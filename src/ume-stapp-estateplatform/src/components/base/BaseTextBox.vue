@@ -1,0 +1,134 @@
+<template>
+	<div class="base-text-box">
+		<Field
+			:name="props.name ?? id"
+			:label="label"
+			v-model="value"
+			v-slot="{ field, errors }"
+			:rules="rules"
+			:keepValue="true"
+		>
+			<base-form-field
+				:id="'label' + id"
+				:labelFor="id"
+				:label="label"
+				:is-required="rules.indexOf('required') > -1"
+				:errorDisplay="!!errors.length"
+			>
+				<v-text-field
+					v-if="!textArea"
+					v-bind="field"
+					:id="id"
+					density="compact"
+					color="primary"
+					:prepend-inner-icon="prependInnerIcon"
+					aria-autocomplete="both"
+					aria-haspopup="false"
+					:variant="variant"
+					:aria-describedby="!!errors.length ? 'error-' + id : null"
+					:disabled="disabled"
+					single-line
+					:placeholder="placeholder"
+					:error="!!errors.length"
+					@input="emit('input')"
+				/>
+				<v-textarea
+					v-else
+					v-bind="field"
+					:id="id"
+					density="compact"
+					color="primary"
+					:prepend-inner-icon="prependInnerIcon"
+					aria-autocomplete="both"
+					aria-haspopup="false"
+					:aria-describedby="!!errors.length ? 'error-' + id : null"
+					:disabled="disabled"
+					:placeholder="placeholder"
+					:error="!!errors.length"
+					@input="emit('input')"
+				/>
+				<BaseHelpText
+					:helpText="helpText"
+					:getValidationId="id"
+					:errors="errorMessage ? [errorMessage, ...errors] : errors"
+				/>
+			</base-form-field>
+		</Field>
+	</div>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+import { Field } from 'vee-validate';
+import BaseHelpText from '@/components/base/BaseHelpAndErrorText.vue';
+import BaseFormField from '@/components/base/BaseFormField.vue';
+
+const props = defineProps({
+	id: { type: String, required: true },
+	name: String,
+	modelValue: {
+		type: String,
+		required: true,
+	},
+	label: String,
+	helpText: String,
+	variant: String,
+	rules: {
+		type: String,
+		default: '',
+	},
+	textArea: {
+		type: Boolean,
+		default: false,
+	},
+	prefix: {
+		type: String,
+		default: '',
+	},
+	placeholder: {
+		type: String,
+		default: '',
+	},
+	disabled: {
+		type: Boolean,
+		default: false,
+	},
+	errorMessage: {
+		type: String,
+		default: '',
+	},
+	prependInnerIcon: String,
+});
+
+const emit = defineEmits(['update:modelValue', 'input']);
+
+const value = computed({
+	get: () => {
+		return props.modelValue;
+	},
+	set: (newValue: string) => {
+		emit('update:modelValue', newValue);
+	},
+});
+</script>
+
+<style scoped lang="scss">
+.admin-text-box {
+	:deep(.v-input .v-field__field) {
+		--v-input-padding-top: 5px;
+	}
+	:deep(.v-input__details) {
+		display: none;
+	}
+
+	:deep(.v-text-field__prefix) {
+		opacity: 1;
+	}
+
+	&.prefix {
+		:deep(.v-input .v-field__field input) {
+			padding-left: 0;
+		}
+	}
+}
+</style>

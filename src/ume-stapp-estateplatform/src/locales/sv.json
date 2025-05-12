@@ -1,0 +1,467 @@
+{
+	"app": {
+		"title": "Mina sidor - Umeå kommun",
+		"nav": {
+			"close": "Stäng",
+			"save": "Spara",
+			"yes": "Ja",
+			"no": "Nej",
+			"cancel": "Avbryt",
+			"logo": "Logotyp Umeå kommun",
+			"skipToContent": "Hoppa till innehåll",
+			"startPage": "Gå till startsidan",
+			"goBack": "Gå tillbaka"
+		},
+		"time": {
+			"minute": "minut | minuter",
+			"second": "sekund | sekunder"
+		},
+		"auth": {
+			"logIn": "Logga in",
+			"logOut": "Logga ut",
+			"loggedInAs": "Inloggad som",
+			"loggedOutExpiredSessionText": "Din inloggningsession har upphört. Logga in igen för att fortsätta.",
+			"loggedOutIdleText": "Du har loggats ut på grund av inaktivitet. Logga in igen för att fortsätta.",
+			"loggedOutIdleTitle": "Utloggad",
+			"loggedOutManual": "Du har nu blivit utloggad, tack för besöket!",
+			"loggedOutTokenError": "Du har blivit utloggad på grund av ett tekniskt problem!",
+			"loggingOut": "Du loggas automatiskt ut på grund av inaktivitet om {time}. Avbryt utloggningen genom att röra musen eller använda tangentbordet.",
+			"loggingOutDifferentLogin": "Du loggas automatiskt ut på grund av att denna e-tjänst har en annan inloggning.",
+			"loginInfo": {
+				"title": "Vad är mina sidor?",
+				"text": "Umeå kommuns mina sidor är en ny plattform för att hantera dina ärenden digitalt. Vi arbetar aktivt med att bygga ut mina sidor och planerar att lansera mer funktionalitet i framtiden.",
+				"externalFunctionalityTitle": "Som privatperson kan du",
+				"externalFunctionality1": "Hantera samtycken och kvittenser för dig eller dina barn i kommunala skolor."
+			}
+		},
+		"error": {
+			"400": {
+				"invalidUserSSN": {
+					"title": "Kunde inte hämta personuppgifter från Skatteverket",
+					"message": "Vi kunde inte hämta dina personuppgifter från Skatteverket då du, ditt barn eller din vårdnadshavare inte har ett giltigt personnummer. Du behöver för närvarande hantera ditt ärende manuellt."
+				}
+			},
+			"401": "Vi kunde inte autentisera dig, var vänlig kontrollera att du är inloggad.",
+			"403": "Du har inte den åtkomst som krävs för att göra detta.",
+			"404": "Sidan kunde inte hittas.",
+			"general": "Tillfälligt tekniskt fel, var god försök senare.",
+			"couldnotfindconversation": "Kunde inte hämta konversation",
+			"differentLogin": "Du är redan vara inloggad på annan e-tjänst. Logga ut från den och testa igen.",
+			"network": "Det gick inte att ansluta till Umeå kommun, kontrollera din internetanslutning och försök igen.",
+			"permissionDenied": "Du saknar behörighet för att komma åt denna sida."
+		},
+		"validation": {
+			"types": {
+				"required": "Obligatoriskt fält"
+			},
+			"messages": {
+				"required": "Fältet \"{0}\" är obligatoriskt.",
+				"validDate": "Ange ett korrekt datum i formatet ÅÅÅÅ-MM-DD.",
+				"invalidDate": "Ange ett korrekt datum i formatet ÅÅÅÅ-MM-DD.",
+				"minDate": "Ange ett datum som är {1} eller senare.",
+				"maxDate": "Ange ett datum som är {1} eller tidigare.",
+				"validPersNumber": "Ange ett giltigt personnummer."
+			}
+		}
+	},
+	"component": {
+		"appError": {
+			"reportError": "Felanmäl",
+			"defaultMessage": "Om problemet kvarstår, vänligen felanmäl detta till oss.",
+			"time": "Felet uppstod {time}"
+		},
+		"appHeader": {
+			"title": {
+				"default": "Mina sidor",
+				"internal": "Interna sidor",
+				"internalConsent": "Samtyckeshantering",
+				"adminConsent": "Admin Samtyckeshantering",
+				"agentConsent": "Samtyckesombud",
+				"internalKvittens": "Kvittenser"
+			},
+			"locale": {
+				"change": "Other languages"
+			},
+			"navigation": "Meny",
+			"logoAlt": "Logotyp för Umeå kommun",
+			"appName": "Umeå kommuns mina sidor",
+			"loginButton": "Logga in",
+			"menuButton": "Meny",
+			"menu": {
+				"logout": "Logga ut",
+				"appStart": "Startsida",
+				"eServices": "Lista av e-tjänster",
+				"about": "Om webbplatsen",
+				"umeaSe": "Umea.se",
+				"errorReport": "Felanmälan",
+				"availabilityStatement": "Tillgänglighetsredogörelse"
+			}
+		},
+		"appContent": {
+			"warning": {
+				"adUserMissingSSN": "Vi har för närvarande tekniska problem och kunde inte hämta dina fullständiga uppgifter, du kan därför märka att viss funktionalitet inte fungerar."
+			}
+		},
+		"appFooter": {
+			"linksTitle": "Hitta snabbt"
+		},
+		"appStart": {
+			"title": "Översikt",
+			"welcomeMessage": "Hej {name}, välkommen till mina sidor.",
+			"description": "Umeå kommuns mina sidor är en ny plattform för att hantera dina ärenden digitalt. Vi arbetar aktivt med att bygga ut mina sidor och planerar att lansera mer funktionalitet i framtiden.",
+			"consent": {
+				"title": "Hantera samtycken",
+				"unreadConsents1": "Du har",
+				"unreadConsents2": "obesvarade samtyckesförfrågningar. | obesvarad samtyckesförfrågning. | obesvarade samtyckesförfrågningar.",
+				"unreadConsentsNotLoaded": "Besvara samtycken för dig själv eller dina barn."
+			},
+			"kvittens": {
+				"title": "Hantera kvittenser",
+				"unansweredKvittens1": "Du har",
+				"unansweredKvittens2": "obesvarade kvittenser. | obesvarad kvittens. | obesvarade kvittenser.",
+				"unansweredKvittensNotLoaded": "Besvara kvittenser för dig själv eller dina barn."
+			}
+		},
+		"pageNotFound": {
+			"pageTitle": "Sidan kunde inte hittas",
+			"title": "Oj, vi kan tyvärr inte hitta sidan du sökte!",
+			"text": "Det kan bero på att sidan har tagits bort eller flyttats. Sidan kan också ha en annan webbadress eftersom vi har uppdaterat vår webbplats."
+		},
+		"BaseConfirmDialog": {
+			"default": {
+				"title": "Titel",
+				"text": "Text"
+			}
+		},
+		"tConfirmDialog": {
+			"cancelDefault": "Avbryt",
+			"confirmDefault": "Ja"
+		},
+		"baseTable": {
+			"pagination": {
+				"All": "Alla",
+				"labelof": " av ",
+				"show": "Visa",
+				"rowsperpage": "rader per sida"
+			}
+		},
+		"baseValidationSummary": {
+			"error": "Det finns {count} fel.",
+			"resolution": " Vänligen åtgärda det innan du publicerar mallen."
+		},
+		"tCookieBanner": {
+			"title": "Vi använder kakor (cookies)",
+			"text": "Denna webbplats använder cookies för statistik och anpassat innehåll. Genom att klicka OK godkänner du denna användning.",
+			"urlText": "För mer information",
+			"button": "OK, jag förstår"
+		},
+		"consentStart": {
+			"table": {
+				"titel": "Titel",
+				"person": "Person",
+				"status": "Status",
+				"answer": "Besvara",
+				"change": "Förändra",
+				"show": "Visa arkiverad",
+				"approved": "Samtycker",
+				"denied": "Samtycker inte",
+				"pending": "Väntar på svar från båda vårdnadshavarna",
+				"new": "Ej besvarad"
+			},
+			"title": "Samtycken",
+			"selectListTitle": "Välj barn",
+			"showAll": "Visa alla",
+			"noResults": "Vi kunde inte hitta några samtycken.",
+			"noFilterResults": "Vi kunde inte hitta några samtycken som matchade sökningen.",
+			"reloadingText": "Hämtar samtycken..."
+		},
+		"external": {
+			"consent": {
+				"loading": "Läser in samtycke...",
+				"goBack": "Gå tillbaka",
+				"consentTitle": "Samtycke",
+				"handleConsentFor": "Du hanterar samtycke för",
+				"period": "Samtycket avser perioden",
+				"giveConsent": "Jag samtycker",
+				"rejectConsent": "Jag samtycker inte",
+				"youCanChangeLater": "Du kan när som helst ändra ditt svar.",
+				"youCanChangeYourAnswerLater": "Du kan när som helst komma tillbaka hit och ändra ditt svar.",
+				"youCanNoLongerChangeAnswer": "Du kan inte längre ändra ditt svar.",
+				"youConsentTo": "Du samtycker till",
+				"youDoNotConsentTo": "Du samtycker inte till",
+				"guardianGiveConsent": "{guardianName} ger samtycke för {childName}.",
+				"guardianRejectConsent": "{guardianName} ger <b>inte</b> samtycke för {childName}.",
+				"usingConsentAgent": "Via samtyckesombud {agentName}.",
+				"openConsentAgentImage": "Öppna bild",
+				"openConsentAgentImageHelpText": "Visa bild på vårdnadshavarens underskrift",
+				"imageOfGuardianSignature": "Bild på vårdnadshavares underskrift",
+				"historyTitle": "Historik"
+			},
+			"kvittensStart": {
+				"title": "Kvittenser",
+				"description": "Här får du ta del av regler för elevdator, nätverk och inloggning till IT-tjänster samt elevskåp, läromedel och böcker samt kvittera att du läst dessa.",
+				"filterOnChild": "Filtrera på barn",
+				"noResults": "Du har inga obesvarade eller besvarade kvittenser.",
+				"noResultsUsingFilter": "Vi hittade inga kvittenser som matchade filtreringen.",
+				"titleUnanswered": "Obesvarade ({count})",
+				"titleAnswered": "Besvarade ({count})"
+			},
+			"kvittensDetails": {
+				"you": "(du)",
+				"requiresMultipleAnswers": "Kvittensen kräver svar från flera personer",
+				"everyoneHasAnswered": "Kvittensen har besvarats",
+				"gdprButton": "Läs mer om hur dina personuppgifter behandlas",
+				"cancel": "Avbryt",
+				"sendIn": "Kvittera",
+				"userAgreedError": "Detta fält är obligatoriskt.",
+				"thankYouForAnswer": "Tack för ditt svar.",
+				"answerNextKvittens": "Besvara nästa kvittens",
+				"history": {
+					"title": "Historik",
+					"answeredYes": "{name} kvitterade."
+				}
+			},
+			"kvittensListItem": {
+				"actionAnswer": "Öppna",
+				"actionOpen": "Öppna",
+				"kvittensFor": "Kvittens för {name}",
+				"XofYHasAnswered": "{answered}/{total} har kvitterat",
+				"allHaveAnswered": "Alla har kvitterat"
+			}
+		},
+		"internal": {
+			"internalStart": {
+				"title": "Hej {name}, välkommen till dina interna sidor.",
+				"description": "Interna sidor tillåter dig som anställd på Umeå kommun att handlägga ärenden och använda e-tjänster i din yrkesroll.",
+				"noAccess": {
+					"title": "Du saknar behörighet",
+					"description": "Du har inte åtkomst till någon funktionalitet på Umeå kommuns interna sidor."
+				},
+				"consent": {
+					"title": "Samtyckeshantering",
+					"goToConsumer": "Visa samtycken för mina elever",
+					"goToAgent": "Ange samtycke för en elev",
+					"goToTemplateAdmin": "Hantera samtyckesmallar"
+				},
+				"kvittens": {
+					"title": "Kvittenser",
+					"goToKvittens": "Se elevers svar på kvittenser"
+				}
+			},
+			"templateGroupSelect": {
+				"modal": {
+					"title": "Lägg till skolform/skola/klass",
+					"unitTypeTitle": "Skolform",
+					"unitTitle": "Skola",
+					"classTitle": "Klass",
+					"allSchools": "Alla skolor",
+					"allClasses": "Alla klasser",
+					"add": "Lägg till",
+					"cancel": "Avbryt"
+				}
+			},
+			"consentTemplateAdmin": {
+				"title": "Mallar",
+				"search": "Sök efter mall",
+				"filterButton": "Filtrera",
+				"filterGroup": "Filter",
+				"filterGroupEmpty": "Lägg till en skolform, en skola eller klass att filtrera på.",
+				"addFilterGroup": "Lägg till skolform/skola/klass",
+				"addFilterBtn": "Lägg till filter",
+				"create": "Skapa ny mall",
+				"open": "Öppna",
+				"edit": "Redigera",
+				"noResults": "Vi kunde inte hitta några mallar som matchade sökningen.",
+				"headers": {
+					"title": "Titel",
+					"groups": "Grupper",
+					"period": "Period",
+					"status": "Status"
+				},
+				"period": {
+					"indefinitely": "{date} - tillsvidare",
+					"until": "fram tills {date}",
+					"none": "ej angett"
+				},
+				"status": {
+					"0": "Utkast",
+					"1": "Publicerad"
+				}
+			},
+			"consentTemplateEdit": {
+				"titleCreate": "Skapa ny mall",
+				"titleEdit": "Redigera mall",
+				"titleView": "Publicerad mall",
+				"saveDraft": "Spara utkast",
+				"publish": "Publicera mall",
+				"field": {
+					"title": {
+						"label": "Titel",
+						"requiredToSave": "Du måste ange en titel för att spara utkastet."
+					},
+					"text": { "label": "Text" },
+					"groups": {
+						"label": "Grupper",
+						"empty": "Du har inte valt någon skola eller klass än."
+					},
+					"startDate": { "label": "Startdatum" },
+					"endDate": { "label": "Slutdatum" }
+				},
+				"publishConfirm": {
+					"title": "Publicera mall?",
+					"text": "Är du säker på att du vill publicera mallen, du kan inte redigera mallen efter att den har publicerats.",
+					"yes": "Ja, publicera mall"
+				}
+			},
+			"consentConsumerList": {
+				"title": "Samtycken",
+				"open": "Öppna",
+				"noResults": "Vi kunde inte hitta några samtycken som du har åtkomst att se.",
+				"noFilterResults": "Vi kunde inte hitta några samtycken som matchade sökningen.",
+				"plusXOtherGroups": "+{count} till",
+				"headers": {
+					"title": "Titel",
+					"groups": "Klass/avdelning/grupp",
+					"period": "Period"
+				},
+				"filter": {
+					"school": "Skola",
+					"caretaker": "Dagbarnvårdare",
+					"classOrGroup": "Klass/avdelning/grupp",
+					"search": "Sök efter samtycken",
+					"noData": "Inga resultat hittades."
+				},
+				"groupType": {
+					"department": "Avdelningar",
+					"educationGroup": "Grupper",
+					"class": "Klasser"
+				},
+				"openDialog": {
+					"title": "Välj klass/grupp att visa samtycken för",
+					"description": "När du valt klass/avdelning/grupp öppnas samtycket direkt."
+				}
+			},
+			"consentConsumerDetails": {
+				"title": "Samtycken",
+				"persons": "Personer",
+				"searchForPersons": "Sök efter personer",
+				"noResults": "Vi kunde inte hitta några personer i {0}.",
+				"noSearchResults": "Vi kunde inte hitta några personer som matchade din sökning.",
+				"headers": {
+					"name": "Namn",
+					"consent": "Samtycke"
+				},
+				"status": {
+					"approved": "Samtycker",
+					"denied": "Samtycker inte",
+					"pending": "Inväntar svar från båda vårdnadshavare",
+					"new": "Ej besvarad"
+				},
+				"accessDeniedError": {
+					"title": "Du saknar behörighet.",
+					"message": "För att se svar på elevers samtycken behöver du vara lärare för klassen."
+				}
+			},
+			"consumerTester": {
+				"testingAs": "Testar som {name}",
+				"yourself": "dig själv",
+				"testingAsPersonAtSchool": "Testar som {name} på {school}",
+				"modal": {
+					"title": "Testa som en lärare",
+					"description": "Välj en skola och sedan en person på denna skola som du vill ta rollen som. Du kommer kunna se och öppna de samtycken som vald person kan. Detta alternativ är endast tillgängligt för dig som är testare.",
+					"school": "Skola",
+					"person": "Person",
+					"cancelTest": "Avsluta test",
+					"hideButton": "Dölj knapp",
+					"confirm": "Starta"
+				}
+			},
+			"consentAgentStart": {
+				"title": "Samtyckesombud",
+				"description": "Som samtyckesombud kan du på en vårdnadshavares begäran uppdatera en elevs samtycke. Du behöver bifoga en bild på ett skriftligt intyg från vårdnadshavaren för att få uppdatera elevens samtycke.",
+				"noResult": "Vi kunde inte hitta några samtycken för den angivna eleven som du har åtkomst att se.",
+				"consentsTitle": "Samtycken för {childName}"
+			},
+			"consentAgentSearch": {
+				"childSSNTitle": "Ange elevens personnummer",
+				"childSSNHelpText": "12 siffror med eller utan bindestreck.",
+				"search": "Hämta elevens samtycken"
+			},
+			"consentAgentList": {
+				"answer": "Ändra svar"
+			},
+			"consentAgentEdit": {
+				"handleConsentFor": "Du agerar som samtyckesombud åt ",
+				"guardianTitle": "Vårdnadshavares samtycke",
+				"responsiblesHaveChangedTitle": "Svar från tidigare ansvariga",
+				"responsiblesHaveChangedInfo": "De personer som är ansvariga för att underteckna detta samtycke har ändrats. Detta är de sista svaren före ändringen. De betraktas som giltiga tills ett nytt svar registreras."
+			},
+			"consentAgentGuardianEditModal": {
+				"title": "Uppdatera vårdnadshavarens svar",
+				"guardianNewAnswer": "Vårdnadshavarens nya svar",
+				"fileUploadLabel": "Bild på vårdnadshavarens godkännande",
+				"fileUploadHelpText": "Ladda upp en existerande bild eller ta en ny bild med din kamera. Bilden kommer vara synlig för elevens vårdnadshavare och för andra samtyckesombud med behörighet.",
+				"fileUploadSelectImage": "Välj bild",
+				"alertPart1": "Du kommer ändra ",
+				"alertPart2": " svar till ",
+				"alertPart3": " för ",
+				"updateButton": "Uppdatera svar",
+				"updateConsentConfirmTitle": "Bekräfta uppdatering",
+				"updateConsentConfirmText": "Är du säker på att du vill ändra svaret till \"{consentStatus}\" för vårdnadshavare \"{guardianName}\"?",
+				"updateConsentConfirmButton": "Ja, uppdatera svar"
+			},
+			"kvittensSummary": {
+				"title": "Sammanfattning över kvittenser",
+				"schoolLabel": "Skola",
+				"classLabel": "Klass",
+				"searchStudent": "Sök efter elev",
+				"filterOnAnswer": "Filtrera på svar",
+				"filter": {
+					"allAnswered": "Har kvitterat samtliga",
+					"hasUnanswered": "Har obesvarade kvittenser"
+				},
+				"noAccess": "Du måste vara mentor för en klass för att se kvittenser.",
+				"selectSchoolAndClass": "Välj skola och klass för att visa sammanställning.",
+				"headers": {
+					"name": "Namn",
+					"dateOfBirth": "Födelsedatum"
+				},
+				"noResults": "Vi hittade inga elever i denna klass.",
+				"noResultsMatchingFilter": "Vi hittade inga elever i denna klass som matchade din sökning."
+			}
+		},
+		"kvittensUserAnswer": {
+			"approved": "Kvitterad",
+			"unanswered": "Ej kvitterat",
+			"iApproved": "Du har kvitterat",
+			"iHaveNotAnswered": "Du har ej kvitterat",
+			"notAnsweredByAll": "Ej kvitterat av samtliga"
+		},
+		"BaseLoginMethods": {
+			"title": "Logga in",
+			"externalTitle": "Logga in som privatperson",
+			"internalTitle": "Är du anställd i Umeå kommun?",
+			"helpTitle": "Hjälp",
+			"loginMethodHelpTitle": "Vilken inloggningsmetod ska jag välja?",
+			"loginMethodHelpPart1": "Logga in med BankID eller Freja eID+ för att hantera och följa dina privata ärenden.",
+			"loginMethodHelpPart2": "Logga in med ditt personalkonto för att handlägga ärenden och använda e-tjänster i din yrkesroll.",
+			"aboutEId": "Vill du veta mer om eller skaffa en e-legitimation?"
+		}
+	},
+	"consent": {
+		"userStatus": {
+			"notAnswered": "Ej besvarad",
+			"approved": "Samtycker",
+			"rejected": "Samtycker inte"
+		}
+	},
+	"schoolForm": {
+		"FS": "Förskola",
+		"FK": "Förskoleklass",
+		"GR": "Grundskolor",
+		"S": "Anpassade grundskolor",
+		"GY": "Gymnasieskolor",
+		"GS": "Anpassade gymnasieskolor",
+		"PC": "Pedagogisk omsorg"
+	}
+}
