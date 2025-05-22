@@ -4,14 +4,6 @@ import PageNotFound from '@/components/app/PageNotFound.vue';
 import ConsentStart from '@/components/external/consent/ConsentStart.vue';
 import KvittensStart from '@/components/external/kvittens/KvittensStart.vue';
 import KvittensDetails from '@/components/external/kvittens/KvittensDetails.vue';
-import InternalStart from '@/components/internal/InternalStart.vue';
-import ConsentTemplateList from '@/components/internal/consent/templateAdmin/ConsentTemplateList.vue';
-import ConsentTemplateEdit from '@/components/internal/consent/templateAdmin/ConsentTemplateEdit.vue';
-import ConsentConsumerOverview from '@/components/internal/consent/consumer/ConsentConsumerOverview.vue';
-import ConsentConsumerDetails from '@/components/internal/consent/consumer/ConsentConsumerDetails.vue';
-import ConsentAgentStart from '@/components/internal/consent/agent/ConsentAgentStart.vue';
-import ConsentAgentEdit from '@/components/internal/consent/agent/ConsentAgentEdit.vue';
-import KvittensSummary from '@/components/internal/kvittens/KvittensSummary.vue';
 import { useAuthMiddleware } from '@/plugins/auth';
 import AuthCallback from '@/components/auth/AuthCallback.vue';
 import AuthLogin from '@/components/auth/AuthLogin.vue';
@@ -66,7 +58,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/internal',
 		name: MyPagesRoutes.InternalStart,
-		component: InternalStart,
+		component: () => import('@/components/internal/InternalStart.vue'),
 		meta: {
 			requiresInternalLogin: true,
 			contentSize: AppContentSize.Wide,
@@ -77,7 +69,10 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/internal/consent/template',
 		name: MyPagesRoutes.InternalConsentTemplateList,
-		component: ConsentTemplateList,
+		component: () =>
+			import(
+				'@/components/internal/consent/templateAdmin/ConsentTemplateList.vue'
+			),
 		meta: {
 			requiresInternalLogin: true,
 			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_TEMPLATE_ID,
@@ -90,7 +85,10 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/internal/consent/template/:templateGuid',
 		name: MyPagesRoutes.InternalConsentTemplateEdit,
 		props: true,
-		component: ConsentTemplateEdit,
+		component: () =>
+			import(
+				'@/components/internal/consent/templateAdmin/ConsentTemplateEdit.vue'
+			),
 		meta: {
 			requiresInternalLogin: true,
 			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_TEMPLATE_ID,
@@ -102,7 +100,10 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/internal/consent/consumer',
 		name: MyPagesRoutes.InternalConsentConsumerList,
-		component: ConsentConsumerOverview,
+		component: () =>
+			import(
+				'@/components/internal/consent/consumer/ConsentConsumerOverview.vue'
+			),
 		meta: {
 			requiresInternalLogin: true,
 			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_CONSUMER_ID,
@@ -114,7 +115,10 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/internal/consent/consumer/:templateGuid,:groupId',
 		name: MyPagesRoutes.InternalConsentConsumerDetails,
-		component: ConsentConsumerDetails,
+		component: () =>
+			import(
+				'@/components/internal/consent/consumer/ConsentConsumerDetails.vue'
+			),
 		props: true,
 		meta: {
 			requiresInternalLogin: true,
@@ -127,7 +131,8 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/internal/consent/agent',
 		name: MyPagesRoutes.InternalConsentAgentStart,
-		component: ConsentAgentStart,
+		component: () =>
+			import('@/components/internal/consent/agent/ConsentAgentStart.vue'),
 		meta: {
 			requiresInternalLogin: true,
 			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_CONSUMER_ID,
@@ -139,7 +144,8 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/internal/consent/agent/edit',
 		name: MyPagesRoutes.InternalConsentAgentEdit,
-		component: ConsentAgentEdit,
+		component: () =>
+			import('@/components/internal/consent/agent/ConsentAgentEdit.vue'),
 		meta: {
 			requiresInternalLogin: true,
 			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_CONSUMER_ID,
@@ -151,7 +157,8 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/internal/kvittens',
 		name: MyPagesRoutes.InternalKvittensSummary,
-		component: KvittensSummary,
+		component: () =>
+			import('@/components/internal/kvittens/KvittensSummary.vue'),
 		meta: {
 			requiresInternalLogin: true,
 			requiresGroup: Config.VUE_APP_AUTH_GROUP_KVITTENS_CONSUMER_ID,

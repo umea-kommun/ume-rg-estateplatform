@@ -1,5 +1,5 @@
 import Config from '@/Config';
-import { createI18n, LocaleMessages, VueMessageType } from 'vue-i18n';
+import { createI18n } from 'vue-i18n';
 import sv from '@/locales/sv.json';
 import en from '@/locales/en.json';
 import moment from 'moment';
@@ -8,8 +8,8 @@ import moment from 'moment';
  * Translation plugin using VueI18n https://kazupon.github.io/vue-i18n
  */
 
-function loadLocaleMessages(): LocaleMessages<VueMessageType> {
-	const messages: LocaleMessages<VueMessageType> = {
+function loadLocaleMessages() {
+	const messages = {
 		sv,
 		en,
 	};

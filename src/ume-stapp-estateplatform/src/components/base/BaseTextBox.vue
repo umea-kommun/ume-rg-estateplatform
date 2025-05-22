@@ -72,7 +72,7 @@ const props = defineProps({
 	},
 	label: String,
 	helpText: String,
-	variant: String,
+	variant: String as () => 'filled' | 'outlined' | 'underlined',
 	rules: {
 		type: String,
 		default: '',

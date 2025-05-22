@@ -2,14 +2,13 @@ import { mount, config } from '@vue/test-utils';
 import { describe, expect, test, beforeAll } from 'vitest';
 import BaseSelectList from '@/components/base/BaseSelectList.vue';
 import Validation from '@/plugins/validation';
-import { I18n } from 'vue-i18n';
+import i18nInstance from '@/plugins/i18next';
 
 config.global.mocks.$t = (phrase: string): string => phrase;
 describe('BaseSelectList', () => {
 	beforeAll(() => {
 		const i18n = { global: { t: (t: string) => t } };
-
-		Validation(i18n as I18n);
+		Validation(i18n as typeof i18nInstance);
 	});
 	test('should be less than ten', async () => {
 		const items = [];

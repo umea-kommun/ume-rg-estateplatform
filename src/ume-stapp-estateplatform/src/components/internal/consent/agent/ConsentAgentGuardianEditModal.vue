@@ -96,7 +96,7 @@
 					</base-form-field>
 					<v-alert
 						icon="info"
-						v-if="guardianNewAnswer && guardianImage?.length"
+						v-if="guardianNewAnswer && guardianImage"
 						class="mt-4"
 					>
 						{{
@@ -129,7 +129,7 @@
 					@click="updateGuardianAnswer"
 					variant="outlined"
 					color="primary"
-					:disabled="!guardianNewAnswer || !guardianImage?.length"
+					:disabled="!guardianNewAnswer || !guardianImage"
 					:loading="isBusySendingToServer"
 					>{{
 						$t(
@@ -182,7 +182,7 @@ const showModal = computed({
 
 const isBusySendingToServer = ref<boolean>(false);
 const guardianNewAnswer = ref<UserConsentStatus>();
-const guardianImage = ref<File[]>([]);
+const guardianImage = ref<File | null>(null);
 const showingConfirmDialog = ref(false);
 
 watch(
@@ -191,7 +191,7 @@ watch(
 		if (!showModal.value) {
 			// Reset fields when closed
 			guardianNewAnswer.value = undefined;
-			guardianImage.value = [];
+			guardianImage.value = null;
 		}
 	}
 );
@@ -206,7 +206,7 @@ const { tConfirmDialogAsync } = useTConfirmDialog();
 const updateGuardianAnswer = async () => {
 	if (
 		guardianNewAnswer.value &&
-		guardianImage.value.length &&
+		guardianImage.value &&
 		!isBusySendingToServer.value
 	) {
 		showingConfirmDialog.value = true;
@@ -236,7 +236,7 @@ const updateGuardianAnswer = async () => {
 			isBusySendingToServer.value = true;
 			try {
 				const compressedImage = await compressImageFile(
-					guardianImage.value[0]
+					guardianImage.value
 				);
 
 				const updatedConsent = await store.dispatch(

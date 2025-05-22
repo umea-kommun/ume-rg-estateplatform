@@ -1,9 +1,8 @@
 import { configure, defineRule } from 'vee-validate';
 import AllRules from '@vee-validate/rules';
-import { I18n, LocaleMessages, VueMessageType } from 'vue-i18n';
 import moment from 'moment';
 import Organisationsnummer from 'organisationsnummer';
-import Config from '@/Config';
+import i18nInstance from './i18next';
 
 /**
  * Installera Vee-Validate
@@ -11,9 +10,7 @@ import Config from '@/Config';
  * Configuration of vee: https://baianat.github.io/vee-validate/configuration.html
  */
 
-function initialize(
-	i18n: I18n<LocaleMessages<VueMessageType>, unknown, unknown, true>
-): void {
+function initialize(i18n: typeof i18nInstance): void {
 	Object.keys(AllRules).forEach((rule) => {
 		defineRule(rule, AllRules[rule]);
 	});

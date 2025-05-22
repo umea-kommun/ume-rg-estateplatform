@@ -32,7 +32,9 @@ export default defineConfig({
 		preprocessorOptions: {
 			scss: {
 				additionalData: `
-          @import "./src/themes/umea-theme.scss";
+          @use "@/themes/umea-theme.scss" as *;
+		  @use "@/themes/variables.scss" as *;
+		  @use "@/themes/mixins.scss" as *;
         `,
 			},
 		},

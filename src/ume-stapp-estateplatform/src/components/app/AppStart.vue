@@ -42,7 +42,7 @@
 								}}
 								<b>{{ unansweredConsents }}</b>
 								{{
-									$tc(
+									$t(
 										'component.appStart.consent.unreadConsents2',
 										unansweredConsents
 									)
@@ -75,7 +75,7 @@
 								}}
 								<b>{{ unansweredKvittens }}</b>
 								{{
-									$tc(
+									$t(
 										'component.appStart.kvittens.unansweredKvittens2',
 										unansweredKvittens
 									)

@@ -18,13 +18,13 @@ Object.defineProperty(window, 'matchMedia', {
 
 import BaseHtmlEditor from '../BaseHtmlEditor.vue';
 import Validation from '@/plugins/validation';
-import { I18n } from 'vue-i18n';
+import i18nInstance from '@/plugins/i18next';
 
 config.global.mocks.$t = (phrase: string): string => phrase;
 describe('BaseHtmlEditor', () => {
 	beforeAll(() => {
 		const i18n = { global: { t: (t: string) => t } };
-		Validation(i18n as I18n);
+		Validation(i18n as typeof i18nInstance);
 	});
 
 	test('renders correct label', async () => {
