@@ -120,6 +120,33 @@
 					</v-btn>
 				</v-col>
 			</v-row>
+			<!--TODO: Change icon -->
+			<v-row class="mt-4" v-if="isPasswordConsumer">
+				<v-col cols="12" class="pa-0">
+					<hr class="mb-4" />
+					<h2 class="mb-4">
+						{{
+							$t(
+								'component.internal.internalStart.passwords.title'
+							)
+						}}
+					</h2>
+					<v-btn
+						variant="outlined"
+						size="x-large"
+						prependIcon="playlist_add_check"
+						:to="{
+							name: MyPagesRoutes.InternalDefaultPassword,
+						}"
+					>
+						{{
+							$t(
+								'component.internal.internalStart.passwords.goToPassword'
+							)
+						}}
+					</v-btn>
+				</v-col>
+			</v-row>
 		</div>
 	</app-content>
 </template>
@@ -172,11 +199,21 @@ const isKvittensConsumer = computed(() => {
 	return false;
 });
 
+const isPasswordConsumer = computed(() => {
+	if (user.value.groups) {
+		return user.value.groups.includes(
+			Config.VUE_APP_AUTH_GROUP_PASSWORD_CONSUMER_ID
+		);
+	}
+	return false;
+});
+
 const userHasNoAccess = computed(() => {
 	return (
 		!isConsentConsumer.value &&
 		!isConsentTemplateAdmin.value &&
-		!isKvittensConsumer.value
+		!isKvittensConsumer.value &&
+		!isPasswordConsumer.value
 	);
 });
 </script>

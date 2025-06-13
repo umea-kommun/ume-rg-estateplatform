@@ -6,6 +6,7 @@ import actions from './actions';
 import mutations from './mutations';
 import VuexPersist from 'vuex-persist';
 import kvittensStore from './kvittens/store';
+import passwordStore from './password/store';
 
 // export default createStore({
 //   state: {},
@@ -45,6 +46,7 @@ const store: StoreOptions<IRootState> = {
 	plugins: [vuexPersistToSessionStorage.plugin],
 	modules: {
 		kvittens: kvittensStore,
+		password: passwordStore,
 	},
 };
 

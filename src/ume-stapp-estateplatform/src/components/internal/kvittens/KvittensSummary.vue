@@ -127,7 +127,7 @@ import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import { DispatchType } from '@/models/Enums';
 import { KvittensSummaryAnswerFilter } from '@/models/kvittens/Enums';
-import ConsumerTester from '@/components/internal/consent/consumer/ConsumerTester.vue';
+import ConsumerTester from '@/components/internal/shared/ConsumerTester.vue';
 import {
 	IKvittensFilterClass,
 	IKvittensFilterSchool,

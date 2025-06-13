@@ -56,7 +56,7 @@ import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import ConsentAgentList from './ConsentAgentList.vue';
-import ConsumerTester from '@/components/internal/consent/consumer/ConsumerTester.vue';
+import ConsumerTester from '@/components/internal/shared/ConsumerTester.vue';
 
 const route = useRoute();
 const store = useStore<IRootState>();

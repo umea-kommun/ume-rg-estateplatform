@@ -153,7 +153,7 @@ import { useStore } from 'vuex';
 import { AppContentSize, UserConsentStatus } from '@/models/Enums';
 import { getConsentUserStatusText } from '@/utils/utils';
 import ConsentHistory from '@/components/consent/ConsentHistory.vue';
-import ConsumerTester from '@/components/internal/consent/consumer/ConsumerTester.vue';
+import ConsumerTester from '@/components/internal/shared/ConsumerTester.vue';
 import ConsentAgentGuardianEditModal from './ConsentAgentGuardianEditModal.vue';
 
 const store = useStore<IRootState>();

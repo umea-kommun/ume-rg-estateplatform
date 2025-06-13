@@ -15,6 +15,7 @@ export enum AppHeaderTitle {
 	AdminConsent = 'adminConsent',
 	AgentConsent = 'agentConsent',
 	InternalKvittens = 'internalKvittens',
+	InternalDefaultPasswords = 'internalDefaultPasswords',
 }
 
 /** ErrorCode som kommer från backend */
@@ -83,6 +84,10 @@ export enum DispatchType {
 	SaveKvittensAnswer = 'saveKvittensAnswer',
 	GetKvittensFilterGroups = 'getKvittensFilterGroups',
 	GetKvittensSummary = 'getKvittensSummary',
+
+	// Password
+	GetConsumerGroupsAndSchools = 'getConsumerGroupsAndSchools',
+	GetDefaultPasswordAssignments = 'getDefaultPasswordAssignments',
 }
 
 export enum ConsentStatus {

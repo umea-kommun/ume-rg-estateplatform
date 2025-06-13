@@ -154,7 +154,7 @@ import { useI18n } from 'vue-i18n';
 import BaseBackButton from '@/components/base/BaseBackButton.vue';
 import BaseTextBox from '@/components/base/BaseTextBox.vue';
 import BaseTableHeader from '@/components/base/baseTable/BaseTableHeader.vue';
-import ConsumerTester from './ConsumerTester.vue';
+import ConsumerTester from '@/components/internal/shared/ConsumerTester.vue';
 
 const route = useRoute();
 const store = useStore<IRootState>();

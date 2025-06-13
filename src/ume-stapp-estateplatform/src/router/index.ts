@@ -167,6 +167,19 @@ const routes: Array<RouteRecordRaw> = [
 			breadcrumb: () => [],
 		},
 	},
+	{
+		path: '/internal/defaultpasswords',
+		name: MyPagesRoutes.InternalDefaultPassword,
+		component: () =>
+			import('@/components/internal/password/DefaultPasswords.vue'),
+		meta: {
+			requiresInternalLogin: true,
+			requiresGroup: Config.VUE_APP_AUTH_GROUP_PASSWORD_CONSUMER_ID,
+			contentSize: AppContentSize.Wide,
+			title: AppHeaderTitle.InternalDefaultPasswords,
+			breadcrumb: () => [],
+		},
+	},
 
 	/** Authentication */
 	{

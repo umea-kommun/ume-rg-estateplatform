@@ -115,7 +115,7 @@ export default {
 			if (context.rootState.tester.testAsPerson) {
 				response = await httpClient.post(
 					Config.VUE_APP_CONSENT_BRIDGE_SERVICE_ORGANIZATION +
-						'/mentoredSchoolsAndGroupsForKvittensTest',
+						'/mentoredSchoolsAndClassesForKvittensTest',
 					JSON.stringify({
 						name: context.rootState.tester.testAsPerson.name,
 						personnummer:
@@ -131,7 +131,7 @@ export default {
 					}
 				);
 			} else {
-				let endpoint = '/mentoredSchoolsAndGroupsForKvittens';
+				let endpoint = '/mentoredSchoolsAndClassesForKvittens';
 				if (context.getters.isKvittensTechnician) {
 					endpoint = '/technicianSchoolsAndClassesForKvittens';
 				} else if (context.getters.isSchoolAdministrator) {

@@ -73,7 +73,7 @@ import {
 	TemplateConnectionType,
 } from '@/models/Enums';
 import { Helper } from '@/utils/helper';
-import ConsumerTester from './ConsumerTester.vue';
+import ConsumerTester from '@/components/internal/shared/ConsumerTester.vue';
 import ConsentConsumerListTable from './ConsentConsumerListTable.vue';
 import ConsumerOpenTemplateDialog from './ConsumerOpenTemplateDialog.vue';
 import ConsentConsumerGroupFilter from './ConsentConsumerGroupFilter.vue';

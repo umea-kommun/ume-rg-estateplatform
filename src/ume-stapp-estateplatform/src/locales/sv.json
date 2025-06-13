@@ -77,7 +77,8 @@
 				"internalConsent": "Samtyckeshantering",
 				"adminConsent": "Admin Samtyckeshantering",
 				"agentConsent": "Samtyckesombud",
-				"internalKvittens": "Kvittenser"
+				"internalKvittens": "Kvittenser",
+				"internalDefaultPasswords": "Lösenord"
 			},
 			"locale": {
 				"change": "Other languages"
@@ -246,6 +247,10 @@
 				"kvittens": {
 					"title": "Kvittenser",
 					"goToKvittens": "Se elevers svar på kvittenser"
+				},
+				"passwords": {
+					"title": "Lösenord",
+					"goToPassword": "Se elevers tilldelade lösenord"
 				}
 			},
 			"templateGroupSelect": {
@@ -428,6 +433,27 @@
 				},
 				"noResults": "Vi hittade inga elever i denna klass.",
 				"noResultsMatchingFilter": "Vi hittade inga elever i denna klass som matchade din sökning."
+			},
+			"defaultPasswords": {
+				"title": "Tilldelade lösenord",
+				"schoolLabel": "Skola",
+				"classLabel": "Klass/avdelning/grupp",
+				"noAccess": "Du har inte de rättigheter som krävs för att se elevers lösenord.",
+				"selectSchoolAndClass": "Välj skola och klass/avdelning/grupp för att visa lösenord.",
+				"headers": {
+					"name": "Namn",
+					"dateOfBirth": "Födelsedatum",
+					"password": "Lösenord",
+                    "email": "Email"
+				},
+				"noResults": "Vi hittade inga lösenord för elever i denna klass/avdelning/grupp.",
+				"groupType": {
+					"department": "Avdelningar",
+					"educationGroup": "Grupper",
+					"class": "Klasser"
+				},
+				"print": "Skriv ut",
+                "noPassword": "Lösenord saknas"
 			}
 		},
 		"kvittensUserAnswer": {

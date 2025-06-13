@@ -77,7 +77,8 @@
 				"internalConsent": "Consent management",
 				"adminConsent": "Admin consent management",
 				"agentConsent": "Consent agent",
-				"internalKvittens": "Receipts"
+				"internalKvittens": "Receipts",
+				"internalDefaultPasswords": "Password"
 			},
 			"locale": {
 				"change": "Other languages"
@@ -246,6 +247,10 @@
 				"kvittens": {
 					"title": "Receipts",
 					"goToKvittens": "See students' responses to receipts"
+				},
+				"passwords": {
+					"title": "Passwords",
+					"goToPassword": "See students' assigned passwords"
 				}
 			},
 			"templateGroupSelect": {
@@ -428,6 +433,27 @@
 				},
 				"noResults": "We found no students in this class.",
 				"noResultsMatchingFilter": "We found no students in this class that matched your search."
+			},
+			"defaultPasswords": {
+				"title": "Assigned passwords",
+				"schoolLabel": "School",
+				"classLabel": "Class/department/group",
+				"noAccess": "You are not authorized to view student passwords.",
+				"selectSchoolAndClass": "Select school and class/department/group to view passwords.",
+				"headers": {
+					"name": "Name",
+					"dateOfBirth": "Date of birth",
+					"password": "Password",
+                    "email": "Email"
+				},
+				"noResults": "We found no passwords for students in this class/department/group.",
+				"groupType": {
+					"department": "Departments",
+					"educationGroup": "Groups",
+					"class": "Classes"
+				},
+				"print": "Print",
+                "noPassword": "No password has been set"
 			}
 		},
 		"kvittensUserAnswer": {
