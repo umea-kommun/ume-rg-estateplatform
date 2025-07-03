@@ -472,7 +472,10 @@
 			"loginMethodHelpPart1": "Logga in med BankID eller Freja eID+ för att hantera och följa dina privata ärenden.",
 			"loginMethodHelpPart2": "Logga in med ditt personalkonto för att handlägga ärenden och använda e-tjänster i din yrkesroll.",
 			"aboutEId": "Vill du veta mer om eller skaffa en e-legitimation?"
-		}
+		},
+        "baseAutocomplete": {
+            "noDataAvailable": "Inga matchande resultat."
+        }
 	},
 	"consent": {
 		"userStatus": {

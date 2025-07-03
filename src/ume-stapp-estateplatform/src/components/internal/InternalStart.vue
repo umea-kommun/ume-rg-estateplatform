@@ -120,7 +120,6 @@
 					</v-btn>
 				</v-col>
 			</v-row>
-			<!--TODO: Change icon -->
 			<v-row class="mt-4" v-if="isPasswordConsumer">
 				<v-col cols="12" class="pa-0">
 					<hr class="mb-4" />

@@ -472,7 +472,10 @@
 			"loginMethodHelpPart1": "Log in with your BankID or Freja eID+ to manage and track your private matters.",
 			"loginMethodHelpPart2": "Log in with your employee account to handle cases and use e-services in your professional role at Umeå Municipality.",
 			"aboutEId": "Want to know more about or get an e-ID?"
-		}
+		},
+        "baseAutocomplete": {
+            "noDataAvailable": "No matching results."
+        }
 	},
 	"consent": {
 		"userStatus": {

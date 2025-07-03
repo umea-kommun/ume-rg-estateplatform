@@ -76,14 +76,13 @@
 		>
 			{{ $t('component.internal.defaultPasswords.noResults') }}
 		</v-alert>
+		<print-password-table
+			:items="fetchedPasswords"
+			:school="selectedSchoolName"
+			:group="selectedGroupName"
+			:sortBy="sortTableBy"
+		/>
 	</app-content>
-	<print-password-table
-		class="print-table"
-		:items="fetchedPasswords"
-		:school="selectedSchoolName"
-		:group="selectedGroupName"
-		:sortBy="sortTableBy"
-	/>
 </template>
 <script setup lang="ts">
 import AppContent from '@/components/app/AppContent.vue';
@@ -199,7 +198,11 @@ async function fetchPasswords() {
 }
 
 watch(selectedGroupId, () => {
-	fetchPasswords();
+	if (selectedGroupId.value) {
+		fetchPasswords();
+	} else {
+		fetchedPasswords.value = [];
+	}
 });
 
 // Print

@@ -11,6 +11,7 @@
 		:disabled="props.items.length === 0"
 		color="primary"
 		autocomplete="off"
+		:no-data-text="$t('component.baseAutocomplete.noDataAvailable')"
 	>
 		<template v-slot:item="{ props, item }">
 			<div v-if="item.raw.groupTitle" class="pl-4 pb-1 group-title">
@@ -32,8 +33,12 @@ const props = defineProps<{
 const emit = defineEmits(['update:selectedItem']);
 
 const selectedItem = ref<string | null>();
-watch(selectedItem, async (newValue) => {
-	emit('update:selectedItem', newValue);
+watch(selectedItem, async (newValue, oldValue) => {
+	if (newValue) {
+		emit('update:selectedItem', newValue);
+	} else if (oldValue) {
+		selectedItem.value = oldValue;
+	}
 });
 
 interface IAutocompleteItem {
