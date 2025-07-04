@@ -11,6 +11,7 @@
 		:disabled="props.items.length === 0"
 		color="primary"
 		autocomplete="off"
+		:menu-props="menuProps"
 		:no-data-text="$t('component.baseAutocomplete.noDataAvailable')"
 	>
 		<template v-slot:item="{ props, item }">
@@ -29,13 +30,17 @@ const props = defineProps<{
 	title: string;
 	itemTitle: string;
 	itemValue: string;
+	menuProps: object;
 }>();
 const emit = defineEmits(['update:selectedItem']);
 
+let items_changed = true;
+
 const selectedItem = ref<string | null>();
 watch(selectedItem, async (newValue, oldValue) => {
-	if (newValue) {
+	if (newValue || items_changed) {
 		emit('update:selectedItem', newValue);
+		items_changed = false;
 	} else if (oldValue) {
 		selectedItem.value = oldValue;
 	}
@@ -57,6 +62,7 @@ function pickDefaultItemIfOnlyOne() {
 watch(
 	() => props.items,
 	() => {
+		items_changed = true;
 		selectedItem.value = null;
 		pickDefaultItemIfOnlyOne();
 	}

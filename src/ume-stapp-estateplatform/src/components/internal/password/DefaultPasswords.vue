@@ -22,6 +22,7 @@
 					"
 					itemTitle="name"
 					itemValue="id"
+					:menuProps="autocompleteMenuProps"
 				/>
 				<base-autocomplete
 					class="b-auto"
@@ -32,6 +33,7 @@
 					"
 					itemTitle="name"
 					itemValue="id"
+					:menuProps="autocompleteMenuProps"
 				/>
 			</div>
 			<v-btn
@@ -92,6 +94,7 @@ import {
 	TemplateConnectionType,
 } from '@/models/Enums';
 import BaseBackButton from '@/components/base/BaseBackButton.vue';
+import { appInsights } from '@/plugins/appInsights';
 import AppLoadingSpinner from '@/components/app/AppLoadingSpinner.vue';
 import ConsumerTester from '@/components/internal/shared/ConsumerTester.vue';
 import DefaultPasswordsTable from './DefaultPasswordsTable.vue';
@@ -111,6 +114,8 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const route = useRoute();
 const store = useStore<IRootState>();
+
+const autocompleteMenuProps = { width: '300px' };
 
 const isBusyFetchingSchoolsAndClasses = ref<boolean>(false);
 const isBusyFetchingPasswords = ref<boolean>(false);
@@ -208,6 +213,18 @@ watch(selectedGroupId, () => {
 // Print
 function printClicked() {
 	window.print();
+
+	// Log print event to app insights
+	if (appInsights) {
+		appInsights.trackEvent({
+			name: 'DefaultPasswordPrintClicked',
+			properties: {
+				groupId: selectedGroupId.value,
+				schoolId: selectedSchoolId.value,
+				nrOfPasswords: fetchedPasswords.value.length,
+			},
+		});
+	}
 }
 
 function updateSortBy(value: ISortBy[]) {
