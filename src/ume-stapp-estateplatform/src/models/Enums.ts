@@ -109,7 +109,7 @@ export enum ConsentTemplateStatus {
 }
 
 export enum ConsentTemplateGuid {
-	New = 'new',
+	New = 'skapa-ny',
 }
 
 export enum TemplateConnectionType {

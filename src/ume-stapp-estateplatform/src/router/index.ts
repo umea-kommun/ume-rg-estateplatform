@@ -24,7 +24,7 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: '/consent',
+		path: '/samtycken',
 		name: MyPagesRoutes.ConsentStart,
 		component: ConsentStart,
 		meta: {
@@ -56,7 +56,7 @@ const routes: Array<RouteRecordRaw> = [
 
 	/** Internal routes */
 	{
-		path: '/internal',
+		path: '/internt',
 		name: MyPagesRoutes.InternalStart,
 		component: () => import('@/components/internal/InternalStart.vue'),
 		meta: {
@@ -67,7 +67,7 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: '/internal/consent/template',
+		path: '/internt/samtycken/mallar',
 		name: MyPagesRoutes.InternalConsentTemplateList,
 		component: () =>
 			import(
@@ -82,7 +82,7 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: '/internal/consent/template/:templateGuid',
+		path: '/internt/samtycken/mallar/:templateGuid',
 		name: MyPagesRoutes.InternalConsentTemplateEdit,
 		props: true,
 		component: () =>
@@ -98,7 +98,7 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: '/internal/consent/consumer',
+		path: '/internt/samtycken/svar',
 		name: MyPagesRoutes.InternalConsentConsumerList,
 		component: () =>
 			import(
@@ -113,7 +113,7 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: '/internal/consent/consumer/:templateGuid,:groupId',
+		path: '/internt/samtycken/svar/:templateGuid,:groupId',
 		name: MyPagesRoutes.InternalConsentConsumerDetails,
 		component: () =>
 			import(
@@ -129,7 +129,7 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: '/internal/consent/agent',
+		path: '/internt/samtycken/ombud',
 		name: MyPagesRoutes.InternalConsentAgentStart,
 		component: () =>
 			import('@/components/internal/consent/agent/ConsentAgentStart.vue'),
@@ -142,7 +142,7 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: '/internal/consent/agent/edit',
+		path: '/internt/samtycken/ombud/svara',
 		name: MyPagesRoutes.InternalConsentAgentEdit,
 		component: () =>
 			import('@/components/internal/consent/agent/ConsentAgentEdit.vue'),
@@ -155,7 +155,7 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: '/internal/kvittens',
+		path: '/internt/kvittens',
 		name: MyPagesRoutes.InternalKvittensSummary,
 		component: () =>
 			import('@/components/internal/kvittens/KvittensSummary.vue'),
@@ -168,7 +168,7 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: '/internal/defaultpasswords',
+		path: '/internt/tilldelade-losenord',
 		name: MyPagesRoutes.InternalDefaultPassword,
 		component: () =>
 			import('@/components/internal/password/DefaultPasswords.vue'),
@@ -185,7 +185,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		component: AuthLogin,
 		name: MyPagesRoutes.AuthLogin,
-		path: '/login',
+		path: '/logga-in',
 		props: true,
 		meta: {
 			requiresUnauthenticated: true,

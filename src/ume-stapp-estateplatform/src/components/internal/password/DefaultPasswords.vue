@@ -39,7 +39,7 @@
 			<v-btn
 				variant="outlined"
 				:disabled="fetchedPasswords.length === 0"
-				class="print-btn"
+				class="print-btn regular-text"
 				prepend-icon="print"
 				@click="printClicked"
 				>{{ $t('component.internal.defaultPasswords.print') }}</v-btn
@@ -276,8 +276,7 @@ const contentSize = ref<AppContentSize>(
 	border: thin solid $grey-lighten-6;
 	height: 40px;
 	margin: 0px;
-	text-transform: none;
-	font-size: 16px;
+	font-size: size(16);
 	margin-top: 3%;
 }
 .dropdowns {
