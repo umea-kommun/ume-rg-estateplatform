@@ -7,6 +7,8 @@ export enum MyPagesRoutes {
 	KvittensStart = 'KvittensStart',
 	KvittensDetails = 'KvittensDetails',
 
+	GradeStart = 'GradeStart',
+
 	InternalStart = 'InternalStart',
 	InternalConsentTemplateList = 'Internal.ConsentTemplateList',
 	InternalConsentTemplateEdit = 'Internal.ConsentTemplateEdit',

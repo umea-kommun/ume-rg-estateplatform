@@ -7,6 +7,7 @@ import mutations from './mutations';
 import VuexPersist from 'vuex-persist';
 import kvittensStore from './kvittens/store';
 import passwordStore from './password/store';
+import gradeStore from './grade/store';
 
 // export default createStore({
 //   state: {},
@@ -47,6 +48,7 @@ const store: StoreOptions<IRootState> = {
 	modules: {
 		kvittens: kvittensStore,
 		password: passwordStore,
+		grade: gradeStore,
 	},
 };
 

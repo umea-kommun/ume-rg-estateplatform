@@ -53,6 +53,16 @@ const routes: Array<RouteRecordRaw> = [
 			contentSize: AppContentSize.Narrow,
 		},
 	},
+	{
+		path: '/betyg',
+		name: MyPagesRoutes.GradeStart,
+		component: () => import('@/components/external/grade/GradeStart.vue'),
+		meta: {
+			requiresExternalLogin: true,
+			contentSize: AppContentSize.Wide,
+			breadcrumb: () => [{ name: 'AppStart', to: '/' }],
+		},
+	},
 
 	/** Internal routes */
 	{

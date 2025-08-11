@@ -121,6 +121,10 @@
 				"unansweredKvittens1": "You have",
 				"unansweredKvittens2": "unanswered receipts. | unanswered receipt. | unanswered receipts.",
 				"unansweredKvittensNotLoaded": "Answer receipts for yourself or your children."
+			},
+			"grade": {
+				"title": "My grades",
+				"description": "Get your upper secondary school grades."
 			}
 		},
 		"pageNotFound": {
@@ -228,6 +232,16 @@
 				"kvittensFor": "Receipt for {name}",
 				"XofYHasAnswered": "{answered}/{total} has answered",
 				"allHaveAnswered": "All have answered"
+			},
+			"gradeStart": {
+				"title": "My grades",
+				"description": "Here you can download your upper secondary school grades.",
+				"explanation": "Your grades will be sent to the city archives approximately two years after your graduation. If it has not been two years yet, you can contact your upper secondary school to get your grades. Find out more at",
+				"explanationLink": "Umeå municipality's website for the city archive.",
+				"noResults": "We could not find any of your grades in the archive."
+			},
+			"gradeListItem": {
+				"download": "Open grades"
 			}
 		},
 		"internal": {

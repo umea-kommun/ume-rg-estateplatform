@@ -88,6 +88,10 @@ export enum DispatchType {
 	// Password
 	GetConsumerGroupsAndSchools = 'getConsumerGroupsAndSchools',
 	GetDefaultPasswordAssignments = 'getDefaultPasswordAssignments',
+
+	// Grades
+	GetGrades = 'getGrades',
+	DownloadGrade = 'downloadGrade',
 }
 
 export enum ConsentStatus {

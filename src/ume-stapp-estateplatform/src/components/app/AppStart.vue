@@ -90,6 +90,19 @@
 							</span>
 						</v-card-text>
 					</v-card>
+					<v-card
+						:to="{ name: MyPagesRoutes.GradeStart }"
+						class="action-card"
+					>
+						<v-card-title>
+							{{ $t('component.appStart.grade.title') }}
+							<v-icon icon="arrow_forward"></v-icon>
+						</v-card-title>
+
+						<v-card-text class="mt-4 mb-2">
+							{{ $t('component.appStart.grade.description') }}
+						</v-card-text>
+					</v-card>
 				</v-col>
 			</v-row>
 		</div>

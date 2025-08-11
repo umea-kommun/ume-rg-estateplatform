@@ -121,6 +121,10 @@
 				"unansweredKvittens1": "Du har",
 				"unansweredKvittens2": "obesvarade kvittenser. | obesvarad kvittens. | obesvarade kvittenser.",
 				"unansweredKvittensNotLoaded": "Besvara kvittenser för dig själv eller dina barn."
+			},
+			"grade": {
+				"title": "Mina betyg",
+				"description": "Hämta dina betyg från gymnasiet."
 			}
 		},
 		"pageNotFound": {
@@ -228,6 +232,16 @@
 				"kvittensFor": "Kvittens för {name}",
 				"XofYHasAnswered": "{answered}/{total} har kvitterat",
 				"allHaveAnswered": "Alla har kvitterat"
+			},
+			"gradeStart": {
+				"title": "Mina betyg",
+				"description": "Här kan du hämta hem dina gymnasiebetyg från stadsarkivet.",
+				"explanation": "Betygen kommer till stadsarkivet ungefär två år efter att du har avslutat din gymnasieutbildning. Om det inte har gått två år än kan du vända dig till din gymnasieskola för att få dina betyg. Läs mer på",
+				"explanationLink": "Umeå kommuns hemsida för stadsarkivet.",
+				"noResults": "Vi kunde inte hitta några av dina betyg i arkivet."
+			},
+			"gradeListItem": {
+				"download": "Öppna betyg"
 			}
 		},
 		"internal": {
@@ -444,7 +458,7 @@
 					"name": "Namn",
 					"dateOfBirth": "Födelsedatum",
 					"password": "Lösenord",
-                    "email": "Email"
+					"email": "Email"
 				},
 				"noResults": "Vi hittade inga lösenord för elever i denna klass/avdelning/grupp.",
 				"groupType": {
@@ -453,7 +467,7 @@
 					"class": "Klasser"
 				},
 				"print": "Skriv ut",
-                "noPassword": "Lösenord saknas"
+				"noPassword": "Lösenord saknas"
 			}
 		},
 		"kvittensUserAnswer": {
