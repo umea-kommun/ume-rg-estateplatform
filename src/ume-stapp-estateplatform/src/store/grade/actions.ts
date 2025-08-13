@@ -38,7 +38,12 @@ export default {
 				}
 			);
 
-			window.open(URL.createObjectURL(response.data), '_blank');
+			const blobUrl = URL.createObjectURL(response.data);
+			const newWindow = window.open(blobUrl, '_blank');
+
+			if (!newWindow) {
+				window.location.href = blobUrl;
+			}
 		} catch (err) {
 			ErrorService.onError({ err });
 		}
