@@ -1,7 +1,7 @@
 import { KvittensStatus } from './Enums';
 
 export interface IKvittensState {
-	kvittensList: IKvittens[];
+	kvittensList?: IKvittens[];
 }
 
 export interface IKvittens {

@@ -33,6 +33,7 @@ export enum MutationType {
 	// Guardian consent
 	GetGuardianConsent = 'getGuardianConsent',
 	GetGuardianConsentList = 'getGuardianConsentList',
+	UpdateGuardianConsentListAnswer = 'updateGuardianConsentListAnswer',
 	GetChildren = 'getChildren',
 
 	// Consent template admin

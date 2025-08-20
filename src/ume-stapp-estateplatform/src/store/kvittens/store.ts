@@ -3,9 +3,7 @@ import actions from './actions';
 import mutations from './mutations';
 import getters from './getters';
 
-const state: IKvittensState = {
-	kvittensList: [],
-};
+const state: IKvittensState = {};
 
 export default {
 	state,

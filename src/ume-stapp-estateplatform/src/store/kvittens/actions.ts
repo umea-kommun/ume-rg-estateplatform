@@ -23,6 +23,9 @@ export default {
 		context: ActionContext<IKvittensState, IRootState>,
 		{ hideError } = { hideError: false }
 	) {
+		if (context.state.kvittensList) {
+			return;
+		}
 		try {
 			const response = await httpClient.get(
 				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_KVITTENS +

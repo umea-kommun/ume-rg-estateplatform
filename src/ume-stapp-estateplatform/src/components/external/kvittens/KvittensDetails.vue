@@ -227,7 +227,7 @@ const kvittensSentInAnswersCount = computed(
 );
 
 const nextKvittensToAnswer = computed(() => {
-	return store.state.kvittens?.kvittensList.find(
+	return store.state.kvittens?.kvittensList?.find(
 		(kvittens) =>
 			kvittens.localId !== props.localId &&
 			kvittens.linkedPersons.find(
@@ -278,7 +278,7 @@ const loadKvittens = async () => {
 
 	// Find the kvittens with the matching localId in state
 	// We use the localId since we don't want to put SSN in the url and the real id is not unique
-	const kvittensInStore = store.state.kvittens?.kvittensList.find(
+	const kvittensInStore = store.state.kvittens?.kvittensList?.find(
 		(k) => k.localId === props.localId
 	);
 	if (kvittensInStore) {

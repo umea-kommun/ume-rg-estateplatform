@@ -16,7 +16,7 @@ export default {
 			hasAnswered,
 		}: { localId: string; linkedPersonSSN: string; hasAnswered: boolean }
 	) => {
-		state.kvittensList.forEach((kvittens) => {
+		state.kvittensList?.forEach((kvittens) => {
 			if (kvittens.localId === localId) {
 				kvittens.linkedPersons.forEach((linkedPerson) => {
 					if (linkedPerson.socialSecurityNumber === linkedPersonSSN) {

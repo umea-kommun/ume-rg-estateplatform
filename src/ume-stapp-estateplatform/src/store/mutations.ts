@@ -1,4 +1,9 @@
-import { ConsentTemplateStatus, MutationType } from '@/models/Enums';
+import {
+	ConsentStatus,
+	ConsentTemplateStatus,
+	MutationType,
+	UserConsentStatus,
+} from '@/models/Enums';
 import {
 	IRootState,
 	IUserContactInfo,
@@ -94,6 +99,26 @@ export default {
 		consents: IChildConsent[]
 	) => {
 		state.childConsentList = consents;
+	},
+
+	[MutationType.UpdateGuardianConsentListAnswer]: (
+		state: IRootState,
+		payload: {
+			templateGuid: string;
+			childSSN: string;
+			guardianStatus: UserConsentStatus;
+			consentStatus: ConsentStatus;
+		}
+	) => {
+		state.childConsentList?.forEach((consent) => {
+			if (
+				consent.templateGuid === payload.templateGuid &&
+				consent.childSSNo === payload.childSSN
+			) {
+				consent.userStatus = payload.guardianStatus;
+				consent.consentStatus = payload.consentStatus;
+			}
+		});
 	},
 
 	[MutationType.GetConsentTemplates]: (

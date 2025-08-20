@@ -30,6 +30,9 @@ if ((Config.VUE_APP_MOCK_DATA || '').trim() === 'yes') {
 export default {
 	async getChildren(context: ActionContext<IRootState, IRootState>) {
 		try {
+			if (context.state.guardianUser?.children) {
+				return;
+			}
 			const response = await httpClient.get(
 				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_CHILDREN + '/children',
 				{
@@ -87,6 +90,9 @@ export default {
 		{ hideError } = { hideError: false }
 	) {
 		try {
+			if (context.state.childConsentList) {
+				return;
+			}
 			const response = await httpClient.get(
 				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_CONSENT +
 					'/childrenconsentlist',
@@ -177,6 +183,12 @@ export default {
 					MutationType.GetGuardianConsent,
 					updatedGuardianConsent
 				);
+				context.commit(MutationType.UpdateGuardianConsentListAnswer, {
+					childSSN: updatedGuardianConsent.childSSNo,
+					templateGuid: updatedGuardianConsent.templateGuid,
+					guardianStatus: payload.guardianStatus,
+					consentStatus: updatedGuardianConsent.consentStatus,
+				});
 			}
 		} catch (err) {
 			ErrorService.onError({ err });
