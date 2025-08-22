@@ -237,9 +237,10 @@
 			"gradeStart": {
 				"title": "Mina betyg",
 				"description": "Här kan du hämta hem dina gymnasiebetyg från stadsarkivet.",
-				"explanation": "Betygen kommer till stadsarkivet ungefär två år efter att du har avslutat din gymnasieutbildning. Om det inte har gått två år än kan du vända dig till din gymnasieskola för att få dina betyg. Läs mer på",
-				"explanationLink": "Umeå kommuns hemsida för stadsarkivet.",
-				"noResults": "Vi kunde inte hitta några av dina betyg i arkivet."
+				"explanationPart1": "Saknas något betyg? Det kan bero på olika orsaker. Du kan skicka in en förfrågan via vårt webbformulär som du hittar på vår hemsida: ",
+				"explanationPart2": "Om du fortfarande studerar eller har hoppat av gymnasiet ska du kontakta din gymnasieskola för att få betygen.",
+				"explanationLink": "Beställ kopia på betyg",
+				"noResults": "Kunde inte hitta några av dina betyg i arkivet."
 			},
 			"gradeListItem": {
 				"download": "Öppna betyg"

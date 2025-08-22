@@ -11,18 +11,22 @@
 		<div class="d-flex flex-wrap justify-space-between top-wrap">
 			<h1>{{ $t('component.external.gradeStart.title') }}</h1>
 		</div>
-		<p>
+		<p class="mt-2">
 			{{ $t('component.external.gradeStart.description') }}
-			{{ $t('component.external.gradeStart.explanation') }}
+		</p>
+		<p class="mt-2">
+			{{ $t('component.external.gradeStart.explanationPart1') }}
 			<a :href="Config.VUE_APP_GRADE_HELP_URL" target="_blank">
 				{{ $t('component.external.gradeStart.explanationLink') }}
 			</a>
 		</p>
-
+		<p>
+			{{ $t('component.external.gradeStart.explanationPart2') }}
+		</p>
 		<v-alert v-if="!grades.length" icon="warning" class="mt-6">
 			{{ $t('component.external.gradeStart.noResults') }}
 		</v-alert>
-		<div v-else class="mt-4">
+		<div v-else class="mt-6">
 			<div
 				v-for="(schoolGrades, schoolName) in gradesGroupedBySchool"
 				:key="schoolName"

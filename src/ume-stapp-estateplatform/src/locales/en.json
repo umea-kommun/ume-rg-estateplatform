@@ -237,8 +237,9 @@
 			"gradeStart": {
 				"title": "My grades",
 				"description": "Here you can download your upper secondary school grades.",
-				"explanation": "Your grades will be sent to the city archives approximately two years after your graduation. If it has not been two years yet, you can contact your upper secondary school to get your grades. Find out more at",
-				"explanationLink": "Umeå municipality's website for the city archive.",
+				"explanationPart1": "Is a grade missing? There could be various reasons for this. You can submit a request via our web form, which you will find on our website: ",
+				"explanationPart2": "If you are still studying or have dropped out of upper secondary school, you should contact your upper secondary school to obtain your grades.",
+				"explanationLink": "Order a copy of grades",
 				"noResults": "We could not find any of your grades in the archive."
 			},
 			"gradeListItem": {
