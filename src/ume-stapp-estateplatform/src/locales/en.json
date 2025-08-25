@@ -1,7 +1,6 @@
 {
 	"app": {
 		"title": "My pages - Umeå municipality",
-		"errorbanner": "There is a lot of traffic on My Pages right now. If you encounter problems, please try again in a few minutes. Measures to increase performance are ongoing.",
 		"nav": {
 			"close": "Close",
 			"save": "Save",

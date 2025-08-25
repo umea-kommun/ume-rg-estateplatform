@@ -1,7 +1,6 @@
 {
 	"app": {
 		"title": "Mina sidor - Umeå kommun",
-		"errorbanner": "Det är mycket trafik på Mina sidor just nu. Om du får problem, försök igen om en stund. Åtgärder för att öka prestanda pågår.",
 		"nav": {
 			"close": "Stäng",
 			"save": "Spara",
