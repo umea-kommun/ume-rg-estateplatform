@@ -181,6 +181,12 @@
 			"reloadingText": "Fetching consents..."
 		},
 		"external": {
+			"common": {
+				"nonFolkbokfordAlert": {
+					"title": "Response via representative required",
+					"text": "One of your child's guardians is not registered in Sweden. Therefore, the guardian cannot log in to My Pages. Contact your child's teacher for help in submitting answers via a representative."
+				}
+			},
 			"consent": {
 				"loading": "Loading consent...",
 				"goBack": "Go back",
@@ -459,7 +465,7 @@
 					"name": "Name",
 					"dateOfBirth": "Date of birth",
 					"password": "Password",
-                    "email": "Email"
+					"email": "Email"
 				},
 				"noResults": "We found no passwords for students in this class/department/group.",
 				"groupType": {
@@ -468,7 +474,7 @@
 					"class": "Classes"
 				},
 				"print": "Print",
-                "noPassword": "No password has been set"
+				"noPassword": "No password has been set"
 			}
 		},
 		"kvittensUserAnswer": {
@@ -488,9 +494,9 @@
 			"loginMethodHelpPart2": "Log in with your employee account to handle cases and use e-services in your professional role at Umeå Municipality.",
 			"aboutEId": "Want to know more about or get an e-ID?"
 		},
-        "baseAutocomplete": {
-            "noDataAvailable": "No matching results."
-        }
+		"baseAutocomplete": {
+			"noDataAvailable": "No matching results."
+		}
 	},
 	"consent": {
 		"userStatus": {

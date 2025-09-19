@@ -101,14 +101,14 @@ export interface IUser {
 	groups?: string[];
 }
 
-//child
-export interface IItem {
-	title?: string; // name
-	value?: string; // SsNo
+export interface IChild {
+	name: string;
+	socialSecurityNumber: string;
+	guardianIsNotFolkbokford: boolean;
 }
 
 export interface IGuardianUser {
-	children: IItem[];
+	children: IChild[];
 }
 
 /**

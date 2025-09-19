@@ -17,27 +17,31 @@
 					class="select-wrap pa-0"
 					v-if="guardianChildren.length > 1"
 				>
-					<BaseSelectList
-						id="listOfChildren"
-						v-model="selectedValue"
+					<v-select
+						v-model="selectedChildSSNo"
 						:items="guardianChildren"
+						clearable
 						:label="$t('component.consentStart.selectListTitle')"
-						box
+						variant="outlined"
+						density="comfortable"
+						color="primary"
+						item-title="name"
+						item-value="socialSecurityNumber"
+						class="mt-2"
+						hide-details
 					/>
 				</v-col>
 			</v-row>
-			<v-row class="mt-2">
+			<non-folkbokford-alert :children="guardianChildren" />
+			<v-row class="mt-4">
 				<v-alert
-					v-if="
-						!consentItems.length &&
-						selectedValue === showAllItem.value
-					"
+					v-if="!consentItems.length && !selectedChildSSNo"
 					icon="warning"
 				>
 					{{ $t('component.consentStart.noResults') }}
 				</v-alert>
 				<v-alert
-					v-else-if="!consentItems.length && selectedValue"
+					v-else-if="!consentItems.length && selectedChildSSNo"
 					icon="warning"
 				>
 					{{ $t('component.consentStart.noFilterResults') }}
@@ -50,7 +54,6 @@
 					:headers="headers"
 					:items="consentItems"
 					item-value="guid"
-					class="mt-3"
 					:loading="isBusyRefetchingList && !showConsentModal"
 					:loading-text="$t('component.consentStart.reloadingText')"
 				>
@@ -155,12 +158,12 @@ import store from '@/store/store';
 import { DispatchType } from '@/models/Enums';
 import { computed } from 'vue';
 import BaseBackButton from '@/components/base/BaseBackButton.vue';
-import BaseSelectList from '@/components/base/BaseSelectList.vue';
-import BaseTablePagination from '@/components/base/baseTable/BaseTablePagination.vue';
 import BaseTableHeader from '@/components/base/baseTable/BaseTableHeader.vue';
+import BaseTablePagination from '@/components/base/baseTable/BaseTablePagination.vue';
+import NonFolkbokfordAlert from '@/components/external/common/NonFolkbokfordAlert.vue';
 import { getConsentStatusText } from '@/utils/utils';
 import { useI18n } from 'vue-i18n';
-import { IItem, ISortBy, ITableHeader } from '@/models/Interfaces';
+import { ISortBy, ITableHeader } from '@/models/Interfaces';
 import ConsentEditModal from './ConsentEditModal.vue';
 import { MyPagesRoutes } from '@/router/routes';
 
@@ -247,23 +250,11 @@ const showConsentModal = computed({
 	},
 });
 
-const showAllItem: IItem = {
-	title: t('component.consentStart.showAll'),
-	value: '-showAllItems-',
-};
-const selectedValue = ref(showAllItem.value);
-const guardianChildren = computed(() => {
-	if (store.state.guardianUser !== null) {
-		const children = store.state.guardianUser.children;
-		const showAllElement: IItem[] = [showAllItem];
-		return showAllElement.concat(children);
-	} else return [];
-});
+const selectedChildSSNo = ref<string | null>(null);
+const guardianChildren = computed(
+	() => store.state.guardianUser?.children ?? []
+);
 const consentItems = computed(() => {
-	const childItem = guardianChildren.value.find(
-		(child) => child.value === selectedValue.value
-	);
-
 	if (store.state.childConsentList) {
 		const x = store.state.childConsentList
 			.map<IConsentItem>((element) => {
@@ -279,9 +270,8 @@ const consentItems = computed(() => {
 			})
 			.filter(
 				(element) =>
-					!selectedValue.value ||
-					selectedValue.value === showAllItem.value ||
-					element.person === childItem?.title
+					!selectedChildSSNo.value ||
+					element.childSSNo === selectedChildSSNo.value
 			);
 
 		return x;

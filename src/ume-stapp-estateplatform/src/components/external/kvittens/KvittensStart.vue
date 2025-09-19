@@ -24,6 +24,8 @@
 					variant="outlined"
 					density="comfortable"
 					color="primary"
+					item-title="name"
+					item-value="socialSecurityNumber"
 					hide-details
 				/>
 			</div>
@@ -32,6 +34,7 @@
 			{{ $t('component.external.kvittensStart.description') }}
 		</p>
 
+		<non-folkbokford-alert :children="children" />
 		<v-alert
 			v-if="!kvittensList.length && filterOnChildSSNo"
 			icon="warning"
@@ -87,6 +90,7 @@ import { DispatchType } from '@/models/Enums';
 import { computed } from 'vue';
 import KvittensListItem from '@/components/external/kvittens/KvittensListItem.vue';
 import { MyPagesRoutes } from '@/router/routes';
+import NonFolkbokfordAlert from '@/components/external/common/NonFolkbokfordAlert.vue';
 
 const route = useRoute();
 const isBusyLoadingFromServer = ref<boolean>(false);

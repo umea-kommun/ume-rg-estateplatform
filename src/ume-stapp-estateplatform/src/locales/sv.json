@@ -181,6 +181,12 @@
 			"reloadingText": "Hämtar samtycken..."
 		},
 		"external": {
+			"common": {
+				"nonFolkbokfordAlert": {
+					"title": "Svar via ombud krävs",
+					"text": "En av ditt barns vårdnadshavare är inte folkbokförd i Sverige. Därför kan vårdnadshavaren inte logga in på Mina sidor. Kontakta ditt barns lärare för att få hjälp med att lämna svar via ombud."
+				}
+			},
 			"consent": {
 				"loading": "Läser in samtycke...",
 				"goBack": "Gå tillbaka",
@@ -488,9 +494,9 @@
 			"loginMethodHelpPart2": "Logga in med ditt personalkonto för att handlägga ärenden och använda e-tjänster i din yrkesroll.",
 			"aboutEId": "Vill du veta mer om eller skaffa en e-legitimation?"
 		},
-        "baseAutocomplete": {
-            "noDataAvailable": "Inga matchande resultat."
-        }
+		"baseAutocomplete": {
+			"noDataAvailable": "Inga matchande resultat."
+		}
 	},
 	"consent": {
 		"userStatus": {

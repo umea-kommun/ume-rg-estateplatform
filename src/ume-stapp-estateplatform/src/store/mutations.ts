@@ -15,10 +15,10 @@ import {
 	IConsumerGroup,
 	IConsentConsumerTemplate,
 	IConsentTemplateWithConsents,
-	IItem,
 	IConsentTemplateGroup,
 	ITesterTestAsPerson,
 	IError,
+	IChild,
 } from '@/models/Interfaces';
 import { Helper } from '@/utils/helper';
 import moment from 'moment';
@@ -76,7 +76,7 @@ export default {
 
 	[MutationType.GetChildren]: (
 		state: IRootState,
-		payload: IItem[] | null
+		payload: IChild[] | null
 	) => {
 		if (state.guardianUser) {
 			state.guardianUser.children = payload || [];

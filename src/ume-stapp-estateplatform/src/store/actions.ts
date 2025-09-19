@@ -13,11 +13,11 @@ import {
 	IGuardianConsent,
 	IConsentTemplateWithConsents,
 	IAgentConsent,
+	IChild,
 } from '@/models/Interfaces';
 import setupMock from '@/store/mock';
 import Axios, { AxiosError } from 'axios';
 import { ActionContext } from 'vuex';
-import { IItem } from '@/models/Interfaces';
 import ErrorService, { ComposedError } from '@/utils/ErrorService';
 import { mappingHelper } from '../store/mappingHelper';
 
@@ -42,7 +42,7 @@ export default {
 				}
 			);
 
-			const items: IItem[] = mappingHelper.mapResponseChildDataToItem(
+			const items: IChild[] = mappingHelper.mapResponseChildDataToItem(
 				response.data
 			);
 

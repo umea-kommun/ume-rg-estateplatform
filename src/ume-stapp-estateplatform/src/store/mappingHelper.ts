@@ -1,9 +1,9 @@
 import {
 	IAgentConsent,
+	IChild,
 	IGuardian,
 	IGuardianConsent,
 	IGuardianConsentHistory,
-	IItem,
 	IResponseConsent,
 } from '@/models/Interfaces';
 import { ConsentStatus, UserConsentStatus } from '@/models/Enums';
@@ -74,13 +74,13 @@ export class mappingHelper {
 		responseChildren: {
 			name: string;
 			socialSecurityNumber: string;
+			guardianIsNotFolkbokford?: boolean;
 		}[]
-	): IItem[] {
-		return responseChildren.map(
-			(element: { name: string; socialSecurityNumber: string }) => ({
-				title: element.name,
-				value: element.socialSecurityNumber,
-			})
-		);
+	): IChild[] {
+		return responseChildren.map((element) => ({
+			name: element.name,
+			socialSecurityNumber: element.socialSecurityNumber,
+			guardianIsNotFolkbokford: element.guardianIsNotFolkbokford ?? false,
+		}));
 	}
 }
