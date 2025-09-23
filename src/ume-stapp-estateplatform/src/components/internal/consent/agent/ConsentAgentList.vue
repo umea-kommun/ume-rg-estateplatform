@@ -53,24 +53,18 @@
 			/>
 		</template>
 	</v-data-table>
+	<consent-agent-edit-modal v-model="showConsentEditModal" />
 </template>
 
 <script setup lang="ts">
 import BaseTableHeader from '@/components/base/baseTable/BaseTableHeader.vue';
 import BaseTablePagination from '@/components/base/baseTable/BaseTablePagination.vue';
-import { ConsentStatus, MutationType } from '@/models/Enums';
-import {
-	IChildConsent,
-	IRootState,
-	ISortBy,
-	ITableHeader,
-} from '@/models/Interfaces';
-import { MyPagesRoutes } from '@/router/routes';
+import { ConsentStatus } from '@/models/Enums';
+import { IChildConsent, ISortBy, ITableHeader } from '@/models/Interfaces';
 import { getConsentStatusText } from '@/utils/utils';
 import { PropType, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import ConsentAgentEditModal from '@/components/internal/consent/agent/ConsentAgentEditModal.vue';
 
 defineProps({
 	consents: {
@@ -80,8 +74,6 @@ defineProps({
 });
 
 const { t } = useI18n();
-const store = useStore<IRootState>();
-const router = useRouter();
 
 const page = ref(1);
 const itemsPerPage = ref(10);
@@ -107,11 +99,16 @@ const headers: ITableHeader[] = [
 	},
 ];
 
+const showConsentEditModal = ref<{
+	childSSNo: string;
+	templateGuid: string;
+} | null>(null);
+
 const openConsent = (consent: IChildConsent) => {
-	store.commit(MutationType.OpenConsentAgentEdit, consent);
-	router.push({
-		name: MyPagesRoutes.InternalConsentAgentEdit,
-	});
+	showConsentEditModal.value = {
+		childSSNo: consent.childSSNo,
+		templateGuid: consent.templateGuid,
+	};
 };
 </script>
 

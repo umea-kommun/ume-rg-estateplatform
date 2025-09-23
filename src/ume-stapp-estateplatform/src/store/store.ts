@@ -25,7 +25,6 @@ const state: IRootState = {
 	} as IUser,
 	consumer: {},
 	tester: {},
-	agent: {},
 
 	guardianUser: null,
 };

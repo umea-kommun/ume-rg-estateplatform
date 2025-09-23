@@ -50,7 +50,8 @@ export enum MutationType {
 	GetConsumerDetails = 'getConsumerDetails',
 
 	// Consent Agent
-	OpenConsentAgentEdit = 'openConsentAgentEdit',
+	UpdateConsentAgentConsentList = 'updateConsentAgentConsentList',
+	UpdateConsentAgentConsentStatus = 'updateConsentAgentConsentStatus',
 
 	// Tester
 	GetTesterSchoolUnits = 'getTesterSchoolUnits',

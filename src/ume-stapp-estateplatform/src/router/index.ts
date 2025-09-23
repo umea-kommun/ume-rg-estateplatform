@@ -152,19 +152,6 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: '/internt/samtycken/ombud/svara',
-		name: MyPagesRoutes.InternalConsentAgentEdit,
-		component: () =>
-			import('@/components/internal/consent/agent/ConsentAgentEdit.vue'),
-		meta: {
-			requiresInternalLogin: true,
-			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_CONSUMER_ID,
-			contentSize: AppContentSize.Narrow,
-			title: AppHeaderTitle.AgentConsent,
-			breadcrumb: () => [],
-		},
-	},
-	{
 		path: '/internt/kvittens',
 		name: MyPagesRoutes.InternalKvittensSummary,
 		component: () =>

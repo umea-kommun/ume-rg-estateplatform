@@ -18,6 +18,7 @@ import {
 	IConsentTemplateGroup,
 	ITesterTestAsPerson,
 	IError,
+	IAgentConsent,
 	IChild,
 } from '@/models/Interfaces';
 import { Helper } from '@/utils/helper';
@@ -203,10 +204,23 @@ export default {
 		state.tester.testAsPerson = testAsPerson;
 	},
 
-	[MutationType.OpenConsentAgentEdit]: (
+	[MutationType.UpdateConsentAgentConsentList]: (
 		state: IRootState,
-		consent: IChildConsent
+		consents: IChildConsent[]
 	) => {
-		state.agent.activeEditConsent = consent;
+		state.consentAgentConsentList = consents ?? [];
+	},
+	[MutationType.UpdateConsentAgentConsentStatus]: (
+		state: IRootState,
+		updatedConsent: IAgentConsent
+	) => {
+		state.consentAgentConsentList?.forEach((consent) => {
+			if (
+				consent.templateGuid === updatedConsent.templateGuid &&
+				consent.childSSNo === updatedConsent.childSSNo
+			) {
+				consent.consentStatus = updatedConsent.consentStatus;
+			}
+		});
 	},
 };

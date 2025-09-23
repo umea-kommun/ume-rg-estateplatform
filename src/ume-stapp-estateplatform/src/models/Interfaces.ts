@@ -17,12 +17,12 @@ export interface IRootState {
 	childConsentList?: IChildConsent[];
 	guardianConsent?: IGuardianConsent;
 	guardianUser: null | IGuardianUser;
+	consentAgentConsentList?: IChildConsent[];
 	consentTemplates?: null | IConsentTemplate[];
 	consentTemplate?: null | IConsentTemplate;
 	consentTemplateGroups?: null | IConsentTemplateGroup[];
 	consentTemplateUnitTypes?: string[];
 	consumer: IConsentConsumerState;
-	agent: IConsentAgentState;
 	tester: ITesterState;
 	error?: IError | null;
 	hideWarningMessage?: null | boolean;
@@ -246,9 +246,6 @@ export interface IConsentConsumerState {
 	groups?: IConsumerGroup[];
 	templates?: IConsentConsumerTemplate[];
 	templateWithConsents?: IConsentTemplateWithConsents;
-}
-export interface IConsentAgentState {
-	activeEditConsent?: IChildConsent;
 }
 export interface IConsentAgentEditData {
 	childSSNo: string;

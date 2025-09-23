@@ -7,7 +7,6 @@
 		aria-labelledby="consent-title"
 		aria-live="polite"
 		:aria-busy="isBusySendingToServer"
-		:retain-focus="!showingConfirmDialog"
 		:persistent="true"
 	>
 		<v-card>
@@ -151,8 +150,6 @@ import { UserConsentStatus } from '@/models/Enums';
 import { getConsentUserStatusText } from '@/utils/utils';
 import BaseFormField from '@/components/base/BaseFormField.vue';
 import BaseHelpAndErrorText from '@/components/base/BaseHelpAndErrorText.vue';
-import { useTConfirmDialog } from '@turkos/components';
-import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { compressImageFile } from '@/utils/imageUtils';
 import ErrorService from '@/utils/ErrorService';
@@ -169,7 +166,6 @@ const props = defineProps({
 	},
 });
 
-const { t } = useI18n();
 const emit = defineEmits(['update:modelValue', 'answerChanged']);
 const store = useStore<IRootState>();
 
@@ -183,7 +179,6 @@ const showModal = computed({
 const isBusySendingToServer = ref<boolean>(false);
 const guardianNewAnswer = ref<UserConsentStatus>();
 const guardianImage = ref<File | null>(null);
-const showingConfirmDialog = ref(false);
 
 watch(
 	() => showModal.value,
@@ -197,69 +192,40 @@ watch(
 );
 
 const guardianName = computed(() => {
-	return props.consent.linkedPersons.find(
-		(person) => person.socialSecurityNumber === props.guardianSSN
-	)?.name;
+	return (
+		props.consent.currentlyResponsiblePersons ?? props.consent.linkedPersons
+	).find((person) => person.socialSecurityNumber === props.guardianSSN)?.name;
 });
 
-const { tConfirmDialogAsync } = useTConfirmDialog();
 const updateGuardianAnswer = async () => {
 	if (
 		guardianNewAnswer.value &&
 		guardianImage.value &&
 		!isBusySendingToServer.value
 	) {
-		showingConfirmDialog.value = true;
-		const confirmed = await tConfirmDialogAsync(
-			t(
-				'component.internal.consentAgentGuardianEditModal.updateConsentConfirmTitle'
-			),
-			t(
-				'component.internal.consentAgentGuardianEditModal.updateConsentConfirmText',
-				{
-					guardianName: guardianName.value,
-					childName: props.consent.childName,
-					consentStatus: getConsentUserStatusText(
-						guardianNewAnswer.value
-					),
-					templateTitle: props.consent.title,
-				}
-			),
-			{
-				text: t(
-					'component.internal.consentAgentGuardianEditModal.updateConsentConfirmButton'
-				),
-			}
-		);
-		showingConfirmDialog.value = false;
-		if (confirmed) {
-			isBusySendingToServer.value = true;
-			try {
-				const compressedImage = await compressImageFile(
-					guardianImage.value
-				);
+		isBusySendingToServer.value = true;
+		try {
+			const compressedImage = await compressImageFile(
+				guardianImage.value
+			);
 
-				const updatedConsent = await store.dispatch(
-					'agentUpdateConsent',
-					{
-						templateGuid: props.consent.templateGuid,
-						childSSN: props.consent.childSSNo,
-						guardianStatus: guardianNewAnswer.value,
-						guardianSSN: props.guardianSSN,
-						image: compressedImage,
-						stamp: 'Stamp from BankId',
-						signType: store.state.user.idp,
-					}
-				);
-				if (updatedConsent) {
-					emit('answerChanged', updatedConsent);
-					showModal.value = false;
-				}
-			} catch (err) {
-				ErrorService.onError({ err });
+			const updatedConsent = await store.dispatch('agentUpdateConsent', {
+				templateGuid: props.consent.templateGuid,
+				childSSN: props.consent.childSSNo,
+				guardianStatus: guardianNewAnswer.value,
+				guardianSSN: props.guardianSSN,
+				image: compressedImage,
+				stamp: 'Stamp from BankId',
+				signType: store.state.user.idp,
+			});
+			if (updatedConsent) {
+				emit('answerChanged', updatedConsent);
+				showModal.value = false;
 			}
-			isBusySendingToServer.value = false;
+		} catch (err) {
+			ErrorService.onError({ err });
 		}
+		isBusySendingToServer.value = false;
 	}
 };
 </script>

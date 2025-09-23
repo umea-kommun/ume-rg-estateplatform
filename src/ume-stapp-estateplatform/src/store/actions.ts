@@ -589,6 +589,8 @@ export default {
 		params: { childSSN: string }
 	) {
 		try {
+			context.commit(MutationType.UpdateConsentAgentConsentList, []);
+
 			let URL;
 			let requestPayload;
 
@@ -617,13 +619,13 @@ export default {
 				},
 			});
 
-			if (response?.data) {
-				return response.data;
-			}
+			context.commit(
+				MutationType.UpdateConsentAgentConsentList,
+				response?.data
+			);
 		} catch (err) {
 			ErrorService.onError({ err });
 		}
-		return [];
 	},
 
 	async getAgentConsent(
@@ -729,6 +731,11 @@ export default {
 			if (response?.data) {
 				const updatedGuardianConsent: IAgentConsent =
 					mappingHelper.mapResponseDataToAgentConsent(response.data);
+
+				context.commit(
+					MutationType.UpdateConsentAgentConsentStatus,
+					updatedGuardianConsent
+				);
 
 				return updatedGuardianConsent;
 			}

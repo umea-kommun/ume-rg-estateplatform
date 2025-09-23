@@ -416,11 +416,6 @@
 				"noResult": "We could not find any consents for the specified student that you have access to see.",
 				"consentsTitle": "Consents for {childName}"
 			},
-			"consentAgentSearch": {
-				"childSSNTitle": "Enter the student's social security number",
-				"childSSNHelpText": "12 digits with or without a hyphen.",
-				"search": "Fetch consents"
-			},
 			"consentAgentList": {
 				"answer": "Update answer"
 			},
@@ -439,10 +434,7 @@
 				"alertPart1": "You will change ",
 				"alertPart2": " answer to ",
 				"alertPart3": " for ",
-				"updateButton": "Update answer",
-				"updateConsentConfirmTitle": "Confirm update",
-				"updateConsentConfirmText": "Are you sure you want to change the answer to \"{consentStatus}\" for guardian \"{guardianName}\"?",
-				"updateConsentConfirmButton": "Yes, update answer"
+				"updateButton": "Update answer"
 			},
 			"kvittensSummary": {
 				"title": "Summary of receipts",

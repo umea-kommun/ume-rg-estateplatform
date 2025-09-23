@@ -11,11 +11,9 @@
 			{{ $t('component.internal.consentAgentStart.description') }}
 		</p>
 
-		<v-row class="mt-6">
-			<v-col class="pa-0">
-				<consent-agent-search @child-search="fetchChildConsents" />
-			</v-col>
-		</v-row>
+		<student-filter
+			@student-selected="fetchChildConsents($event?.studentSsno)"
+		/>
 
 		<v-row v-if="isBusyFetchingConsents">
 			<v-col class="pa-0">
@@ -49,21 +47,21 @@
 import AppContent from '@/components/app/AppContent.vue';
 import BaseBackButton from '@/components/base/BaseBackButton.vue';
 import AppLoadingSpinner from '@/components/app/AppLoadingSpinner.vue';
-import ConsentAgentSearch from '@/components/internal/consent/agent/ConsentAgentSearch.vue';
 import { AppContentSize } from '@/models/Enums';
-import { IChildConsent, IRootState } from '@/models/Interfaces';
+import { IRootState } from '@/models/Interfaces';
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import ConsentAgentList from './ConsentAgentList.vue';
 import ConsumerTester from '@/components/internal/shared/ConsumerTester.vue';
+import StudentFilter from '../../shared/StudentFilter.vue';
 
 const route = useRoute();
 const store = useStore<IRootState>();
 
 const isBusyFetchingConsents = ref(false);
 
-const childConsents = ref<IChildConsent[] | null>(null);
+const childConsents = computed(() => store.state.consentAgentConsentList);
 
 const childName = computed(() => {
 	if (childConsents.value?.length) {
@@ -77,7 +75,7 @@ async function fetchChildConsents(childSSN: string) {
 		return;
 	}
 	isBusyFetchingConsents.value = true;
-	childConsents.value = await store.dispatch('getAgentChildConsentList', {
+	await store.dispatch('getAgentChildConsentList', {
 		childSSN,
 	});
 	isBusyFetchingConsents.value = false;

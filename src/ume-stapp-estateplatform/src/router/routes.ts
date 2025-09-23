@@ -15,7 +15,6 @@ export enum MyPagesRoutes {
 	InternalConsentConsumerList = 'Internal.ConsentConsumerList',
 	InternalConsentConsumerDetails = 'Internal.ConsentConsumerDetails',
 	InternalConsentAgentStart = 'Internal.ConsentAgentStart',
-	InternalConsentAgentEdit = 'Internal.ConsentAgentEdit',
 	InternalKvittensSummary = 'Internal.KvittensSummary',
 	InternalKvittensAgent = 'Internal.KvittensAgent',
 	InternalDefaultPassword = 'Internal.DefaultPassword',
