@@ -1,5 +1,11 @@
 import { MutationType } from '@/models/Enums';
-import { IKvittens, IKvittensState } from '@/models/kvittens/Interfaces';
+import { KvittensStatus } from '@/models/kvittens/Enums';
+import {
+	IAgentKvittens,
+	IKvittens,
+	IKvittensLinkedPerson,
+	IKvittensState,
+} from '@/models/kvittens/Interfaces';
 
 export default {
 	[MutationType.UpdateKvittensList]: (
@@ -23,6 +29,37 @@ export default {
 						linkedPerson.userHasAnswered = hasAnswered;
 					}
 				});
+			}
+		});
+	},
+	[MutationType.UpdateKvittensAgentList]: (
+		state: IKvittensState,
+		kvittensList: IAgentKvittens[]
+	) => {
+		state.kvittensAgentList = kvittensList;
+	},
+	[MutationType.UpdateAnswerInAgentKvittensList]: (
+		state: IKvittensState,
+		{
+			templateId,
+			subjectSsno,
+			linkedPersons,
+		}: {
+			templateId: string;
+			subjectSsno: string;
+			linkedPersons: IKvittensLinkedPerson[];
+		}
+	) => {
+		state.kvittensAgentList?.forEach((kvittens) => {
+			if (
+				kvittens.templateId === templateId &&
+				kvittens.personSSNo === subjectSsno
+			) {
+				if (linkedPersons.every((p) => p.userHasAnswered)) {
+					kvittens.status = KvittensStatus.Approved;
+				} else if (linkedPersons.some((p) => p.userHasAnswered)) {
+					kvittens.status = KvittensStatus.NotAnsweredByAll;
+				}
 			}
 		});
 	},

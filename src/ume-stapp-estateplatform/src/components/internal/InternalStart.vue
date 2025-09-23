@@ -118,6 +118,20 @@
 							)
 						}}
 					</v-btn>
+					<v-btn
+						variant="outlined"
+						size="x-large"
+						prependIcon="post_add"
+						:to="{
+							name: MyPagesRoutes.InternalKvittensAgent,
+						}"
+					>
+						{{
+							$t(
+								'component.internal.internalStart.kvittens.goToKvittensAgent'
+							)
+						}}
+					</v-btn>
 				</v-col>
 			</v-row>
 			<v-row class="mt-4" v-if="isPasswordConsumer">

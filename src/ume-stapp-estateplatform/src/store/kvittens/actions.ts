@@ -4,6 +4,7 @@ import Axios from 'axios';
 import { ActionContext } from 'vuex';
 import ErrorService from '@/utils/ErrorService';
 import {
+	IAgentKvittens,
 	IKvittens,
 	IKvittensDetails,
 	IKvittensState,
@@ -11,6 +12,7 @@ import {
 import { IRootState } from '@/models/Interfaces';
 import { MutationType } from '@/models/Enums';
 import kvittensMapper from './mapper';
+import { mappingHelper } from '../mappingHelper';
 
 const httpClient = Axios.create();
 if ((Config.VUE_APP_MOCK_DATA || '').trim() === 'yes') {
@@ -209,5 +211,157 @@ export default {
 		} catch (err) {
 			ErrorService.onError({ err });
 		}
+	},
+	async getAgentKvittensList(
+		context: ActionContext<IKvittensState, IRootState>,
+		studentSsno: string
+	) {
+		context.commit(MutationType.UpdateKvittensAgentList, []);
+		if (!studentSsno) {
+			return;
+		}
+
+		let URL;
+		let requestPayload;
+
+		if (context.rootState.tester.testAsPerson) {
+			URL =
+				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_KVITTENS_AGENT +
+				'/kvittensAgentGetKvittensBriefsTest';
+
+			requestPayload = {
+				pupilSsNo: studentSsno,
+				impersonatedPerson: mappingHelper.mapTesterToTestPerson(
+					context.rootState.tester.testAsPerson
+				),
+			};
+		} else {
+			URL =
+				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_KVITTENS_AGENT +
+				'/kvittensAgentGetKvittensBriefs';
+
+			requestPayload = { pupilSsNo: studentSsno };
+		}
+
+		const response = await httpClient.post(URL, requestPayload, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + context.rootState.user.token,
+			},
+		});
+
+		const kvittensList: IAgentKvittens[] =
+			kvittensMapper.mapResponseToAgentKvittensList(response.data);
+
+		context.commit(MutationType.UpdateKvittensAgentList, kvittensList);
+	},
+	async getAgentKvittensDetails(
+		context: ActionContext<IKvittensState, IRootState>,
+		{ studentSsno, templateId }: { studentSsno: string; templateId: string }
+	) {
+		let URL;
+		let requestPayload;
+
+		if (context.rootState.tester.testAsPerson) {
+			URL =
+				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_KVITTENS_AGENT +
+				'/kvittensAgentGetKvittensDetailsTest';
+
+			requestPayload = {
+				personSSNo: studentSsno,
+				templateId: templateId,
+				impersonatedPerson: mappingHelper.mapTesterToTestPerson(
+					context.rootState.tester.testAsPerson
+				),
+			};
+		} else {
+			URL =
+				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_KVITTENS_AGENT +
+				'/kvittensAgentGetKvittensDetails';
+
+			requestPayload = {
+				personSSNo: studentSsno,
+				templateId: templateId,
+			};
+		}
+
+		const response = await httpClient.post(URL, requestPayload, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + context.rootState.user.token,
+			},
+		});
+
+		const kvittensDetails: IKvittensDetails =
+			kvittensMapper.mapResponseToKvittensDetails(response.data);
+
+		return kvittensDetails;
+	},
+	async agentAnswerKvittens(
+		context: ActionContext<IKvittensState, IRootState>,
+		{
+			templateId,
+			subjectSsno,
+			respondents,
+			image,
+		}: {
+			templateId: string;
+			subjectSsno: string;
+			respondents: string[];
+			image: File;
+		}
+	) {
+		let URL;
+		const form = new FormData();
+		form.append('image', image, image.name);
+
+		if (context.rootState.tester.testAsPerson) {
+			URL =
+				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_KVITTENS_AGENT +
+				'/kvittensAgentAnswerTest';
+
+			form.append(
+				'body',
+				JSON.stringify({
+					personSSNo: subjectSsno,
+					templateId: templateId,
+					respondentsSsno: respondents,
+					impersonatedPerson: mappingHelper.mapTesterToTestPerson(
+						context.rootState.tester.testAsPerson
+					),
+				})
+			);
+		} else {
+			URL =
+				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_KVITTENS_AGENT +
+				'/kvittensAgentAnswer';
+
+			form.append(
+				'body',
+				JSON.stringify({
+					personSSNo: subjectSsno,
+					templateId: templateId,
+					respondentsSsno: respondents,
+				})
+			);
+		}
+
+		const response = await httpClient.post(URL, form, {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+				Authorization: 'Bearer ' + context.rootState.user.token,
+			},
+		});
+
+		const kvittensDetails: IKvittensDetails =
+			kvittensMapper.mapResponseToKvittensDetails(response.data);
+
+		context.commit(MutationType.UpdateAnswerInAgentKvittensList, {
+			templateId,
+			subjectSsno,
+			linkedPersons: kvittensDetails.linkedPersons,
+		});
+
+		return kvittensDetails;
 	},
 };

@@ -178,6 +178,19 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
+		path: '/internt/kvittens/ombud',
+		name: MyPagesRoutes.InternalKvittensAgent,
+		component: () =>
+			import('@/components/internal/kvittens/KvittensAgent.vue'),
+		meta: {
+			requiresInternalLogin: true,
+			requiresGroup: Config.VUE_APP_AUTH_GROUP_KVITTENS_CONSUMER_ID,
+			contentSize: AppContentSize.Wide,
+			title: AppHeaderTitle.AgentKvittens,
+			breadcrumb: () => [],
+		},
+	},
+	{
 		path: '/internt/tilldelade-losenord',
 		name: MyPagesRoutes.InternalDefaultPassword,
 		component: () =>

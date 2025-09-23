@@ -9,6 +9,7 @@ import {
 	IKvittensSummaryTemplate,
 	IKvittensSummaryStudent,
 	IKvittensSummaryStudentAnswer,
+	IAgentKvittens,
 } from '@/models/kvittens/Interfaces';
 import { Helper } from '@/utils/helper';
 
@@ -68,6 +69,8 @@ export default {
 		history: {
 			name: string;
 			date: string;
+			agentName?: string;
+			imageIdToken?: string;
 		}[];
 	}): IKvittensDetails => {
 		const linkedPersons: IKvittensLinkedPerson[] =
@@ -85,6 +88,8 @@ export default {
 				const linkedPerson: IKvittensHistory = {
 					name: historyData.name,
 					date: historyData.date,
+					agentName: historyData.agentName,
+					imageIdToken: historyData.imageIdToken,
 				};
 				return linkedPerson;
 			});
@@ -174,5 +179,26 @@ export default {
 			return student;
 		});
 		return { templates, students };
+	},
+	mapResponseToAgentKvittensList: (
+		kvittensListResponse: {
+			kvittensTemplateId: string;
+			title: string;
+			personName: string;
+			personSsNo: string;
+			status: number;
+		}[]
+	): IAgentKvittens[] => {
+		return kvittensListResponse.map((kvittensData) => {
+			const kvittens: IAgentKvittens = {
+				templateId: kvittensData.kvittensTemplateId,
+				title: kvittensData.title,
+				personName: kvittensData.personName,
+				personSSNo: kvittensData.personSsNo,
+				status: kvittensData.status,
+			};
+
+			return kvittens;
+		});
 	},
 };

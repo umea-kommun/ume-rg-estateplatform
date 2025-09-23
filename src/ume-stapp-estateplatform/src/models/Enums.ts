@@ -15,6 +15,7 @@ export enum AppHeaderTitle {
 	AdminConsent = 'adminConsent',
 	AgentConsent = 'agentConsent',
 	InternalKvittens = 'internalKvittens',
+	AgentKvittens = 'agentKvittens',
 	InternalDefaultPasswords = 'internalDefaultPasswords',
 }
 
@@ -61,6 +62,8 @@ export enum MutationType {
 	// Kvittens
 	UpdateKvittensList = 'updateKvittensList',
 	UpdateAnswerInKvittensList = 'updateAnswerInKvittensList',
+	UpdateKvittensAgentList = 'updateKvittensAgentList',
+	UpdateAnswerInAgentKvittensList = 'updateAnswerInAgentKvittensList',
 }
 
 export enum DispatchType {
@@ -79,12 +82,17 @@ export enum DispatchType {
 	GetTesterSchoolUnits = 'getTesterSchoolUnits',
 	GetTesterSchoolTeachers = 'getTesterSchoolTeachers',
 
+	GetStudentsInGroup = 'getStudentsInGroup',
+
 	// Kvittens
 	GetKvittensList = 'getKvittensList',
 	GetKvittensDetails = 'getKvittensDetails',
 	SaveKvittensAnswer = 'saveKvittensAnswer',
 	GetKvittensFilterGroups = 'getKvittensFilterGroups',
 	GetKvittensSummary = 'getKvittensSummary',
+	GetAgentKvittensList = 'getAgentKvittensList',
+	GetAgentKvittensDetails = 'getAgentKvittensDetails',
+	AgentAnswerKvittens = 'agentAnswerKvittens',
 
 	// Password
 	GetConsumerGroupsAndSchools = 'getConsumerGroupsAndSchools',

@@ -16,7 +16,7 @@
 				<base-autocomplete
 					class="b-auto"
 					:items="fetchedSchools"
-					@update:selectedItem="schoolSelected"
+					v-model="selectedSchoolId"
 					:title="
 						$t('component.internal.defaultPasswords.schoolLabel')
 					"
@@ -27,7 +27,7 @@
 				<base-autocomplete
 					class="b-auto"
 					:items="groupsInSelectedSchool"
-					@update:selectedItem="groupSelected"
+					v-model="selectedGroupId"
 					:title="
 						$t('component.internal.defaultPasswords.classLabel')
 					"
@@ -100,7 +100,7 @@ import ConsumerTester from '@/components/internal/shared/ConsumerTester.vue';
 import DefaultPasswordsTable from './DefaultPasswordsTable.vue';
 import PrintPasswordTable from './PrintPasswordTable.vue';
 import BaseAutocomplete from '@/components/base/BaseAutocomplete.vue';
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { IRootState, ISortBy } from '@/models/Interfaces';
 import { useStore } from 'vuex';
@@ -127,12 +127,12 @@ const fetchedGroups = ref<IPasswordGroup[]>([]);
 const fetchedPasswords = ref<IPasswordDefaultAssignment[]>([]);
 
 const selectedSchoolId = ref<string | null>(null);
-const selectedSchoolName = ref<string | null>(null);
-function schoolSelected(id: string) {
-	selectedSchoolId.value = id;
-	selectedSchoolName.value =
-		fetchedSchools.value.find((school) => school.id === id)?.name ?? null;
-}
+const selectedSchoolName = computed(
+	() =>
+		fetchedSchools.value.find(
+			(school) => school.id === selectedSchoolId.value
+		)?.name ?? null
+);
 
 const groupHeaders = {
 	[TemplateConnectionType.Department]: t(
@@ -183,13 +183,12 @@ watch(selectedSchoolId, () => {
 });
 
 const selectedGroupId = ref<string | null>(null);
-const selectedGroupName = ref<string | null>(null);
-function groupSelected(id: string) {
-	selectedGroupId.value = id;
-	selectedGroupName.value =
-		groupsInSelectedSchool.value.find((group) => group.id === id)?.name ??
-		null;
-}
+const selectedGroupName = computed(
+	() =>
+		groupsInSelectedSchool.value.find(
+			(group) => group.id === selectedGroupId.value
+		)?.name ?? null
+);
 
 async function fetchPasswords() {
 	isBusyFetchingPasswords.value = true;

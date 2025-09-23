@@ -78,6 +78,7 @@
 				"adminConsent": "Admin Samtyckeshantering",
 				"agentConsent": "Samtyckesombud",
 				"internalKvittens": "Kvittenser",
+				"agentKvittens": "Kvittensombud",
 				"internalDefaultPasswords": "Lösenord"
 			},
 			"locale": {
@@ -154,6 +155,10 @@
 			"error": "Det finns {count} fel.",
 			"resolution": " Vänligen åtgärda det innan du publicerar mallen."
 		},
+		"baseExpandableContent": {
+			"showMoreButtonOpen": "Visa mer",
+			"showMoreButtonClose": "Visa mindre"
+		},
 		"tCookieBanner": {
 			"title": "Vi använder kakor (cookies)",
 			"text": "Denna webbplats använder cookies för statistik och anpassat innehåll. Genom att klicka OK godkänner du denna användning.",
@@ -205,7 +210,7 @@
 				"usingConsentAgent": "Via samtyckesombud {agentName}.",
 				"openConsentAgentImage": "Öppna bild",
 				"openConsentAgentImageHelpText": "Visa bild på vårdnadshavarens underskrift",
-				"imageOfGuardianSignature": "Bild på vårdnadshavares underskrift",
+				"imageOfGuardianSignature": "Signerat dokument",
 				"historyTitle": "Historik"
 			},
 			"kvittensStart": {
@@ -229,7 +234,9 @@
 				"answerNextKvittens": "Besvara nästa kvittens",
 				"history": {
 					"title": "Historik",
-					"answeredYes": "{name} kvitterade."
+					"answeredYes": "{name} kvitterade",
+					"throughAgent": "via ombud, {agentName}",
+					"openImage": "Öppna bifogad kvittens"
 				}
 			},
 			"kvittensListItem": {
@@ -267,7 +274,8 @@
 				},
 				"kvittens": {
 					"title": "Kvittenser",
-					"goToKvittens": "Se elevers svar på kvittenser"
+					"goToKvittens": "Se elevers svar på kvittenser",
+					"goToKvittensAgent": "Registrera kvittens för elev"
 				},
 				"passwords": {
 					"title": "Lösenord",
@@ -455,6 +463,37 @@
 				"noResults": "Vi hittade inga elever i denna klass.",
 				"noResultsMatchingFilter": "Vi hittade inga elever i denna klass som matchade din sökning."
 			},
+			"kvittensAgent": {
+				"title": "Kvittensombud",
+				"stateLabel": "Status",
+				"noAccess": "Du måste vara mentor för en klass för att se kvittenser.",
+				"selectSchoolAndClass": "Välj skola, klass/avdelning/grupp och elev för att visa kvittenser.",
+				"headers": {
+					"receiptTitle": "Kvittens",
+					"receiptStatus": "Status",
+					"registerSingleReceiptButton": ""
+				},
+				"groupType": {
+					"department": "Avdelningar",
+					"educationGroup": "Grupper",
+					"class": "Klasser"
+				},
+				"bulkRegisterDialogSubtitle": "Register receipt for blabla",
+				"closeDialogButton": "Stäng",
+				"description": "Som kvittensombud kan du på en vårdnadshavares begäran registrera en elevs kvittens. För att registrera en kvittens behöver du som lärare bifoga en bild på ett skriftligt intyg från vårdnadshavaren.",
+				"dialogDetailsTitle": "Kvittensdetaljer",
+				"dialogTitle": "Kvittensombud för {name}",
+				"everyRespondentHasAnswered": "Denna kvittens är besvarad av samtliga.",
+				"fileUploadHelpText": "Ladda upp en existerande bild eller ta en ny bild med din kamera. Bilden kommer vara synlig för elevens vårdnadshavare och för andra ombud med behörighet.",
+				"fileUploadLabel": "Bild på vårdnadshavarens godkännande",
+				"fileUploadSelectImage": "Välj bild",
+				"historyTitle": "Historik",
+				"kvittensTitle": "Kvittenser för {childName}",
+				"noResult": "Vi kunde inte hitta några kvittenser för den angivna eleven som du har åtkomst att se.",
+				"registerButton": "Registrera kvittens",
+				"registerRespondentsLabel": "Vem/vilka svarar du för?",
+				"registerTitle": "Registrera kvittens"
+			},
 			"defaultPasswords": {
 				"title": "Tilldelade lösenord",
 				"schoolLabel": "Skola",
@@ -475,6 +514,12 @@
 				},
 				"print": "Skriv ut",
 				"noPassword": "Lösenord saknas"
+			},
+			"studentFilter": {
+				"schoolLabel": "Skola",
+				"classLabel": "Klass/avdelning/grupp",
+				"studentLabel": "Elev",
+				"noAccess": "Inga skolor eller grupper med koppling till ditt konto hittades."
 			}
 		},
 		"kvittensUserAnswer": {
@@ -495,6 +540,7 @@
 			"aboutEId": "Vill du veta mer om eller skaffa en e-legitimation?"
 		},
 		"baseAutocomplete": {
+			"loading": "Laddar innehåll...",
 			"noDataAvailable": "Inga matchande resultat."
 		}
 	},

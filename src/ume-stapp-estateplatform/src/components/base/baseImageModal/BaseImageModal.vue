@@ -5,10 +5,7 @@
 			v-model="modalIsVisible"
 			:max-width="1440"
 		>
-			<v-card v-if="activeImage">
-				<v-card-title v-if="activeImage.title">
-					{{ activeImage.title }}
-				</v-card-title>
+			<v-card v-if="activeImage" :title="activeImage.title">
 				<v-card-text>
 					<v-progress-linear
 						v-if="loadingImage"

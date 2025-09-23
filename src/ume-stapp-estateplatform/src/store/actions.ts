@@ -738,4 +738,45 @@ export default {
 			return null;
 		}
 	},
+
+	async getStudentsInGroup(
+		context: ActionContext<IRootState, IRootState>,
+		groupId: string
+	) {
+		let URL;
+		let requestPayload;
+
+		if (context.state.tester.testAsPerson) {
+			URL =
+				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_ORGANIZATION +
+				'/getStudentsInGroupTest';
+
+			requestPayload = JSON.stringify({
+				groupId,
+				impersonatedPerson: mappingHelper.mapTesterToTestPerson(
+					context.state.tester.testAsPerson
+				),
+			});
+		} else {
+			URL =
+				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_ORGANIZATION +
+				'/getStudentsInGroup';
+
+			requestPayload = { groupId };
+		}
+
+		const response = await httpClient.post(URL, requestPayload, {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + context.state.user.token,
+			},
+		});
+
+		const studentList = response?.data as { name: string; ssNo: string }[];
+
+		return studentList.map((p) => ({
+			name: p.name,
+			studentSsno: p.ssNo,
+		}));
+	},
 };

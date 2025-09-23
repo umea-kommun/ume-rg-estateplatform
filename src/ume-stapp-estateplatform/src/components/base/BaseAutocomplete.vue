@@ -4,15 +4,20 @@
 		:items="props.items"
 		:item-title="props.itemTitle"
 		:item-value="props.itemValue"
-		v-model="selectedItem"
+		v-model="selectedItemId"
 		:label="props.title"
 		variant="outlined"
 		density="comfortable"
-		:disabled="props.items.length === 0"
 		color="primary"
 		autocomplete="off"
 		:menu-props="menuProps"
-		:no-data-text="$t('component.baseAutocomplete.noDataAvailable')"
+		:no-data-text="
+			props.loading
+				? $t('component.baseAutocomplete.loading')
+				: $t('component.baseAutocomplete.noDataAvailable')
+		"
+		:loading="props.loading"
+		:disabled="props.disabled"
 	>
 		<template v-slot:item="{ props, item }">
 			<div v-if="item.raw.groupTitle" class="pl-4 pb-1 group-title">
@@ -23,27 +28,25 @@
 	</v-autocomplete>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 
 const props = defineProps<{
+	modelValue: string | null;
 	items: IAutocompleteItem[];
 	title: string;
 	itemTitle: string;
 	itemValue: string;
 	menuProps: object;
+	loading?: boolean;
+	disabled?: boolean;
 }>();
-const emit = defineEmits(['update:selectedItem']);
+const emit = defineEmits(['update:modelValue']);
 
-let items_changed = true;
-
-const selectedItem = ref<string | null>();
-watch(selectedItem, async (newValue, oldValue) => {
-	if (newValue || items_changed) {
-		emit('update:selectedItem', newValue);
-		items_changed = false;
-	} else if (oldValue) {
-		selectedItem.value = oldValue;
-	}
+const selectedItemId = computed({
+	get: () => props.modelValue,
+	set: (newValue: string | null) => {
+		emit('update:modelValue', newValue);
+	},
 });
 
 interface IAutocompleteItem {
@@ -52,9 +55,8 @@ interface IAutocompleteItem {
 
 function pickDefaultItemIfOnlyOne() {
 	if (props.items && props.items.length === 1) {
-		// If only one item in list, preselect it
 		if (props.itemValue in props.items[0]) {
-			selectedItem.value = props.items[0][props.itemValue];
+			selectedItemId.value = props.items[0][props.itemValue];
 		}
 	}
 }
@@ -62,8 +64,7 @@ function pickDefaultItemIfOnlyOne() {
 watch(
 	() => props.items,
 	() => {
-		items_changed = true;
-		selectedItem.value = null;
+		selectedItemId.value = null;
 		pickDefaultItemIfOnlyOne();
 	}
 );
@@ -72,3 +73,10 @@ onMounted(async () => {
 	pickDefaultItemIfOnlyOne();
 });
 </script>
+
+<style scoped lang="css">
+:deep(.v-list-item-title) {
+	white-space: unset;
+	text-overflow: unset;
+}
+</style>

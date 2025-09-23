@@ -5,6 +5,7 @@ import {
 	IGuardianConsent,
 	IGuardianConsentHistory,
 	IResponseConsent,
+	ITesterTestAsPerson,
 } from '@/models/Interfaces';
 import { ConsentStatus, UserConsentStatus } from '@/models/Enums';
 
@@ -82,5 +83,12 @@ export class mappingHelper {
 			socialSecurityNumber: element.socialSecurityNumber,
 			guardianIsNotFolkbokford: element.guardianIsNotFolkbokford ?? false,
 		}));
+	}
+
+	public static mapTesterToTestPerson(testAsPerson: ITesterTestAsPerson) {
+		return {
+			name: testAsPerson.name,
+			personnummer: testAsPerson.socialSecurityNumber,
+		};
 	}
 }

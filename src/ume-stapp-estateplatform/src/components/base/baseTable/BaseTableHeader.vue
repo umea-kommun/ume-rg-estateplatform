@@ -1,5 +1,17 @@
 <template>
 	<tr>
+		<th v-if="showSelectAll && headerSlotProps">
+			<v-checkbox-btn
+				:indeterminate="
+					headerSlotProps.someSelected && !headerSlotProps.allSelected
+				"
+				:model-value="headerSlotProps.allSelected"
+				color="primary"
+				@update:model-value="
+					headerSlotProps.selectAll(!headerSlotProps.allSelected)
+				"
+			/>
+		</th>
 		<th v-for="header in headers" :key="header.title">
 			<div
 				class="base-table-header"
@@ -23,6 +35,7 @@
 <script setup lang="ts">
 import { ISortBy, ITableHeader } from '@/models/Interfaces';
 import { computed, PropType } from 'vue';
+import { HeadersSlotProps } from 'vuetify/lib/components/VDataTable/VDataTableHeaders';
 
 const props = defineProps({
 	sortBy: {
@@ -36,6 +49,13 @@ const props = defineProps({
 	defaultOrder: {
 		type: String as PropType<'asc' | 'desc'>,
 		default: 'desc',
+	},
+	headerSlotProps: {
+		type: Object as PropType<HeadersSlotProps>,
+	},
+	showSelectAll: {
+		type: Boolean,
+		default: false,
 	},
 });
 

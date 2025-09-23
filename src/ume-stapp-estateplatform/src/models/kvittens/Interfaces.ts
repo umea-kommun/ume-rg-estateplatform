@@ -2,6 +2,7 @@ import { KvittensStatus } from './Enums';
 
 export interface IKvittensState {
 	kvittensList?: IKvittens[];
+	kvittensAgentList?: IAgentKvittens[];
 }
 
 export interface IKvittens {
@@ -23,6 +24,8 @@ export interface IKvittensLinkedPerson {
 export interface IKvittensHistory {
 	name: string;
 	date: string;
+	agentName?: string;
+	imageIdToken?: string;
 }
 export interface IKvittensDetails {
 	templateId: string;
@@ -66,4 +69,12 @@ export interface IKvittensSummaryTemplate {
 export interface IKvittensSummary {
 	templates: IKvittensSummaryTemplate[];
 	students: IKvittensSummaryStudent[];
+}
+
+export interface IAgentKvittens {
+	templateId: string;
+	title: string;
+	personName: string;
+	personSSNo: string;
+	status: KvittensStatus;
 }
