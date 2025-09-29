@@ -66,6 +66,8 @@ export default {
 			userId: '',
 			authClientName: '',
 		} as IUser;
+
+		delete state.feedback;
 	},
 
 	[MutationType.HideWarningMessage]: (

@@ -41,6 +41,12 @@
 				/>
 			</div>
 		</div>
+
+		<rate-feedback
+			:feedback-title="$t('component.external.gradeStart.feedbackTitle')"
+			category="grades"
+			:additionalInfo="{ numberOfGrades: grades.length }"
+		/>
 	</app-content>
 </template>
 <script setup lang="ts">
@@ -56,6 +62,7 @@ import { IGrade } from '@/models/grade/Interfaces';
 import { IRootState } from '@/models/Interfaces';
 import { useStore } from 'vuex';
 import Config from '@/Config';
+import RateFeedback from '@/components/feedback/RateFeedback.vue';
 
 const route = useRoute();
 

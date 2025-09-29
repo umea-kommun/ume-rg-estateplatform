@@ -8,6 +8,7 @@ import {
 	TemplateConnectionType,
 } from './Enums';
 import { IKvittensState } from './kvittens/Interfaces';
+import { IFeedbackState } from './feedback/Interfaces';
 
 /**
  * State för vuex-store
@@ -28,6 +29,7 @@ export interface IRootState {
 	hideWarningMessage?: null | boolean;
 
 	kvittens?: IKvittensState;
+	feedback?: IFeedbackState;
 }
 
 export interface IError {

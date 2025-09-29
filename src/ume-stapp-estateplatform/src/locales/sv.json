@@ -185,6 +185,17 @@
 			"noFilterResults": "Vi kunde inte hitta några samtycken som matchade sökningen.",
 			"reloadingText": "Hämtar samtycken..."
 		},
+		"feedback": {
+			"subtitle": "Hjälp oss bli bättre.",
+			"thanksForRating": "Tack för ditt betyg!",
+			"commentLabel": "Vad fungerade bra och vad kan bli bättre?",
+			"commentHelpText": "Ange inte några personuppgifter.",
+			"sendComment": "Skicka kommentar",
+			"thanksForComment": "Din feedback har tagits emot, tack för att du hjälper oss bli bättre!",
+			"ratingStars": {
+				"starLabel": "{n} stjärna | {n} stjärnor"
+			}
+		},
 		"external": {
 			"common": {
 				"nonFolkbokfordAlert": {
@@ -252,7 +263,8 @@
 				"explanationPart1": "Saknas något betyg? Det kan bero på olika orsaker. Du kan skicka in en förfrågan via vårt webbformulär som du hittar på vår hemsida: ",
 				"explanationPart2": "Om du fortfarande studerar eller har hoppat av gymnasiet ska du kontakta din gymnasieskola för att få betygen.",
 				"explanationLink": "Beställ kopia på betyg",
-				"noResults": "Kunde inte hitta några av dina betyg i arkivet."
+				"noResults": "Kunde inte hitta några av dina betyg i arkivet.",
+				"feedbackTitle": "Hur fungerade det att hämta dina betyg?"
 			},
 			"gradeListItem": {
 				"download": "Öppna betyg"

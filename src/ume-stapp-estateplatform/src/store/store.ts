@@ -8,6 +8,7 @@ import VuexPersist from 'vuex-persist';
 import kvittensStore from './kvittens/store';
 import passwordStore from './password/store';
 import gradeStore from './grade/store';
+import feedbackStore from './feedback/store';
 
 // export default createStore({
 //   state: {},
@@ -34,6 +35,7 @@ const vuexPersistToSessionStorage = new VuexPersist({
 	reducer: (state: IRootState) => ({
 		user: state.user,
 		tester: { testAsPerson: state.tester?.testAsPerson },
+		feedback: state.feedback,
 	}),
 	storage: window.sessionStorage,
 });
@@ -48,6 +50,7 @@ const store: StoreOptions<IRootState> = {
 		kvittens: kvittensStore,
 		password: passwordStore,
 		grade: gradeStore,
+		feedback: feedbackStore,
 	},
 };
 

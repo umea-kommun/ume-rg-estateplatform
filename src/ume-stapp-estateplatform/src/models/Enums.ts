@@ -65,6 +65,9 @@ export enum MutationType {
 	UpdateAnswerInKvittensList = 'updateAnswerInKvittensList',
 	UpdateKvittensAgentList = 'updateKvittensAgentList',
 	UpdateAnswerInAgentKvittensList = 'updateAnswerInAgentKvittensList',
+
+	// Feedback
+	FeedbackGiven = 'feedbackGiven',
 }
 
 export enum DispatchType {
@@ -102,6 +105,10 @@ export enum DispatchType {
 	// Grades
 	GetGrades = 'getGrades',
 	DownloadGrade = 'downloadGrade',
+
+	// Feedback
+	FeedbackRate = 'feedbackRate',
+	FeedbackComment = 'feedbackComment',
 }
 
 export enum ConsentStatus {

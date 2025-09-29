@@ -185,6 +185,17 @@
 			"noFilterResults": "We could not find any consents that matched the search.",
 			"reloadingText": "Fetching consents..."
 		},
+		"feedback": {
+			"subtitle": "Help us improve.",
+			"thanksForRating": "Thank you for your rating!",
+			"commentLabel": "What worked well or could be improved?",
+			"commentHelpText": "Do not enter any personal information.",
+			"sendComment": "Submit comment",
+			"thanksForComment": "Your feedback has been received, thank you for helping us improve!",
+			"ratingStars": {
+				"starLabel": "{n} star | {n} stars"
+			}
+		},
 		"external": {
 			"common": {
 				"nonFolkbokfordAlert": {
@@ -252,7 +263,8 @@
 				"explanationPart1": "Is a grade missing? There could be various reasons for this. You can submit a request via our web form, which you will find on our website: ",
 				"explanationPart2": "If you are still studying or have dropped out of upper secondary school, you should contact your upper secondary school to obtain your grades.",
 				"explanationLink": "Order a copy of grades",
-				"noResults": "We could not find any of your grades in the archive."
+				"noResults": "We could not find any of your grades in the archive.",
+				"feedbackTitle": "How did it work to retrieve your grades?"
 			},
 			"gradeListItem": {
 				"download": "Open grades"
