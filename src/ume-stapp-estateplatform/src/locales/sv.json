@@ -183,7 +183,8 @@
 			"showAll": "Visa alla",
 			"noResults": "Vi kunde inte hitta några samtycken.",
 			"noFilterResults": "Vi kunde inte hitta några samtycken som matchade sökningen.",
-			"reloadingText": "Hämtar samtycken..."
+			"reloadingText": "Hämtar samtycken...",
+			"feedbackTitle": "Hur fungerade det att svara på samtycken?"
 		},
 		"feedback": {
 			"subtitle": "Hjälp oss bli bättre.",
@@ -231,7 +232,8 @@
 				"noResults": "Du har inga obesvarade eller besvarade kvittenser.",
 				"noResultsUsingFilter": "Vi hittade inga kvittenser som matchade filtreringen.",
 				"titleUnanswered": "Obesvarade ({count})",
-				"titleAnswered": "Besvarade ({count})"
+				"titleAnswered": "Besvarade ({count})",
+				"feedbackTitle": "Hur fungerade det att svara på kvittenser?"
 			},
 			"kvittensDetails": {
 				"you": "(du)",

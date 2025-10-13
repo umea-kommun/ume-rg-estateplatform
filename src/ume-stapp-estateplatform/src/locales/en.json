@@ -183,7 +183,8 @@
 			"showAll": "Show all",
 			"noResults": "We could not find any consents.",
 			"noFilterResults": "We could not find any consents that matched the search.",
-			"reloadingText": "Fetching consents..."
+			"reloadingText": "Fetching consents...",
+			"feedbackTitle": "How did it go to respond to consents?"
 		},
 		"feedback": {
 			"subtitle": "Help us improve.",
@@ -231,7 +232,8 @@
 				"noResults": "You have no unanswered or answered receipts.",
 				"noResultsUsingFilter": "We did not find any receipts that matched the filtering.",
 				"titleUnanswered": "Unanswered ({count})",
-				"titleAnswered": "Answered ({count})"
+				"titleAnswered": "Answered ({count})",
+				"feedbackTitle": "How did it go to respond to receipts?"
 			},
 			"kvittensDetails": {
 				"you": "(you)",

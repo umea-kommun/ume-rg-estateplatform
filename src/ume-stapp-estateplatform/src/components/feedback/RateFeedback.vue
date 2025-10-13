@@ -95,7 +95,7 @@ import ErrorService from '@/utils/ErrorService';
 
 const props = defineProps<{
 	feedbackTitle: string;
-	category: 'grades';
+	category: 'grades' | 'consents' | 'kvittenser';
 	additionalInfo?: Record<string, unknown>;
 }>();
 

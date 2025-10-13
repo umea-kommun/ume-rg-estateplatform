@@ -43,6 +43,7 @@
 		</div>
 
 		<rate-feedback
+			v-if="Array.isArray(grades) && grades.length > 0"
 			:feedback-title="$t('component.external.gradeStart.feedbackTitle')"
 			category="grades"
 			:additionalInfo="{ numberOfGrades: grades.length }"

@@ -77,6 +77,20 @@
 				:kvittensForMultiplePersons="kvittensForMultiplePersons"
 			/>
 		</div>
+		<rate-feedback
+			v-if="
+				Array.isArray(answeredKvittensList) &&
+				answeredKvittensList.length > 0
+			"
+			:feedback-title="
+				$t('component.external.kvittensStart.feedbackTitle')
+			"
+			category="kvittenser"
+			:additionalInfo="{
+				numberOfAnsweredKvittenser: answeredKvittensList.length,
+				numberOfUnansweredKvittenser: unansweredKvittensList.length,
+			}"
+		/>
 	</app-content>
 </template>
 <script setup lang="ts">
@@ -91,6 +105,7 @@ import { computed } from 'vue';
 import KvittensListItem from '@/components/external/kvittens/KvittensListItem.vue';
 import { MyPagesRoutes } from '@/router/routes';
 import NonFolkbokfordAlert from '@/components/external/common/NonFolkbokfordAlert.vue';
+import RateFeedback from '@/components/feedback/RateFeedback.vue';
 
 const route = useRoute();
 const isBusyLoadingFromServer = ref<boolean>(false);

@@ -143,6 +143,13 @@
 				@answerChanged="refetchListData"
 			/>
 		</div>
+
+		<rate-feedback
+			v-if="Array.isArray(consentItems) && consentItems.length > 0"
+			:feedback-title="$t('component.consentStart.feedbackTitle')"
+			category="consents"
+			:additionalInfo="{ numberOfConsents: consentItems.length }"
+		/>
 	</app-content>
 </template>
 <script setup lang="ts">
@@ -166,6 +173,7 @@ import { useI18n } from 'vue-i18n';
 import { ISortBy, ITableHeader } from '@/models/Interfaces';
 import ConsentEditModal from './ConsentEditModal.vue';
 import { MyPagesRoutes } from '@/router/routes';
+import RateFeedback from '@/components/feedback/RateFeedback.vue';
 
 const route = useRoute();
 const isBusyLoadingFromServer = ref<boolean>(false);
