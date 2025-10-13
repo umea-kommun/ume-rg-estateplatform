@@ -12,16 +12,21 @@
 			{{ t('component.internal.kvittensAgent.description') }}
 		</p>
 
-		<student-filter @student-selected="selectedStudent = $event" />
+		<student-filter
+			:fetch-kvittens-schools-and-groups="true"
+			@student-selected="selectedStudent = $event"
+			:select-instruction="
+				t('component.internal.kvittensAgent.selectSchoolAndClass')
+			"
+		/>
 		<app-loading-spinner
 			v-if="isBusyFetchingKvittensList"
 			:isVisible="isBusyFetchingKvittensList"
 		/>
-		<v-alert v-else-if="!selectedStudent" icon="info" class="mt-6">
-			{{ t('component.internal.kvittensAgent.selectSchoolAndClass') }}
-		</v-alert>
 		<v-alert
-			v-else-if="!kvittensListForSelectedStudent.length"
+			v-else-if="
+				selectedStudent && !kvittensListForSelectedStudent.length
+			"
 			icon="info"
 			class="mt-6"
 		>

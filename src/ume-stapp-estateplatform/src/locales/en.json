@@ -426,7 +426,8 @@
 				"title": "Consent Agent",
 				"description": "As a consent agent, you can update a student's consent at a guardian's request. You need to attach a picture of a written consent from the guardian to update the student's consent.",
 				"noResult": "We could not find any consents for the specified student that you have access to see.",
-				"consentsTitle": "Consents for {childName}"
+				"consentsTitle": "Consents for {childName}",
+				"selectSchoolAndClass": "Select school, class/department/group and student to view consents."
 			},
 			"consentAgentList": {
 				"answer": "Update answer"
@@ -472,6 +473,7 @@
 				"stateLabel": "State",
 				"noAccess": "You need to be a mentor of a class to see receipts.",
 				"selectSchoolAndClass": "Select school, class/department/group and pupil to view receipts.",
+				"noResults": "We could not find any receipts for the specified student that you have access to view.",
 				"headers": {
 					"receiptTitle": "Receipt",
 					"receiptStatus": "State",
@@ -487,7 +489,7 @@
 				"description": "As a recepit agent, you can register a receipt for a student at a guardian's request. You need to attach a picture of a written receipt from the guardian to register the student's receipt.",
 				"dialogDetailsTitle": "Receipt details",
 				"dialogTitle": "Receipt agent for {name}",
-                "everyRespondentHasAnswered": "All respondents have acknowledged this receipt.",
+				"everyRespondentHasAnswered": "All respondents have acknowledged this receipt.",
 				"fileUploadHelpText": "Upload an existing image or take a new image with your camera. The image will be visible to the student's guardians and to other authorized agents.",
 				"fileUploadLabel": "Picture of the guardian's consent",
 				"fileUploadSelectImage": "Select image",

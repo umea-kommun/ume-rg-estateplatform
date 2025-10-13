@@ -34,6 +34,9 @@
 		icon="warning"
 		>{{ t('component.internal.studentFilter.noAccess') }}</v-alert
 	>
+	<v-alert v-else-if="!selectedStudentId" icon="info" class="mt-6">
+		{{ selectInstruction }}
+	</v-alert>
 </template>
 
 <script setup lang="ts">
@@ -49,6 +52,11 @@ import ErrorService from '@/utils/ErrorService';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+
+const props = defineProps<{
+	fetchKvittensSchoolsAndGroups?: boolean;
+	selectInstruction: string;
+}>();
 
 const emit = defineEmits(['student-selected']);
 
@@ -91,8 +99,10 @@ async function fetchSchools() {
 	isBusyLoadingSchoolsAndGroups.value = true;
 
 	try {
-		const { schools: schools, classes: groups } = await store.dispatch(
-			DispatchType.GetKvittensFilterGroups
+		const { schools, groups } = await store.dispatch(
+			props.fetchKvittensSchoolsAndGroups
+				? DispatchType.GetKvittensFilterGroups
+				: DispatchType.GetConsumerFilterGroups
 		);
 		fetchedSchools.value = schools.sort(sort_asc);
 		fetchedGroups.value = groups.sort(sort_asc);

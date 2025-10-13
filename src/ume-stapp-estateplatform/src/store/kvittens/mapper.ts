@@ -120,7 +120,7 @@ export default {
 		}[];
 	}): {
 		schools: IKvittensFilterSchool[];
-		classes: IKvittensFilterClass[];
+		groups: IKvittensFilterClass[];
 	} => {
 		const schools = response.schools.map((responseSchool) => {
 			const school: IKvittensFilterSchool = {
@@ -129,7 +129,7 @@ export default {
 			};
 			return school;
 		});
-		const classes = response.classes.map((responseClass) => {
+		const groups = response.classes.map((responseClass) => {
 			const classGroup: IKvittensFilterClass = {
 				refId: responseClass.id,
 				name: responseClass.name,
@@ -137,7 +137,7 @@ export default {
 			};
 			return classGroup;
 		});
-		return { schools, classes };
+		return { schools, groups };
 	},
 	mapResponseToSummary: (response: {
 		templates: {

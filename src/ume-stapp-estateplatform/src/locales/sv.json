@@ -426,7 +426,8 @@
 				"title": "Samtyckesombud",
 				"description": "Som samtyckesombud kan du på en vårdnadshavares begäran uppdatera en elevs samtycke. Du behöver bifoga en bild på ett skriftligt intyg från vårdnadshavaren för att få uppdatera elevens samtycke.",
 				"noResult": "Vi kunde inte hitta några samtycken för den angivna eleven som du har åtkomst att se.",
-				"consentsTitle": "Samtycken för {childName}"
+				"consentsTitle": "Samtycken för {childName}",
+				"selectSchoolAndClass": "Välj skola, klass/avdelning/grupp och elev för att visa samtycken."
 			},
 			"consentAgentList": {
 				"answer": "Ändra svar"
@@ -472,6 +473,7 @@
 				"stateLabel": "Status",
 				"noAccess": "Du måste vara mentor för en klass för att se kvittenser.",
 				"selectSchoolAndClass": "Välj skola, klass/avdelning/grupp och elev för att visa kvittenser.",
+				"noResults": "Vi kunde inte hitta några kvittenser för den angivna eleven som du har åtkomst att se.",
 				"headers": {
 					"receiptTitle": "Kvittens",
 					"receiptStatus": "Status",

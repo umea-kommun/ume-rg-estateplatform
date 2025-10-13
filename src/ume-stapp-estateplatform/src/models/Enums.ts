@@ -86,6 +86,7 @@ export enum DispatchType {
 	GetTesterSchoolUnits = 'getTesterSchoolUnits',
 	GetTesterSchoolTeachers = 'getTesterSchoolTeachers',
 
+	GetConsumerFilterGroups = 'getConsumerFilterGroups',
 	GetStudentsInGroup = 'getStudentsInGroup',
 
 	// Kvittens

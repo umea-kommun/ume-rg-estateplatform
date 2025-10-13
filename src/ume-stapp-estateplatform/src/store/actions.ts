@@ -20,6 +20,7 @@ import Axios, { AxiosError } from 'axios';
 import { ActionContext } from 'vuex';
 import ErrorService, { ComposedError } from '@/utils/ErrorService';
 import { mappingHelper } from '../store/mappingHelper';
+import mapper from './mapper';
 
 const httpClient = Axios.create();
 if ((Config.VUE_APP_MOCK_DATA || '').trim() === 'yes') {
@@ -743,6 +744,48 @@ export default {
 		} catch (err) {
 			ErrorService.onError({ err });
 			return null;
+		}
+	},
+
+	async getConsumerFilterGroups(
+		context: ActionContext<IRootState, IRootState>
+	) {
+		try {
+			let response;
+			if (context.rootState.tester.testAsPerson) {
+				response = await httpClient.post(
+					Config.VUE_APP_CONSENT_BRIDGE_SERVICE_ORGANIZATION +
+						'/getConsumerGroupsAndSchoolsTest',
+					JSON.stringify({
+						name: context.rootState.tester.testAsPerson.name,
+						personnummer:
+							context.rootState.tester.testAsPerson
+								.socialSecurityNumber,
+					}),
+					{
+						headers: {
+							'Content-Type': 'application/json',
+							Authorization:
+								'Bearer ' + context.rootState.user.token,
+						},
+					}
+				);
+			} else {
+				response = await httpClient.get(
+					Config.VUE_APP_CONSENT_BRIDGE_SERVICE_ORGANIZATION +
+						'/getConsumerGroupsAndSchools',
+					{
+						headers: {
+							Authorization:
+								'Bearer ' + context.rootState.user.token,
+						},
+					}
+				);
+			}
+
+			return mapper.mapResponseToSchoolsAndGroups(response.data);
+		} catch (err) {
+			ErrorService.onError({ err, errorPage: { visible: true } });
 		}
 	},
 

@@ -207,7 +207,7 @@ watch(selectedClassRefId, (newSelectedClass) => {
 onMounted(async () => {
 	isBusyFetchingSchoolsAndClasses.value = true;
 
-	const { schools: fetchedSchools, classes: fetchedClasses } =
+	const { schools: fetchedSchools, groups: fetchedClasses } =
 		await store.dispatch(DispatchType.GetKvittensFilterGroups);
 	schools.value = fetchedSchools.sort(
 		(a: IKvittensFilterSchool, b: IKvittensFilterSchool) =>
