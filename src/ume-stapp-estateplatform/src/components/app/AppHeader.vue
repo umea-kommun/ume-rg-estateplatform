@@ -1,5 +1,8 @@
 <template>
 	<header class="app-header">
+		<v-alert class="ma-4" icon="warning" color="error">
+			{{ $t('app.informationBanner') }}
+		</v-alert>
 		<div class="mock-alert-wrap" v-if="usingMockedData">
 			<div class="mock-alert">
 				<div>
