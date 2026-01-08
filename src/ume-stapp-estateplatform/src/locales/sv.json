@@ -294,7 +294,9 @@
 				"passwords": {
 					"title": "Lösenord",
 					"goToPassword": "Se elevers tilldelade lösenord"
-				}
+				},
+				"feedbackTitle": "Vill du hjälpa oss att bli bättre?",
+				"feedbackSubtitle": "Lämna ett omdömme"
 			},
 			"templateGroupSelect": {
 				"modal": {

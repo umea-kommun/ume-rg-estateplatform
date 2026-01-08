@@ -19,7 +19,7 @@
 			<v-card-text>
 				<h3>{{ feedbackTitle }}</h3>
 				<p class="mt-3 text-subtitle-1">
-					{{ t('component.feedback.subtitle') }}
+					{{ feedbackSubtitle || t('component.feedback.subtitle') }}
 				</p>
 				<div class="mt-3 mb-3 d-flex justify-center">
 					<rating-stars
@@ -95,7 +95,8 @@ import ErrorService from '@/utils/ErrorService';
 
 const props = defineProps<{
 	feedbackTitle: string;
-	category: 'grades' | 'consents' | 'kvittenser';
+	feedbackSubtitle?: string;
+	category: 'grades' | 'consents' | 'kvittenser' | 'internalPagesOverview';
 	additionalInfo?: Record<string, unknown>;
 }>();
 

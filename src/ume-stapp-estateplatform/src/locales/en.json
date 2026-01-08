@@ -294,7 +294,9 @@
 				"passwords": {
 					"title": "Passwords",
 					"goToPassword": "See students' assigned passwords"
-				}
+				},
+				"feedbackTitle": "Would you like to help us improve?",
+				"feedbackSubtitle": "Leave feedback"
 			},
 			"templateGroupSelect": {
 				"modal": {

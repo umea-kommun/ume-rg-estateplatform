@@ -161,6 +161,15 @@
 				</v-col>
 			</v-row>
 		</div>
+		<rate-feedback
+			:feedback-title="
+				$t('component.internal.internalStart.feedbackTitle')
+			"
+			:feedback-subtitle="
+				$t('component.internal.internalStart.feedbackSubtitle')
+			"
+			category="internalPagesOverview"
+		/>
 	</app-content>
 </template>
 <script setup lang="ts">
@@ -172,6 +181,7 @@ import { IRootState } from '@/models/Interfaces';
 import { AppContentSize } from '@/models/Enums';
 import { MyPagesRoutes } from '@/router/routes';
 import Config from '@/Config';
+import RateFeedback from '@/components/feedback/RateFeedback.vue';
 
 const store = useStore<IRootState>();
 const route = useRoute();
