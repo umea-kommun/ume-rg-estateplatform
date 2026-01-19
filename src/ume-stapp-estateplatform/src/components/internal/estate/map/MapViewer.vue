@@ -60,6 +60,7 @@ const {
 	highlightLayer,
 	setHighlightedPoint,
 	updatePoints,
+	allFeaturesAtSameLocation,
 } = createPointLayers();
 
 // Umeå stadshuset
@@ -88,25 +89,6 @@ watch(
 /** Handle click event */
 const buildingsClicked = (ids: number[]) => {
 	selectedBuildingIds.value = ids;
-};
-
-const allFeaturesAtSameLocation = (clustered: Feature[], tolerance = 1) => {
-	if (clustered.length <= 1) {
-		return true;
-	}
-
-	const extent = createEmpty();
-	clustered.forEach((f) => {
-		const geo = f.getGeometry();
-		if (geo) {
-			extend(extent, geo.getExtent());
-		}
-	});
-
-	const width = extent[2] - extent[0];
-	const height = extent[3] - extent[1];
-
-	return width <= tolerance && height <= tolerance;
 };
 
 const onClusterClick = (clustered: Feature[]) => {
@@ -156,6 +138,25 @@ const onMapClick = (
 	const clustered = hit?.get('features') as Feature[] | undefined;
 	if (clustered?.length) {
 		onClusterClick(clustered);
+	}
+};
+
+let lastHit = false;
+const onMapHover = (e: MapBrowserEvent) => {
+	if (!map || e.dragging) {
+		return;
+	}
+
+	const hit = map.hasFeatureAtPixel(e.pixel);
+
+	if (hit !== lastHit) {
+		const el = map.getTargetElement();
+		if (!el) {
+			return;
+		}
+
+		el.style.cursor = hit ? 'pointer' : '';
+		lastHit = hit ?? false;
 	}
 };
 
@@ -226,6 +227,7 @@ const initMap = () => {
 	});
 
 	map.on('singleclick', onMapClick);
+	map.on('pointermove', onMapHover);
 	map.on('rendercomplete', onRenderComplete);
 
 	updatePoints(props.points ?? [], map, props.fitPoints);
@@ -237,6 +239,11 @@ onMounted(initMap);
 
 onUnmounted(() => {
 	if (!map) return;
+
+	map.un('singleclick', onMapClick);
+	map.un('pointermove', onMapHover);
+	map.un('rendercomplete', onRenderComplete);
+
 	map.setTarget(undefined); // detach from DOM
 	map = null;
 });

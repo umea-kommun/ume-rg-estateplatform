@@ -10,6 +10,7 @@ import Text from 'ol/style/Text';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import MapHouseSvg from '@/assets/map_house.svg';
+import MapHouseMultipleSvg from '@/assets/map_house_multi.svg';
 import MapHouseHighlightSvg from '@/assets/map_house_grey.svg';
 import Icon from 'ol/style/Icon';
 import { to3016 } from './layer';
@@ -38,7 +39,64 @@ export function createPointLayers() {
 	});
 	const singleStyle = new Style({ image: singleCircle });
 
-	const cache: { [key: number]: Style } = {};
+	const cache: { [key: string]: Style } = {};
+
+	function allFeaturesAtSameLocation(clustered: Feature[]) {
+		if (clustered.length <= 1) {
+			return true;
+		}
+
+		const extent = createEmpty();
+		clustered.forEach((f) => {
+			const geo = f.getGeometry();
+			if (geo) {
+				extend(extent, geo.getExtent());
+			}
+		});
+
+		const width = extent[2] - extent[0];
+		const height = extent[3] - extent[1];
+
+		const tolerance = 4;
+		return width <= tolerance && height <= tolerance;
+	}
+
+	function getSameLocationPointStyle(size: number) {
+		return new Style({
+			image: new Icon({
+				src: MapHouseMultipleSvg,
+			}),
+			text: new Text({
+				text: String(size),
+				font: `normal ${size >= 10 ? 12 : 14}px sans-serif`,
+				fill: new Fill({ color: '#000' }),
+				offsetX: 8,
+				offsetY: size >= 10 ? 0 : 1,
+				textBaseline: 'bottom',
+				textAlign: 'center',
+			}),
+		});
+	}
+
+	function getClusterPointStyle(size: number) {
+		const radius = Math.max(14, Math.min(26, 10 + Math.log2(size) * 3));
+		return new Style({
+			image: new CircleStyle({
+				radius,
+				fill: new Fill({
+					color: '#006e1e',
+				}),
+				stroke: new Stroke({ color: '#fff', width: 2 }),
+			}),
+			text: new Text({
+				text: String(size),
+				font: 'bold 14px sans-serif',
+				fill: new Fill({ color: '#fff' }),
+				textBaseline: 'middle',
+				textAlign: 'center',
+			}),
+		});
+	}
 
 	function clusterStyle(feature: FeatureLike) {
 		const clustered = feature.get('features') as Feature[] | undefined;
@@ -48,25 +106,16 @@ export function createPointLayers() {
 			return singleStyle;
 		}
 
-		// Cluster, reuse cached style per size (count)
-		if (!cache[size]) {
-			const radius = Math.max(14, Math.min(26, 10 + Math.log2(size) * 3));
-			cache[size] = new Style({
-				image: new CircleStyle({
-					radius,
-					fill: new Fill({ color: '#006e1e' }),
-					stroke: new Stroke({ color: '#fff', width: 2 }),
-				}),
-				text: new Text({
-					text: String(size),
-					font: 'bold 14px sans-serif',
-					fill: new Fill({ color: '#fff' }),
-					textBaseline: 'middle',
-					textAlign: 'center',
-				}),
-			});
+		const allSameLocation = allFeaturesAtSameLocation(clustered || []);
+		const cacheKey = `${size}_${allSameLocation}`;
+
+		// Cluster, reuse cached style
+		if (!cache[cacheKey]) {
+			cache[cacheKey] = allSameLocation
+				? getSameLocationPointStyle(size)
+				: getClusterPointStyle(size);
 		}
-		return cache[size];
+		return cache[cacheKey];
 	}
 
 	const clusterLayer = new VectorLayer({
@@ -168,5 +217,6 @@ export function createPointLayers() {
 		highlightLayer,
 		updatePoints,
 		setHighlightedPoint,
+		allFeaturesAtSameLocation,
 	};
 }
