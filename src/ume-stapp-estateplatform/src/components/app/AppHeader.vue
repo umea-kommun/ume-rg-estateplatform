@@ -1,5 +1,5 @@
 <template>
-	<header class="app-header">
+	<header class="app-header" :class="size">
 		<div class="mock-alert-wrap" v-if="usingMockedData">
 			<div class="mock-alert">
 				<div>
@@ -64,8 +64,11 @@
 						:src="logoGreen"
 						:alt="$t('app.nav.logo')"
 				/></router-link>
-				<div class="separator"></div>
-				<div class="title">{{ headerTitle }}</div>
+
+				<div class="title">
+					<div class="separator"></div>
+					{{ headerTitle }}
+				</div>
 			</div>
 
 			<div
@@ -111,6 +114,33 @@
 								$t('component.appHeader.menu.about')
 							}}</v-list-item-title>
 						</v-list-item>
+						<v-list-group :value="selectedLocale">
+							<template v-slot:activator="{ props }">
+								<v-list-item v-bind="props" @click.prevent.stop>
+									{{
+										$t('component.appHeader.locale.change')
+									}}
+								</v-list-item>
+							</template>
+							<v-list-item
+								v-for="(item, index) in languages"
+								:key="index"
+								:value="index"
+								@click="selectedLocale = item.locale"
+								:append-icon="
+									selectedLocale === item.locale
+										? 'check'
+										: undefined
+								"
+								:active="selectedLocale === item.locale"
+								:base-color="
+									selectedLocale === item.locale
+										? 'primary'
+										: ''
+								"
+								>{{ item.title }}
+							</v-list-item>
+						</v-list-group>
 
 						<hr v-if="user.isAuthenticated" />
 						<v-list-item
@@ -129,7 +159,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from 'vue';
+import { computed, inject, PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { setLocale } from '@/plugins/i18next';
 import IAuthManager from '@/plugins/auth/IAuthManager';
@@ -138,9 +168,16 @@ import { MyPagesRoutes } from '@/router/routes';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import Config from '@/Config';
-import { AppHeaderTitle } from '@/models/Enums';
+import { AppContentSize, AppHeaderTitle } from '@/models/Enums';
 import logoGreen from '@/assets/logo_green.png';
 import { resetSavedMockData } from '@/mock/mockStorageHandler';
+
+defineProps({
+	size: {
+		type: String as PropType<AppContentSize>,
+		default: AppContentSize.Default,
+	},
+});
 
 const route = useRoute();
 const router = useRouter();
@@ -251,10 +288,13 @@ function resetMockedData(): void {
 			.separator {
 				height: 50%;
 				width: 1px;
-				margin: 0 16px;
+				margin: 0 14px;
 				background-color: $grey-lighten-5;
 			}
 			.title {
+				display: flex;
+				height: 100%;
+				align-items: center;
 				color: $grey-darken-2;
 				font-size: size(20);
 				font-weight: bold;
@@ -305,19 +345,17 @@ function resetMockedData(): void {
 		}
 
 		@media only screen and (max-width: 700px) {
-			flex-wrap: wrap;
-			.menu-wrap {
-				margin-left: 0;
-				width: 100%;
-				justify-content: space-between;
-				margin-top: 10px;
-
-				.user-wrap {
-					flex: auto;
-				}
-			}
 			.logo-wrap .logo {
 				height: 38px;
+			}
+			.menu-wrap .user-wrap {
+				display: none;
+			}
+		}
+
+		@media only screen and (max-width: 450px) {
+			.logo-wrap .title {
+				display: none;
 			}
 		}
 	}
@@ -347,6 +385,26 @@ function resetMockedData(): void {
 			.v-menu {
 				text-align: left;
 			}
+		}
+	}
+
+	&.Size-FullWidth {
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		height: $site-header-height;
+
+		.header-content {
+			max-width: none;
+			padding: 14px 24px;
+		}
+
+		.locale-wrap {
+			display: none;
+		}
+		.locale {
+			max-width: none;
+			padding: 0 18px;
 		}
 	}
 

@@ -22,3 +22,13 @@ export enum MyPagesRoutes {
 	AuthLogin = 'AuthLogin',
 	AuthCallback = 'AuthCallback',
 }
+
+export enum EstateRoutes {
+	Search = 'Estate.EstateSearch',
+
+	EstateDetails = 'Estate.EstateDetails',
+	EstateDetailsBuildings = 'Estate.EstateDetails.Buildings',
+
+	BuildingDetails = 'Estate.BuildingDetails',
+	BuildingDetailsRooms = 'Estate.BuildingDetails.Rooms',
+}

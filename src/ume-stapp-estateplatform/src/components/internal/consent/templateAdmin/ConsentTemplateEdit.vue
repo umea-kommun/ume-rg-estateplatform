@@ -7,7 +7,7 @@
 	>
 		<base-back-button />
 		<div v-if="!isBusyLoadingFromServer && template">
-			<Form v-slot="{ errors }" :ref="(e) => (validator = e)">
+			<vee-form v-slot="{ errors }" :ref="(e) => (validator = e)">
 				<v-row>
 					<v-col class="pa-0">
 						<h1>
@@ -167,7 +167,7 @@
 						></app-loading-spinner>
 					</v-col>
 				</v-row>
-			</Form>
+			</vee-form>
 		</div>
 	</app-content>
 </template>
@@ -198,7 +198,7 @@ import AppLoadingSpinner from '@/components/app/AppLoadingSpinner.vue';
 import { useI18n } from 'vue-i18n';
 import { useTConfirmDialog } from '@turkos/components';
 import TemplateGroupSelect from './TemplateGroupSelect.vue';
-import { Form } from 'vee-validate';
+import { Form as VeeForm } from 'vee-validate';
 import moment from 'moment';
 
 const router = useRouter();

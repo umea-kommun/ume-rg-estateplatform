@@ -7,9 +7,11 @@ import KvittensDetails from '@/components/external/kvittens/KvittensDetails.vue'
 import { useAuthMiddleware } from '@/plugins/auth';
 import AuthCallback from '@/components/auth/AuthCallback.vue';
 import AuthLogin from '@/components/auth/AuthLogin.vue';
-import { MyPagesRoutes } from './routes';
+import { EstateRoutes, MyPagesRoutes } from './routes';
 import { AppContentSize, AppHeaderTitle } from '@/models/Enums';
 import Config from '@/Config';
+
+const ESTATE_ENABLED = Config.VUE_APP_ESTATE_ENABLED === 'true';
 
 const routes: Array<RouteRecordRaw> = [
 	/** External routes */
@@ -190,6 +192,53 @@ const routes: Array<RouteRecordRaw> = [
 			breadcrumb: () => [],
 		},
 	},
+
+	// Declare estate routes only if the feature is enabled
+	...(ESTATE_ENABLED
+		? [
+				{
+					path: '/internt/fastigheter',
+					name: EstateRoutes.Search,
+					component: () =>
+						import(
+							'@/components/internal/estate/search/EstateSearch.vue'
+						),
+					meta: {
+						requiresInternalLogin: true,
+						title: AppHeaderTitle.InternalEstate,
+						contentSize: AppContentSize.FullWidth,
+					},
+				},
+				{
+					path: '/internt/fastighet/:estateId/:slug?',
+					name: EstateRoutes.EstateDetails,
+					component: () =>
+						import(
+							'@/components/internal/estate/EstateDetails.vue'
+						),
+					props: true,
+					meta: {
+						requiresInternalLogin: true,
+						title: AppHeaderTitle.InternalEstate,
+						contentSize: AppContentSize.FullWidth,
+					},
+				},
+				{
+					path: '/internt/fastigheter/byggnad/:buildingId/:slug?',
+					name: EstateRoutes.BuildingDetails,
+					component: () =>
+						import(
+							'@/components/internal/estate/BuildingDetails.vue'
+						),
+					props: true,
+					meta: {
+						requiresInternalLogin: true,
+						title: AppHeaderTitle.InternalEstate,
+						contentSize: AppContentSize.FullWidth,
+					},
+				},
+		  ]
+		: []),
 
 	/** Authentication */
 	{

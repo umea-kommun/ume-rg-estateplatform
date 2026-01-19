@@ -2,6 +2,7 @@
 	"app": {
 		"title": "My pages - Umeå municipality",
 		"nav": {
+			"home": "Home",
 			"close": "Close",
 			"save": "Save",
 			"yes": "Yes",
@@ -10,7 +11,8 @@
 			"logo": "Logo Umeå municipality",
 			"skipToContent": "Skip to content",
 			"startPage": "Go to start page",
-			"goBack": "Go back"
+			"goBack": "Go back",
+			"more": "More"
 		},
 		"time": {
 			"minute": "minute | minutes",
@@ -79,7 +81,8 @@
 				"agentConsent": "Consent agent",
 				"internalKvittens": "Receipts",
 				"agentKvittens": "Receipt agent",
-				"internalDefaultPasswords": "Password"
+				"internalDefaultPasswords": "Password",
+				"internalEstate": "Real Estate"
 			},
 			"locale": {
 				"change": "Other languages"
@@ -127,6 +130,16 @@
 				"title": "My grades",
 				"description": "Get your upper secondary school grades."
 			}
+		},
+		"map": {
+			"fullScreenClose": "Close full screen",
+			"fullScreenOpen": "Open full screen",
+			"zoomIn": "Zoom in",
+			"zoomOut": "Zoom out"
+		},
+		"blueprintMap": {
+			"floor": "Floor",
+			"reportRoom": "Report a fault"
 		},
 		"pageNotFound": {
 			"pageTitle": "Page could not be found",
@@ -276,10 +289,6 @@
 			"internalStart": {
 				"title": "Hello {name}, welcome to your internal pages.",
 				"description": "Internal pages allow you as an employee of Umeå municipality to handle cases and use e-services in your professional role.",
-				"noAccess": {
-					"title": "You do not have access",
-					"description": "You do not have access to any functionality on Umeå municipality's internal pages."
-				},
 				"consent": {
 					"title": "Consent management",
 					"goToConsumer": "Show my students' consent",
@@ -294,6 +303,11 @@
 				"passwords": {
 					"title": "Passwords",
 					"goToPassword": "See students' assigned passwords"
+				},
+				"estate": {
+					"title": "Properties and buildings",
+					"description": "Find information about properties, buildings and rooms in the municipality of Umeå.",
+					"goToEstateSearch": "Search properties and buildings"
 				},
 				"feedbackTitle": "Would you like to help us improve?",
 				"feedbackSubtitle": "Leave feedback"
@@ -530,6 +544,37 @@
 				"classLabel": "Class/department/group",
 				"studentLabel": "Student",
 				"noAccess": "No schools or groups associated to your account were found."
+			},
+			"estateSearch": {
+				"breadcrumb": "Property Search",
+				"searchPlaceholder": "Search by property name, address, building name or room...",
+				"searchButton": "Search",
+				"filter": "Filter",
+				"selectOnMap": "Select on map",
+				"noResults": "We could not find any properties, buildings or rooms that matched your search."
+			},
+			"estateSearchFilter": {
+				"businessTypeLabel": "Main business type",
+				"clearFilter": "Clear filter"
+			},
+			"estateDetails": {
+				"noBuildings": "This property has no buildings associated with it.",
+				"buildings": "Buildings"
+			},
+			"buildingDetails": {
+				"floorLabel": "Floor",
+				"noRooms": "This building has no rooms associated with it.",
+				"mapButton": "Map",
+				"buildingImageAlt": "Image of building",
+				"blueprintButton": "Blueprint",
+				"blueprintMissingButton": "Blueprint missing",
+				"room": {
+					"title": "Rooms",
+					"search": "Search",
+					"searchPlaceholder": "Search rooms...",
+					"floor": "Floor",
+					"noMatches": "There are no rooms that match your search."
+				}
 			}
 		},
 		"kvittensUserAnswer": {
@@ -569,5 +614,31 @@
 		"GY": "Upper Secondary School ",
 		"GS": "Upper Secondary School For Learning Disabilities",
 		"PC": "Pedagogical Care"
+	},
+	"estateCommon": {
+		"addressLabel": "Address",
+		"areaLabel": "Area (m²)",
+		"buildingLabel": "Building",
+		"floorLabel": "Floor",
+		"municipalityAreaLabel": "Municipality Area",
+		"nameLabel": "Name",
+		"operationalAreaLabel": "Operational Area",
+		"administrativeAreaLabel": "Administrative Area",
+		"propertyDesignationLabel": "Property Designation",
+		"propertyLabel": "Property",
+		"type": {
+			"estate": "Property",
+			"building": "Building",
+			"room": "Room"
+		},
+		"buildingCount": "{count} building | {count} buildings",
+		"floorCount": "{count} floor | {count} floors",
+		"roomCount": "{count} room | {count} rooms",
+		"yearOfConstructionLabel": "Year of construction",
+		"externalOwner": {
+			"status": "Owned/Rented",
+			"name": "Property owner",
+			"note": "Contact information"
+		}
 	}
 }

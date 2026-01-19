@@ -44,6 +44,11 @@ module.exports = {
 				code: 120,
 			},
 		],
+		'vue/component-name-in-template-casing': [
+			'warn',
+			'kebab-case',
+			{ registeredComponentsOnly: false },
+		],
 	},
 	overrides: [
 		{

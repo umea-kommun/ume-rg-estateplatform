@@ -6,6 +6,7 @@ export enum AppContentSize {
 	Narrow = 'Size-Narrow',
 	Default = 'Size-Default',
 	Wide = 'Size-Wide',
+	FullWidth = 'Size-FullWidth',
 }
 
 export enum AppHeaderTitle {
@@ -17,6 +18,7 @@ export enum AppHeaderTitle {
 	InternalKvittens = 'internalKvittens',
 	AgentKvittens = 'agentKvittens',
 	InternalDefaultPasswords = 'internalDefaultPasswords',
+	InternalEstate = 'internalEstate',
 }
 
 /** ErrorCode som kommer från backend */
@@ -106,6 +108,19 @@ export enum DispatchType {
 	// Grades
 	GetGrades = 'getGrades',
 	DownloadGrade = 'downloadGrade',
+
+	// Estate
+	GetEstateSearch = 'getEstateSearch',
+	GetEstateSearchGeoLocations = 'getEstateSearchGeoLocations',
+	GetEstateById = 'getEstateById',
+	GetEstateBuildings = 'getEstateBuildings',
+	GetBuildingLocations = 'getBuildingLocations',
+	GetBuildingById = 'getBuildingById',
+	GetBuildingRooms = 'getBuildingRooms',
+	GetBuildingFloors = 'getBuildingFloors',
+	GetFloorBlueprint = 'getFloorBlueprint',
+	GetRoomById = 'getRoomById',
+	GetBusinessTypes = 'getBusinessTypes',
 
 	// Feedback
 	FeedbackRate = 'feedbackRate',

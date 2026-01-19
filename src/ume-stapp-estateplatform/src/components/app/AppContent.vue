@@ -11,7 +11,10 @@
 				{{ warningMessage }}
 			</v-alert>
 		</div>
-		<v-container>
+		<v-container :class="{ 'with-breadcrumb': $slots.breadcrumbs }">
+			<div class="breadcrumbs-wrap" v-if="!isLoading">
+				<slot name="breadcrumbs"></slot>
+			</div>
 			<!-- Spinner while loading content  -->
 			<app-loading-spinner :isVisible="isLoading"></app-loading-spinner>
 			<!-- Render slot content -->
@@ -120,6 +123,20 @@ const showWarningMessage = computed({
 	&.Size-Narrow {
 		.v-container {
 			max-width: $site-max-width-narrow;
+		}
+	}
+	&.Size-FullWidth {
+		.v-container {
+			max-width: none;
+
+			padding: 0;
+		}
+	}
+
+	.v-container.with-breadcrumb {
+		padding-top: calc($site-content-vertical-padding - 24px);
+		.breadcrumbs-wrap {
+			margin-bottom: 8px;
 		}
 	}
 }

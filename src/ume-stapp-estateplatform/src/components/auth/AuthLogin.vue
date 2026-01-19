@@ -70,6 +70,7 @@ function login(): void {
 
 		let comeBackUrl = '/';
 		if (route.query.comeBack) {
+			// TODO: comeBackUrl should be able to include route params, not only path
 			const { name, path } = router.resolve({
 				path: route.query.comeBack.toString(),
 			});

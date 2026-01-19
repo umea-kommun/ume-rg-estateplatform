@@ -1,5 +1,5 @@
 @use './variables.scss' as *;
-@use  './mixins.scss' as *;
+@use './mixins.scss' as *;
 
 /**
  * Vuetify theme for Umeå kommun. Modifies default material design theme.
@@ -162,5 +162,20 @@ html {
 
 	.v-container {
 		max-width: none !important;
+	}
+}
+
+.loader-lazy {
+	animation: loader-in 0.5s;
+}
+@keyframes loader-in {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
 	}
 }

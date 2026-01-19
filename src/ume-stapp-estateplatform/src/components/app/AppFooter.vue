@@ -1,6 +1,6 @@
 <template>
 	<footer
-		class="app-footer mt-4"
+		class="app-footer"
 		:style="{ backgroundImage: 'url(' + footerBackground + ')' }"
 	>
 		<v-container class="top-container">

@@ -8,6 +8,7 @@ import VuexPersist from 'vuex-persist';
 import kvittensStore from './kvittens/store';
 import passwordStore from './password/store';
 import gradeStore from './grade/store';
+import estateStore from './estate/store';
 import feedbackStore from './feedback/store';
 
 // export default createStore({
@@ -50,6 +51,7 @@ const store: StoreOptions<IRootState> = {
 		kvittens: kvittensStore,
 		password: passwordStore,
 		grade: gradeStore,
+		estate: estateStore,
 		feedback: feedbackStore,
 	},
 };

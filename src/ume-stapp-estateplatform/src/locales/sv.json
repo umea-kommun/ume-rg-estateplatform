@@ -2,6 +2,7 @@
 	"app": {
 		"title": "Mina sidor - Umeå kommun",
 		"nav": {
+			"home": "Hem",
 			"close": "Stäng",
 			"save": "Spara",
 			"yes": "Ja",
@@ -10,7 +11,8 @@
 			"logo": "Logotyp Umeå kommun",
 			"skipToContent": "Hoppa till innehåll",
 			"startPage": "Gå till startsidan",
-			"goBack": "Gå tillbaka"
+			"goBack": "Gå tillbaka",
+			"more": "Mer"
 		},
 		"time": {
 			"minute": "minut | minuter",
@@ -79,7 +81,8 @@
 				"agentConsent": "Samtyckesombud",
 				"internalKvittens": "Kvittenser",
 				"agentKvittens": "Kvittensombud",
-				"internalDefaultPasswords": "Lösenord"
+				"internalDefaultPasswords": "Lösenord",
+				"internalEstate": "Fastigheter"
 			},
 			"locale": {
 				"change": "Other languages"
@@ -127,6 +130,16 @@
 				"title": "Mina betyg",
 				"description": "Hämta dina betyg från gymnasiet."
 			}
+		},
+		"map": {
+			"fullScreenClose": "Stäng helskärm",
+			"fullScreenOpen": "Öppna helskärm",
+			"zoomIn": "Zooma in",
+			"zoomOut": "Zooma ut"
+		},
+		"blueprintMap": {
+			"floor": "Våning",
+			"reportRoom": "Felanmäl"
 		},
 		"pageNotFound": {
 			"pageTitle": "Sidan kunde inte hittas",
@@ -276,10 +289,6 @@
 			"internalStart": {
 				"title": "Hej {name}, välkommen till dina interna sidor.",
 				"description": "Interna sidor tillåter dig som anställd på Umeå kommun att handlägga ärenden och använda e-tjänster i din yrkesroll.",
-				"noAccess": {
-					"title": "Du saknar behörighet",
-					"description": "Du har inte åtkomst till någon funktionalitet på Umeå kommuns interna sidor."
-				},
 				"consent": {
 					"title": "Samtyckeshantering",
 					"goToConsumer": "Visa samtycken för mina elever",
@@ -294,6 +303,11 @@
 				"passwords": {
 					"title": "Lösenord",
 					"goToPassword": "Se elevers tilldelade lösenord"
+				},
+				"estate": {
+					"title": "Fastigheter",
+					"description": "Hitta information om fastigheter, byggnader och rum inom Umeå kommun.",
+					"goToEstateSearch": "Sök efter fastigheter"
 				},
 				"feedbackTitle": "Vill du hjälpa oss att bli bättre?",
 				"feedbackSubtitle": "Lämna ett omdömme"
@@ -530,6 +544,37 @@
 				"classLabel": "Klass/avdelning/grupp",
 				"studentLabel": "Elev",
 				"noAccess": "Inga skolor eller grupper med koppling till ditt konto hittades."
+			},
+			"estateSearch": {
+				"breadcrumb": "Fastighetssök",
+				"searchPlaceholder": "Sök på fastighet, adress, byggnad eller rum...",
+				"searchButton": "Sök",
+				"filter": "Filtrera",
+				"selectOnMap": "Välj på karta",
+				"noResults": "Vi kunde inte hitta några fastigheter, byggnader eller rum som matchade din sökning."
+			},
+			"estateSearchFilter": {
+				"businessTypeLabel": "Huvudsaklig verksamhetstyp",
+				"clearFilter": "Rensa filter"
+			},
+			"estateDetails": {
+				"noBuildings": "Denna fastighet har inga byggnader kopplade till sig.",
+				"buildings": "Byggnader"
+			},
+			"buildingDetails": {
+				"floorLabel": "Våning",
+				"noRooms": "Denna byggnad har inga rum kopplade till sig.",
+				"mapButton": "Karta",
+				"buildingImageAlt": "Bild på byggnaden",
+				"blueprintButton": "Planritning",
+				"blueprintMissingButton": "Planritning saknas",
+				"room": {
+					"title": "Rum",
+					"search": "Sök",
+					"searchPlaceholder": "Sök på rum...",
+					"floor": "Våning",
+					"noMatches": "Det finns inga rum som matchar din sökning."
+				}
 			}
 		},
 		"kvittensUserAnswer": {
@@ -569,5 +614,31 @@
 		"GY": "Gymnasieskolor",
 		"GS": "Anpassade gymnasieskolor",
 		"PC": "Pedagogisk omsorg"
+	},
+	"estateCommon": {
+		"addressLabel": "Adress",
+		"areaLabel": "Yta (m²)",
+		"buildingLabel": "Byggnad",
+		"floorLabel": "Våning",
+		"municipalityAreaLabel": "Kommundel",
+		"nameLabel": "Namn",
+		"operationalAreaLabel": "Driftområde",
+		"administrativeAreaLabel": "Förvaltningsområde",
+		"propertyDesignationLabel": "Fastighetsbeteckning",
+		"propertyLabel": "Fastighet",
+		"type": {
+			"estate": "Fastighet",
+			"building": "Byggnad",
+			"room": "Rum"
+		},
+		"buildingCount": "{count} byggnad | {count} byggnader",
+		"floorCount": "{count} våning | {count} våningar",
+		"roomCount": "{count} rum",
+		"yearOfConstructionLabel": "Byggnadsår",
+		"externalOwner": {
+			"status": "Egen/inhyrd",
+			"name": "Fastighetsägare",
+			"note": "Kontaktuppgifter"
+		}
 	}
 }

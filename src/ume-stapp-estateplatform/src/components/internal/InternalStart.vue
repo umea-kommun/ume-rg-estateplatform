@@ -20,22 +20,6 @@
 					</p>
 				</v-col>
 			</v-row>
-			<v-row v-if="userHasNoAccess">
-				<v-col class="pa-0 pt-4">
-					<v-alert
-						:title="
-							$t(
-								'component.internal.internalStart.noAccess.title'
-							)
-						"
-						:text="
-							$t(
-								'component.internal.internalStart.noAccess.description'
-							)
-						"
-					></v-alert>
-				</v-col>
-			</v-row>
 			<v-row
 				v-if="isConsentConsumer || isConsentTemplateAdmin"
 				class="mt-4"
@@ -160,6 +144,37 @@
 					</v-btn>
 				</v-col>
 			</v-row>
+			<v-row class="mt-4" v-if="isEstateEnabled">
+				<v-col cols="12" class="pa-0">
+					<hr class="mb-4" />
+					<h2 class="mb-2">
+						{{
+							$t('component.internal.internalStart.estate.title')
+						}}
+					</h2>
+					<p class="mb-4">
+						{{
+							$t(
+								'component.internal.internalStart.estate.description'
+							)
+						}}
+					</p>
+					<v-btn
+						variant="outlined"
+						size="x-large"
+						prependIcon="domain"
+						:to="{
+							name: EstateRoutes.Search,
+						}"
+					>
+						{{
+							$t(
+								'component.internal.internalStart.estate.goToEstateSearch'
+							)
+						}}
+					</v-btn>
+				</v-col>
+			</v-row>
 		</div>
 		<rate-feedback
 			:feedback-title="
@@ -179,7 +194,7 @@ import AppContent from '@/components/app/AppContent.vue';
 import { useRoute } from 'vue-router';
 import { IRootState } from '@/models/Interfaces';
 import { AppContentSize } from '@/models/Enums';
-import { MyPagesRoutes } from '@/router/routes';
+import { EstateRoutes, MyPagesRoutes } from '@/router/routes';
 import Config from '@/Config';
 import RateFeedback from '@/components/feedback/RateFeedback.vue';
 
@@ -230,14 +245,8 @@ const isPasswordConsumer = computed(() => {
 	}
 	return false;
 });
-
-const userHasNoAccess = computed(() => {
-	return (
-		!isConsentConsumer.value &&
-		!isConsentTemplateAdmin.value &&
-		!isKvittensConsumer.value &&
-		!isPasswordConsumer.value
-	);
+const isEstateEnabled = computed(() => {
+	return Config.VUE_APP_ESTATE_ENABLED === 'true';
 });
 </script>
 <style scoped lang="scss">
