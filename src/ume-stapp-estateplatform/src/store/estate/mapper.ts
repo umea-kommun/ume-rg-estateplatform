@@ -166,23 +166,25 @@ export default {
 			municipalityArea: string | null;
 			operationalArea: string | null;
 			administrativeArea?: string | null;
-			externalOwnerInfo?: {
+			externalOwnerInfo: {
 				status: string;
 				name: string;
 				note: string;
-			};
+			} | null;
 		} | null;
 	}): IEstateDetails => {
+		const rExternalOwner = r.extendedProperties?.externalOwnerInfo;
+
 		const estate: IEstateDetails = {
 			id: r.id,
 			type: r.type as EstateType,
 			name: r.name,
 			popularName: capitalizeWords(r.popularName),
-			externalOwnerInfo: r.extendedProperties?.externalOwnerInfo
+			externalOwnerInfo: rExternalOwner
 				? {
-						status: r.extendedProperties?.externalOwnerInfo?.status,
-						name: r.extendedProperties?.externalOwnerInfo?.name,
-						note: r.extendedProperties?.externalOwnerInfo?.note,
+						status: rExternalOwner?.status,
+						name: rExternalOwner?.name,
+						note: rExternalOwner?.note,
 				  }
 				: null,
 			municipalityArea: capitalizeWords(
@@ -294,12 +296,20 @@ export default {
 				name: string;
 				note: string;
 			};
+			contactPersons: {
+				propertyManager: string | null;
+				operationsManager: string | null;
+				operationCoordinator: string | null;
+				rentalAdministrator: string | null;
+			} | null;
 		};
 		geoLocation: {
 			lat: number;
 			lon: number;
 		} | null;
 	}): IBuildingDetails => {
+		const rContactPersons = r.extendedProperties?.contactPersons;
+
 		const building: IBuildingDetails = {
 			id: r.id,
 			type: r.type as EstateType,
@@ -349,6 +359,16 @@ export default {
 						text: r.extendedProperties.noticeBoard.text,
 						startDate: r.extendedProperties.noticeBoard.startDate,
 						endDate: r.extendedProperties.noticeBoard.endDate,
+				  }
+				: null,
+			contactPersons: rContactPersons
+				? {
+						propertyManager: rContactPersons?.propertyManager,
+						operationsManager: rContactPersons?.operationsManager,
+						operationCoordinator:
+							rContactPersons?.operationCoordinator,
+						rentalAdministrator:
+							rContactPersons?.rentalAdministrator,
 				  }
 				: null,
 		};

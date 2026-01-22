@@ -3,3 +3,8 @@ export enum EstateType {
 	Building = 'building',
 	Room = 'room',
 }
+
+export enum ActiveMapType {
+	Map = 'map',
+	Blueprint = 'blueprint',
+}

@@ -1,14 +1,52 @@
 <template>
-	<v-btn class="base-icon-button regular-text ma-0" :class="{ active }" flat>
-		<div class="icon-wrap d-flex justify-center align-center">
-			<v-icon :icon="icon" />
-		</div>
-		<div class="text">{{ label }}</div>
-	</v-btn>
+	<v-tooltip
+		class="base-icon-button-wrap"
+		:text="tooltip"
+		location="bottom"
+		:disabled="!tooltip"
+		:open-delay="200"
+	>
+		<template v-slot:activator="{ props }">
+			<div v-bind="props">
+				<v-btn
+					v-bind="$attrs"
+					class="base-icon-button regular-text ma-0"
+					:class="{ active }"
+					:disabled="disabled"
+					flat
+				>
+					<div class="icon-wrap d-flex justify-center align-center">
+						<v-icon :icon="icon" />
+						<div
+							v-if="count !== undefined"
+							class="count"
+							:class="{
+								zero: !count,
+								'three-digit': count > 99,
+							}"
+						>
+							{{ count }}
+						</div>
+						<div v-else-if="disabled" class="count zero">
+							<v-icon icon="close" size="14" />
+						</div>
+					</div>
+					<div class="text">{{ label }}</div>
+				</v-btn>
+			</div>
+		</template>
+	</v-tooltip>
 </template>
 
 <script setup lang="ts">
-defineProps<{ label: string; icon: string; active?: boolean }>();
+defineProps<{
+	active?: boolean;
+	count?: number;
+	disabled?: boolean;
+	icon: string;
+	label: string;
+	tooltip?: string;
+}>();
 </script>
 
 <style scoped lang="scss">
@@ -26,6 +64,8 @@ defineProps<{ label: string; icon: string; active?: boolean }>();
 		font-size: size(16);
 	}
 	.icon-wrap {
+		position: relative;
+		margin: 0 12px;
 		width: 48px;
 		height: 48px;
 		background-color: #e6e6e6;
@@ -33,6 +73,37 @@ defineProps<{ label: string; icon: string; active?: boolean }>();
 
 		.v-icon {
 			font-size: size(24);
+		}
+	}
+	.count {
+		position: absolute;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-top: -90%;
+		margin-right: -80%;
+
+		font-size: size(12);
+
+		border-radius: 50%;
+		background-color: $grey-darken-2;
+		background-color: $primary;
+		font-weight: bold;
+		color: #fff;
+		width: size(22);
+		height: size(22);
+
+		&.zero {
+			background-color: $primary;
+			background-color: $grey-darken-2;
+		}
+		&.three-digit {
+			font-size: size(10);
+		}
+	}
+	&.v-btn--disabled {
+		.count {
+			background-color: $grey-lighten-6;
 		}
 	}
 

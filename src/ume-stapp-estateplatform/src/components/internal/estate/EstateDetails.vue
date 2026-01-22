@@ -135,7 +135,6 @@ import '@/themes/estate.scss';
 import { EstateType } from '@/models/estate/Enums';
 import BuildingMap from './map/BuildingMap.vue';
 import BaseIconButton from '@/components/base/BaseIconButton.vue';
-import { useRouteSlug } from '@/router/routeSlug';
 import ExternalOwnerInfo from './ExternalOwnerInfo.vue';
 
 const props = defineProps<{
@@ -150,7 +149,6 @@ const buildingMapRef = useTemplateRef('building-map');
 const estateName = computed(() => {
 	return estate.value?.popularName || estate.value?.name || '';
 });
-useRouteSlug(estateName);
 
 const breadcrumbs = computed(() => {
 	return [

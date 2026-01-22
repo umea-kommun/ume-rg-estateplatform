@@ -567,7 +567,10 @@
 				"mapButton": "Karta",
 				"buildingImageAlt": "Bild på byggnaden",
 				"blueprintButton": "Planritning",
-				"blueprintMissingButton": "Planritning saknas",
+				"blueprintMissingTooltip": "Planritning saknas",
+				"contactPersonsButton": "Kontaktpersoner",
+				"contactPersonsMissingTooltip": "Det finns inga kontaktpersoner angivna",
+				"documentsButton": "Handlingar",
 				"room": {
 					"title": "Rum",
 					"search": "Sök",
@@ -575,6 +578,14 @@
 					"floor": "Våning",
 					"noMatches": "Det finns inga rum som matchar din sökning."
 				}
+			},
+			"buildingContact": {
+				"title": "Kontaktpersoner",
+				"propertyManager": "Fastighetsförvaltare",
+				"operationsManager": "Driftområdeschef",
+				"operationCoordinator": "Driftsamordnare",
+				"rentalAdministrator": "Hyresadministratör",
+				"valueMissing": "Ej angivet"
 			}
 		},
 		"kvittensUserAnswer": {

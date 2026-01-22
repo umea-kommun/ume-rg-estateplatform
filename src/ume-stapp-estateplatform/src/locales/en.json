@@ -567,7 +567,10 @@
 				"mapButton": "Map",
 				"buildingImageAlt": "Image of building",
 				"blueprintButton": "Blueprint",
-				"blueprintMissingButton": "Blueprint missing",
+				"blueprintMissingTooltip": "Blueprint missing",
+				"contactPersonsButton": "Contact persons",
+				"contactPersonsMissingTooltip": "No contact persons specified",
+				"documentsButton": "Documents",
 				"room": {
 					"title": "Rooms",
 					"search": "Search",
@@ -575,6 +578,14 @@
 					"floor": "Floor",
 					"noMatches": "There are no rooms that match your search."
 				}
+			},
+			"buildingContact": {
+				"title": "Contact persons",
+				"propertyManager": "Property manager",
+				"operationsManager": "Operations manager",
+				"operationCoordinator": "Operations coordinator",
+				"rentalAdministrator": "Rental administrator",
+				"valueMissing": "Not specified"
 			}
 		},
 		"kvittensUserAnswer": {

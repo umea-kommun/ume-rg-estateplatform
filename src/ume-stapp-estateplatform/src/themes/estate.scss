@@ -91,14 +91,26 @@
 
 	.circle-button-toggles {
 		display: flex;
-		gap: 16px;
+		flex-wrap: wrap;
+		gap: 24px 16px;
 
 		&.mobile {
 			display: none;
 		}
 
+		@media only screen and (max-width: 490px) {
+			justify-content: space-evenly;
+
+			> div {
+				width: calc(50% - 16px);
+
+				.v-btn {
+					width: 100%;
+				}
+			}
+		}
+
 		@media only screen and (max-width: $estate-mobile-threshold) {
-			display: none;
 			&.mobile {
 				display: flex;
 			}
@@ -118,4 +130,8 @@ html,
 body {
 	height: 100%;
 	overscroll-behavior-y: none;
+}
+
+:root {
+	--estate-mobile-threshold: #{$estate-mobile-threshold};
 }

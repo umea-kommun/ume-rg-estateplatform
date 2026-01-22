@@ -85,6 +85,13 @@ export interface IExternalOwnerInfo {
 	note: string | null;
 }
 
+export interface IBuildingContactPersons {
+	propertyManager: string | null;
+	operationsManager: string | null;
+	operationCoordinator: string | null;
+	rentalAdministrator: string | null;
+}
+
 export interface IBuildingGeoLocation {
 	id: number;
 	geoLocation: {
@@ -128,6 +135,7 @@ export interface IBuildingDetails {
 	};
 	externalOwnerInfo: IExternalOwnerInfo | null;
 	noticeBoard: IBuildingNoticeBoard | null;
+	contactPersons: IBuildingContactPersons | null;
 }
 
 export interface IBuildingRoom {

@@ -228,7 +228,7 @@ const routes: Array<RouteRecordRaw> = [
 					name: EstateRoutes.BuildingDetails,
 					component: () =>
 						import(
-							'@/components/internal/estate/BuildingDetails.vue'
+							'@/components/internal/estate/building/BuildingDetails.vue'
 						),
 					props: true,
 					meta: {
