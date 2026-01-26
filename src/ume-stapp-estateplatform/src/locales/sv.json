@@ -547,11 +547,11 @@
 			},
 			"estateSearch": {
 				"breadcrumb": "Fastighetssök",
-				"searchPlaceholder": "Sök på fastighet, adress, byggnad eller rum...",
+				"searchPlaceholder": "Sök på fastighet, adress eller byggnad...",
 				"searchButton": "Sök",
 				"filter": "Filtrera",
 				"selectOnMap": "Välj på karta",
-				"noResults": "Vi kunde inte hitta några fastigheter, byggnader eller rum som matchade din sökning."
+				"noResults": "Vi kunde inte hitta några fastigheter eller byggnader som matchade din sökning."
 			},
 			"estateSearchFilter": {
 				"businessTypeLabel": "Huvudsaklig verksamhetstyp",
@@ -576,6 +576,7 @@
 					"search": "Sök",
 					"searchPlaceholder": "Sök på rum...",
 					"floor": "Våning",
+					"type": "Rumstyp",
 					"noMatches": "Det finns inga rum som matchar din sökning."
 				}
 			},

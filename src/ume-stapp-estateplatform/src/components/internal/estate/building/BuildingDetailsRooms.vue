@@ -19,6 +19,18 @@
 				density="comfortable"
 				clearable
 			/>
+			<v-autocomplete
+				v-if="roomTypes.length"
+				:label="t('component.internal.buildingDetails.room.type')"
+				:items="roomTypes"
+				v-model="selectedRoomType"
+				color="primary"
+				rounded="lg"
+				density="comfortable"
+				variant="outlined"
+				autocomplete="off"
+				clearable
+			/>
 			<v-select
 				:label="t('component.internal.buildingDetails.room.floor')"
 				v-model="selectedFloorId"
@@ -32,7 +44,7 @@
 				clearable
 			/>
 		</div>
-		<div class="mt-2">
+		<div class="mt-2 result-wrap">
 			<v-alert
 				v-if="!filteredRooms?.length"
 				icon="info"
@@ -90,11 +102,28 @@ const rooms = ref<IBuildingRoom[] | null>(null);
 
 // Filters
 const searchTerm = ref('');
+const selectedRoomType = ref<string | null>(null);
 const selectedFloorId = computed<number | null>({
 	get: () => props.floor,
 	set: (value: number | null) => {
 		emit('update:floor', value);
 	},
+});
+
+const roomTypes = computed(() => {
+	// Room types are based on popular names
+	const roomTypes = Array.from(
+		new Set(
+			(rooms.value ?? [])
+				.map((room) => room.popularName)
+				.filter(
+					(name): name is string =>
+						typeof name === 'string' && name.length > 0
+				)
+		)
+	);
+
+	return roomTypes.sort((a, b) => a.localeCompare(b));
 });
 
 const filteredRooms = computed(() => {
@@ -107,6 +136,12 @@ const filteredRooms = computed(() => {
 				room.name.toLowerCase().includes(lowerSearchTerm) ||
 				(room.popularName &&
 					room.popularName.toLowerCase().includes(lowerSearchTerm))
+		);
+	}
+
+	if (selectedRoomType.value) {
+		filtered = filtered.filter(
+			(room) => room.popularName === selectedRoomType.value
 		);
 	}
 
@@ -183,6 +218,9 @@ defineExpose({
 			flex: 1;
 		}
 	}
+}
+.result-wrap {
+	min-height: 20svh;
 }
 .room-item {
 	cursor: pointer;

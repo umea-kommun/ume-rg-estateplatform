@@ -547,11 +547,11 @@
 			},
 			"estateSearch": {
 				"breadcrumb": "Property Search",
-				"searchPlaceholder": "Search by property name, address, building name or room...",
+				"searchPlaceholder": "Search by property name, address or building name...",
 				"searchButton": "Search",
 				"filter": "Filter",
 				"selectOnMap": "Select on map",
-				"noResults": "We could not find any properties, buildings or rooms that matched your search."
+				"noResults": "We could not find any properties or buildings that matched your search."
 			},
 			"estateSearchFilter": {
 				"businessTypeLabel": "Main business type",
@@ -576,6 +576,7 @@
 					"search": "Search",
 					"searchPlaceholder": "Search rooms...",
 					"floor": "Floor",
+					"type": "Room type",
 					"noMatches": "There are no rooms that match your search."
 				}
 			},

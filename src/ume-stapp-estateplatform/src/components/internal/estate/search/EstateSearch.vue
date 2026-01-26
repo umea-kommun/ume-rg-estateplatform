@@ -306,6 +306,9 @@ onMounted(() => {
 			color: $grey-darken-3;
 		}
 	}
+	.content {
+		min-height: 50svh;
+	}
 	.map-btn {
 		display: none;
 	}
