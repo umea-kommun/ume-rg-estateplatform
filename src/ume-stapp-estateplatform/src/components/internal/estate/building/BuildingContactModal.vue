@@ -1,7 +1,7 @@
 <template>
 	<v-dialog
 		v-model="showModal"
-		class="building-contact-modal"
+		class="building-contact-modal estate-default"
 		:max-width="820"
 		aria-labelledby="modal-title"
 	>

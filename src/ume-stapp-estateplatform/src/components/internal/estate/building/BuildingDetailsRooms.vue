@@ -130,7 +130,7 @@ const filteredRooms = computed(() => {
 	let filtered = rooms.value ?? [];
 
 	if (searchTerm.value) {
-		const lowerSearchTerm = searchTerm.value.toLowerCase();
+		const lowerSearchTerm = searchTerm.value.toLowerCase().trim();
 		filtered = filtered.filter(
 			(room) =>
 				room.name.toLowerCase().includes(lowerSearchTerm) ||

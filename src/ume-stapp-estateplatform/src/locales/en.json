@@ -571,6 +571,7 @@
 				"contactPersonsButton": "Contact persons",
 				"contactPersonsMissingTooltip": "No contact persons specified",
 				"documentsButton": "Documents",
+				"documentsMissingTooltip": "There are no documents associated with this building",
 				"buildingImage": "Image of building",
 				"room": {
 					"title": "Rooms",
@@ -588,6 +589,13 @@
 				"operationCoordinator": "Operations coordinator",
 				"rentalAdministrator": "Rental administrator",
 				"valueMissing": "Not specified"
+			},
+			"buildingDocument": {
+				"title": "Documents",
+				"searchPlaceholder": "Search documents...",
+				"searchNoResults": "No documents matched your search.",
+				"noContent": "No content",
+				"downloadFile": "Download {filename}"
 			}
 		},
 		"kvittensUserAnswer": {

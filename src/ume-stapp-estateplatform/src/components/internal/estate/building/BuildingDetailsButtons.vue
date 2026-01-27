@@ -39,14 +39,26 @@
 		<base-icon-button
 			icon="insert_drive_file"
 			:label="$t('component.internal.buildingDetails.documentsButton')"
-			:tooltip="'Ej implementerat än' /* TODO: Remove when implemented */"
-			:count="0"
-			:disabled="true"
+			:tooltip="
+				building.numDocuments === 0
+					? $t(
+							'component.internal.buildingDetails.documentsMissingTooltip'
+					  )
+					: undefined
+			"
+			:count="building.numDocuments ?? undefined"
+			:disabled="building.numDocuments === 0"
+			@click="showDocumentModal = true"
 		/>
 
 		<building-contact-modal
 			v-if="building"
 			v-model="showContactPersonsModal"
+			:building="building"
+		/>
+		<building-document-modal
+			v-if="building"
+			v-model="showDocumentModal"
 			:building="building"
 		/>
 	</div>
@@ -59,6 +71,7 @@ import { useEstateIsMobile } from '../useEstateIsMobile';
 import { IBuildingDetails } from '@/models/estate/Interfaces';
 import BaseIconButton from '@/components/base/BaseIconButton.vue';
 import BuildingContactModal from './BuildingContactModal.vue';
+import BuildingDocumentModal from './BuildingDocumentModal.vue';
 
 const props = defineProps<{
 	building: IBuildingDetails;
@@ -72,6 +85,9 @@ const emit = defineEmits([
 ]);
 
 const isMobile = useEstateIsMobile();
+
+const showDocumentModal = ref(false);
+const showContactPersonsModal = ref(false);
 
 const activeMap = computed({
 	get: () => props.activeMap,
@@ -93,7 +109,6 @@ const onBlueprintClick = () => {
 		activeMap.value = ActiveMapType.Blueprint;
 	}
 };
-const showContactPersonsModal = ref(false);
 
 const contactPersonsCount = computed(() => {
 	return Object.values(props.building?.contactPersons || {}).reduce(

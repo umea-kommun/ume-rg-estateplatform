@@ -571,6 +571,7 @@
 				"contactPersonsButton": "Kontaktpersoner",
 				"contactPersonsMissingTooltip": "Det finns inga kontaktpersoner angivna",
 				"documentsButton": "Handlingar",
+				"documentsMissingTooltip": "Det finns inga handlingar kopplade till denna byggnad",
 				"buildingImage": "Bild på byggnaden",
 				"room": {
 					"title": "Rum",
@@ -588,6 +589,13 @@
 				"operationCoordinator": "Driftsamordnare",
 				"rentalAdministrator": "Hyresadministratör",
 				"valueMissing": "Ej angivet"
+			},
+			"buildingDocument": {
+				"title": "Handlingar",
+				"searchPlaceholder": "Sök efter handlingar...",
+				"searchNoResults": "Inga handlingar matchade din sökning.",
+				"noContent": "Inget innehåll",
+				"downloadFile": "Ladda ner {filename}"
 			}
 		},
 		"kvittensUserAnswer": {

@@ -124,6 +124,10 @@
 		width: 140px;
 		aspect-ratio: 4 / 3;
 	}
+
+	&.v-dialog .v-card-actions {
+		border-top: solid 1px $grey-lighten-3;
+	}
 }
 
 html,

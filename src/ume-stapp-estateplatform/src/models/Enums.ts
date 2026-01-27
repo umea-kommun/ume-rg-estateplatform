@@ -121,6 +121,8 @@ export enum DispatchType {
 	GetFloorBlueprint = 'getFloorBlueprint',
 	GetRoomById = 'getRoomById',
 	GetBusinessTypes = 'getBusinessTypes',
+	GetBuildingDocuments = 'getBuildingDocuments',
+	DownloadBuildingDocument = 'downloadBuildingDocument',
 
 	// Feedback
 	FeedbackRate = 'feedbackRate',

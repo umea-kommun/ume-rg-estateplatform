@@ -1,7 +1,15 @@
+import {
+	IBuildingDirectoryDto,
+	IBuildingDocumentDto,
+	IBuildingDocumentTreeDto,
+} from '@/models/estate/Dto';
 import Config from '@/Config';
 import { EstateType } from '@/models/estate/Enums';
 import {
 	IBuildingDetails,
+	IBuildingDirectory,
+	IBuildingDocument,
+	IBuildingDocumentTree,
 	IBuildingFloor,
 	IBuildingGeoLocation,
 	IBuildingRoom,
@@ -275,6 +283,7 @@ export default {
 		grossArea: number | null;
 		numFloors: number | null;
 		numRooms: number | null;
+		numDocuments: number | null;
 		estate: { id: number; name: string; popularName: string | null };
 		region: { id: number; name: string };
 		imageUrl: string | null;
@@ -310,6 +319,7 @@ export default {
 			type: r.type as EstateType,
 			name: r.name,
 			popularName: capitalizeWords(r.popularName),
+			numDocuments: r.numDocuments,
 			blueprintAvailable:
 				r.extendedProperties?.blueprintAvailable ?? false,
 			imageUrl: r.imageUrl ? getBuildingImageUrl(r.id) : null,
@@ -437,5 +447,43 @@ export default {
 		);
 
 		return businessTypes;
+	},
+	mapResponseToBuildingDocuments: (
+		r: IBuildingDocumentTreeDto
+	): IBuildingDocumentTree => {
+		const mapDocuments = (
+			docs: IBuildingDocumentDto[]
+		): IBuildingDocument[] =>
+			docs.map((doc) => ({
+				id: doc.id,
+				name: doc.name,
+				directoryId: doc.directoryId,
+				sizeInBytes: doc.sizeInBytes,
+				actionTypeId: doc.actionTypeId,
+				actionTypeName: doc.actionTypeName,
+			}));
+
+		const mapDirectories = (
+			dirs: IBuildingDirectoryDto[]
+		): IBuildingDirectory[] => {
+			return dirs.map((dir) => ({
+				id: dir.id,
+				name: dir.name,
+				subDirectories: mapDirectories(dir.subdirectories),
+				documents: mapDocuments(dir.documents),
+			}));
+		};
+
+		const directories: IBuildingDirectory[] = mapDirectories(r.directories);
+		const rootDocuments: IBuildingDocument[] = mapDocuments(
+			r.rootDocuments
+		);
+
+		return {
+			totalDirectoryCount: r.totalDirectoryCount,
+			totalDocumentCount: r.totalDocumentCount,
+			directories,
+			rootDocuments,
+		};
 	},
 };

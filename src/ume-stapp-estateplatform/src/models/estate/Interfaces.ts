@@ -99,6 +99,7 @@ export interface IBuildingDetails {
 	name: string;
 	popularName: string | null;
 	blueprintAvailable: boolean;
+	numDocuments: number | null;
 	imageUrl: string | null;
 	address: {
 		street: string;
@@ -147,6 +148,28 @@ export interface IBuildingFloor {
 export interface IBusinessType {
 	id: number;
 	name: string;
+}
+
+export interface IBuildingDocument {
+	id: number;
+	name: string;
+	directoryId: number;
+	sizeInBytes: number;
+	actionTypeId: number | null;
+	actionTypeName: string | null;
+}
+export interface IBuildingDirectory {
+	id: number;
+	name: string;
+	subDirectories: IBuildingDirectory[];
+	documents: IBuildingDocument[];
+}
+
+export interface IBuildingDocumentTree {
+	totalDocumentCount?: number;
+	totalDirectoryCount?: number;
+	directories: IBuildingDirectory[];
+	rootDocuments: IBuildingDocument[];
 }
 
 export interface IBlueprintPosition {
