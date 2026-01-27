@@ -1,3 +1,4 @@
+import Config from '@/Config';
 import { EstateType } from '@/models/estate/Enums';
 import {
 	IBuildingDetails,
@@ -28,20 +29,12 @@ function capitalizeWords(str?: string | null) {
 		);
 }
 
-// TODO: Remove when real images are available from API
-const tmpImages = () =>
-	Math.floor(Math.random() * 9 + 1) > 0 // disabled tmg images for now
-		? null
-		: {
-				thumbnailUrl:
-					'http://localhost:8080/assets/tmp_remove/thumbnail' +
-					Math.floor(Math.random() * 9 + 1) +
-					'.jpg',
-				imageUrl: 'http://localhost:8080/assets/tmp_remove/image.jpg',
-		  };
-
 function removeLeadingZerosRegex(str: string) {
 	return str.replace(/^0+(?=\d)/, '');
+}
+
+function getBuildingImageUrl(buildingId: number): string {
+	return `${Config.VUE_APP_ESTATE_SERVICE}/buildings/${buildingId}/image`;
 }
 
 export default {
@@ -54,6 +47,7 @@ export default {
 			numChildren: number | null;
 			numFloors: number | null;
 			grossArea: number | null;
+			imageUrl: string | null;
 			address: {
 				street: string;
 				zipCode: string;
@@ -88,7 +82,7 @@ export default {
 				operationalArea: capitalizeWords(
 					item.extendedProperties?.operationalArea
 				),
-				image: item.type === 'building' ? tmpImages() : null, // TODO: Replace with real image from API
+				imageUrl: item.imageUrl ? getBuildingImageUrl(item.id) : null,
 				address: item.address
 					? {
 							street: capitalizeWords(
@@ -211,6 +205,7 @@ export default {
 			grossArea: number | null;
 			numFloors: number | null;
 			numRooms: number | null;
+			imageUrl: string | null;
 			address: {
 				street: string;
 				zipCode: string;
@@ -228,8 +223,7 @@ export default {
 			name: b.name,
 			popularName: capitalizeWords(b.popularName),
 			grossArea: Math.round(b.grossArea ?? 0),
-
-			image: tmpImages(), // TODO: Replace with real image from API
+			imageUrl: b.imageUrl ? getBuildingImageUrl(b.id) : null,
 			metrics: {
 				floorCount: b.numFloors,
 				roomCount: b.numRooms,
@@ -283,6 +277,7 @@ export default {
 		numRooms: number | null;
 		estate: { id: number; name: string; popularName: string | null };
 		region: { id: number; name: string };
+		imageUrl: string | null;
 		extendedProperties?: {
 			blueprintAvailable: boolean | null;
 			noticeBoard: {
@@ -317,7 +312,7 @@ export default {
 			popularName: capitalizeWords(r.popularName),
 			blueprintAvailable:
 				r.extendedProperties?.blueprintAvailable ?? false,
-			image: tmpImages(), // TODO: Replace with real image from API
+			imageUrl: r.imageUrl ? getBuildingImageUrl(r.id) : null,
 			externalOwnerInfo: r.extendedProperties?.externalOwnerInfo
 				? {
 						status: r.extendedProperties?.externalOwnerInfo?.status,

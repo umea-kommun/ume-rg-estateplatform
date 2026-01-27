@@ -571,6 +571,7 @@
 				"contactPersonsButton": "Contact persons",
 				"contactPersonsMissingTooltip": "No contact persons specified",
 				"documentsButton": "Documents",
+				"buildingImage": "Image of building",
 				"room": {
 					"title": "Rooms",
 					"search": "Search",

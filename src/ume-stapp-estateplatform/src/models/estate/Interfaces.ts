@@ -7,10 +7,7 @@ export interface IEstateSearchResultEntry {
 	popularName: string | null;
 	municipalityArea: string | null;
 	operationalArea?: string | null;
-	image: {
-		thumbnailUrl: string;
-		imageUrl: string;
-	} | null;
+	imageUrl: string | null;
 	address: {
 		street: string;
 		zipCode: string;
@@ -54,10 +51,7 @@ export interface IEstateBuilding {
 	name: string;
 	popularName: string | null;
 	grossArea: number;
-	image: {
-		thumbnailUrl: string;
-		imageUrl: string;
-	} | null;
+	imageUrl: string | null;
 	metrics: {
 		floorCount: number | null;
 		roomCount: number | null;
@@ -105,10 +99,7 @@ export interface IBuildingDetails {
 	name: string;
 	popularName: string | null;
 	blueprintAvailable: boolean;
-	image: {
-		thumbnailUrl: string;
-		imageUrl: string;
-	} | null;
+	imageUrl: string | null;
 	address: {
 		street: string;
 		zipCode: string;

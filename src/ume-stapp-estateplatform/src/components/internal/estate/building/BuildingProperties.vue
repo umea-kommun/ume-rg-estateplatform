@@ -1,49 +1,51 @@
 <template>
-	<div class="properties-wrap d-flex align-start ga-4">
-		<div>
-			<div class="properties">
-				<div
-					class="prop"
-					v-for="prop in properties"
-					:key="prop.label"
-					v-show="prop.value"
-				>
-					<div class="label">{{ prop.label }}</div>
-					<div class="value" :class="prop.class">
-						{{ prop.value }}
+	<div>
+		<div class="properties-wrap d-flex align-start ga-4">
+			<div>
+				<div class="properties">
+					<div
+						class="prop"
+						v-for="prop in properties"
+						:key="prop.label"
+						v-show="prop.value"
+					>
+						<div class="label">{{ prop.label }}</div>
+						<div class="value" :class="prop.class">
+							{{ prop.value }}
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="chip-properties">
-				<v-chip v-if="building.metrics?.floorCount">
-					{{
-						$t('estateCommon.floorCount', {
-							count: building.metrics?.floorCount,
-						})
-					}}
-				</v-chip>
-				<v-chip v-if="building.metrics?.roomCount">
-					{{
-						$t('estateCommon.roomCount', {
-							count: building.metrics?.roomCount,
-						})
-					}}
-				</v-chip>
-				<v-chip v-if="building.metrics?.areaSqm">
-					{{ building.metrics?.areaSqm?.toLocaleString() }}
-					m²
-				</v-chip>
+				<div class="chip-properties">
+					<v-chip v-if="building.metrics?.floorCount">
+						{{
+							$t('estateCommon.floorCount', {
+								count: building.metrics?.floorCount,
+							})
+						}}
+					</v-chip>
+					<v-chip v-if="building.metrics?.roomCount">
+						{{
+							$t('estateCommon.roomCount', {
+								count: building.metrics?.roomCount,
+							})
+						}}
+					</v-chip>
+					<v-chip v-if="building.metrics?.areaSqm">
+						{{ building.metrics?.areaSqm?.toLocaleString() }}
+						m²
+					</v-chip>
+				</div>
 			</div>
+			<building-image
+				v-if="building.imageUrl"
+				:src="building.imageUrl"
+				:image-width="300"
+				:alt="$t('component.internal.buildingDetails.buildingImageAlt')"
+				class="cursor-pointer building-image"
+				@click="showImageInModal(building.imageUrl)"
+			/>
 		</div>
-		<img
-			v-if="building.image"
-			:src="building.image?.thumbnailUrl"
-			:alt="$t('component.internal.buildingDetails.buildingImageAlt')"
-			class="cursor-pointer building-image"
-			@click="showImageInModal(building.image.imageUrl)"
-		/>
-
 		<base-image-modal />
 	</div>
 </template>
@@ -54,6 +56,7 @@ import BaseImageModal from '@/components/base/baseImageModal/BaseImageModal.vue'
 import { IBuildingDetails } from '@/models/estate/Interfaces';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import BuildingImage from './BuildingImage.vue';
 
 const props = defineProps<{
 	building: IBuildingDetails;

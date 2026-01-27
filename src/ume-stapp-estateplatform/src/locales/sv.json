@@ -571,6 +571,7 @@
 				"contactPersonsButton": "Kontaktpersoner",
 				"contactPersonsMissingTooltip": "Det finns inga kontaktpersoner angivna",
 				"documentsButton": "Handlingar",
+				"buildingImage": "Bild på byggnaden",
 				"room": {
 					"title": "Rum",
 					"search": "Sök",

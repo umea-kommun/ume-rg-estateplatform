@@ -1,8 +1,9 @@
 <template>
 	<v-card class="estate-search-result-item" :to="navigation">
-		<img
-			v-if="entry.image"
-			:src="entry.image.thumbnailUrl"
+		<building-image
+			v-if="entry.imageUrl"
+			:src="entry.imageUrl"
+			:image-width="300"
 			class="building-image-mobile"
 		/>
 		<div class="content">
@@ -76,10 +77,11 @@
 						</v-chip>
 					</div>
 				</v-card-text>
-				<img
-					v-if="entry.image"
-					:src="entry.image.thumbnailUrl"
-					class="building-image ma-4"
+				<building-image
+					v-if="entry.imageUrl"
+					:src="entry.imageUrl"
+					:image-width="300"
+					class="building-image-desktop ma-4"
 				/>
 			</div>
 		</div>
@@ -92,6 +94,7 @@ import { IEstateSearchResultEntry } from '@/models/estate/Interfaces';
 import { EstateRoutes } from '@/router/routes';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import BuildingImage from '../building/BuildingImage.vue';
 
 const props = defineProps<{
 	entry: IEstateSearchResultEntry;
@@ -244,7 +247,7 @@ const estateType = computed(() => {
 		.building-image-mobile {
 			display: block;
 		}
-		.building-image {
+		.building-image-desktop {
 			display: none;
 		}
 	}

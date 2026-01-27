@@ -1,7 +1,18 @@
 import { ApplicationInsights, Util } from '@microsoft/applicationinsights-web';
-import { Router } from 'vue-router';
+import { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
 
 export let appInsights: ApplicationInsights;
+
+function isSamePage(
+	to: RouteLocationNormalizedLoadedGeneric,
+	from: RouteLocationNormalizedLoadedGeneric
+) {
+	return (
+		to.name === from.name &&
+		to.path === from.path &&
+		JSON.stringify(to.params ?? {}) === JSON.stringify(from.params ?? {})
+	);
+}
 
 export default {
 	install(
@@ -38,6 +49,10 @@ export default {
 		// Track route change (same way as done in 'vue-application-insights' that we used before)
 		if (router) {
 			router.beforeEach((route, from, next) => {
+				if (from && isSamePage(route, from)) {
+					return next();
+				}
+
 				const name = baseName + ' / ' + route.name?.toString();
 				appInsights.context.telemetryTrace.traceID =
 					Util.generateW3CId();
@@ -47,7 +62,11 @@ export default {
 				next();
 			});
 
-			router.afterEach((route) => {
+			router.afterEach((route, from) => {
+				if (from && isSamePage(route, from)) {
+					return;
+				}
+
 				const name = baseName + ' / ' + route.name?.toString();
 				const url =
 					location.protocol + '//' + location.host + route.fullPath;

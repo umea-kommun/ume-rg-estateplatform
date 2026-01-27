@@ -83,7 +83,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="chip-properties d-flex ga-2 mt-4">
+						<div class="chip-properties d-flex flex-wrap ga-2 mt-4">
 							<v-chip v-if="building?.metrics?.floorCount"
 								>{{
 									$t('estateCommon.floorCount', {
@@ -108,21 +108,21 @@
 						</div>
 					</div>
 					<router-link
-						v-if="building.image"
+						v-if="building.imageUrl"
 						:to="{
 							name: EstateRoutes.BuildingDetails,
 							params: { buildingId: building.id },
 						}"
 					>
-						<img
-							:src="building.image?.thumbnailUrl"
-							class="ml-4 cursor-pointer building-image"
+						<building-image
+							:src="building.imageUrl"
+							:image-width="300"
+							class="cursor-pointer building-image"
 						/>
 					</router-link>
 				</v-card-text>
 			</div>
 		</v-card>
-		<base-image-modal />
 	</div>
 </template>
 
@@ -134,7 +134,7 @@ import { computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { EstateRoutes } from '@/router/routes';
 import { useI18n } from 'vue-i18n';
-import BaseImageModal from '@/components/base/baseImageModal/BaseImageModal.vue';
+import BuildingImage from '../building/BuildingImage.vue';
 
 const props = defineProps<{
 	modelValue: number[] | null;
@@ -260,6 +260,7 @@ watch(
 		pointer-events: auto;
 		width: 100%;
 		max-width: 520px;
+		container-type: inline-size;
 
 		.card-header {
 			display: flex;
@@ -295,11 +296,27 @@ watch(
 				}
 			}
 		}
-	}
 
-	@media only screen and (max-width: 620px) {
-		.v-img {
-			display: none;
+		.v-card-text {
+			.building-image {
+				margin-left: 16px;
+			}
+
+			@container (max-width: 400px) {
+				flex-wrap: wrap-reverse;
+
+				a:has(.building-image) {
+					flex: 1;
+				}
+				.building-image {
+					margin: 0 0 8px 0;
+					width: 100%;
+					height: 100px;
+
+					aspect-ratio: initial;
+					object-fit: cover;
+				}
+			}
 		}
 	}
 }
