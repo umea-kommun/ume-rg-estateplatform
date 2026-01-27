@@ -204,7 +204,7 @@ export default {
 			}
 		);
 
-		return response.data.replace(/wstxns1:/g, '');
+		return response.data;
 	},
 	async getRoomById(
 		context: ActionContext<IRootState, IRootState>,

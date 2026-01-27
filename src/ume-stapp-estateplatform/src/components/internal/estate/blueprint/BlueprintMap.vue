@@ -1,6 +1,6 @@
 <template>
 	<div ref="viewport" class="blueprint-viewport">
-		<div ref="content" class="blueprint-content" v-html="blueprintSvg" />
+		<div ref="content" class="blueprint-content" v-html="interactiveSvg" />
 	</div>
 </template>
 
@@ -8,6 +8,7 @@
 import { IBlueprintPosition } from '@/models/estate/Interfaces';
 import { useDebounceFn } from '@vueuse/core';
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { useBlueprintSvg, ROOM_TYPE_ID } from './blueprintSvg';
 
 const props = defineProps<{
 	blueprintSvg: string;
@@ -28,9 +29,10 @@ const zoomOutDisabled = ref(false);
 let svgElement: SVGSVGElement | null = null;
 let camera: SVGGElement | null = null;
 
-const ROOM_TYPE_ID = 3;
 const DOUBLE_CLICK_THRESHOLD = 300;
 const ZOOM_STEP = 1.7;
+
+const { interactiveSvg } = useBlueprintSvg(props.blueprintSvg);
 
 // ---------- Camera state (user units) ----------
 // Transform applied to <g id="camera">: [x',y'] = s*[x,y] + [tx,ty]
@@ -38,17 +40,20 @@ const ZOOM_STEP = 1.7;
 const cam: IBlueprintPosition = { s: 1, tx: 0, ty: 0 };
 
 const baseViewBox = { x: 0, y: 0, w: 0, h: 0 };
-let svgW = 0; // viewport width in CSS px
+let svgW = 0;
+let svgH = 0;
 
-// Root scale: CSS pixels per user unit (from viewBox mapping)
+// base scale (CSS px per user unit) for a "contain" fit
 const s0 = (): number => {
 	const w = Math.max(1e-6, baseViewBox.w);
-	return svgW > 0 ? svgW / w : 1; // avoid 0 or NaN
+	const h = Math.max(1e-6, baseViewBox.h);
+	if (svgW <= 0 || svgH <= 0) return 1;
+	return Math.min(svgW / w, svgH / h);
 };
 
 // Zoom limits expressed as visible world width (in user units)
 let MIN_VISIBLE_W = 10; // max zoom-in (smallest visible width)
-const MAX_VISIBLE_W = 200;
+const MAX_VISIBLE_W = 300; // min zoom-out (largest visible width)
 
 function computeScaleLimits() {
 	const w = Math.max(1e-6, baseViewBox.w);
@@ -65,14 +70,15 @@ const cameraMovedDebounced = useDebounceFn(() => {
 }, 300);
 
 function applyCamera() {
-	if (!camera) return;
-	// Guard against invalid numbers
 	if (
+		!camera ||
 		!Number.isFinite(cam.s) ||
 		!Number.isFinite(cam.tx) ||
 		!Number.isFinite(cam.ty)
-	)
+	) {
 		return;
+	}
+
 	camera.setAttribute(
 		'transform',
 		`matrix(${cam.s},0,0,${cam.s},${cam.tx},${cam.ty})`
@@ -95,6 +101,9 @@ function scheduleRender() {
 // ---------- Init: wrap all <svg> children into <g id="camera"> ----------
 function ensureCameraWrapper() {
 	if (!svgElement) return;
+
+	svgW = svgElement.clientWidth;
+	svgH = svgElement.clientHeight;
 
 	// Parse/initialize base viewBox
 	const vb = svgElement.viewBox.baseVal;
@@ -290,12 +299,12 @@ function centerRoomElement(g: SVGAElement) {
 	animateCamera(target, 600);
 }
 
+let selectedEl: SVGAElement | null = null;
 function selectRoom(roomId: number | null, centerPosition = true) {
 	if (!svgElement) return;
 
-	svgElement.querySelectorAll('g[data-iid].room').forEach((g) => {
-		g.classList.remove('selected-room');
-	});
+	selectedEl?.classList.remove('selected-room');
+	selectedEl = null;
 
 	if (!roomId) return;
 
@@ -303,6 +312,7 @@ function selectRoom(roomId: number | null, centerPosition = true) {
 	if (!el) return;
 
 	el.classList.add('selected-room');
+	selectedEl = el;
 	if (centerPosition) {
 		centerRoomElement(el);
 	}
@@ -387,7 +397,6 @@ const onPointerDown = (e: PointerEvent) => {
 	viewport.value?.classList.add('is-panning');
 };
 
-let panScheduled = false;
 const onPointerMove = (e: PointerEvent) => {
 	// keep the latest event for this pointer
 	if (activePointers.has(e.pointerId)) {
@@ -428,21 +437,15 @@ const onPointerMove = (e: PointerEvent) => {
 
 	// Single-finger/mouse pan
 	if (!isPanning || !svgElement) return;
-	if (panScheduled) return;
-	panScheduled = true;
-	requestAnimationFrame(() => {
-		panScheduled = false;
 
-		const dxScreen = e.clientX - startClientX; // pixels
-		const dyScreen = e.clientY - startClientY; // pixels
+	const dxScreen = e.clientX - startClientX;
+	const dyScreen = e.clientY - startClientY;
 
-		// Convert screen pixels -> USER units (viewBox space)
-		const k = Math.max(1e-6, s0()); // pixels per user unit
-		cam.tx = startTx + dxScreen / k;
-		cam.ty = startTy + dyScreen / k;
+	const k = Math.max(1e-6, s0());
+	cam.tx = startTx + dxScreen / k;
+	cam.ty = startTy + dyScreen / k;
 
-		scheduleRender();
-	});
+	scheduleRender();
 };
 
 let lastPointerUpTime = 0;
@@ -601,6 +604,7 @@ onMounted(() => {
 		const ro = new ResizeObserver(() => {
 			if (!svgElement) return;
 			svgW = svgElement.clientWidth;
+			svgH = svgElement.clientHeight;
 			scheduleRender();
 		});
 		if (viewport.value) {
@@ -627,23 +631,34 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 .blueprint-viewport {
+	position: relative;
+	overflow: hidden;
 	user-select: none;
 	height: 100%;
 	cursor: grab;
 	overscroll-behavior: contain; // keep scroll/refresh from escaping this box
 	touch-action: none; // better pointer perf
 
-	:deep(tspan) {
+	:deep(svg *) {
 		pointer-events: none;
 	}
 	:deep(.room) {
+		pointer-events: all;
+		path {
+			pointer-events: all;
+		}
 		cursor: pointer;
 		transition: fill 0.3s ease;
-		&:hover {
-			fill: $grey-lighten-3 !important;
+		fill: transparent !important;
+		opacity: 0.3;
+
+		@media (hover: hover) and (pointer: fine) {
+			&:hover {
+				fill: rgb(149, 149, 149) !important;
+			}
 		}
 		&.selected-room {
-			fill: rgb(226, 226, 253) !important;
+			fill: rgb(73, 73, 255) !important;
 		}
 	}
 
