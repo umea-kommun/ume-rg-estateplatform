@@ -559,7 +559,8 @@
 			},
 			"estateDetails": {
 				"noBuildings": "Denna fastighet har inga byggnader kopplade till sig.",
-				"buildings": "Byggnader"
+				"buildings": "Byggnader",
+				"informationMissing": "Information saknas"
 			},
 			"buildingDetails": {
 				"floorLabel": "Våning",
@@ -579,7 +580,9 @@
 					"searchPlaceholder": "Sök på rum...",
 					"floor": "Våning",
 					"type": "Rumstyp",
-					"noMatches": "Det finns inga rum som matchar din sökning."
+					"noMatches": "Det finns inga rum som matchar din sökning.",
+					"noMatchesSelectedFloor": "Det finns inga rum på våning {floor} som matchar din sökning.",
+					"matchesOnOtherFloors": "Resultat på andra våningar"
 				}
 			},
 			"buildingContact": {
@@ -657,7 +660,7 @@
 		"roomCount": "{count} rum",
 		"yearOfConstructionLabel": "Byggnadsår",
 		"externalOwner": {
-			"status": "Egen/inhyrd",
+			"status": "Ägandeförhållande",
 			"name": "Fastighetsägare",
 			"note": "Kontaktuppgifter"
 		}

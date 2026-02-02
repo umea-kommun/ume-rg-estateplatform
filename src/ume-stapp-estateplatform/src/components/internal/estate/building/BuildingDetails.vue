@@ -129,7 +129,7 @@ import BuildingNoticeBoard from '@/components/internal/estate/building/BuildingN
 import '@/themes/estate.scss';
 import { ActiveMapType, EstateType } from '@/models/estate/Enums';
 import BuildingMap from '@/components/internal/estate/map/BuildingMap.vue';
-import ExternalOwnerInfo from '@/components/internal/estate/ExternalOwnerInfo.vue';
+import ExternalOwnerInfo from '@/components/internal/estate/estate/ExternalOwnerInfo.vue';
 import BuildingProperties from './BuildingProperties.vue';
 import BuildingDetailsButtons from './BuildingDetailsButtons.vue';
 

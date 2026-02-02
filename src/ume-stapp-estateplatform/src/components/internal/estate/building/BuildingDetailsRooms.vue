@@ -52,27 +52,43 @@
 			>
 				{{ t('component.internal.buildingDetails.room.noMatches') }}
 			</v-alert>
-			<div
-				v-for="room in filteredRooms"
+			<v-alert
+				v-else-if="!filteredRoomsForFloor?.length"
+				icon="info"
+				class="mt-4 mx-6"
+				>{{
+					t(
+						'component.internal.buildingDetails.room.noMatchesSelectedFloor',
+						{
+							floor: floors?.find((f) => f.id === selectedFloorId)
+								?.name,
+						}
+					)
+				}}
+			</v-alert>
+
+			<room-card
+				v-for="room in filteredRoomsForFloor"
 				:key="room.id"
-				class="room-item px-6 pt-4"
-				:data-room-id="room.id"
-				:class="{ focused: room.id === focusedRoomId }"
+				:room="room"
+				:focusedRoomId="focusedRoomId"
 				@click="clickRoom(room.id)"
-			>
-				<div v-if="room.popularName" class="title">
-					{{ room.popularName }} - {{ room.name }}
-				</div>
-				<div v-else class="title">{{ room.name }}</div>
-				<div class="properties d-flex ga-2">
-					<div>
-						{{ t('component.internal.buildingDetails.floorLabel') }}
-						{{ room.floorName }}
-					</div>
-					&bull;
-					<div>{{ room.grossArea?.toLocaleString() }} m²</div>
-				</div>
-				<hr class="mt-4" />
+			/>
+			<div v-if="filteredRoomsForOtherFloors.length">
+				<h3 class="mx-6 mt-6 mb-2">
+					{{
+						t(
+							'component.internal.buildingDetails.room.matchesOnOtherFloors'
+						)
+					}}
+				</h3>
+				<room-card
+					v-for="room in filteredRoomsForOtherFloors"
+					:key="room.id"
+					:room="room"
+					:focusedRoomId="focusedRoomId"
+					@click="clickRoom(room.id)"
+				/>
 			</div>
 		</div>
 	</div>
@@ -86,6 +102,7 @@ import { useI18n } from 'vue-i18n';
 import { DispatchType } from '@/models/Enums';
 import { IRootState } from '@/models/Interfaces';
 import { useStore } from 'vuex';
+import RoomCard from './RoomCard.vue';
 
 const props = defineProps<{
 	buildingId: number;
@@ -145,13 +162,27 @@ const filteredRooms = computed(() => {
 		);
 	}
 
+	return filtered;
+});
+
+const filteredRoomsForFloor = computed(() => {
 	if (selectedFloorId.value !== null) {
-		filtered = filtered.filter(
+		return filteredRooms.value.filter(
 			(room) => room.floorId === selectedFloorId.value
 		);
 	}
 
-	return filtered;
+	return filteredRooms.value;
+});
+
+const filteredRoomsForOtherFloors = computed(() => {
+	if (selectedFloorId.value !== null) {
+		return filteredRooms.value.filter(
+			(room) => room.floorId !== selectedFloorId.value
+		);
+	}
+
+	return filteredRooms.value;
 });
 
 const isBusyFetchingFloors = ref(false);
@@ -209,6 +240,9 @@ defineExpose({
 		color: $grey-darken-3;
 	}
 }
+h3 {
+	font-size: size(18);
+}
 .filter {
 	.v-input {
 		min-width: 150px;
@@ -221,31 +255,5 @@ defineExpose({
 }
 .result-wrap {
 	min-height: 20svh;
-}
-.room-item {
-	cursor: pointer;
-	transition: background-color 0.2s ease-in-out;
-
-	&:hover {
-		background-color: $grey-lighten-2;
-	}
-
-	hr {
-		border: none;
-		border-bottom: solid 1px $grey-lighten-2;
-	}
-
-	.title {
-		color: $black;
-		font-size: size(18);
-		margin-bottom: 4px;
-	}
-	.properties {
-		font-size: size(14);
-		color: $grey-darken-2;
-	}
-	&.focused {
-		background-color: $grey-lighten-3;
-	}
 }
 </style>

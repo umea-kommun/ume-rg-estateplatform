@@ -300,6 +300,7 @@ watch(
 		.v-card-text {
 			.building-image {
 				margin-left: 16px;
+				min-width: 100px;
 			}
 
 			@container (max-width: 400px) {

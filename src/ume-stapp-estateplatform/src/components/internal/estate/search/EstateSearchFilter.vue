@@ -12,6 +12,7 @@
 			item-value="id"
 			density="comfortable"
 			:loading="isBusyFetchFilters"
+			autocomplete="off"
 			chips
 			multiple
 			clearable

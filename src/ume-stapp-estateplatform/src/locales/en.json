@@ -559,7 +559,8 @@
 			},
 			"estateDetails": {
 				"noBuildings": "This property has no buildings associated with it.",
-				"buildings": "Buildings"
+				"buildings": "Buildings",
+				"informationMissing": "Information missing"
 			},
 			"buildingDetails": {
 				"floorLabel": "Floor",
@@ -579,7 +580,9 @@
 					"searchPlaceholder": "Search rooms...",
 					"floor": "Floor",
 					"type": "Room type",
-					"noMatches": "There are no rooms that match your search."
+					"noMatches": "There are no rooms that match your search.",
+					"noMatchesSelectedFloor": "There are no rooms on floor {floor} that match your search.",
+					"matchesOnOtherFloors": "Results on other floors"
 				}
 			},
 			"buildingContact": {
@@ -657,7 +660,7 @@
 		"roomCount": "{count} room | {count} rooms",
 		"yearOfConstructionLabel": "Year of construction",
 		"externalOwner": {
-			"status": "Owned/Rented",
+			"status": "Ownership",
 			"name": "Property owner",
 			"note": "Contact information"
 		}

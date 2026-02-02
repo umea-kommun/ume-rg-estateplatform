@@ -128,12 +128,12 @@ import { EstateRoutes, MyPagesRoutes } from '@/router/routes';
 import { computed, ref, watch, useTemplateRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
-import NavBreadcrumbs from '../shared/NavBreadcrumbs.vue';
 import { useScroll } from '@vueuse/core';
+import NavBreadcrumbs from '@/components/internal/shared/NavBreadcrumbs.vue';
 import EstateDetailsBuildings from './EstateDetailsBuildings.vue';
 import '@/themes/estate.scss';
 import { EstateType } from '@/models/estate/Enums';
-import BuildingMap from './map/BuildingMap.vue';
+import BuildingMap from '../map/BuildingMap.vue';
 import BaseIconButton from '@/components/base/BaseIconButton.vue';
 import ExternalOwnerInfo from './ExternalOwnerInfo.vue';
 

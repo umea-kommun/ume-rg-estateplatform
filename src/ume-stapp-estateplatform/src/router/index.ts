@@ -214,7 +214,7 @@ const routes: Array<RouteRecordRaw> = [
 					name: EstateRoutes.EstateDetails,
 					component: () =>
 						import(
-							'@/components/internal/estate/EstateDetails.vue'
+							'@/components/internal/estate/estate/EstateDetails.vue'
 						),
 					props: true,
 					meta: {
