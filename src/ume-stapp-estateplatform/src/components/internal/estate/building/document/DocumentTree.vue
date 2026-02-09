@@ -17,16 +17,14 @@
 			:key="directory.id"
 			:depth="0"
 			:directory="directory"
-			:loading-id="loadingId"
-			@download="emit('download', $event)"
+			@open="emit('open', $event)"
 		/>
 		<document-file
 			v-for="document in filteredDirectories.rootDocuments"
 			:key="document.id"
 			:document="document"
 			:depth="0"
-			:loading-id="loadingId"
-			@download="emit('download', $event)"
+			@open="emit('open', $event)"
 		/>
 	</div>
 </template>
@@ -44,9 +42,8 @@ import { computed } from 'vue';
 const props = defineProps<{
 	tree: IBuildingDocumentTree;
 	search: string | null;
-	loadingId?: number | null;
 }>();
-const emit = defineEmits(['download']);
+const emit = defineEmits(['open']);
 
 function filterBuildingDocumentTree(
 	tree: IBuildingDocumentTree,

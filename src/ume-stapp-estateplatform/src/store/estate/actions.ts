@@ -254,12 +254,10 @@ export default {
 			buildingId,
 			directoryId,
 			documentId,
-			fileName,
 		}: {
 			buildingId: number;
 			directoryId: number;
 			documentId: number;
-			fileName: string;
 		}
 	) {
 		const response = await httpClient.get(
@@ -273,15 +271,6 @@ export default {
 			}
 		);
 
-		const href = URL.createObjectURL(response.data);
-
-		const link = document.createElement('a');
-		link.href = href;
-		link.setAttribute('download', fileName);
-		document.body.appendChild(link);
-		link.click();
-
-		document.body.removeChild(link);
-		URL.revokeObjectURL(href);
+		return response.data;
 	},
 };

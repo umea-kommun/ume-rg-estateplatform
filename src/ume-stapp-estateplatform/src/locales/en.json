@@ -599,7 +599,9 @@
 				"searchPlaceholder": "Search documents...",
 				"searchNoResults": "No documents matched your search.",
 				"noContent": "No content",
-				"downloadFile": "Download {filename}"
+				"downloadFile": "Download {filename}",
+				"noPreview": "No preview available for this file type.",
+				"openPdf": "Open PDF"
 			}
 		},
 		"kvittensUserAnswer": {

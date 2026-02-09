@@ -1,10 +1,6 @@
 <template>
 	<div class="document-file mb-1" :class="{ root: depth === 0 }">
-		<v-list-item
-			class="pa-0"
-			@click="emit('download', document)"
-			rounded="lg"
-		>
+		<v-list-item class="pa-0" @click="emit('open', document)" rounded="lg">
 			<div
 				class="document-file-inner"
 				:title="
@@ -30,20 +26,6 @@
 						</div>
 					</div>
 				</div>
-				<v-progress-circular
-					v-if="loadingId === document.id"
-					indeterminate
-					color="primary"
-					:width="2"
-					:size="26"
-					class="ma-2"
-				/>
-				<v-icon
-					v-else
-					class="download-icon ma-2"
-					icon="download"
-					:size="24"
-				/>
 			</div>
 		</v-list-item>
 	</div>
@@ -56,9 +38,8 @@ import { computed } from 'vue';
 const props = defineProps<{
 	document: IBuildingDocument;
 	depth: number;
-	loadingId?: number | null;
 }>();
-const emit = defineEmits(['download']);
+const emit = defineEmits(['open']);
 
 const getHumanFileSize = (sizeInBytes: number): string => {
 	const i =
@@ -98,20 +79,6 @@ const humanFileSize = computed(() => {
 					padding: 0 6px;
 				}
 			}
-		}
-	}
-	.download-icon {
-		color: $grey-darken-1;
-		transition: color 0.2s ease-in-out;
-	}
-	&:hover {
-		.download-icon {
-			color: $grey-darken-3;
-		}
-	}
-	@media only screen and (max-width: $estate-mobile-threshold) {
-		.download-icon {
-			display: none;
 		}
 	}
 }

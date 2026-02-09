@@ -39,8 +39,7 @@
 						v-else-if="nodeTree"
 						:tree="nodeTree"
 						:search="search"
-						:loading-id="downloadingDocumentId"
-						@download="downloadFile"
+						@open="previewDocument = $event"
 					/>
 				</v-card-text>
 			</div>
@@ -52,6 +51,11 @@
 			</v-card-actions>
 		</v-card>
 	</v-dialog>
+	<document-preview-modal
+		v-model="showPreview"
+		:building="building"
+		:document="previewDocument"
+	/>
 </template>
 
 <script setup lang="ts">
@@ -65,6 +69,7 @@ import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import { DispatchType } from '@/models/Enums';
 import DocumentTree from './document/DocumentTree.vue';
+import DocumentPreviewModal from './document/DocumentPreviewModal.vue';
 
 const props = defineProps<{
 	modelValue: boolean;
@@ -80,23 +85,18 @@ const showModal = computed({
 	set: (show) => emit('update:modelValue', show),
 });
 
+const previewDocument = ref<IBuildingDocument | null>(null);
+const showPreview = computed({
+	get: () => previewDocument.value !== null,
+	set: (show) => {
+		if (!show) {
+			previewDocument.value = null;
+		}
+	},
+});
+
 const search = ref('');
 const nodeTree = ref<IBuildingDocumentTree | null>(null);
-
-const downloadingDocumentId = ref<number | null>(null);
-const downloadFile = async (document: IBuildingDocument) => {
-	downloadingDocumentId.value = document.id;
-	try {
-		await store.dispatch(DispatchType.DownloadBuildingDocument, {
-			buildingId: props.building.id,
-			directoryId: document.directoryId,
-			documentId: document.id,
-			fileName: document.name,
-		});
-	} finally {
-		downloadingDocumentId.value = null;
-	}
-};
 
 const isBusyFetchingDocuments = ref(false);
 const fetchDocuments = async () => {

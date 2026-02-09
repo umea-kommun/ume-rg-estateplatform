@@ -599,7 +599,9 @@
 				"searchPlaceholder": "Sök efter handlingar...",
 				"searchNoResults": "Inga handlingar matchade din sökning.",
 				"noContent": "Inget innehåll",
-				"downloadFile": "Ladda ner {filename}"
+				"downloadFile": "Ladda ner {filename}",
+				"noPreview": "Förhandsgranskning saknas för denna filtyp.",
+				"openPdf": "Öppna PDF"
 			}
 		},
 		"kvittensUserAnswer": {

@@ -47,7 +47,7 @@
 				:directory="subDirectory"
 				:depth="depth + 1"
 				:loading-id="loadingId"
-				@download="emit('download', $event)"
+				@open="emit('open', $event)"
 			/>
 			<document-file
 				v-for="document in directory.documents"
@@ -55,7 +55,7 @@
 				:document="document"
 				:depth="depth + 1"
 				:loading-id="loadingId"
-				@download="emit('download', $event)"
+				@open="emit('open', $event)"
 			/>
 		</div>
 	</div>
@@ -71,7 +71,7 @@ const props = defineProps<{
 	depth: number;
 	loadingId?: number | null;
 }>();
-const emit = defineEmits(['download']);
+const emit = defineEmits(['open']);
 
 const opened = ref(true);
 
