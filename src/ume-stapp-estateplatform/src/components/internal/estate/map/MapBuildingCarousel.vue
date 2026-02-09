@@ -1,127 +1,119 @@
 <template>
-	<div
-		class="map-building-carousel estate-default"
-		v-if="isBusyLoadingBuilding || building"
-	>
-		<v-card>
-			<div>
-				<div class="card-header">
-					<v-skeleton-loader
-						v-if="isBusyLoadingBuilding && !building"
-						type="heading"
-						width="100%"
-						height="48px"
-						flex-grow="1"
-					></v-skeleton-loader>
-					<v-card-title v-else-if="building">
-						<router-link
-							:to="{
-								name: EstateRoutes.BuildingDetails,
-								params: { buildingId: building.id },
-							}"
-						>
-							{{ building?.popularName ?? building?.name }}
-						</router-link>
-					</v-card-title>
-					<div class="d-flex">
-						<div
-							v-if="(buildingIds?.length ?? 0) > 1"
-							class="navigation"
-						>
-							<v-btn
-								icon="chevron_left"
-								rounded="xl"
-								size="small"
-								flat
-								:disabled="activeBuildingIndex <= 0"
-								@click="previousBuilding"
-							/>
-							{{ activeBuildingIndex + 1 }} /
-							{{ buildingIds?.length }}
-							<v-btn
-								icon="chevron_right"
-								rounded="xl"
-								size="small"
-								flat
-								:disabled="
-									activeBuildingIndex >=
-									(buildingIds?.length ?? 0) - 1
-								"
-								@click="nextBuilding"
-							/>
-						</div>
-						<v-btn
-							icon="close"
-							rounded="xl"
-							size="small"
-							flat
-							@click="close"
-						/>
-					</div>
-				</div>
+	<div class="map-building-carousel estate-default">
+		<v-card class="building-card" rounded="lg" :key="building?.id">
+			<router-link
+				v-if="building?.imageUrl"
+				:to="{
+					name: EstateRoutes.BuildingDetails,
+					params: { buildingId: building.id },
+				}"
+			>
+				<building-image
+					:src="building.imageUrl"
+					:image-width="300"
+					class="cursor-pointer building-image"
+				/>
+			</router-link>
+			<div class="card-header">
 				<v-skeleton-loader
-					v-if="isBusyLoadingBuilding && !building"
-					type="list-item-three-line"
+					v-if="isBusyLoadingBuildings && !building"
+					type="heading"
 					width="100%"
-					height="114px"
+					height="48px"
+					flex-grow="1"
 				></v-skeleton-loader>
-				<v-card-text
-					v-else-if="building"
-					class="pt-2 d-flex align-start"
-				>
-					<div>
-						<div class="properties">
-							<div
-								class="prop"
-								v-for="prop in properties"
-								:key="prop.label"
-								v-show="prop.value"
-							>
-								<div class="label">{{ prop.label }}</div>
-								<div class="value" :class="prop.class">
-									{{ prop.value }}
-								</div>
-							</div>
-						</div>
-						<div class="chip-properties d-flex flex-wrap ga-2 mt-4">
-							<v-chip v-if="building?.metrics?.floorCount"
-								>{{
-									$t('estateCommon.floorCount', {
-										count: building.metrics?.floorCount,
-									})
-								}}
-							</v-chip>
-							<v-chip v-if="building.metrics?.roomCount">
-								{{
-									$t('estateCommon.roomCount', {
-										count: building.metrics?.roomCount,
-									})
-								}}
-							</v-chip>
-
-							<v-chip v-if="building.metrics?.areaSqm">
-								{{
-									building.metrics?.areaSqm?.toLocaleString()
-								}}
-								m²
-							</v-chip>
-						</div>
-					</div>
+				<v-card-title v-else-if="building">
 					<router-link
-						v-if="building.imageUrl"
 						:to="{
 							name: EstateRoutes.BuildingDetails,
 							params: { buildingId: building.id },
 						}"
+						:title="building?.popularName ?? building?.name"
 					>
-						<building-image
-							:src="building.imageUrl"
-							:image-width="300"
-							class="cursor-pointer building-image"
-						/>
+						{{ building?.popularName ?? building?.name }}
 					</router-link>
-				</v-card-text>
+				</v-card-title>
+
+				<v-btn
+					icon="close"
+					rounded="xl"
+					size="small"
+					flat
+					@click="close"
+				/>
 			</div>
+			<v-skeleton-loader
+				v-if="isBusyLoadingBuildings && !building"
+				type="list-item-three-line"
+				width="100%"
+				height="114px"
+			></v-skeleton-loader>
+			<v-card-text v-else-if="building" class="pt-2 d-flex align-start">
+				<div>
+					<div class="properties">
+						<div
+							class="prop"
+							v-for="prop in properties"
+							:key="prop.label"
+							v-show="prop.value"
+						>
+							<div class="label">{{ prop.label }}</div>
+							<div class="value" :class="prop.class">
+								{{ prop.value }}
+							</div>
+						</div>
+					</div>
+					<div class="chip-properties d-flex flex-wrap ga-2 mt-4">
+						<v-chip v-if="building?.metrics?.floorCount"
+							>{{
+								$t('estateCommon.floorCount', {
+									count: building.metrics?.floorCount,
+								})
+							}}
+						</v-chip>
+						<v-chip v-if="building.metrics?.roomCount">
+							{{
+								$t('estateCommon.roomCount', {
+									count: building.metrics?.roomCount,
+								})
+							}}
+						</v-chip>
+
+						<v-chip v-if="building.metrics?.areaSqm">
+							{{ building.metrics?.areaSqm?.toLocaleString() }}
+							m²
+						</v-chip>
+					</div>
+				</div>
+			</v-card-text>
+		</v-card>
+		<v-card v-if="(buildingIds?.length ?? 0) > 1" class="navigation mt-2">
+			<v-btn
+				icon="chevron_left"
+				rounded="0"
+				size="small"
+				variant="text"
+				:disabled="activeBuildingIndex <= 0"
+				@click="previousBuilding"
+			/>
+			<div class="label">
+				{{
+					$t('component.map.buildingXofY', {
+						buildingNumber: activeBuildingIndex + 1,
+						totalBuildings: buildingIds?.length,
+					})
+				}}
+			</div>
+			<v-btn
+				icon="chevron_right"
+				rounded="0"
+				size="small"
+				variant="text"
+				:disabled="
+					activeBuildingIndex >= (buildingIds?.length ?? 0) - 1
+				"
+				@click="nextBuilding"
+			/>
 		</v-card>
 	</div>
 </template>
@@ -160,8 +152,17 @@ const activeBuildingId = computed({
 	},
 });
 
-const isBusyLoadingBuilding = ref(false);
-const building = ref<IBuildingDetails | null>(null);
+const isBusyLoadingBuildings = ref(false);
+const buildings = ref<IBuildingDetails[]>([]);
+
+const building = computed(() => {
+	if (buildingIds.value && activeBuildingId.value !== null) {
+		return (
+			buildings.value.find((b) => b.id === activeBuildingId.value) || null
+		);
+	}
+	return null;
+});
 
 const activeBuildingIndex = computed(() => {
 	if (buildingIds.value && activeBuildingId.value !== null) {
@@ -190,7 +191,8 @@ const nextBuilding = () => {
 
 const close = () => {
 	buildingIds.value = null;
-	building.value = null;
+	activeBuildingId.value = null;
+	buildings.value = [];
 };
 
 const lowercaseAddress = computed(() => {
@@ -219,27 +221,32 @@ const properties = computed(() => {
 	];
 });
 
-const fetchBuilding = async (buildingId: number) => {
-	isBusyLoadingBuilding.value = true;
-	building.value = await store.dispatch(DispatchType.GetBuildingById, {
-		buildingId,
-	});
-	isBusyLoadingBuilding.value = false;
+const fetchBuildings = async (buildingIds: number[]) => {
+	if (!buildingIds.length) {
+		buildings.value = [];
+		return;
+	}
+	isBusyLoadingBuildings.value = true;
+	try {
+		buildings.value = await Promise.all(
+			buildingIds.map((id) =>
+				store.dispatch(DispatchType.GetBuildingById, { buildingId: id })
+			)
+		);
+	} finally {
+		isBusyLoadingBuildings.value = false;
+	}
 };
 
-watch(activeBuildingId, (newBuildingId) => {
-	building.value = null;
-	if (newBuildingId !== null) {
-		fetchBuilding(newBuildingId);
-	}
-});
 watch(
 	() => buildingIds.value,
 	(newBuildingIds) => {
 		if (newBuildingIds?.length) {
 			activeBuildingId.value = newBuildingIds[0];
+			fetchBuildings(newBuildingIds);
 		} else {
 			activeBuildingId.value = null;
+			buildings.value = [];
 		}
 	}
 );
@@ -247,19 +254,9 @@ watch(
 
 <style scoped lang="scss">
 .map-building-carousel {
-	pointer-events: none;
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	padding: 14px;
-	display: flex;
-	justify-content: center;
-
-	.v-card {
+	.building-card {
+		position: relative;
 		pointer-events: auto;
-		width: 100%;
-		max-width: 520px;
 		container-type: inline-size;
 
 		.card-header {
@@ -267,18 +264,6 @@ watch(
 			flex-wrap: wrap-reverse;
 			align-items: start;
 			justify-content: end;
-
-			.navigation {
-				display: flex;
-				align-items: center;
-				font-size: size(14);
-				.v-btn.v-btn--disabled {
-					opacity: 0.8;
-					:deep(.v-btn__overlay) {
-						display: none;
-					}
-				}
-			}
 
 			.v-btn {
 				margin: 4px;
@@ -297,26 +282,32 @@ watch(
 			}
 		}
 
-		.v-card-text {
-			.building-image {
-				margin-left: 16px;
-				min-width: 100px;
-			}
-
-			@container (max-width: 400px) {
-				flex-wrap: wrap-reverse;
-
-				a:has(.building-image) {
-					flex: 1;
-				}
-				.building-image {
-					margin: 0 0 8px 0;
-					width: 100%;
-					height: 100px;
-
-					aspect-ratio: initial;
-					object-fit: cover;
-				}
+		.building-image {
+			width: 100%;
+			max-height: 110px;
+			border-radius: 8px 8px 0 0;
+			corner-shape: initial;
+			object-fit: cover;
+		}
+	}
+	.navigation {
+		pointer-events: auto;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 8px;
+		font-size: size(14);
+		.label {
+			flex: 1;
+			text-align: center;
+		}
+		.v-btn {
+			margin: 0;
+		}
+		.v-btn.v-btn--disabled {
+			opacity: 0.4;
+			:deep(.v-btn__overlay) {
+				display: none;
 			}
 		}
 	}

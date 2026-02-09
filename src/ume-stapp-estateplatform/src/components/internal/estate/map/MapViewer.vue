@@ -9,15 +9,16 @@
 		/>
 
 		<div :id="mapId" class="map-viewer"></div>
+		<div ref="popupEl" class="ol-popup">
+			<map-building-carousel
+				v-model="selectedBuildingIds"
+				v-model:active-building-id="activeBuildingId"
+			/>
+		</div>
 		<map-controls
 			v-model:full-screen="fullscreen"
-			@zoom-in="smoothZoom(1)"
-			@zoom-out="smoothZoom(-1)"
-		/>
-
-		<map-building-carousel
-			v-model="selectedBuildingIds"
-			v-model:active-building-id="activeBuildingId"
+			@zoom-in="smoothZoom(map, 1)"
+			@zoom-out="smoothZoom(map, -1)"
 		/>
 	</div>
 </template>
@@ -26,7 +27,14 @@
 import { createEmpty, extend } from 'ol/extent';
 import { EstateType } from '@/models/estate/Enums';
 import { IMapPoint, IMapState } from '@/models/estate/Interfaces';
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import {
+	computed,
+	onMounted,
+	onUnmounted,
+	ref,
+	useTemplateRef,
+	watch,
+} from 'vue';
 import Feature, { FeatureLike } from 'ol/Feature';
 import Map from 'ol/Map';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
@@ -36,6 +44,9 @@ import { useMagicKeys, watchDebounced } from '@vueuse/core';
 import { createWmsLayer, SWEREF992015, to3016 } from './layer';
 import { createPointLayers } from './points';
 import MapControls from './MapControls.vue';
+import Point from 'ol/geom/Point';
+import Overlay from 'ol/Overlay';
+import { panToWithPixelOffset, smoothZoom } from './pan';
 
 const props = defineProps<{
 	mapId: string;
@@ -74,6 +85,9 @@ let map: Map | null = null;
 const selectedBuildingIds = ref<number[] | null>(null);
 const activeBuildingId = ref<number | null>(null);
 
+const popupEl = useTemplateRef('popupEl');
+let popupOverlay: Overlay | null = null;
+
 watchDebounced(
 	() => props.points,
 	() => updatePoints(props.points ?? [], map, props.fitPoints),
@@ -86,6 +100,26 @@ watch(
 	}
 );
 
+/** Overlay events */
+function showPopupForFeature(f: Feature, buildingIds: number[]) {
+	const geo = f.getGeometry();
+	if (!geo || geo.getType() !== 'Point') return;
+
+	const coord = (geo as Point).getCoordinates();
+	selectedBuildingIds.value = buildingIds;
+	popupOverlay?.setPosition(coord);
+}
+
+function closePopup() {
+	selectedBuildingIds.value = null;
+	popupOverlay?.setPosition(undefined);
+}
+watch(selectedBuildingIds, (ids) => {
+	if (!ids) {
+		closePopup();
+	}
+});
+
 /** Handle click event */
 const buildingsClicked = (ids: number[]) => {
 	selectedBuildingIds.value = ids;
@@ -97,6 +131,17 @@ const onClusterClick = (clustered: Feature[]) => {
 			.filter((f) => f.get('type') === EstateType.Building)
 			.map((f) => f.get('id'));
 		buildingsClicked(buildingIds);
+
+		// Center clicked feature(s) (keep current zoom)
+		const geo = clustered[0]?.getGeometry();
+		if (geo && map) {
+			panToWithPixelOffset(
+				map,
+				(geo as Point).getCoordinates(),
+				[0, 150]
+			);
+		}
+		showPopupForFeature(clustered[0], buildingIds);
 		return;
 	}
 
@@ -126,6 +171,7 @@ const onMapClick = (
 	evt: MapBrowserEvent<KeyboardEvent | WheelEvent | PointerEvent>
 ) => {
 	let hit: FeatureLike | undefined;
+	closePopup();
 
 	map?.forEachFeatureAtPixel(
 		evt.pixel,
@@ -158,18 +204,6 @@ const onMapHover = (e: MapBrowserEvent) => {
 		el.style.cursor = hit ? 'pointer' : '';
 		lastHit = hit ?? false;
 	}
-};
-
-const smoothZoom = (delta: number) => {
-	if (!map) return;
-	const view = map.getView();
-	const current = view.getZoom() ?? 0;
-	const target = view.getConstrainedZoom(current + delta);
-	view.animate({
-		zoom: target,
-		duration: 250,
-		easing: (t: number) => 1 - Math.pow(1 - t, 3), // easeOutCubic
-	});
 };
 
 // Close overlays on Escape key
@@ -226,6 +260,18 @@ const initMap = () => {
 		}),
 	});
 
+	if (popupEl.value) {
+		popupOverlay = new Overlay({
+			element: popupEl.value,
+			positioning: 'bottom-center',
+			offset: [0, -24],
+			stopEvent: true,
+			autoPan: false,
+		});
+
+		map.addOverlay(popupOverlay);
+	}
+
 	map.on('singleclick', onMapClick);
 	map.on('pointermove', onMapHover);
 	map.on('rendercomplete', onRenderComplete);
@@ -265,6 +311,17 @@ onUnmounted(() => {
 	.map-viewer {
 		height: 100%;
 		width: 100%;
+	}
+
+	:deep(.ol-overlay-container) {
+		pointer-events: none !important;
+		display: flex;
+		max-width: 100%;
+		justify-content: center;
+	}
+	.ol-popup {
+		max-width: 80%;
+		width: 440px;
 	}
 }
 </style>

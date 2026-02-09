@@ -135,7 +135,8 @@
 			"fullScreenClose": "Stäng helskärm",
 			"fullScreenOpen": "Öppna helskärm",
 			"zoomIn": "Zooma in",
-			"zoomOut": "Zooma ut"
+			"zoomOut": "Zooma ut",
+			"buildingXofY": "Byggnad {buildingNumber} av {totalBuildings}"
 		},
 		"blueprintMap": {
 			"floor": "Våning",
@@ -310,7 +311,7 @@
 					"goToEstateSearch": "Sök efter fastigheter"
 				},
 				"feedbackTitle": "Vill du hjälpa oss att bli bättre?",
-				"feedbackSubtitle": "Lämna ett omdömme"
+				"feedbackSubtitle": "Lämna ett omdöme"
 			},
 			"templateGroupSelect": {
 				"modal": {
