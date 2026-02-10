@@ -74,7 +74,7 @@
 				:focusedRoomId="focusedRoomId"
 				@click="clickRoom(room.id)"
 			/>
-			<div v-if="filteredRoomsForOtherFloors.length">
+			<div v-if="selectedFloorId && filteredRoomsForOtherFloors.length">
 				<h3 class="mx-6 mt-6 mb-2">
 					{{
 						t(
