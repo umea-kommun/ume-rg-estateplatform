@@ -19,13 +19,6 @@ export default defineConfig({
 	],
 	build: {
 		outDir: 'wwwroot',
-		rollupOptions: {
-			output: {
-				entryFileNames: 'assets/[name].js',
-				chunkFileNames: 'assets/[name].js',
-				assetFileNames: 'assets/[name].[ext]',
-			},
-		},
 	},
 	envPrefix: 'VUE_APP_',
 	css: {
