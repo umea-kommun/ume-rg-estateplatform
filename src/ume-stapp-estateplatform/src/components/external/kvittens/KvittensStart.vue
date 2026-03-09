@@ -25,6 +25,7 @@
 					density="comfortable"
 					color="primary"
 					item-title="name"
+					rounded="lg"
 					item-value="socialSecurityNumber"
 					hide-details
 				/>
@@ -38,11 +39,17 @@
 		<v-alert
 			v-if="!kvittensList.length && filterOnChildSSNo"
 			icon="warning"
+			rounded="lg"
 			class="mt-6"
 		>
 			{{ $t('component.external.kvittensStart.noResultsUsingFilter') }}
 		</v-alert>
-		<v-alert v-else-if="!kvittensList.length" icon="warning" class="mt-6">
+		<v-alert
+			v-else-if="!kvittensList.length"
+			icon="warning"
+			rounded="lg"
+			class="mt-6"
+		>
 			{{ $t('component.external.kvittensStart.noResults') }}
 		</v-alert>
 

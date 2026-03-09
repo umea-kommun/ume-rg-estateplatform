@@ -3,6 +3,7 @@
 		v-if="childHasNonFolkbokfordGuardian"
 		class="mt-4"
 		icon="info"
+		rounded="lg"
 		:title="t('component.external.common.nonFolkbokfordAlert.title')"
 		:text="t('component.external.common.nonFolkbokfordAlert.text')"
 	/>

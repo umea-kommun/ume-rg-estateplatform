@@ -184,25 +184,33 @@
 			"button": "OK, jag förstår"
 		},
 		"consentStart": {
-			"table": {
-				"titel": "Titel",
-				"person": "Person",
-				"status": "Status",
-				"answer": "Besvara",
-				"change": "Förändra",
-				"show": "Visa arkiverad",
-				"approved": "Samtycker",
-				"denied": "Samtycker inte",
-				"pending": "Väntar på svar från båda vårdnadshavarna",
-				"new": "Ej besvarad"
-			},
 			"title": "Samtycken",
 			"selectListTitle": "Välj barn",
 			"showAll": "Visa alla",
 			"noResults": "Vi kunde inte hitta några samtycken.",
 			"noFilterResults": "Vi kunde inte hitta några samtycken som matchade sökningen.",
 			"reloadingText": "Hämtar samtycken...",
-			"feedbackTitle": "Hur fungerade det att svara på samtycken?"
+			"feedbackTitle": "Hur fungerade det att svara på samtycken?",
+			"titleUnanswered": "Obesvarade ({count})",
+			"titleAnswered": "Besvarade ({count})",
+			"titleInactive": "Inaktiva ({count})",
+			"consentForName": "Samtycket gäller {name}",
+			"actionAnswer": "Besvara",
+			"actionOpen": "Öppna",
+			"status": {
+				"approvedAdult": "Samtycker",
+				"approved": "Samtliga vårdnadshavare samtycker",
+				"rejectedAdult": "Samtycker inte",
+				"rejected": "Åtminstone en vårdnadshavare samtycker inte",
+				"pendingYourAnswer": "Inväntar ditt svar",
+				"pendingOther": "Inväntar svar från den andra vårdnadshavaren",
+				"unanswered": "Ej besvarad"
+			},
+			"userStatus": {
+				"approved": "Du samtycker",
+				"rejected": "Du samtycker inte",
+				"unanswered": "Du har ej besvarat"
+			}
 		},
 		"feedback": {
 			"subtitle": "Hjälp oss bli bättre.",
@@ -271,7 +279,7 @@
 				}
 			},
 			"kvittensListItem": {
-				"actionAnswer": "Öppna",
+				"actionAnswer": "Besvara",
 				"actionOpen": "Öppna",
 				"kvittensFor": "Kvittens för {name}",
 				"XofYHasAnswered": "{answered}/{total} har kvitterat",

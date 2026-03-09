@@ -184,25 +184,33 @@
 			"button": "OK, I understand"
 		},
 		"consentStart": {
-			"table": {
-				"titel": "Title",
-				"person": "Person",
-				"status": "Status",
-				"answer": "Answer",
-				"change": "Change",
-				"show": "View archived",
-				"approved": "Approved",
-				"denied": "Denied",
-				"pending": "Pending",
-				"new": "Not answered"
-			},
 			"title": "Consent",
 			"selectListTitle": "Select child",
 			"showAll": "Show all",
 			"noResults": "We could not find any consents.",
 			"noFilterResults": "We could not find any consents that matched the search.",
 			"reloadingText": "Fetching consents...",
-			"feedbackTitle": "How did it go to respond to consents?"
+			"feedbackTitle": "How did it go to respond to consents?",
+			"titleUnanswered": "Unanswered ({count})",
+			"titleAnswered": "Answered ({count})",
+			"titleInactive": "Inactive ({count})",
+			"consentForName": "Consent for {name}",
+			"actionAnswer": "Answer",
+			"actionOpen": "Open",
+			"status": {
+				"approvedAdult": "Approved",
+				"approved": "All guardians approve",
+				"rejectedAdult": "Not approved",
+				"rejected": "At least one guardian does not approve",
+				"pendingYourAnswer": "Awaiting your answer",
+				"pendingOther": "Awaiting answer from the other guardian",
+				"unanswered": "Unanswered"
+			},
+			"userStatus": {
+				"approved": "You approve",
+				"rejected": "You do not approve",
+				"unanswered": "You have not answered"
+			}
 		},
 		"feedback": {
 			"subtitle": "Help us improve.",
@@ -230,7 +238,7 @@
 				"period": "The consent refers to the period",
 				"giveConsent": "I consent",
 				"rejectConsent": "I do not consent",
-				"youCanChangeLater": "You can change you answer later.",
+				"youCanChangeLater": "You can change your answer later.",
 				"youCanChangeYourAnswerLater": "You can always come back here and change your answer.",
 				"youCanNoLongerChangeAnswer": "You can no longer change your answer.",
 				"youConsentTo": "You consent to",
