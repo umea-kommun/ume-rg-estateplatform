@@ -32,7 +32,7 @@ function createResolutions() {
 	return resolutions;
 }
 
-function createWmsLayer(layerName: string, visible: boolean) {
+function createWmsLayer(layerName: string, backgroundColor: string) {
 	const resolutions = createResolutions();
 	const tileGrid = new TileGrid({
 		origin: getTopLeft(SWEREF992015.getExtent()),
@@ -41,7 +41,8 @@ function createWmsLayer(layerName: string, visible: boolean) {
 	});
 
 	return new TileLayer({
-		visible,
+		visible: false,
+		background: backgroundColor,
 		source: new TileWMS({
 			url: 'https://wms.umea.se/geoserver/gwc/service/wms',
 			params: {

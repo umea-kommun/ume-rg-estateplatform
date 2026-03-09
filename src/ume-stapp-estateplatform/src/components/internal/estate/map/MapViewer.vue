@@ -17,6 +17,7 @@
 		</div>
 		<map-controls
 			v-model:full-screen="fullscreen"
+			v-model:base-layer="visibleBaseLayer"
 			@zoom-in="smoothZoom(map, 1)"
 			@zoom-out="smoothZoom(map, -1)"
 		/>
@@ -25,7 +26,7 @@
 
 <script setup lang="ts">
 import { createEmpty, extend } from 'ol/extent';
-import { EstateType } from '@/models/estate/Enums';
+import { EstateType, MapBaseLayer } from '@/models/estate/Enums';
 import { IMapPoint, IMapState } from '@/models/estate/Interfaces';
 import {
 	computed,
@@ -40,13 +41,15 @@ import Map from 'ol/Map';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import View from 'ol/View';
 import MapBuildingCarousel from './MapBuildingCarousel.vue';
-import { useMagicKeys, watchDebounced } from '@vueuse/core';
+import { useMagicKeys, useStorage, watchDebounced } from '@vueuse/core';
 import { createWmsLayer, SWEREF992015, to3016 } from './layer';
 import { createPointLayers } from './points';
 import MapControls from './MapControls.vue';
 import Point from 'ol/geom/Point';
 import Overlay from 'ol/Overlay';
 import { panToWithPixelOffset, smoothZoom } from './pan';
+import { TileWMS } from 'ol/source';
+import TileLayer from 'ol/layer/Tile';
 
 const props = defineProps<{
 	mapId: string;
@@ -220,6 +223,21 @@ watch(escape, () => {
 	}
 });
 
+/** Map base layers */
+const mapBaseLayers: Partial<Record<MapBaseLayer, TileLayer<TileWMS>>> = {};
+const visibleBaseLayer = useStorage<MapBaseLayer>(
+	'map-selected-base-layer',
+	MapBaseLayer.Lovisa,
+	sessionStorage
+);
+
+function applyVisibleBaseLayer(selected: MapBaseLayer) {
+	for (const layerName of Object.keys(mapBaseLayers) as MapBaseLayer[]) {
+		mapBaseLayers[layerName]?.setVisible(layerName === selected);
+	}
+}
+watch(visibleBaseLayer, applyVisibleBaseLayer);
+
 /** Initialize the map */
 let initRenderComplete = false;
 const onRenderComplete = () => {
@@ -234,6 +252,21 @@ const onRenderComplete = () => {
 	}
 };
 
+const initBaseLayers = (): TileLayer<TileWMS>[] => {
+	mapBaseLayers[MapBaseLayer.Lovisa] = createWmsLayer(
+		MapBaseLayer.Lovisa,
+		'#d6e1d9'
+	);
+	mapBaseLayers[MapBaseLayer.Ortofoto] = createWmsLayer(
+		MapBaseLayer.Ortofoto,
+		'#08091a'
+	);
+
+	applyVisibleBaseLayer(visibleBaseLayer.value);
+
+	return Object.values(mapBaseLayers);
+};
+
 const initMap = () => {
 	const initialState = props.initialState
 		? props.initialState
@@ -245,8 +278,7 @@ const initMap = () => {
 		target: props.mapId,
 		controls: [],
 		layers: [
-			createWmsLayer('Lovisa', true),
-			// createWmsLayer('Ortofoto', false), // TODO: Satellite toggle later?
+			...initBaseLayers(),
 			clusterLayer,
 			highlightLayer, // Highlighted point is rendered on top of clusters
 		],

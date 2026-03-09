@@ -8,3 +8,8 @@ export enum ActiveMapType {
 	Map = 'map',
 	Blueprint = 'blueprint',
 }
+
+export enum MapBaseLayer {
+	Lovisa = 'Lovisa',
+	Ortofoto = 'Ortofoto',
+}

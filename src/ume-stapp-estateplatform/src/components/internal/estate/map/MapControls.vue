@@ -11,7 +11,28 @@
 			size="small"
 		/>
 		<v-spacer></v-spacer>
-		<div class="d-flex align-end justify-end w-100 ga-4">
+		<div class="d-flex align-end justify-space-between w-100 ga-4">
+			<v-btn
+				v-if="baseLayer === MapBaseLayer.Ortofoto"
+				@click="baseLayer = MapBaseLayer.Lovisa"
+				class="layer-btn"
+				:style="{ backgroundImage: `url(${LovisaImg})` }"
+			>
+				<span class="layer-btn__label">
+					{{ t('component.map.layer.regular') }}
+				</span>
+			</v-btn>
+			<v-btn
+				v-else
+				@click="baseLayer = MapBaseLayer.Ortofoto"
+				class="layer-btn"
+				:style="{ backgroundImage: `url(${OrtofotoImg})` }"
+			>
+				<span class="layer-btn__label">
+					{{ t('component.map.layer.photo') }}
+				</span>
+			</v-btn>
+
 			<v-btn-group direction="vertical" :elevation="2">
 				<v-btn
 					rounded="0"
@@ -37,21 +58,37 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import LovisaImg from '@/assets/map/layer_lovisa.webp';
+import OrtofotoImg from '@/assets/map/layer_ortofoto.webp';
+import { MapBaseLayer } from '@/models/estate/Enums';
 
 const props = defineProps<{
 	fullScreen: boolean;
 	zoomInDisabled?: boolean;
 	zoomOutDisabled?: boolean;
+	baseLayer?: MapBaseLayer;
 }>();
 
 const { t } = useI18n();
 
-const emit = defineEmits(['update:fullScreen', 'zoom-in', 'zoom-out']);
+const emit = defineEmits([
+	'update:fullScreen',
+	'update:baseLayer',
+	'zoom-in',
+	'zoom-out',
+]);
 
 const fullScreen = computed({
 	get: () => props.fullScreen,
 	set: (value: boolean) => {
 		emit('update:fullScreen', value);
+	},
+});
+
+const baseLayer = computed({
+	get: () => props.baseLayer,
+	set: (value: MapBaseLayer) => {
+		emit('update:baseLayer', value);
 	},
 });
 </script>
@@ -87,6 +124,39 @@ const fullScreen = computed({
 			&:last-child {
 				border-bottom: none;
 			}
+		}
+	}
+	.layer-btn {
+		text-transform: none;
+		letter-spacing: normal;
+		color: #fff;
+		width: 75px;
+		height: 75px;
+		align-items: end;
+
+		border: solid 2px #fff;
+
+		background-position: center;
+		background-size: cover;
+		overflow: hidden;
+
+		&::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(
+				to top,
+				rgb(0 0 0 / 0.65) 0%,
+				rgb(0 0 0 / 0.45) 30%,
+				rgb(0 0 0 / 0.1) 60%,
+				rgb(0 0 0 / 0) 100%
+			);
+			z-index: 0;
+		}
+
+		&__label {
+			padding: 8px;
+			z-index: 1;
 		}
 	}
 }

@@ -136,7 +136,11 @@
 			"fullScreenOpen": "Öppna helskärm",
 			"zoomIn": "Zooma in",
 			"zoomOut": "Zooma ut",
-			"buildingXofY": "Byggnad {buildingNumber} av {totalBuildings}"
+			"buildingXofY": "Byggnad {buildingNumber} av {totalBuildings}",
+			"layer": {
+				"regular": "Karta",
+				"photo": "Foto"
+			}
 		},
 		"blueprintMap": {
 			"floor": "Våning",

@@ -136,7 +136,11 @@
 			"fullScreenOpen": "Open full screen",
 			"zoomIn": "Zoom in",
 			"zoomOut": "Zoom out",
-			"buildingXofY": "Building {buildingNumber} of {totalBuildings}"
+			"buildingXofY": "Building {buildingNumber} of {totalBuildings}",
+			"layer": {
+				"regular": "Map",
+				"photo": "Photo"
+			}
 		},
 		"blueprintMap": {
 			"floor": "Floor",
