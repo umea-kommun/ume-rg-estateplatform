@@ -13,9 +13,12 @@
 			<map-building-carousel
 				v-model="selectedBuildingIds"
 				v-model:active-building-id="activeBuildingId"
+				:selectable="selectable"
+				@select="(buildingId) => emit('select-building', buildingId)"
 			/>
 		</div>
 		<map-controls
+			v-if="!hideControls"
 			v-model:full-screen="fullscreen"
 			v-model:base-layer="visibleBaseLayer"
 			@zoom-in="smoothZoom(map, 1)"
@@ -59,9 +62,11 @@ const props = defineProps<{
 	highlightedPointId?: number | null;
 	fullscreen?: boolean;
 	loading?: boolean;
+	hideControls?: boolean;
+	selectable?: boolean;
 }>();
 
-const emit = defineEmits(['update:fullscreen']);
+const emit = defineEmits(['update:fullscreen', 'select-building']);
 
 const fullscreen = computed({
 	get: () => props.fullscreen ?? false,

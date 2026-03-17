@@ -46,7 +46,7 @@
 			"401": "We could not authenticate you, please check that you are logged in.",
 			"403": "You do not have the necessary access to do this.",
 			"404": "Page could not be found",
-			"general": "Tillfälligt tekniskt fel, var god försök senare.",
+			"general": "Temporary technical error, please try again later.",
 			"couldnotfindconversation": "Could not get conversation",
 			"differentLogin": "You are already logged in to another e-service. Log out of it and try again.",
 			"network": "Could not connect to Umeå kommun, please check your internet connection and try again.",
@@ -62,7 +62,9 @@
 				"invalidDate": "Enter a correct date in the format YYYY-MM-DD.",
 				"minDate": "Select date no earlier than {1}.",
 				"maxDate": "Select date no later than {1}.",
-				"validPersNumber": "Enter a valid social security number."
+				"validPersNumber": "Enter a valid social security number.",
+				"email": "Enter a valid email address.",
+				"phone": "Enter a valid phone number."
 			}
 		}
 	},
@@ -82,7 +84,8 @@
 				"internalKvittens": "Receipts",
 				"agentKvittens": "Receipt agent",
 				"internalDefaultPasswords": "Password",
-				"internalEstate": "Real Estate"
+				"internalEstate": "Real Estate (beta)",
+				"internalEstateFaultReport": "Fault Report - Real Estate"
 			},
 			"locale": {
 				"change": "Other languages"
@@ -137,6 +140,7 @@
 			"zoomIn": "Zoom in",
 			"zoomOut": "Zoom out",
 			"buildingXofY": "Building {buildingNumber} of {totalBuildings}",
+			"selectBuilding": "Select building",
 			"layer": {
 				"regular": "Map",
 				"photo": "Photo"
@@ -144,7 +148,8 @@
 		},
 		"blueprintMap": {
 			"floor": "Floor",
-			"reportRoom": "Report a fault"
+			"reportRoom": "Report a fault",
+			"selectRoom": "Select room"
 		},
 		"pageNotFound": {
 			"pageTitle": "Page could not be found",
@@ -176,6 +181,15 @@
 		"baseExpandableContent": {
 			"showMoreButtonOpen": "Show more",
 			"showMoreButtonClose": "Show less"
+		},
+		"baseFileUpload": {
+			"selectFiles": "Select file",
+			"dropFiles": "or drop your file here | or drop files here",
+			"rulesHint": "Max {size} | Up to {maxFiles} files, max {size} per file",
+			"error": {
+				"fileTooLarge": "\"{filename}\" is too large.",
+				"tooManyFiles": "You cannot upload more than {maxFiles} files."
+			}
 		},
 		"tCookieBanner": {
 			"title": "We use cookies",
@@ -318,9 +332,10 @@
 					"goToPassword": "See students' assigned passwords"
 				},
 				"estate": {
-					"title": "Properties and buildings",
+					"title": "Properties and buildings (beta)",
 					"description": "Find information about properties, buildings and rooms in the municipality of Umeå.",
-					"goToEstateSearch": "Search properties and buildings"
+					"goToEstateSearch": "Search properties and buildings",
+					"goToEstateFaultReport": "Report a fault"
 				},
 				"feedbackTitle": "Would you like to help us improve?",
 				"feedbackSubtitle": "Leave feedback"
@@ -564,11 +579,18 @@
 				"searchButton": "Search",
 				"filter": "Filter",
 				"selectOnMap": "Select on map",
-				"noResults": "We could not find any properties or buildings that matched your search."
+				"noResults": "We could not find any properties or buildings that matched your search.",
+				"searchHelp": "Type in the search box or use filters to find properties and buildings."
 			},
 			"estateSearchFilter": {
 				"businessTypeLabel": "Main business type",
 				"clearFilter": "Clear filter"
+			},
+			"estateFavorite": {
+				"title": "My favorites ({count})",
+				"noFavorites": "Here you can see your favorites. To add a favorite, click on the star next to the name of a property, building, or room.",
+				"addFavorite": "Add to my favorites",
+				"removeFavorite": "Remove from my favorites"
 			},
 			"estateDetails": {
 				"noBuildings": "This property has no buildings associated with it.",
@@ -586,6 +608,7 @@
 				"contactPersonsMissingTooltip": "No contact persons specified",
 				"documentsButton": "Documents",
 				"documentsMissingTooltip": "There are no documents associated with this building",
+				"reportButton": "Report fault",
 				"buildingImage": "Image of building",
 				"room": {
 					"title": "Rooms",
@@ -614,6 +637,73 @@
 				"downloadFile": "Download {filename}",
 				"noPreview": "No preview available for this file type.",
 				"openPdf": "Open PDF"
+			},
+			"faultReport": {
+				"title": "Fault Report",
+				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",
+				"changeAnswer": "Change",
+				"submitButton": "Submit Fault Report",
+				"building": {
+					"select": "Select building",
+					"selected": "Building"
+				},
+				"location": {
+					"select": "Is the problem indoor or outdoor?",
+					"indoor": {
+						"title": "The problem is indoor",
+						"description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+						"select": "Indoor",
+						"selectButton": "Select indoor",
+						"selected": "You have selected that the fault report concerns the interior of the building."
+					},
+					"outdoor": {
+						"title": "The problem is outdoor",
+						"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et",
+						"select": "Outdoor",
+						"selectButton": "Select outdoor",
+						"selected": "You have selected that the fault report concerns the exterior of the building."
+					}
+				},
+				"room": {
+					"select": "Which room does it concern?",
+					"selected": "Room",
+					"none": "No room",
+					"skip": "Skip"
+				},
+				"general": {
+					"problemTitle": "Problem description",
+					"problemLabel": "Describe the problem",
+					"problemHelpText": "Describe as clearly as possible what the problem is, where it is, and when it occurred. The more information you can provide, the better the property manager can address the issue.",
+					"contactLabel": "Contact information",
+					"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to resolve the issue, or if there are questions regarding the fault report.",
+					"contactNameLabel": "Name",
+					"contactEmailLabel": "Email",
+					"contactPhoneLabel": "Phone number"
+				},
+				"info": {
+					"title": "Information",
+					"text1": "It is important to consider this when reporting a fault, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					"text2": "After the fault report is submitted, duis aute irure dolor in reprehenderit in voluptatevelit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident."
+				},
+				"completed": {
+					"title": "Thank you for your fault report!",
+					"description": "We have received your fault report and will handle it as soon as possible.",
+					"goHome": "Go to the homepage",
+					"feedbackTitle": "How did reporting a fault work?"
+				}
+			},
+			"buildingSelector": {
+				"searchLabel": "Search for building or address",
+				"noResults": "No buildings matched your search.",
+				"selectOnMap": "Select on map",
+				"searchHelp": "Start typing in the search field to find a building.",
+				"favoritesTitle": "My favorites ({count})",
+				"favoritesDescription": "You can also select a building or room directly from your favorites."
+			},
+			"roomSelector": {
+				"none": "You have not selected a room.",
+				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula cursus vestibulum. Duis et nisl ut ipsum fermentum",
+				"selectOnBlueprint": "Select on blueprint"
 			}
 		},
 		"kvittensUserAnswer": {

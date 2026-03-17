@@ -10,8 +10,7 @@ import AuthLogin from '@/components/auth/AuthLogin.vue';
 import { EstateRoutes, MyPagesRoutes } from './routes';
 import { AppContentSize, AppHeaderTitle } from '@/models/Enums';
 import Config from '@/Config';
-
-const ESTATE_ENABLED = Config.VUE_APP_ESTATE_ENABLED === 'true';
+import { useFeatureFlags } from '@/utils/useFeatureFlags';
 
 const routes: Array<RouteRecordRaw> = [
 	/** External routes */
@@ -193,52 +192,64 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 
-	// Declare estate routes only if the feature is enabled
-	...(ESTATE_ENABLED
-		? [
-				{
-					path: '/internt/fastigheter',
-					name: EstateRoutes.Search,
-					component: () =>
-						import(
-							'@/components/internal/estate/search/EstateSearch.vue'
-						),
-					meta: {
-						requiresInternalLogin: true,
-						title: AppHeaderTitle.InternalEstate,
-						contentSize: AppContentSize.FullWidth,
-					},
-				},
-				{
-					path: '/internt/fastighet/:estateId/:slug?',
-					name: EstateRoutes.EstateDetails,
-					component: () =>
-						import(
-							'@/components/internal/estate/estate/EstateDetails.vue'
-						),
-					props: true,
-					meta: {
-						requiresInternalLogin: true,
-						title: AppHeaderTitle.InternalEstate,
-						contentSize: AppContentSize.FullWidth,
-					},
-				},
-				{
-					path: '/internt/fastigheter/byggnad/:buildingId/:slug?',
-					name: EstateRoutes.BuildingDetails,
-					component: () =>
-						import(
-							'@/components/internal/estate/building/BuildingDetails.vue'
-						),
-					props: true,
-					meta: {
-						requiresInternalLogin: true,
-						title: AppHeaderTitle.InternalEstate,
-						contentSize: AppContentSize.FullWidth,
-					},
-				},
-		  ]
-		: []),
+	// Estate routes - gated by runtime feature flags
+	{
+		path: '/internt/fastigheter',
+		name: EstateRoutes.Search,
+		component: () =>
+			import(
+				'@/components/internal/estate/search/EstateSearch.vue'
+			),
+		meta: {
+			requiresInternalLogin: true,
+			requiresFeature: 'EstateService',
+			title: AppHeaderTitle.InternalEstate,
+			contentSize: AppContentSize.FullWidth,
+		},
+	},
+	{
+		path: '/internt/fastigheter/felanmalan',
+		name: EstateRoutes.FaultReport,
+		component: () =>
+			import(
+				'@/components/internal/estate/faultReport/EstateFaultReport.vue'
+			),
+		meta: {
+			requiresInternalLogin: true,
+			requiresFeature: 'ErrorReport',
+			title: AppHeaderTitle.InternalEstate,
+		},
+	},
+	{
+		path: '/internt/fastighet/:estateId/:slug?',
+		name: EstateRoutes.EstateDetails,
+		component: () =>
+			import(
+				'@/components/internal/estate/estate/EstateDetails.vue'
+			),
+		props: true,
+		meta: {
+			requiresInternalLogin: true,
+			requiresFeature: 'EstateService',
+			title: AppHeaderTitle.InternalEstate,
+			contentSize: AppContentSize.FullWidth,
+		},
+	},
+	{
+		path: '/internt/fastigheter/byggnad/:buildingId/:slug?',
+		name: EstateRoutes.BuildingDetails,
+		component: () =>
+			import(
+				'@/components/internal/estate/building/BuildingDetails.vue'
+			),
+		props: true,
+		meta: {
+			requiresInternalLogin: true,
+			requiresFeature: 'EstateService',
+			title: AppHeaderTitle.InternalEstate,
+			contentSize: AppContentSize.FullWidth,
+		},
+	},
 
 	/** Authentication */
 	{
@@ -274,11 +285,35 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
 	history: createWebHistory(),
 	routes,
-	scrollBehavior() {
-		return { top: 0 };
+	scrollBehavior(to, from, savedPosition) {
+		if (to.hash) {
+			return {
+				el: to.hash,
+				top: 100,
+			};
+		}
+
+		// back/forward button
+		if (savedPosition) return savedPosition;
+
+		// same page (e.g., only query changed) -> keep scroll
+		if (to.path === from.path) return false;
+
+		// normal navigation -> scroll to top
+		return { left: 0, top: 0 };
 	},
 });
 
 useAuthMiddleware(router);
+
+const { loadFeatures, isEnabled } = useFeatureFlags();
+
+router.beforeEach(async (to) => {
+	await loadFeatures();
+	const requiredFeature = to.meta.requiresFeature as string | undefined;
+	if (requiredFeature && !isEnabled(requiredFeature)) {
+		return { path: '/internt' };
+	}
+});
 
 export default router;

@@ -15,8 +15,14 @@
 			@mouseenter="() => emit('building-mouseenter', building.id)"
 			@mouseleave="() => emit('building-mouseleave')"
 		>
-			<v-card-title class="px-0 py-0">
+			<v-card-title class="px-0 py-0 d-flex align-center ga-1">
 				{{ building.popularName || building.name }}
+				<favorite-button
+					:id="building.id"
+					:type="EstateType.Building"
+					:isFavorite="building.isFavorite"
+					not-interactive
+				/>
 			</v-card-title>
 			<v-card-text class="pt-2 pb-3 px-0">
 				<ul>
@@ -53,6 +59,8 @@ import { IEstateBuilding } from '@/models/estate/Interfaces';
 import { EstateRoutes } from '@/router/routes';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import FavoriteButton from '../favorite/FavoriteButton.vue';
+import { EstateType } from '@/models/estate/Enums';
 
 const props = defineProps<{
 	loading: boolean;

@@ -16,7 +16,7 @@
 					flat
 				>
 					<div class="icon-wrap d-flex justify-center align-center">
-						<v-icon :icon="icon" />
+						<v-icon :icon="icon" :color="iconColor" />
 						<div
 							v-if="count !== undefined"
 							class="count"
@@ -44,6 +44,7 @@ defineProps<{
 	count?: number;
 	disabled?: boolean;
 	icon: string;
+	iconColor?: string;
 	label: string;
 	tooltip?: string;
 }>();

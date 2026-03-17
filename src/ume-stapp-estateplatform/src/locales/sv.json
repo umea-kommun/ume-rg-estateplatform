@@ -62,7 +62,9 @@
 				"invalidDate": "Ange ett korrekt datum i formatet ÅÅÅÅ-MM-DD.",
 				"minDate": "Ange ett datum som är {1} eller senare.",
 				"maxDate": "Ange ett datum som är {1} eller tidigare.",
-				"validPersNumber": "Ange ett giltigt personnummer."
+				"validPersNumber": "Ange ett giltigt personnummer.",
+				"email": "Ange en giltig mejladress.",
+				"phone": "Ange ett giltigt telefonnummer."
 			}
 		}
 	},
@@ -82,7 +84,8 @@
 				"internalKvittens": "Kvittenser",
 				"agentKvittens": "Kvittensombud",
 				"internalDefaultPasswords": "Lösenord",
-				"internalEstate": "Fastigheter"
+				"internalEstate": "Fastigheter (beta)",
+				"internalEstateFaultReport": "Felanmälan - Fastigheter"
 			},
 			"locale": {
 				"change": "Other languages"
@@ -137,6 +140,7 @@
 			"zoomIn": "Zooma in",
 			"zoomOut": "Zooma ut",
 			"buildingXofY": "Byggnad {buildingNumber} av {totalBuildings}",
+			"selectBuilding": "Välj byggnad",
 			"layer": {
 				"regular": "Karta",
 				"photo": "Foto"
@@ -144,7 +148,8 @@
 		},
 		"blueprintMap": {
 			"floor": "Våning",
-			"reportRoom": "Felanmäl"
+			"reportRoom": "Felanmäl rum",
+			"selectRoom": "Välj rum"
 		},
 		"pageNotFound": {
 			"pageTitle": "Sidan kunde inte hittas",
@@ -176,6 +181,15 @@
 		"baseExpandableContent": {
 			"showMoreButtonOpen": "Visa mer",
 			"showMoreButtonClose": "Visa mindre"
+		},
+		"baseFileUpload": {
+			"selectFiles": "Välj fil",
+			"dropFiles": "eller släpp filen här | eller släpp filer här",
+			"rulesHint": "Max {size} | Upp till {maxFiles} filer, max {size} per fil",
+			"error": {
+				"fileTooLarge": "\"{filename}\" är för stor.",
+				"tooManyFiles": "Du kan inte ladda upp fler än {maxFiles} filer."
+			}
 		},
 		"tCookieBanner": {
 			"title": "Vi använder kakor (cookies)",
@@ -318,9 +332,10 @@
 					"goToPassword": "Se elevers tilldelade lösenord"
 				},
 				"estate": {
-					"title": "Fastigheter",
+					"title": "Fastigheter (beta)",
 					"description": "Hitta information om fastigheter, byggnader och rum inom Umeå kommun.",
-					"goToEstateSearch": "Sök efter fastigheter"
+					"goToEstateSearch": "Sök efter fastigheter",
+					"goToEstateFaultReport": "Felanmälan"
 				},
 				"feedbackTitle": "Vill du hjälpa oss att bli bättre?",
 				"feedbackSubtitle": "Lämna ett omdöme"
@@ -564,11 +579,18 @@
 				"searchButton": "Sök",
 				"filter": "Filtrera",
 				"selectOnMap": "Välj på karta",
-				"noResults": "Vi kunde inte hitta några fastigheter eller byggnader som matchade din sökning."
+				"noResults": "Vi kunde inte hitta några fastigheter eller byggnader som matchade din sökning.",
+				"searchHelp": "Skriv i sökrutan eller använd filter för att hitta fastigheter och byggnader."
 			},
 			"estateSearchFilter": {
 				"businessTypeLabel": "Huvudsaklig verksamhetstyp",
 				"clearFilter": "Rensa filter"
+			},
+			"estateFavorite": {
+				"title": "Mina favoriter ({count})",
+				"noFavorites": "Här syns dina favoriter. För att lägga till en favorit, klicka på stjärnan vid namnet på en fastighet, byggnad eller ett rum.",
+				"addFavorite": "Lägg till i mina favoriter",
+				"removeFavorite": "Ta bort från mina favoriter"
 			},
 			"estateDetails": {
 				"noBuildings": "Denna fastighet har inga byggnader kopplade till sig.",
@@ -586,6 +608,7 @@
 				"contactPersonsMissingTooltip": "Det finns inga kontaktpersoner angivna",
 				"documentsButton": "Handlingar",
 				"documentsMissingTooltip": "Det finns inga handlingar kopplade till denna byggnad",
+				"reportButton": "Felanmäl",
 				"buildingImage": "Bild på byggnaden",
 				"room": {
 					"title": "Rum",
@@ -614,6 +637,73 @@
 				"downloadFile": "Ladda ner {filename}",
 				"noPreview": "Förhandsgranskning saknas för denna filtyp.",
 				"openPdf": "Öppna PDF"
+			},
+			"faultReport": {
+				"title": "Felanmälan",
+				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",
+				"changeAnswer": "Ändra",
+				"submitButton": "Skicka in felanmälan",
+				"building": {
+					"select": "Välj byggnad",
+					"selected": "Byggnad"
+				},
+				"location": {
+					"select": "Är problemet utvändigt eller invändigt?",
+					"indoor": {
+						"title": "Problemet är invändigt",
+						"description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+						"select": "Invändigt",
+						"selectButton": "Välj invändigt",
+						"selected": "Du har valt att felanmälan gäller byggnadens insida."
+					},
+					"outdoor": {
+						"title": "Problemet är utvändigt",
+						"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et",
+						"select": "Utvändigt",
+						"selectButton": "Välj utvändigt",
+						"selected": "Du har valt att felanmälan gäller byggnadens utsida."
+					}
+				},
+				"room": {
+					"select": "Vilket rum gäller det?",
+					"selected": "Rum",
+					"none": "Inget rum",
+					"skip": "Hoppa över"
+				},
+				"general": {
+					"problemTitle": "Problembeskrivning",
+					"problemLabel": "Beskriv problemet",
+					"problemHelpText": "Beskriv så tydligt som möjligt vad problemet är, var det är och när det uppstod. Ju mer information du kan ge, desto bättre kan fastighetsförvaltaren åtgärda problemet.",
+					"contactLabel": "Kontaktuppgifter",
+					"contactHelpText": "Ange vem som ska kontaktas om mer information behövs för att åtgärda problemet, eller om det finns frågor kring felanmälan.",
+					"contactNameLabel": "Namn",
+					"contactEmailLabel": "E-post",
+					"contactPhoneLabel": "Telefonnummer"
+				},
+				"info": {
+					"title": "Information",
+					"text1": "Det är viktigt att tänka på detta när du felanmäler, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					"text2": "Efter felanmälan är inskickad duis aute irure dolor in reprehenderit in voluptatevelit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident."
+				},
+				"completed": {
+					"title": "Tack för din felanmälan!",
+					"description": "Vi har mottagit din felanmälan och kommer att hantera den så snart som möjligt.",
+					"goHome": "Gå till startsidan",
+					"feedbackTitle": "Hur fungerade det att göra en felanmälan?"
+				}
+			},
+			"buildingSelector": {
+				"searchLabel": "Sök efter byggnad eller adress",
+				"noResults": "Vi kunde inte hitta några byggnader som matchade din sökning.",
+				"selectOnMap": "Välj på karta",
+				"searchHelp": "Börja skriva i sökfältet för att hitta en byggnad.",
+				"favoritesTitle": "Mina favoriter ({count})",
+				"favoritesDescription": "Du kan också välja byggnad eller rum direkt från dina favoriter."
+			},
+			"roomSelector": {
+				"none": "Du har inte valt något rum.",
+				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula cursus vestibulum. Duis et nisl ut ipsum fermentum",
+				"selectOnBlueprint": "Välj på planritning"
 			}
 		},
 		"kvittensUserAnswer": {

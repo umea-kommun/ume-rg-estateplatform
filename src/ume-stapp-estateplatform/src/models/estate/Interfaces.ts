@@ -1,4 +1,4 @@
-import { EstateType } from './Enums';
+import { EstateFaultLocation, EstateType } from './Enums';
 
 export interface IEstateSearchResultEntry {
 	id: number;
@@ -8,6 +8,7 @@ export interface IEstateSearchResultEntry {
 	municipalityArea: string | null;
 	operationalArea?: string | null;
 	imageUrl: string | null;
+	isFavorite: boolean;
 	address: {
 		street: string;
 		zipCode: string;
@@ -40,6 +41,7 @@ export interface IEstateDetails {
 	operationalArea?: string | null;
 	administrativeArea?: string | null;
 	externalOwnerInfo: IExternalOwnerInfo | null;
+	isFavorite: boolean;
 	metrics: {
 		buildingCount: number | null;
 		areaSqm: number | null;
@@ -52,6 +54,7 @@ export interface IEstateBuilding {
 	popularName: string | null;
 	grossArea: number;
 	imageUrl: string | null;
+	isFavorite: boolean;
 	metrics: {
 		floorCount: number | null;
 		roomCount: number | null;
@@ -101,6 +104,7 @@ export interface IBuildingDetails {
 	blueprintAvailable: boolean;
 	numDocuments: number | null;
 	imageUrl: string | null;
+	isFavorite: boolean;
 	address: {
 		street: string;
 		zipCode: string;
@@ -137,6 +141,8 @@ export interface IBuildingRoom {
 	grossArea: number;
 	floorName: string;
 	floorId: number;
+	buildingId: number;
+	isFavorite: boolean;
 }
 
 export interface IBuildingFloor {
@@ -193,4 +199,15 @@ export interface IMapState {
 
 export interface SearchFilter {
 	businessTypes?: number[];
+}
+
+export interface ISubmitEstateFaultReport {
+	buildingId: number;
+	location: EstateFaultLocation;
+	roomId: number | undefined;
+	description: string;
+	attachments: File[];
+	notifierName: string;
+	notifierEmail: string;
+	notifierPhone: string;
 }

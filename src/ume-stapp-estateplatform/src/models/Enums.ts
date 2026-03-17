@@ -116,6 +116,7 @@ export enum DispatchType {
 	GetEstateBuildings = 'getEstateBuildings',
 	GetBuildingLocations = 'getBuildingLocations',
 	GetBuildingById = 'getBuildingById',
+	GetBuildingRoomById = 'getBuildingRoomById',
 	GetBuildingRooms = 'getBuildingRooms',
 	GetBuildingFloors = 'getBuildingFloors',
 	GetFloorBlueprint = 'getFloorBlueprint',
@@ -123,6 +124,10 @@ export enum DispatchType {
 	GetBusinessTypes = 'getBusinessTypes',
 	GetBuildingDocuments = 'getBuildingDocuments',
 	DownloadBuildingDocument = 'downloadBuildingDocument',
+	SubmitFaultReport = 'submitFaultReport',
+	SetFavorite = 'setFavorite',
+	UnsetFavorite = 'unsetFavorite',
+	GetFavorites = 'getFavorites',
 
 	// Feedback
 	FeedbackRate = 'feedbackRate',

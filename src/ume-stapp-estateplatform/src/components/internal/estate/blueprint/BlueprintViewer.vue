@@ -9,10 +9,12 @@
 			:blueprintSvg="blueprint"
 			:selectedRoomId="selectedRoom?.id"
 			:start-position="startPosition"
-			@room-clicked="(roomId) => emit('room-selected', roomId)"
+			:room-zoom-padding="roomZoomPadding"
+			@room-clicked="(roomId) => emit('room-opened', roomId)"
 			@camera-moved="(a) => (startPosition = a)"
 		/>
 		<blueprint-controls
+			v-if="!hideControls"
 			v-model:fullScreen="fullScreen"
 			v-model:selectedFloorId="selectedFloorId"
 			:floors="floors"
@@ -22,9 +24,11 @@
 			:zoom-out-disabled="blueprintMap?.zoomOutDisabled"
 		/>
 		<blueprint-room-card
-			v-if="selectedRoom"
+			v-if="selectedRoom && !hideControls"
 			:room="selectedRoom"
-			@close="emit('room-selected', null)"
+			:selectable="selectable"
+			@close="emit('room-opened', null)"
+			@select="(room) => emit('room-selected', room)"
 		/>
 	</div>
 </template>
@@ -49,10 +53,14 @@ const props = defineProps<{
 	selectedRoom: IBuildingRoom | null;
 	selectedFloorId: number | null;
 	fullScreen: boolean;
+	hideControls?: boolean;
+	roomZoomPadding?: number;
+	selectable?: boolean;
 }>();
 
 const emit = defineEmits<{
-	(e: 'room-selected', id: number | null): void;
+	(e: 'room-opened', id: number | null): void;
+	(e: 'room-selected', room: IBuildingRoom): void;
 	(e: 'update:full-screen', value: boolean): void;
 	(e: 'update:selected-floor-id', value: number | null): void;
 	(e: 'update:start-position', value: IBlueprintPosition | null): void;

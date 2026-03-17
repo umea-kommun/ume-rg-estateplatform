@@ -1,5 +1,5 @@
 <template>
-	<div class="nav-breadcrumbs">
+	<div class="nav-breadcrumbs" :class="{ 'full-width': fullWidth }">
 		<v-breadcrumbs class="ma-0 pa-0" divider="/" :items="breadcrumbs">
 			<template v-slot:prepend>
 				<v-icon
@@ -22,6 +22,7 @@ const props = defineProps<{
 		title: string;
 		to: RouteLocationAsRelativeTyped;
 	}[];
+	fullWidth?: boolean;
 }>();
 
 const breadcrumbs = computed(() => props.breadcrumbs);
@@ -39,6 +40,14 @@ const breadcrumbs = computed(() => props.breadcrumbs);
 		}
 		:first-child {
 			padding-left: 0;
+		}
+	}
+
+	&.full-width {
+		.v-breadcrumbs {
+			:deep(.v-breadcrumbs-item a) {
+				max-width: none;
+			}
 		}
 	}
 }

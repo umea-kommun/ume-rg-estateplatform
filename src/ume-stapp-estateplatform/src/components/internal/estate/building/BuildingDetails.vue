@@ -18,10 +18,16 @@
 								:breadcrumbs="breadcrumbs"
 							/>
 
-							<div class="d-flex align-center ga-4">
+							<div class="d-flex align-center">
 								<h1 :title="buildingName">
 									{{ buildingName }}
 								</h1>
+								<favorite-button
+									:id="building.id"
+									:type="EstateType.Building"
+									:isFavorite="building.isFavorite"
+									class="mr-2"
+								/>
 
 								<v-chip
 									variant="flat"
@@ -74,7 +80,7 @@
 						class="list mb-4"
 						:buildingId="building.id"
 						@room-selected="
-							(roomId) => buildingBlueprintRef?.selectRoom(roomId)
+							(roomId) => buildingBlueprintRef?.openRoom(roomId)
 						"
 						v-model:floor="selectedFloorId"
 					/>
@@ -86,7 +92,7 @@
 					v-show="activeMap === ActiveMapType.Blueprint"
 					ref="building-blueprint"
 					:buildingId="building.id"
-					@room-selected="(roomId) => roomList?.focusRoom(roomId)"
+					@room-opened="(roomId) => roomList?.focusRoom(roomId)"
 					v-model:floor="selectedFloorId"
 				/>
 				<building-map
@@ -118,7 +124,7 @@ import { DispatchType } from '@/models/Enums';
 import { IBuildingDetails } from '@/models/estate/Interfaces';
 import { IRootState } from '@/models/Interfaces';
 import { EstateRoutes, MyPagesRoutes } from '@/router/routes';
-import { computed, ref, useTemplateRef, watch } from 'vue';
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import NavBreadcrumbs from '@/components/internal/shared/NavBreadcrumbs.vue';
@@ -132,6 +138,9 @@ import BuildingMap from '@/components/internal/estate/map/BuildingMap.vue';
 import ExternalOwnerInfo from '@/components/internal/estate/estate/ExternalOwnerInfo.vue';
 import BuildingProperties from './BuildingProperties.vue';
 import BuildingDetailsButtons from './BuildingDetailsButtons.vue';
+import ErrorService from '@/utils/ErrorService';
+import FavoriteButton from '../favorite/FavoriteButton.vue';
+import { useRoute } from 'vue-router';
 
 const props = defineProps<{
 	buildingId: string;
@@ -139,6 +148,7 @@ const props = defineProps<{
 
 const { t } = useI18n();
 const store = useStore<IRootState>();
+const route = useRoute();
 const building = ref<IBuildingDetails | null>(null);
 const selectedFloorId = ref<number | null>(null);
 
@@ -201,6 +211,15 @@ const fetchBuilding = async (id: string) => {
 		} else {
 			activeMap.value = ActiveMapType.Map;
 		}
+
+		if (route.query.roomId) {
+			// Open room in the blueprint and focus it in the list
+			await nextTick();
+			roomList.value?.focusRoom(Number(route.query.roomId));
+			buildingBlueprintRef.value?.openRoom(Number(route.query.roomId));
+		}
+	} catch (err) {
+		ErrorService.onError({ err, errorPage: { visible: true } });
 	} finally {
 		isBusyFetching.value = false;
 	}

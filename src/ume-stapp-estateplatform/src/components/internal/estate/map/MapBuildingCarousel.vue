@@ -22,16 +22,27 @@
 					height="48px"
 					flex-grow="1"
 				></v-skeleton-loader>
-				<v-card-title v-else-if="building">
-					<router-link
-						:to="{
-							name: EstateRoutes.BuildingDetails,
-							params: { buildingId: building.id },
-						}"
-						:title="building?.popularName ?? building?.name"
-					>
-						{{ building?.popularName ?? building?.name }}
-					</router-link>
+				<v-card-title
+					v-else-if="building"
+					class="d-flex align-center pr-0"
+				>
+					<div class="title">
+						<router-link
+							:to="{
+								name: EstateRoutes.BuildingDetails,
+								params: { buildingId: building.id },
+							}"
+							:title="building?.popularName ?? building?.name"
+						>
+							{{ building?.popularName ?? building?.name }}
+						</router-link>
+					</div>
+					<favorite-button
+						:id="building.id"
+						:type="EstateType.Building"
+						:isFavorite="building.isFavorite"
+						size="small"
+					/>
 				</v-card-title>
 
 				<v-btn
@@ -86,6 +97,16 @@
 					</div>
 				</div>
 			</v-card-text>
+			<div v-if="selectable" class="d-flex justify-center pb-2">
+				<v-btn
+					class="regular-text"
+					flat
+					color="primary"
+					@click="$emit('select', building?.id)"
+				>
+					{{ $t('component.map.selectBuilding') }}
+				</v-btn>
+			</div>
 		</v-card>
 		<v-card v-if="(buildingIds?.length ?? 0) > 1" class="navigation mt-2">
 			<v-btn
@@ -127,13 +148,20 @@ import { useStore } from 'vuex';
 import { EstateRoutes } from '@/router/routes';
 import { useI18n } from 'vue-i18n';
 import BuildingImage from '../building/BuildingImage.vue';
+import FavoriteButton from '../favorite/FavoriteButton.vue';
+import { EstateType } from '@/models/estate/Enums';
 
 const props = defineProps<{
 	modelValue: number[] | null;
 	activeBuildingId: number | null;
+	selectable?: boolean;
 }>();
 
-const emit = defineEmits(['update:modelValue', 'update:activeBuildingId']);
+const emit = defineEmits([
+	'update:modelValue',
+	'update:activeBuildingId',
+	'select',
+]);
 
 const store = useStore<IRootState>();
 const { t } = useI18n();
@@ -261,24 +289,30 @@ watch(
 
 		.card-header {
 			display: flex;
-			flex-wrap: wrap-reverse;
-			align-items: start;
-			justify-content: end;
 
 			.v-btn {
 				margin: 4px;
 			}
-			.v-card-title,
+			.v-card-title {
+				flex: 1;
+
+				.title {
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+
+					a {
+						text-decoration: none;
+						&:hover {
+							text-decoration: underline;
+						}
+					}
+				}
+			}
+
 			:deep(.v-skeleton-loader) {
 				flex: 1;
 				min-width: 200px;
-
-				a {
-					text-decoration: none;
-					&:hover {
-						text-decoration: underline;
-					}
-				}
 			}
 		}
 

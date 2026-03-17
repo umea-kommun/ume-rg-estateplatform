@@ -45,6 +45,28 @@ function getBuildingImageUrl(buildingId: number): string {
 	return `${Config.VUE_APP_ESTATE_SERVICE}/buildings/${buildingId}/image`;
 }
 
+function mapResponseToBuildingRoom(r: {
+	id: number;
+	name: string;
+	popularName: string | null;
+	grossArea: number | null;
+	floorId: number;
+	floorName: string;
+	buildingId: number;
+	isFavorite?: boolean;
+}): IBuildingRoom {
+	return {
+		id: r.id,
+		name: r.name,
+		popularName: r.popularName,
+		grossArea: Math.round(r.grossArea ?? 0),
+		floorId: r.floorId,
+		floorName: removeLeadingZerosRegex(r.floorName),
+		buildingId: r.buildingId,
+		isFavorite: r.isFavorite ?? false,
+	};
+}
+
 export default {
 	mapResponseToEstateSearchResult: (
 		responseData: {
@@ -56,6 +78,7 @@ export default {
 			numFloors: number | null;
 			grossArea: number | null;
 			imageUrl: string | null;
+			isFavorite: boolean;
 			address: {
 				street: string;
 				zipCode: string;
@@ -91,6 +114,7 @@ export default {
 					item.extendedProperties?.operationalArea
 				),
 				imageUrl: item.imageUrl ? getBuildingImageUrl(item.id) : null,
+				isFavorite: item.isFavorite ?? false,
 				address: item.address
 					? {
 							street: capitalizeWords(
@@ -164,6 +188,7 @@ export default {
 		address: string | null;
 		grossArea: number | null;
 		buildingCount: number | null;
+		isFavorite?: boolean;
 		extendedProperties: {
 			municipalityArea: string | null;
 			operationalArea: string | null;
@@ -182,6 +207,7 @@ export default {
 			type: r.type as EstateType,
 			name: r.name,
 			popularName: capitalizeWords(r.popularName),
+			isFavorite: r.isFavorite ?? false,
 			externalOwnerInfo: rExternalOwner
 				? {
 						status: rExternalOwner?.status,
@@ -214,6 +240,7 @@ export default {
 			numFloors: number | null;
 			numRooms: number | null;
 			imageUrl: string | null;
+			isFavorite?: boolean;
 			address: {
 				street: string;
 				zipCode: string;
@@ -232,6 +259,7 @@ export default {
 			popularName: capitalizeWords(b.popularName),
 			grossArea: Math.round(b.grossArea ?? 0),
 			imageUrl: b.imageUrl ? getBuildingImageUrl(b.id) : null,
+			isFavorite: b.isFavorite ?? false,
 			metrics: {
 				floorCount: b.numFloors,
 				roomCount: b.numRooms,
@@ -287,6 +315,7 @@ export default {
 		estate: { id: number; name: string; popularName: string | null };
 		region: { id: number; name: string };
 		imageUrl: string | null;
+		isFavorite?: boolean;
 		extendedProperties?: {
 			blueprintAvailable: boolean | null;
 			noticeBoard: {
@@ -323,6 +352,7 @@ export default {
 			blueprintAvailable:
 				r.extendedProperties?.blueprintAvailable ?? false,
 			imageUrl: r.imageUrl ? getBuildingImageUrl(r.id) : null,
+			isFavorite: r.isFavorite ?? false,
 			externalOwnerInfo: r.extendedProperties?.externalOwnerInfo
 				? {
 						status: r.extendedProperties?.externalOwnerInfo?.status,
@@ -379,6 +409,7 @@ export default {
 		};
 		return building;
 	},
+	mapResponseToBuildingRoom,
 	mapResponseToBuildingRooms: (
 		roomsResponse: {
 			id: number;
@@ -387,18 +418,10 @@ export default {
 			grossArea: number | null;
 			floorId: number;
 			floorName: string;
+			buildingId: number;
 		}[]
 	): IBuildingRoom[] => {
-		const rooms: IBuildingRoom[] = roomsResponse.map((r) => ({
-			id: r.id,
-			name: r.name,
-			popularName: r.popularName,
-			grossArea: Math.round(r.grossArea ?? 0),
-			floorId: r.floorId,
-			floorName: removeLeadingZerosRegex(r.floorName),
-		}));
-
-		return rooms;
+		return roomsResponse.map(mapResponseToBuildingRoom);
 	},
 	mapResponseToBuildingFloors: (
 		floorsResponse: {
@@ -422,6 +445,8 @@ export default {
 		grossArea: number | null;
 		floorId: number;
 		floorName: string;
+		buildingId: number;
+		isFavorite?: boolean;
 	}): IBuildingRoom => {
 		const room: IBuildingRoom = {
 			id: r.id,
@@ -430,6 +455,8 @@ export default {
 			grossArea: Math.round(r.grossArea ?? 0),
 			floorId: r.floorId,
 			floorName: removeLeadingZerosRegex(r.floorName),
+			buildingId: r.buildingId,
+			isFavorite: r.isFavorite ?? false,
 		};
 		return room;
 	},

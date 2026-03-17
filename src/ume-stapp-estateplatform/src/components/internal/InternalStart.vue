@@ -173,6 +173,21 @@
 							)
 						}}
 					</v-btn>
+					<v-btn
+						v-if="isErrorReportEnabled"
+						variant="outlined"
+						size="x-large"
+						prependIcon="warning"
+						:to="{
+							name: EstateRoutes.FaultReport,
+						}"
+					>
+						{{
+							$t(
+								'component.internal.internalStart.estate.goToEstateFaultReport'
+							)
+						}}
+					</v-btn>
 				</v-col>
 			</v-row>
 		</div>
@@ -195,12 +210,14 @@ import { useRoute } from 'vue-router';
 import { IRootState } from '@/models/Interfaces';
 import { AppContentSize } from '@/models/Enums';
 import { EstateRoutes, MyPagesRoutes } from '@/router/routes';
-import Config from '@/Config';
 import RateFeedback from '@/components/feedback/RateFeedback.vue';
+import Config from '@/Config';
+import { useFeatureFlags } from '@/utils/useFeatureFlags';
 
 const store = useStore<IRootState>();
 const route = useRoute();
 const isBusyLoadingFromServer = ref<boolean>(false);
+const { isEnabled } = useFeatureFlags();
 
 const user = computed(() => store.state.user);
 const contentSize = ref<AppContentSize>(
@@ -245,9 +262,8 @@ const isPasswordConsumer = computed(() => {
 	}
 	return false;
 });
-const isEstateEnabled = computed(() => {
-	return Config.VUE_APP_ESTATE_ENABLED === 'true';
-});
+const isEstateEnabled = computed(() => isEnabled('EstateService'));
+const isErrorReportEnabled = computed(() => isEnabled('ErrorReport'));
 </script>
 <style scoped lang="scss">
 .internal-start {

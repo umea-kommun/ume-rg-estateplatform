@@ -11,7 +11,11 @@
 			@update:selected-floor-id="selectFloor"
 			v-model:start-position="blueprintCameraPosition"
 			:selected-room="selectedRoom"
-			@room-selected="(roomId) => selectRoom(roomId, true)"
+			@room-opened="(roomId) => openRoom(roomId, true)"
+			@room-selected="(room) => emit('room-selected', room)"
+			:hide-controls="hideControls"
+			:room-zoom-padding="roomZoomPadding"
+			:selectable="selectable"
 		/>
 		<v-dialog
 			v-model="fullScreen"
@@ -29,7 +33,10 @@
 				@update:selected-floor-id="selectFloor"
 				v-model:start-position="blueprintCameraPosition"
 				:selected-room="selectedRoom"
-				@room-selected="(roomId) => selectRoom(roomId, true)"
+				@room-opened="(roomId) => openRoom(roomId, true)"
+				@room-selected="(room) => emit('room-selected', room)"
+				:room-zoom-padding="roomZoomPadding"
+				:selectable="selectable"
 			/>
 		</v-dialog>
 	</div>
@@ -50,8 +57,16 @@ import BlueprintViewer from './BlueprintViewer.vue';
 const props = defineProps<{
 	buildingId: number;
 	floor: number | null;
+	hideControls?: boolean;
+	roomZoomPadding?: number;
+	selectable?: boolean;
 }>();
-const emit = defineEmits(['room-selected', 'update:floor']);
+const emit = defineEmits([
+	'room-opened',
+	'room-selected',
+	'update:floor',
+	'fullscreen-closed',
+]);
 
 const store = useStore<IRootState>();
 
@@ -62,6 +77,11 @@ const blueprint = ref<string | null>(null);
 const blueprintWrap = useTemplateRef('blueprintWrap');
 const blueprintCameraPosition = ref<IBlueprintPosition | null>(null);
 const fullScreen = ref(false);
+watch(fullScreen, (newVal) => {
+	if (!newVal) {
+		emit('fullscreen-closed');
+	}
+});
 
 const selectedRoomId = ref<number | null>(null);
 const selectedRoom = ref<IBuildingRoom | null>(null);
@@ -87,13 +107,13 @@ const selectFloor = async (floorId: number | null) => {
 	await fetchBlueprint(floorId);
 };
 
-const selectRoom = async (roomId: number | null, emitEvent = false) => {
+const openRoom = async (roomId: number | null, emitEvent = false) => {
 	if (selectedRoomId.value === roomId) {
 		return;
 	}
 
 	if (emitEvent) {
-		emit('room-selected', roomId);
+		emit('room-opened', roomId);
 	}
 	selectedRoomId.value = roomId;
 
@@ -119,13 +139,20 @@ const selectRoom = async (roomId: number | null, emitEvent = false) => {
 };
 
 /* Fetch blueprint and floors */
+let abortController: AbortController | null = null;
 const isBusyFetchingBlueprint = ref(false);
 const fetchBlueprint = async (floorId: number) => {
+	if (abortController) {
+		abortController.abort();
+		await new Promise((r) => requestAnimationFrame(r)); // Wait for the abort to propagate and avoid race conditions
+	}
+	abortController = new AbortController();
 	isBusyFetchingBlueprint.value = true;
 	blueprintCameraPosition.value = null;
 	try {
 		blueprint.value = await store.dispatch(DispatchType.GetFloorBlueprint, {
 			floorId,
+			abortController,
 		});
 	} finally {
 		isBusyFetchingBlueprint.value = false;
@@ -165,7 +192,7 @@ const openFullscreen = () => {
 };
 
 defineExpose({
-	selectRoom,
+	openRoom,
 	openFullscreen,
 });
 </script>

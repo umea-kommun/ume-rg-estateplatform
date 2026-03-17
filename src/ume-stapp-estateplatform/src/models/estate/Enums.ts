@@ -9,6 +9,11 @@ export enum ActiveMapType {
 	Blueprint = 'blueprint',
 }
 
+export enum EstateFaultLocation {
+	Indoor = 'indoor',
+	Outdoor = 'outdoor',
+}
+
 export enum MapBaseLayer {
 	Lovisa = 'Lovisa',
 	Ortofoto = 'Ortofoto',

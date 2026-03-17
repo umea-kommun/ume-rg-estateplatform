@@ -18,10 +18,16 @@
 								:breadcrumbs="breadcrumbs"
 							/>
 
-							<div class="d-flex align-center ga-4">
+							<div class="d-flex align-center">
 								<h1 :title="estateName">
 									{{ estateName }}
 								</h1>
+								<favorite-button
+									:id="estate.id"
+									:type="EstateType.Estate"
+									:isFavorite="estate.isFavorite"
+									class="mr-2"
+								/>
 
 								<v-chip
 									class="flex-shrink-0"
@@ -136,6 +142,7 @@ import { EstateType } from '@/models/estate/Enums';
 import BuildingMap from '../map/BuildingMap.vue';
 import BaseIconButton from '@/components/base/BaseIconButton.vue';
 import ExternalOwnerInfo from './ExternalOwnerInfo.vue';
+import FavoriteButton from '../favorite/FavoriteButton.vue';
 
 const props = defineProps<{
 	estateId: string;

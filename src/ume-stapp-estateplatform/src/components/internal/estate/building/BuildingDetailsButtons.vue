@@ -21,6 +21,7 @@
 			@click="onBlueprintClick"
 		/>
 		<base-icon-button
+			v-if="isEnabled('ContactPersons')"
 			icon="contacts"
 			:label="
 				$t('component.internal.buildingDetails.contactPersonsButton')
@@ -37,6 +38,7 @@
 			@click="showContactPersonsModal = true"
 		/>
 		<base-icon-button
+			v-if="isEnabled('Documents')"
 			icon="insert_drive_file"
 			:label="$t('component.internal.buildingDetails.documentsButton')"
 			:tooltip="
@@ -50,14 +52,26 @@
 			:disabled="building.numDocuments === 0"
 			@click="showDocumentModal = true"
 		/>
+		<base-icon-button
+			v-if="isEnabled('ErrorReport')"
+			icon="warning"
+			icon-color="error"
+			:label="$t('component.internal.buildingDetails.reportButton')"
+			:to="{
+				name: EstateRoutes.FaultReport,
+				query: {
+					buildingId: building.id,
+				},
+			}"
+		/>
 
 		<building-contact-modal
-			v-if="building"
+			v-if="building && isEnabled('ContactPersons')"
 			v-model="showContactPersonsModal"
 			:building="building"
 		/>
 		<building-document-modal
-			v-if="building"
+			v-if="building && isEnabled('Documents')"
 			v-model="showDocumentModal"
 			:building="building"
 		/>
@@ -72,6 +86,10 @@ import { IBuildingDetails } from '@/models/estate/Interfaces';
 import BaseIconButton from '@/components/base/BaseIconButton.vue';
 import BuildingContactModal from './BuildingContactModal.vue';
 import BuildingDocumentModal from './BuildingDocumentModal.vue';
+import { EstateRoutes } from '@/router/routes';
+import { useFeatureFlags } from '@/utils/useFeatureFlags';
+
+const { isEnabled } = useFeatureFlags();
 
 const props = defineProps<{
 	building: IBuildingDetails;

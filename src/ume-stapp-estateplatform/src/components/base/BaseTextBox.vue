@@ -1,8 +1,8 @@
 <template>
 	<div class="base-text-box">
-		<Field
+		<vee-field
 			:name="props.name ?? id"
-			:label="label"
+			:label="validationLabel ?? label"
 			v-model="value"
 			v-slot="{ field, errors }"
 			:rules="rules"
@@ -24,7 +24,9 @@
 					:prepend-inner-icon="prependInnerIcon"
 					aria-autocomplete="both"
 					aria-haspopup="false"
+					:aria-labelledby="ariaLabelledby"
 					:variant="variant"
+					:rounded="rounded"
 					:aria-describedby="!!errors.length ? 'error-' + id : null"
 					:disabled="disabled"
 					single-line
@@ -41,25 +43,29 @@
 					:prepend-inner-icon="prependInnerIcon"
 					aria-autocomplete="both"
 					aria-haspopup="false"
+					:aria-labelledby="ariaLabelledby"
+					:variant="variant"
+					:rounded="rounded"
+					:auto-grow="autoGrow"
 					:aria-describedby="!!errors.length ? 'error-' + id : null"
 					:disabled="disabled"
 					:placeholder="placeholder"
 					:error="!!errors.length"
 					@input="emit('input')"
 				/>
-				<BaseHelpText
+				<base-help-text
 					:helpText="helpText"
 					:getValidationId="id"
 					:errors="errorMessage ? [errorMessage, ...errors] : errors"
 				/>
 			</base-form-field>
-		</Field>
+		</vee-field>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Field } from 'vee-validate';
+import { Field as VeeField } from 'vee-validate';
 import BaseHelpText from '@/components/base/BaseHelpAndErrorText.vue';
 import BaseFormField from '@/components/base/BaseFormField.vue';
 
@@ -71,8 +77,11 @@ const props = defineProps({
 		required: true,
 	},
 	label: String,
+	validationLabel: String,
 	helpText: String,
 	variant: String as () => 'filled' | 'outlined' | 'underlined',
+	rounded: String,
+	autoGrow: Boolean,
 	rules: {
 		type: String,
 		default: '',
@@ -98,6 +107,7 @@ const props = defineProps({
 		default: '',
 	},
 	prependInnerIcon: String,
+	ariaLabelledby: String,
 });
 
 const emit = defineEmits(['update:modelValue', 'input']);

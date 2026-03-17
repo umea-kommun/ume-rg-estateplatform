@@ -17,6 +17,7 @@
 						"
 						color="primary"
 						prepend-inner-icon="search"
+						:loading="isBusyLoading"
 						clearable
 						variant="outlined"
 						autocomplete="off"
@@ -81,11 +82,18 @@
 					/>
 
 					<!-- Search results -->
+					<div class="mt-4 pb-4 search-help" v-if="!userHasSearched">
+						<v-alert color="primary" variant="tonal">
+							{{
+								$t('component.internal.estateSearch.searchHelp')
+							}}
+						</v-alert>
+					</div>
 					<v-alert
 						v-if="
 							!isBusyLoading &&
 							searchResults?.length === 0 &&
-							(search || Object.keys(searchFilter).length)
+							userHasSearched
 						"
 						class="mt-4"
 						icon="info"
@@ -109,6 +117,10 @@
 						:loading="isBusyLoading"
 					/>
 				</div>
+
+				<div v-if="!isBusyLoading && !userHasSearched" class="mt-4">
+					<favorite-list class="mt-4" />
+				</div>
 			</div>
 
 			<div class="map">
@@ -125,35 +137,24 @@
 </template>
 
 <script setup lang="ts">
-import { DispatchType } from '@/models/Enums';
-import { IRootState } from '@/models/Interfaces';
-import { AxiosError } from 'axios';
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
-import { useStore } from 'vuex';
 import EstateSearchResultItem from './EstateSearchResultItem.vue';
-import {
-	IBuildingGeoLocation,
-	IEstateSearchResultEntry,
-	IMapPoint,
-	SearchFilter,
-} from '@/models/estate/Interfaces';
+import { SearchFilter } from '@/models/estate/Interfaces';
 import { watchDebounced } from '@vueuse/core';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import AppContent from '@/components/app/AppContent.vue';
 import '@/themes/estate.scss';
 import { EstateRoutes, MyPagesRoutes } from '@/router/routes';
 import { useI18n } from 'vue-i18n';
-import { EstateType } from '@/models/estate/Enums';
 import BuildingMap from '@/components/internal/estate/map/BuildingMap.vue';
 import EstateSearchFilter from './EstateSearchFilter.vue';
 import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
+import { useEstateSearch } from './useEstateSearch';
+import FavoriteList from '../favorite/FavoriteList.vue';
 
-const router = useRouter();
 const route = useRoute();
-const store = useStore<IRootState>();
 const { t } = useI18n();
 
-const isBusyLoading = ref(false);
 const buildingMapRef = useTemplateRef('building-map');
 const hoveredSearchResultId = ref<number | null>(null);
 
@@ -163,107 +164,28 @@ const searchFilter = ref<SearchFilter>(
 	route.query.filter ? JSON.parse(route.query.filter.toString()) : {}
 );
 
-const searchResults = ref<IEstateSearchResultEntry[] | null>(null);
-const buildings = ref<IBuildingGeoLocation[]>([]);
+const breadcrumbs = [
+	{
+		title: t('app.nav.home'),
+		to: { name: MyPagesRoutes.InternalStart },
+	},
+	{
+		title: t('component.internal.estateSearch.breadcrumb'),
+		to: { name: EstateRoutes.Search },
+	},
+];
 
-const breadcrumbs = computed(() => {
-	return [
-		{
-			title: t('app.nav.home'),
-			to: { name: MyPagesRoutes.InternalStart },
-		},
-		{
-			title: t('component.internal.estateSearch.breadcrumb'),
-			to: { name: EstateRoutes.Search },
-		},
-	];
+const userHasSearched = computed(() => {
+	return !!search.value || Object.keys(searchFilter.value).length > 0;
 });
 
-const buildingPoints = computed<IMapPoint[]>(() => {
-	return buildings.value.map((building) => {
-		return {
-			id: building.id,
-			type: EstateType.Building,
-			lon: building.geoLocation.lon,
-			lat: building.geoLocation.lat,
-		};
-	});
-});
-
-const updateQueryParams = () => {
-	const queryParams: Record<string, string | number | undefined> = {
-		search: search.value || undefined,
-		filter: Object.keys(searchFilter.value).length
-			? JSON.stringify(searchFilter.value)
-			: undefined,
-	};
-	if (route.name) {
-		router.replace({ name: route.name, query: queryParams });
-	}
-};
-
-const isFetchingBuildingLocations = ref(false);
-const fetchBuildingLocations = async (abortController?: AbortController) => {
-	isFetchingBuildingLocations.value = true;
-	try {
-		buildings.value = await store.dispatch(
-			DispatchType.GetEstateSearchGeoLocations,
-			{
-				params: {
-					query: search.value,
-					searchFilter: searchFilter.value,
-				},
-				abortController,
-			}
-		);
-	} catch (ex) {
-		if ((ex as AxiosError).name === 'CanceledError') {
-			return;
-		}
-		throw ex;
-	} finally {
-		isFetchingBuildingLocations.value = false;
-	}
-};
-
-let abortController: AbortController | null = null;
-const fetchSearchResults = async () => {
-	isBusyLoading.value = true;
-	if (abortController) {
-		abortController.abort();
-	}
-	abortController = new AbortController();
-	try {
-		updateQueryParams();
-		fetchBuildingLocations(abortController);
-
-		if (
-			!search.value?.trim() &&
-			Object.keys(searchFilter.value).length === 0
-		) {
-			searchResults.value = [];
-			return;
-		}
-
-		const result = await store.dispatch(DispatchType.GetEstateSearch, {
-			params: {
-				query: search.value,
-				searchFilter: searchFilter.value,
-			},
-			abortController,
-		});
-
-		searchResults.value = result;
-	} catch (ex) {
-		if ((ex as AxiosError).name === 'CanceledError') {
-			return;
-		}
-		throw ex;
-	} finally {
-		abortController = null;
-		isBusyLoading.value = false;
-	}
-};
+const {
+	fetchSearchResults,
+	searchResults,
+	buildingPoints,
+	isBusyLoading,
+	isFetchingBuildingLocations,
+} = useEstateSearch(search, searchFilter);
 
 watchDebounced(
 	() => [search.value, searchFilter.value],
@@ -279,6 +201,9 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .estate-search {
+	.search-help {
+		border-bottom: solid 1px $grey-lighten-4;
+	}
 	:deep(.v-btn),
 	:deep(.v-field) {
 		border-radius: $border-radius;

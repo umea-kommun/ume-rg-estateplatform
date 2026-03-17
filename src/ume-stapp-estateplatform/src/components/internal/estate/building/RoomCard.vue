@@ -1,14 +1,24 @@
 <template>
-	<div
+	<v-list-item
 		:key="room.id"
-		class="room-card px-6 pt-4"
+		class="room-card pt-4"
 		:data-room-id="room.id"
 		:class="{ focused: room.id === focusedRoomId }"
 	>
-		<div v-if="room.popularName" class="title">
-			{{ room.popularName }} - {{ room.name }}
+		<div class="title d-flex align-center">
+			<span v-if="room.popularName">
+				{{ room.popularName }} - {{ room.name }}
+			</span>
+			<span v-else>
+				{{ room.name }}
+			</span>
+			<favorite-button
+				:id="room.id"
+				:type="EstateType.Room"
+				:isFavorite="room.isFavorite"
+				size="small"
+			/>
 		</div>
-		<div v-else class="title">{{ room.name }}</div>
 		<ul>
 			<li>
 				{{ $t('component.internal.buildingDetails.floorLabel') }}
@@ -17,11 +27,13 @@
 			<li>{{ room.grossArea?.toLocaleString() }} m²</li>
 		</ul>
 		<hr class="mt-4" />
-	</div>
+	</v-list-item>
 </template>
 
 <script lang="ts" setup>
 import { IBuildingRoom } from '@/models/estate/Interfaces';
+import FavoriteButton from '../favorite/FavoriteButton.vue';
+import { EstateType } from '@/models/estate/Enums';
 
 defineProps<{
 	room: IBuildingRoom;
@@ -31,12 +43,7 @@ defineProps<{
 
 <style scoped lang="scss">
 .room-card {
-	cursor: pointer;
 	transition: background-color 0.2s ease-in-out;
-
-	&:hover {
-		background-color: $grey-lighten-2;
-	}
 
 	hr {
 		border: none;

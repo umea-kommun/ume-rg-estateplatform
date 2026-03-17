@@ -8,6 +8,11 @@
 			:highlighted-point-id="highlightedPointId"
 			:fit-points="fitPoints"
 			:loading="loading"
+			:hide-controls="hideControls"
+			:selectable="selectable"
+			@select-building="
+				(buildingId) => emit('select-building', buildingId)
+			"
 		/>
 
 		<v-dialog
@@ -24,6 +29,10 @@
 				:highlighted-point-id="highlightedPointId"
 				:fit-points="fitPoints"
 				:loading="loading"
+				:selectable="selectable"
+				@select-building="
+					(buildingId) => emit('select-building', buildingId)
+				"
 			/>
 		</v-dialog>
 	</div>
@@ -31,7 +40,7 @@
 
 <script setup lang="ts">
 import { IMapPoint, IMapState } from '@/models/estate/Interfaces';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import MapViewer from './MapViewer.vue';
 
 defineProps<{
@@ -40,8 +49,19 @@ defineProps<{
 	initialState?: IMapState | null;
 	highlightedPointId?: number | null;
 	loading?: boolean;
+	hideControls?: boolean;
+	selectable?: boolean;
 }>();
+
+const emit = defineEmits(['fullscreen-closed', 'select-building']);
+
 const fullscreen = ref(false);
+
+watch(fullscreen, (newVal) => {
+	if (!newVal) {
+		emit('fullscreen-closed');
+	}
+});
 
 const openFullscreen = () => {
 	fullscreen.value = true;

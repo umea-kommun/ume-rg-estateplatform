@@ -25,6 +25,7 @@ export enum MyPagesRoutes {
 
 export enum EstateRoutes {
 	Search = 'Estate.EstateSearch',
+	FaultReport = 'Estate.FaultReport',
 
 	EstateDetails = 'Estate.EstateDetails',
 	EstateDetailsBuildings = 'Estate.EstateDetails.Buildings',

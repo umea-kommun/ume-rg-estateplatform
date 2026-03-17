@@ -1,5 +1,9 @@
 <template>
-	<v-card class="estate-search-result-item" :to="navigation">
+	<v-card
+		class="estate-search-result-item"
+		:to="navigation"
+		:disabled="loading"
+	>
 		<building-image
 			v-if="entry.imageUrl"
 			:src="entry.imageUrl"
@@ -9,7 +13,15 @@
 		<div class="content">
 			<div class="d-flex align-center justify-space-between">
 				<v-card-title>
-					{{ entry.popularName || entry.name }}
+					<div class="title">
+						{{ entry.popularName || entry.name }}
+					</div>
+					<favorite-button
+						:id="entry.id"
+						:type="entry.type"
+						:isFavorite="entry.isFavorite"
+						size="small"
+					/>
 				</v-card-title>
 				<v-chip
 					class="estate-type mt-2 mr-4"
@@ -85,6 +97,14 @@
 				/>
 			</div>
 		</div>
+		<div class="loading-overlay loader-lazy" v-if="loading">
+			<v-progress-circular
+				color="primary"
+				:size="32"
+				:width="2"
+				indeterminate
+			/>
+		</div>
 	</v-card>
 </template>
 
@@ -95,9 +115,11 @@ import { EstateRoutes } from '@/router/routes';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import BuildingImage from '../building/BuildingImage.vue';
+import FavoriteButton from '../favorite/FavoriteButton.vue';
 
 const props = defineProps<{
 	entry: IEstateSearchResultEntry;
+	loading?: boolean;
 }>();
 
 const { t } = useI18n();
@@ -114,6 +136,16 @@ const navigation = computed(() => {
 				name: EstateRoutes.BuildingDetails,
 				params: { buildingId: props.entry.id },
 			};
+		case EstateType.Room: {
+			const buildingId = props.entry.ancestors?.find(
+				(ancestor) => ancestor.type === EstateType.Building
+			)?.id;
+			return {
+				name: EstateRoutes.BuildingDetails,
+				params: { buildingId: buildingId },
+				query: { roomId: props.entry.id },
+			};
+		}
 	}
 	return undefined;
 });
@@ -205,10 +237,16 @@ const estateType = computed(() => {
 		font-size: size(18);
 		color: $black;
 		flex: 1;
-		text-overflow: initial;
-		white-space: normal;
-		text-transform: capitalize;
-		word-break: break-word;
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		.title {
+			text-overflow: initial;
+			white-space: normal;
+			text-transform: capitalize;
+			word-break: break-word;
+		}
 	}
 	.properties {
 		display: flex;
@@ -223,6 +261,7 @@ const estateType = computed(() => {
 			}
 			.value {
 				font-size: size(16);
+				word-break: break-all;
 			}
 		}
 	}
@@ -239,6 +278,13 @@ const estateType = computed(() => {
 		width: 100%;
 		border-radius: 0;
 		object-fit: cover;
+	}
+	.loading-overlay {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 	@media only screen and (max-width: 620px) {
 		.inner-content {

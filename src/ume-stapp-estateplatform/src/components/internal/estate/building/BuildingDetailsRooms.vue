@@ -4,7 +4,10 @@
 		{{ t('component.internal.buildingDetails.noRooms') }}
 	</v-alert>
 	<div v-else-if="rooms">
-		<div class="filter d-flex flex-wrap ga-4 mt-4 px-6">
+		<div
+			class="filter d-flex flex-wrap ga-4 mt-4"
+			:class="{ 'px-6': !noPadding }"
+		>
 			<v-text-field
 				:label="t('component.internal.buildingDetails.room.search')"
 				:placeholder="
@@ -12,6 +15,7 @@
 						'component.internal.buildingDetails.room.searchPlaceholder'
 					)
 				"
+				prepend-inner-icon="search"
 				v-model="searchTerm"
 				color="primary"
 				rounded="lg"
@@ -44,18 +48,21 @@
 				clearable
 			/>
 		</div>
+		<slot name="append-search"></slot>
 		<div class="mt-2 result-wrap">
 			<v-alert
 				v-if="!filteredRooms?.length"
 				icon="info"
-				class="mt-4 mx-6"
+				class="mt-4"
+				:class="{ 'mx-6': !noPadding }"
 			>
 				{{ t('component.internal.buildingDetails.room.noMatches') }}
 			</v-alert>
 			<v-alert
 				v-else-if="!filteredRoomsForFloor?.length"
 				icon="info"
-				class="mt-4 mx-6"
+				class="mt-4"
+				:class="{ 'mx-6': !noPadding }"
 				>{{
 					t(
 						'component.internal.buildingDetails.room.noMatchesSelectedFloor',
@@ -67,15 +74,20 @@
 				}}
 			</v-alert>
 
-			<room-card
-				v-for="room in filteredRoomsForFloor"
-				:key="room.id"
-				:room="room"
-				:focusedRoomId="focusedRoomId"
-				@click="clickRoom(room.id)"
-			/>
+			<v-list>
+				<room-card
+					v-for="room in filteredRoomsForFloor"
+					:key="room.id"
+					:room="room"
+					:focusedRoomId="focusedRoomId"
+					:class="{
+						'px-6': !noPadding,
+					}"
+					@click="clickRoom(room.id)"
+				/>
+			</v-list>
 			<div v-if="selectedFloorId && filteredRoomsForOtherFloors.length">
-				<h3 class="mx-6 mt-6 mb-2">
+				<h3 class="mt-6 mb-2" :class="{ 'mx-6': !noPadding }">
 					{{
 						t(
 							'component.internal.buildingDetails.room.matchesOnOtherFloors'
@@ -107,6 +119,8 @@ import RoomCard from './RoomCard.vue';
 const props = defineProps<{
 	buildingId: number;
 	floor: number | null;
+	returnObject?: boolean;
+	noPadding?: boolean;
 }>();
 
 const emit = defineEmits(['room-selected', 'update:floor']);
@@ -225,7 +239,13 @@ const focusRoom = async (roomId: number | null) => {
 
 const clickRoom = async (roomId: number | null) => {
 	focusedRoomId.value = roomId;
-	emit('room-selected', roomId);
+
+	if (props.returnObject) {
+		const room = rooms.value?.find((r) => r.id === roomId) ?? null;
+		emit('room-selected', room);
+	} else {
+		emit('room-selected', roomId);
+	}
 };
 
 defineExpose({

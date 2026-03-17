@@ -155,8 +155,4 @@ defineProps({
 		margin-top: 15px;
 	}
 }
-
-form div:first-child .component-base-form-field label {
-	padding-top: 0;
-}
 </style>

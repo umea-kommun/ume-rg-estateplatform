@@ -14,6 +14,7 @@ const props = defineProps<{
 	blueprintSvg: string;
 	selectedRoomId?: number;
 	startPosition?: IBlueprintPosition | null;
+	roomZoomPadding?: number; // 0.2 for 20% padding etc.
 }>();
 const emit = defineEmits<{
 	(e: 'room-clicked', id: number): void;
@@ -295,7 +296,7 @@ function indexRooms() {
 function centerRoomElement(g: SVGAElement) {
 	if (!svgElement) return;
 	const bbox = g.getBBox();
-	const target = fitRectWithMargin(bbox, 0.2); // 20% padding
+	const target = fitRectWithMargin(bbox, props.roomZoomPadding ?? 0.2); // 20% padding fallback
 	animateCamera(target, 600);
 }
 

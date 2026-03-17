@@ -4,17 +4,32 @@ import { IRootState } from '@/models/Interfaces';
 import Axios from 'axios';
 import mapper from './mapper';
 import ErrorService from '@/utils/ErrorService';
-import { SearchFilter } from '@/models/estate/Interfaces';
+import {
+	ISubmitEstateFaultReport,
+	SearchFilter,
+} from '@/models/estate/Interfaces';
 
-const httpClient = Axios.create();
+const httpClient = Axios.create({
+	baseURL: Config.VUE_APP_ESTATE_SERVICE,
+});
 
 const buildQueryParams = (params: {
 	query?: string;
 	searchFilter?: SearchFilter;
+	type?: string[];
+	limit?: number;
 }): URLSearchParams => {
 	const queryParams = new URLSearchParams();
 	if (params.query) {
 		queryParams.append('query', params.query);
+	}
+	if (params.type) {
+		params.type.forEach((type) => {
+			queryParams.append('type', type);
+		});
+	}
+	if (params.limit) {
+		queryParams.append('limit', params.limit.toString());
 	}
 
 	if (params.searchFilter?.businessTypes) {
@@ -44,7 +59,7 @@ export default {
 		queryParams.append('limit', '50');
 
 		const response = await httpClient.get(
-			Config.VUE_APP_ESTATE_SERVICE + '/search?' + queryParams.toString(),
+			'/search?' + queryParams.toString(),
 			{
 				headers: {
 					Authorization: 'Bearer ' + context.rootState.user.token,
@@ -71,9 +86,7 @@ export default {
 		const queryParams = buildQueryParams(params);
 
 		const response = await httpClient.get(
-			Config.VUE_APP_ESTATE_SERVICE +
-				'/search/geolocations?' +
-				queryParams.toString(),
+			'/search/geolocations?' + queryParams.toString(),
 			{
 				headers: {
 					Authorization: 'Bearer ' + context.rootState.user.token,
@@ -91,14 +104,11 @@ export default {
 		{ estateId }: { estateId: string }
 	) {
 		try {
-			const response = await httpClient.get(
-				Config.VUE_APP_ESTATE_SERVICE + `/estates/${estateId}`,
-				{
-					headers: {
-						Authorization: 'Bearer ' + context.rootState.user.token,
-					},
-				}
-			);
+			const response = await httpClient.get(`/estates/${estateId}`, {
+				headers: {
+					Authorization: 'Bearer ' + context.rootState.user.token,
+				},
+			});
 
 			return mapper.mapResponseToEstateDetails(response.data);
 		} catch (err) {
@@ -110,7 +120,7 @@ export default {
 		{ estateId }: { estateId: string }
 	) {
 		const response = await httpClient.get(
-			Config.VUE_APP_ESTATE_SERVICE + `/estates/${estateId}/buildings`,
+			`/estates/${estateId}/buildings`,
 			{
 				headers: {
 					Authorization: 'Bearer ' + context.rootState.user.token,
@@ -122,14 +132,11 @@ export default {
 	},
 	async getBuildingLocations(context: ActionContext<IRootState, IRootState>) {
 		try {
-			const response = await httpClient.get(
-				Config.VUE_APP_ESTATE_SERVICE + '/buildings/geolocations',
-				{
-					headers: {
-						Authorization: 'Bearer ' + context.rootState.user.token,
-					},
-				}
-			);
+			const response = await httpClient.get('/buildings/geolocations', {
+				headers: {
+					Authorization: 'Bearer ' + context.rootState.user.token,
+				},
+			});
 
 			return mapper.mapResponseToBuildingLocations(response.data);
 		} catch (err) {
@@ -140,20 +147,13 @@ export default {
 		context: ActionContext<IRootState, IRootState>,
 		{ buildingId }: { buildingId: string }
 	) {
-		try {
-			const response = await httpClient.get(
-				Config.VUE_APP_ESTATE_SERVICE + `/buildings/${buildingId}`,
-				{
-					headers: {
-						Authorization: 'Bearer ' + context.rootState.user.token,
-					},
-				}
-			);
+		const response = await httpClient.get(`/buildings/${buildingId}`, {
+			headers: {
+				Authorization: 'Bearer ' + context.rootState.user.token,
+			},
+		});
 
-			return mapper.mapResponseToBuildingDetails(response.data);
-		} catch (err) {
-			ErrorService.onError({ err, errorPage: { visible: true } });
-		}
+		return mapper.mapResponseToBuildingDetails(response.data);
 	},
 	async getBuildingFloors(
 		context: ActionContext<IRootState, IRootState>,
@@ -163,8 +163,7 @@ export default {
 		}: { buildingId: string; includeRooms: boolean }
 	) {
 		const response = await httpClient.get(
-			Config.VUE_APP_ESTATE_SERVICE +
-				`/buildings/${buildingId}/floors?includeRooms=${includeRooms}`,
+			`/buildings/${buildingId}/floors?includeRooms=${includeRooms}`,
 			{
 				headers: {
 					Authorization: 'Bearer ' + context.rootState.user.token,
@@ -179,8 +178,7 @@ export default {
 		{ buildingId }: { buildingId: string }
 	) {
 		const response = await httpClient.get(
-			Config.VUE_APP_ESTATE_SERVICE +
-				`/buildings/${buildingId}/rooms?limit=-1`,
+			`/buildings/${buildingId}/rooms?limit=-1`,
 			{
 				headers: {
 					Authorization: 'Bearer ' + context.rootState.user.token,
@@ -190,17 +188,32 @@ export default {
 
 		return mapper.mapResponseToBuildingRooms(response.data);
 	},
+	async getBuildingRoomById(
+		context: ActionContext<IRootState, IRootState>,
+		{ roomId }: { roomId: number }
+	) {
+		const response = await httpClient.get(`/rooms/${roomId}`, {
+			headers: {
+				Authorization: 'Bearer ' + context.rootState.user.token,
+			},
+		});
+
+		return mapper.mapResponseToBuildingRoom(response.data);
+	},
 	async getFloorBlueprint(
 		context: ActionContext<IRootState, IRootState>,
-		{ floorId }: { floorId: string }
+		{
+			floorId,
+			abortController,
+		}: { floorId: string; abortController: AbortController }
 	) {
 		const response = await httpClient.get(
-			Config.VUE_APP_ESTATE_SERVICE +
-				`/floors/${floorId}/blueprint?format=svg`,
+			`/floors/${floorId}/blueprint?format=svg`,
 			{
 				headers: {
 					Authorization: 'Bearer ' + context.rootState.user.token,
 				},
+				signal: abortController?.signal,
 			}
 		);
 
@@ -210,26 +223,20 @@ export default {
 		context: ActionContext<IRootState, IRootState>,
 		{ roomId }: { roomId: string }
 	) {
-		const response = await httpClient.get(
-			Config.VUE_APP_ESTATE_SERVICE + `/rooms/${roomId}`,
-			{
-				headers: {
-					Authorization: 'Bearer ' + context.rootState.user.token,
-				},
-			}
-		);
+		const response = await httpClient.get(`/rooms/${roomId}`, {
+			headers: {
+				Authorization: 'Bearer ' + context.rootState.user.token,
+			},
+		});
 
 		return mapper.mapResponseToRoomDetails(response.data);
 	},
 	async getBusinessTypes(context: ActionContext<IRootState, IRootState>) {
-		const response = await httpClient.get(
-			Config.VUE_APP_ESTATE_SERVICE + '/businessTypes',
-			{
-				headers: {
-					Authorization: 'Bearer ' + context.rootState.user.token,
-				},
-			}
-		);
+		const response = await httpClient.get('/businessTypes', {
+			headers: {
+				Authorization: 'Bearer ' + context.rootState.user.token,
+			},
+		});
 
 		return mapper.mapResponseToBusinessTypes(response.data);
 	},
@@ -238,7 +245,7 @@ export default {
 		{ buildingId }: { buildingId: number }
 	) {
 		const response = await httpClient.get(
-			`${Config.VUE_APP_ESTATE_SERVICE}/documents/building/${buildingId}/tree`,
+			`/documents/building/${buildingId}/tree`,
 			{
 				headers: {
 					Authorization: 'Bearer ' + context.rootState.user.token,
@@ -261,8 +268,7 @@ export default {
 		}
 	) {
 		const response = await httpClient.get(
-			Config.VUE_APP_ESTATE_SERVICE +
-				`/documents/building/${buildingId}/directory/${directoryId}/download/${documentId}`,
+			`/documents/building/${buildingId}/directory/${directoryId}/download/${documentId}`,
 			{
 				headers: {
 					Authorization: 'Bearer ' + context.rootState.user.token,
@@ -272,5 +278,66 @@ export default {
 		);
 
 		return response.data;
+	},
+	async submitFaultReport(
+		context: ActionContext<IRootState, IRootState>,
+		reportData: ISubmitEstateFaultReport
+	) {
+		const formData = new FormData();
+		formData.append('buildingId', reportData.buildingId.toString());
+		formData.append('location', reportData.location);
+		formData.append('workOrderType', 'error_report');
+		formData.append('description', reportData.description);
+		formData.append('notifierName', reportData.notifierName);
+		formData.append('notifierEmail', reportData.notifierEmail);
+
+		if (reportData.roomId) {
+			formData.append('roomId', reportData.roomId.toString());
+		}
+		if (reportData.notifierPhone) {
+			formData.append('notifierPhone', reportData.notifierPhone);
+		}
+
+		reportData.attachments.forEach((file) => {
+			formData.append('files', file, file.name);
+		});
+
+		const response = await httpClient.post('/workorders', formData, {
+			headers: {
+				Authorization: 'Bearer ' + context.rootState.user.token,
+				'Content-Type': 'multipart/form-data',
+			},
+		});
+
+		return response.data;
+	},
+	async setFavorite(
+		context: ActionContext<IRootState, IRootState>,
+		{ id, type }: { id: number; type: string }
+	) {
+		await httpClient.put(`/favorites/${type}/${id}`, null, {
+			headers: {
+				Authorization: 'Bearer ' + context.rootState.user.token,
+			},
+		});
+	},
+	async unsetFavorite(
+		context: ActionContext<IRootState, IRootState>,
+		{ id, type }: { id: number; type: string }
+	) {
+		await httpClient.delete(`/favorites/${type}/${id}`, {
+			headers: {
+				Authorization: 'Bearer ' + context.rootState.user.token,
+			},
+		});
+	},
+	async getFavorites(context: ActionContext<IRootState, IRootState>) {
+		const response = await httpClient.get('/favorites', {
+			headers: {
+				Authorization: 'Bearer ' + context.rootState.user.token,
+			},
+		});
+
+		return mapper.mapResponseToEstateSearchResult(response.data);
 	},
 };

@@ -71,6 +71,22 @@ function initialize(i18n: typeof i18nInstance): void {
 	});
 
 	/**
+	 * Validate phone number
+	 */
+	defineRule('phone', (value: string) => {
+		if (!value) {
+			return true;
+		}
+
+		let valid = true;
+		const regexp = new RegExp(
+			/^\s*(?:\+?(\d{1,3}))?([-. (]*(\d{3})[-. )]*)?((\d{3})[-. ]*(\d{2,4})(?:[-.x ]*(\d+))?)\s*$/
+		);
+		valid = !!regexp.exec(value);
+		return valid;
+	});
+
+	/**
 	 * Valid SSN
 	 */
 	defineRule('validPersNumber', (value: string) => {
