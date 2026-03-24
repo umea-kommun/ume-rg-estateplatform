@@ -46,7 +46,7 @@
 						color="primary"
 						variant="tonal"
 						prepend-icon="map"
-						@click="roomBlueprintSelectorRef?.open()"
+						@click="selectRoomOnBlueprint"
 					>
 						{{
 							$t(
@@ -67,6 +67,7 @@ import { ref, useTemplateRef, watch } from 'vue';
 import RoomCard from '../../building/RoomCard.vue';
 import BuildingBlueprint from '../../blueprint/BuildingBlueprint.vue';
 import RoomBlueprintSelector from './RoomBlueprintSelector.vue';
+import { appInsights } from '@/plugins/appInsights';
 
 const props = defineProps<{
 	building: IBuildingDetails;
@@ -83,6 +84,16 @@ const floorId = ref<number | null>(null);
 
 const buildingBlueprintRef = useTemplateRef('buildingBlueprintRef');
 const roomBlueprintSelectorRef = useTemplateRef('roomBlueprintSelector');
+
+const selectRoomOnBlueprint = () => {
+	roomBlueprintSelectorRef.value?.open();
+	appInsights?.trackEvent({
+		name: 'EstateSelectRoomOnBlueprintClicked',
+		properties: {
+			url: window.location.href,
+		},
+	});
+};
 
 watch(
 	[() => props.selectedRoom, () => buildingBlueprintRef.value],

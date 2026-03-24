@@ -12,6 +12,7 @@
 			:room-zoom-padding="roomZoomPadding"
 			@room-clicked="(roomId) => emit('room-opened', roomId)"
 			@camera-moved="(a) => (startPosition = a)"
+			@user-interacted="logUserInteractionOnce"
 		/>
 		<blueprint-controls
 			v-if="!hideControls"
@@ -42,8 +43,15 @@ import {
 import BlueprintControls from '@/components/internal/estate/blueprint/BlueprintControls.vue';
 import BlueprintRoomCard from '@/components/internal/estate/blueprint/BlueprintRoomCard.vue';
 import BlueprintMap from '@/components/internal/estate/blueprint/BlueprintMap.vue';
-import { computed, onBeforeUnmount, useTemplateRef, watch } from 'vue';
+import {
+	computed,
+	onBeforeUnmount,
+	onMounted,
+	useTemplateRef,
+	watch,
+} from 'vue';
 import AppLoadingSpinner from '@/components/app/AppLoadingSpinner.vue';
+import { appInsights } from '@/plugins/appInsights';
 
 const props = defineProps<{
 	blueprint: string | null;
@@ -121,6 +129,32 @@ watch(
 		immediate: true,
 	}
 );
+
+let hasLoggedInteraction = false;
+const logUserInteractionOnce = () => {
+	if (hasLoggedInteraction) {
+		return;
+	}
+
+	appInsights?.trackEvent({
+		name: 'EstateBlueprintInteraction',
+		properties: {
+			url: window.location.href,
+		},
+	});
+	hasLoggedInteraction = true;
+};
+
+onMounted(() => {
+	if (props.fullScreen) {
+		appInsights?.trackEvent({
+			name: 'EstateBlueprintFullscreen',
+			properties: {
+				url: window.location.href,
+			},
+		});
+	}
+});
 
 onBeforeUnmount(() => {
 	unlockViewportZoom?.();

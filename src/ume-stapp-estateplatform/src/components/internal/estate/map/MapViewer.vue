@@ -53,6 +53,7 @@ import Overlay from 'ol/Overlay';
 import { panToWithPixelOffset, smoothZoom } from './pan';
 import { TileWMS } from 'ol/source';
 import TileLayer from 'ol/layer/Tile';
+import { appInsights } from '@/plugins/appInsights';
 
 const props = defineProps<{
 	mapId: string;
@@ -131,6 +132,14 @@ watch(selectedBuildingIds, (ids) => {
 /** Handle click event */
 const buildingsClicked = (ids: number[]) => {
 	selectedBuildingIds.value = ids;
+
+	appInsights?.trackEvent({
+		name: 'EstateMapBuildingClicked',
+		properties: {
+			buildingIds: ids,
+			url: window.location.href,
+		},
+	});
 };
 
 const onClusterClick = (clustered: Feature[]) => {
@@ -171,6 +180,13 @@ const onClusterClick = (clustered: Feature[]) => {
 			],
 			maxZoom: 14,
 			duration: 300,
+		});
+
+		appInsights?.trackEvent({
+			name: 'EstateMapZoomClusterClicked',
+			properties: {
+				url: window.location.href,
+			},
 		});
 	}
 };
@@ -316,6 +332,15 @@ const initMap = () => {
 	updatePoints(props.points ?? [], map, props.fitPoints);
 
 	setHighlightedPoint(props.highlightedPointId ?? null);
+
+	if (props.fullscreen) {
+		appInsights?.trackEvent({
+			name: 'EstateMapFullscreen',
+			properties: {
+				url: window.location.href,
+			},
+		});
+	}
 };
 
 onMounted(initMap);

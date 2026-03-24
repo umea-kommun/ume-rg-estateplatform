@@ -46,7 +46,7 @@
 				color="primary"
 				variant="tonal"
 				prepend-icon="location_pin"
-				@click="buildingMapSelectorRef?.open()"
+				@click="selectBuildingOnMap"
 			>
 				{{ $t('component.internal.buildingSelector.selectOnMap') }}
 			</v-btn>
@@ -124,6 +124,7 @@ import EstateSearchResultItem from '@/components/internal/estate/search/EstateSe
 import BuildingMapSelector from './BuildingMapSelector.vue';
 import FavoriteList from '../../favorite/FavoriteList.vue';
 import { EstateType } from '@/models/estate/Enums';
+import { appInsights } from '@/plugins/appInsights';
 
 const props = defineProps<{
 	selectedBuilding: IBuildingDetails | null;
@@ -156,6 +157,16 @@ const selectBuilding = async (buildingId: number) => {
 	} finally {
 		isBusyFetchingBuildingId.value = null;
 	}
+};
+
+const selectBuildingOnMap = () => {
+	buildingMapSelectorRef.value?.open();
+	appInsights?.trackEvent({
+		name: 'EstateSelectOnMapClicked',
+		properties: {
+			url: window.location.href,
+		},
+	});
 };
 
 const selectedBuildingMapPoints = computed(() => {

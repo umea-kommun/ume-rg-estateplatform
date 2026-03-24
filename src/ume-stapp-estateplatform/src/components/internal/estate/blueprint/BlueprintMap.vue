@@ -19,6 +19,7 @@ const props = defineProps<{
 const emit = defineEmits<{
 	(e: 'room-clicked', id: number): void;
 	(e: 'camera-moved', camPos: IBlueprintPosition): void;
+	(e: 'user-interacted'): void;
 }>();
 
 const viewport = ref<HTMLDivElement | null>(null);
@@ -491,6 +492,8 @@ const onPointerUp = (e: PointerEvent) => {
 
 		viewport.value?.classList.remove('is-panning');
 	}
+
+	emit('user-interacted');
 };
 
 let startTouchY = 0;
@@ -540,15 +543,18 @@ const onWheel = (e: WheelEvent) => {
 
 		zoomBy(factorExp, mouseSvg, false);
 	});
+	emit('user-interacted');
 };
 
 const zoomIn = () => {
 	cancelAnimation();
 	zoomBy(ZOOM_STEP, undefined, true);
+	emit('user-interacted');
 };
 const zoomOut = () => {
 	cancelAnimation();
 	zoomBy(1 / ZOOM_STEP, undefined, true);
+	emit('user-interacted');
 };
 
 defineExpose({

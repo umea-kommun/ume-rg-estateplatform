@@ -88,6 +88,7 @@ import BuildingContactModal from './BuildingContactModal.vue';
 import BuildingDocumentModal from './BuildingDocumentModal.vue';
 import { EstateRoutes } from '@/router/routes';
 import { useFeatureFlags } from '@/utils/useFeatureFlags';
+import { appInsights } from '@/plugins/appInsights';
 
 const { isEnabled } = useFeatureFlags();
 
@@ -118,6 +119,14 @@ const onMapClick = () => {
 	} else {
 		activeMap.value = ActiveMapType.Map;
 	}
+	appInsights?.trackEvent({
+		name: 'EstateMapButtonClicked',
+		properties: {
+			isMobile: isMobile.value,
+			buildingId: props.building.id,
+			buildingName: props.building.name,
+		},
+	});
 };
 
 const onBlueprintClick = () => {
@@ -126,6 +135,14 @@ const onBlueprintClick = () => {
 	} else {
 		activeMap.value = ActiveMapType.Blueprint;
 	}
+	appInsights?.trackEvent({
+		name: 'EstateBlueprintButtonClicked',
+		properties: {
+			isMobile: isMobile.value,
+			buildingId: props.building.id,
+			buildingName: props.building.name,
+		},
+	});
 };
 
 const contactPersonsCount = computed(() => {

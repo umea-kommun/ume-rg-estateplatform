@@ -65,7 +65,7 @@
 							class="map-btn regular-text ma-0 ml-2"
 							color="primary"
 							prepend-icon="location_pin"
-							@click="buildingMapRef?.openFullscreen()"
+							@click="selectBuildingOnMap"
 						>
 							{{
 								$t(
@@ -151,6 +151,7 @@ import EstateSearchFilter from './EstateSearchFilter.vue';
 import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
 import { useEstateSearch } from './useEstateSearch';
 import FavoriteList from '../favorite/FavoriteList.vue';
+import { appInsights } from '@/plugins/appInsights';
 
 const route = useRoute();
 const { t } = useI18n();
@@ -178,6 +179,16 @@ const breadcrumbs = [
 const userHasSearched = computed(() => {
 	return !!search.value || Object.keys(searchFilter.value).length > 0;
 });
+
+const selectBuildingOnMap = () => {
+	buildingMapRef.value?.openFullscreen();
+	appInsights?.trackEvent({
+		name: 'EstateSelectOnMapClicked',
+		properties: {
+			url: window.location.href,
+		},
+	});
+};
 
 const {
 	fetchSearchResults,

@@ -61,6 +61,7 @@ import { useI18n } from 'vue-i18n';
 import LovisaImg from '@/assets/map/layer_lovisa.webp';
 import OrtofotoImg from '@/assets/map/layer_ortofoto.webp';
 import { MapBaseLayer } from '@/models/estate/Enums';
+import { appInsights } from '@/plugins/appInsights';
 
 const props = defineProps<{
 	fullScreen: boolean;
@@ -89,6 +90,12 @@ const baseLayer = computed({
 	get: () => props.baseLayer,
 	set: (value: MapBaseLayer) => {
 		emit('update:baseLayer', value);
+		appInsights?.trackEvent({
+			name: 'EstateMapBaseLayerChanged',
+			properties: {
+				baseLayer: value,
+			},
+		});
 	},
 });
 </script>
