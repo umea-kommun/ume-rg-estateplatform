@@ -52,7 +52,13 @@
 				<td :label="headers[2].title">
 					{{ moment(item.period.start).format('Do MMMM YYYY') }}
 					-
-					{{ moment(item.period.end).format('Do MMMM YYYY') }}
+					{{
+						item.period.end
+							? moment(item.period.end).format('Do MMMM YYYY')
+							: $t(
+									'component.internal.consentConsumerList.noEndDate'
+							  )
+					}}
 				</td>
 				<td class="open-button-wrap">
 					<v-btn

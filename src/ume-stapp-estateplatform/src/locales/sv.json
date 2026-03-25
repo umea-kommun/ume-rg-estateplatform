@@ -405,7 +405,8 @@
 						"empty": "Du har inte valt någon skola eller klass än."
 					},
 					"startDate": { "label": "Startdatum" },
-					"endDate": { "label": "Slutdatum" }
+					"endDate": { "label": "Slutdatum" },
+					"isOngoing": { "label": "Tillsvidare" }
 				},
 				"publishConfirm": {
 					"title": "Publicera mall?",
@@ -419,6 +420,7 @@
 				"noResults": "Vi kunde inte hitta några samtycken som du har åtkomst att se.",
 				"noFilterResults": "Vi kunde inte hitta några samtycken som matchade sökningen.",
 				"plusXOtherGroups": "+{count} till",
+				"noEndDate": "tillsvidare",
 				"headers": {
 					"title": "Titel",
 					"groups": "Klass/avdelning/grupp",

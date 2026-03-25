@@ -123,12 +123,22 @@
 							"
 							v-model="expireDate"
 							:rules="
-								'required' +
 								(publishedDate
 									? '|minDate:' + publishedDate
-									: '')
+									: '') +
+								(!templateIsOngoing ? '|required' : '')
 							"
 							max-date="9999-12-31"
+							:disabled="isPublished || templateIsOngoing"
+						/>
+						<v-checkbox
+							:label="
+								$t(
+									'component.internal.consentTemplateEdit.field.isOngoing.label'
+								)
+							"
+							color="primary"
+							v-model="templateIsOngoing"
 							:disabled="isPublished"
 						/>
 					</v-col>
@@ -172,7 +182,7 @@
 	</app-content>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import AppContent from '@/components/app/AppContent.vue';
 import { useRoute, useRouter } from 'vue-router';
 import {
@@ -318,6 +328,16 @@ const expireDate = computed({
 	},
 });
 
+const templateIsOngoing = ref(false);
+watch(
+	() => templateIsOngoing.value,
+	(newValue) => {
+		if (newValue) {
+			expireDate.value = '';
+		}
+	}
+);
+
 const isPublished = computed(
 	() => template.value?.status === ConsentTemplateStatus.Published
 );
@@ -402,25 +422,27 @@ onMounted(async () => {
 	if (store.state.consentTemplate) {
 		originalTemplate.value = JSON.stringify(store.state.consentTemplate);
 	}
+	templateIsOngoing.value = !expireDate.value;
 	isBusyLoadingFromServer.value = false;
 });
 </script>
 <style scoped lang="scss">
 .consent-template-edit {
 	.v-row {
+		gap: 24px;
 		.v-col {
-			padding-bottom: 0;
-			padding-top: 0;
-			&:first-child {
-				padding-left: 0;
-			}
-			&:last-child {
-				padding-right: 0;
-			}
+			padding: 0;
 		}
 	}
 	hr {
 		border: solid 1px $grey-lighten-3;
+	}
+
+	.v-checkbox {
+		margin-left: -12px;
+		:deep(.v-selection-control) {
+			min-height: 24px;
+		}
 	}
 
 	.v-btn:not(.back-btn) {

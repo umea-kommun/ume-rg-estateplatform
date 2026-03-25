@@ -234,14 +234,14 @@ export interface IFilteredConsumerTemplate {
 	groups: IConsentConsumerTemplateGroup[];
 	period: {
 		start: string;
-		end: string;
+		end: string | null;
 	};
 }
 
 export interface IConsentConsumerTemplate
 	extends Omit<IConsentTemplate, 'groups'> {
 	publishedDate: string;
-	expireDate: string;
+	expireDate: string | null;
 	groups: IConsumerGroup[];
 }
 export interface IConsentConsumerState {

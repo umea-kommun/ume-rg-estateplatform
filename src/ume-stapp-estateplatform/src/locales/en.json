@@ -405,7 +405,8 @@
 						"empty": "You have not selected any school or class yet."
 					},
 					"startDate": { "label": "Start date" },
-					"endDate": { "label": "End date" }
+					"endDate": { "label": "End date" },
+					"isOngoing": { "label": "Until further notice" }
 				},
 				"publishConfirm": {
 					"title": "Publish template?",
@@ -419,6 +420,7 @@
 				"noResults": "We could not find any consents that you have access to see.",
 				"noFilterResults": "We could not find any consents that matched the search.",
 				"plusXOtherGroups": "+{count} more",
+				"noEndDate": "until further notice",
 				"headers": {
 					"title": "Title",
 					"groups": "Groups",
