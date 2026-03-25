@@ -198,6 +198,14 @@
 			"button": "OK, I understand"
 		},
 		"consentStart": {
+			"table": {
+				"titel": "Title",
+				"status": "Status",
+				"approved": "Approved",
+				"denied": "Denied",
+				"pending": "Pending",
+				"new": "Not answered"
+			},
 			"title": "Consent",
 			"selectListTitle": "Select child",
 			"showAll": "Show all",

@@ -198,6 +198,14 @@
 			"button": "OK, jag förstår"
 		},
 		"consentStart": {
+			"table": {
+				"titel": "Titel",
+				"status": "Status",
+				"approved": "Samtycker",
+				"denied": "Samtycker inte",
+				"pending": "Väntar på svar från båda vårdnadshavarna",
+				"new": "Ej besvarad"
+			},
 			"title": "Samtycken",
 			"selectListTitle": "Välj barn",
 			"showAll": "Visa alla",
