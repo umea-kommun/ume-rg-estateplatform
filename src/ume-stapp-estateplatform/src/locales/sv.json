@@ -85,7 +85,8 @@
 				"agentKvittens": "Kvittensombud",
 				"internalDefaultPasswords": "Lösenord",
 				"internalEstate": "Fastigheter (beta)",
-				"internalEstateFaultReport": "Felanmälan - Fastigheter"
+				"internalEstateFaultReport": "Felanmälan - Fastigheter",
+				"internalEstateOrder": "Beställning - Fastigheter"
 			},
 			"locale": {
 				"change": "Other languages"
@@ -343,7 +344,8 @@
 					"title": "Fastigheter (beta)",
 					"description": "Hitta information om fastigheter, byggnader och rum inom Umeå kommun.",
 					"goToEstateSearch": "Sök efter fastigheter",
-					"goToEstateFaultReport": "Felanmälan"
+					"goToEstateFaultReport": "Felanmälan",
+					"goToEstateOrder": "Beställning"
 				},
 				"feedbackTitle": "Vill du hjälpa oss att bli bättre?",
 				"feedbackSubtitle": "Lämna ett omdöme"
@@ -700,6 +702,47 @@
 					"description": "Vi har mottagit din felanmälan och kommer att hantera den så snart som möjligt.",
 					"goHome": "Gå till startsidan",
 					"feedbackTitle": "Hur fungerade det att göra en felanmälan?"
+				}
+			},
+			"order": {
+				"title": "Beställning",
+				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+				"submitButton": "Skicka in beställning",
+				"general": {
+					"descriptionTitle": "Beskrivning",
+					"descriptionLabel": "Beskriv vad du vill beställa",
+					"descriptionHelpText": "Beskriv så tydligt som möjligt vad du vill beställa, varför du vill beställa det och när du önskar att det ska vara på plats. Ju mer information du kan ge, desto bättre kan beställningen hanteras.",
+					"contactLabel": "Kontaktuppgifter",
+					"contactHelpText": "Ange vem som ska kontaktas om mer information behövs för att hantera beställningen, eller om det finns frågor kring beställningen."
+				},
+				"category": {
+					"title": "Typ av beställning",
+					"select": "Välj",
+					"selected": "Vald",
+
+					"townHallServices": {
+						"title": "Stadshusservice",
+						"description": "Ärenden kopplade till kommunhus och liknande lokaler."
+					},
+					"buildingServices": {
+						"title": "Byggservice",
+						"description": "Reparationer, enklare byggjobb och underhåll."
+					},
+					"facilitiesManager": {
+						"title": "Verksamhetsvaktmästare",
+						"description": "Praktisk hjälp och fastighetsnära service i verksamheter."
+					}
+				},
+				"info": {
+					"title": "Information",
+					"text1": "Här ska det stå information som är viktig när man beställer något, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					"text2": "Efter att beställningen är inskickad duis aute ir..."
+				},
+				"completed": {
+					"title": "Tack för din beställning!",
+					"description": "Vi har mottagit din beställning och kommer att hantera den så snart som möjligt.",
+					"goHome": "Gå till startsidan",
+					"feedbackTitle": "Hur fungerade det att göra en beställning?"
 				}
 			},
 			"buildingSelector": {

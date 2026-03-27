@@ -4,7 +4,7 @@ import {
 	IBuildingDocumentTreeDto,
 } from '@/models/estate/Dto';
 import Config from '@/Config';
-import { EstateType } from '@/models/estate/Enums';
+import { EstateOrderCategory, EstateType } from '@/models/estate/Enums';
 import {
 	IBuildingDetails,
 	IBuildingDirectory,
@@ -353,6 +353,12 @@ export default {
 				r.extendedProperties?.blueprintAvailable ?? false,
 			imageUrl: r.imageUrl ? getBuildingImageUrl(r.id) : null,
 			isFavorite: r.isFavorite ?? false,
+			// TODO: map order categories from API when available instead of hardcoding
+			orderCategories: [
+				'townHallServices',
+				'buildingServices',
+				'facilitiesManager',
+			] as EstateOrderCategory[],
 			externalOwnerInfo: r.extendedProperties?.externalOwnerInfo
 				? {
 						status: r.extendedProperties?.externalOwnerInfo?.status,

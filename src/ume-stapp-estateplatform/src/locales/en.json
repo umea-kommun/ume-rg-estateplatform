@@ -343,7 +343,8 @@
 					"title": "Properties and buildings (beta)",
 					"description": "Find information about properties, buildings and rooms in the municipality of Umeå.",
 					"goToEstateSearch": "Search properties and buildings",
-					"goToEstateFaultReport": "Report a fault"
+					"goToEstateFaultReport": "Report a fault",
+					"goToEstateOrder": "Place an order"
 				},
 				"feedbackTitle": "Would you like to help us improve?",
 				"feedbackSubtitle": "Leave feedback"
@@ -700,6 +701,47 @@
 					"description": "We have received your fault report and will handle it as soon as possible.",
 					"goHome": "Go to the homepage",
 					"feedbackTitle": "How did reporting a fault work?"
+				}
+			},
+			"order": {
+				"title": "Order",
+				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				"submitButton": "Submit your order",
+				"general": {
+					"descriptionTitle": "Description",
+					"descriptionLabel": "Describe what you want to order",
+					"descriptionHelpText": "Describe as clearly as possible what you want to order, why you want to order it, and when you want it to be in place. The more information you can provide, the better the order can be handled.",
+					"contactLabel": "Contact information",
+					"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to handle the order, or if there are questions regarding the order."
+				},
+				"category": {
+					"title": "Type of order",
+					"select": "Select",
+					"selected": "Selected",
+
+					"townHallServices": {
+						"title": "Town Hall Services",
+						"description": "Matters related to the town hall and similar premises."
+					},
+					"buildingServices": {
+						"title": "Building Services",
+						"description": "Repairs, minor construction work, and maintenance."
+					},
+					"facilitiesManager": {
+						"title": "Facilities Manager",
+						"description": "Practical help and property-related services in operations."
+					}
+				},
+				"info": {
+					"title": "Information",
+					"text1": "Here is some important information when placing an order, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					"text2": "After the order is submitted, duis aute ir..."
+				},
+				"completed": {
+					"title": "Thank you for your order!",
+					"description": "We have received your order and will handle it as soon as possible.",
+					"goHome": "Go to the homepage",
+					"feedbackTitle": "How did placing an order work?"
 				}
 			},
 			"buildingSelector": {

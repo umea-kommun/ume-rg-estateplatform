@@ -1,4 +1,4 @@
-import { EstateFaultLocation, EstateType } from './Enums';
+import { EstateFaultLocation, EstateOrderCategory, EstateType } from './Enums';
 
 export interface IEstateSearchResultEntry {
 	id: number;
@@ -105,6 +105,7 @@ export interface IBuildingDetails {
 	numDocuments: number | null;
 	imageUrl: string | null;
 	isFavorite: boolean;
+	orderCategories: EstateOrderCategory[];
 	address: {
 		street: string;
 		zipCode: string;
@@ -204,6 +205,17 @@ export interface SearchFilter {
 export interface ISubmitEstateFaultReport {
 	buildingId: number;
 	location: EstateFaultLocation;
+	roomId: number | undefined;
+	description: string;
+	attachments: File[];
+	notifierName: string;
+	notifierEmail: string;
+	notifierPhone: string;
+}
+
+export interface ISubmitEstateOrder {
+	buildingId: number;
+	category: EstateOrderCategory;
 	roomId: number | undefined;
 	description: string;
 	attachments: File[];

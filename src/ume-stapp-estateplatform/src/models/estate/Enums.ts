@@ -18,3 +18,9 @@ export enum MapBaseLayer {
 	Lovisa = 'Lovisa',
 	Ortofoto = 'Ortofoto',
 }
+
+export enum EstateOrderCategory {
+	TownHallServices = 'townHallServices', // Stadshusservice
+	BuildingServices = 'buildingServices', // Byggservice
+	FacilitiesManager = 'facilitiesManager', // Verksamhetsvaktmästare
+}

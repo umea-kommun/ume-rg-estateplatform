@@ -197,9 +197,7 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/internt/fastigheter',
 		name: EstateRoutes.Search,
 		component: () =>
-			import(
-				'@/components/internal/estate/search/EstateSearch.vue'
-			),
+			import('@/components/internal/estate/search/EstateSearch.vue'),
 		meta: {
 			requiresInternalLogin: true,
 			requiresFeature: 'EstateService',
@@ -221,12 +219,21 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
+		path: '/internt/fastigheter/bestallning',
+		name: EstateRoutes.Order,
+		component: () =>
+			import('@/components/internal/estate/order/EstateOrder.vue'),
+		meta: {
+			requiresInternalLogin: true,
+			requiresFeature: 'ErrorReport',
+			title: AppHeaderTitle.InternalEstate,
+		},
+	},
+	{
 		path: '/internt/fastighet/:estateId/:slug?',
 		name: EstateRoutes.EstateDetails,
 		component: () =>
-			import(
-				'@/components/internal/estate/estate/EstateDetails.vue'
-			),
+			import('@/components/internal/estate/estate/EstateDetails.vue'),
 		props: true,
 		meta: {
 			requiresInternalLogin: true,
@@ -239,9 +246,7 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/internt/fastigheter/byggnad/:buildingId/:slug?',
 		name: EstateRoutes.BuildingDetails,
 		component: () =>
-			import(
-				'@/components/internal/estate/building/BuildingDetails.vue'
-			),
+			import('@/components/internal/estate/building/BuildingDetails.vue'),
 		props: true,
 		meta: {
 			requiresInternalLogin: true,

@@ -1,31 +1,31 @@
 <template>
 	<app-content
-		class="estate-default estate-fault-report"
-		:pageTitle="$t('component.appHeader.title.internalEstateFaultReport')"
+		class="estate-default estate-order"
+		:pageTitle="$t('component.appHeader.title.internalEstateOrder')"
 		:is-loading="isLoadingFromQuery"
 	>
 		<div class="content-wrap">
-			<div class="pb-4 report-wrap">
+			<div class="pb-4 order-wrap">
 				<nav-breadcrumbs
 					class="mb-2"
 					:breadcrumbs="breadcrumbs"
 					full-width
 				/>
-				<estate-fault-report-completed v-if="hasSubmitted" />
+				<estate-order-completed v-if="hasSubmitted" />
 				<div v-else class="mt-2">
 					<div class="pb-4">
 						<h1>
-							{{ $t('component.internal.faultReport.title') }}
+							{{ $t('component.internal.order.title') }}
 						</h1>
 						<p>
-							{{
-								$t('component.internal.faultReport.description')
-							}}
+							{{ $t('component.internal.order.description') }}
 						</p>
 					</div>
 
 					<!-- BUILDING SELECTOR -->
 					<estate-order-step
+						:step="1"
+						:step-count="stepCount"
 						:title="
 							selectedBuilding
 								? $t(
@@ -35,8 +35,6 @@
 										'component.internal.faultReport.building.select'
 								  )
 						"
-						:step="1"
-						:step-count="stepCount"
 						:show-clear="!!selectedBuilding"
 						@clear="selectBuilding(null)"
 					>
@@ -47,62 +45,10 @@
 						/>
 					</estate-order-step>
 
-					<!-- OUTDOOR / INDOOR SELECTOR -->
-					<estate-order-step
-						v-if="selectedBuilding"
-						:show-clear="!!problemLocation"
-						@clear="selectLocation(null)"
-						:step="2"
-						:step-count="stepCount"
-						class="mt-6"
-						ref="locationTitle"
-					>
-						<template #title>
-							<span
-								v-if="
-									problemLocation ===
-									EstateFaultLocation.Indoor
-								"
-							>
-								{{
-									$t(
-										'component.internal.faultReport.location.indoor.title'
-									)
-								}}
-							</span>
-							<span
-								v-else-if="
-									problemLocation ===
-									EstateFaultLocation.Outdoor
-								"
-							>
-								{{
-									$t(
-										'component.internal.faultReport.location.outdoor.title'
-									)
-								}}
-							</span>
-							<span v-else>
-								{{
-									$t(
-										'component.internal.faultReport.location.select'
-									)
-								}}
-							</span>
-						</template>
-						<fault-location-selector
-							:problem-location="problemLocation"
-							@select="selectLocation"
-						/>
-					</estate-order-step>
-
 					<!-- ROOM SELECTOR -->
 					<estate-order-step
-						v-if="
-							problemLocation === EstateFaultLocation.Indoor &&
-							selectedBuilding
-						"
-						:step="3"
+						v-if="selectedBuilding"
+						:step="2"
 						:step-count="stepCount"
 						:show-clear="!!selectedRoom || skippedRoom"
 						@clear="selectRoom(null)"
@@ -142,6 +88,24 @@
 						/>
 					</estate-order-step>
 
+					<!-- CATEGORY SELECTOR -->
+					<estate-order-step
+						v-if="selectedBuilding && (selectedRoom || skippedRoom)"
+						:step="3"
+						:step-count="stepCount"
+						:title="$t('component.internal.order.category.title')"
+						ref="categoryTitle"
+						class="mt-6"
+					>
+						<order-category-selector
+							:available-categories="
+								selectedBuilding.orderCategories
+							"
+							:category="selectedCategory"
+							@select="selectCategory"
+						/>
+					</estate-order-step>
+
 					<!-- PROBLEM DESCRIPTION -->
 					<vee-form
 						v-if="showLastSteps"
@@ -150,21 +114,21 @@
 						@submit.prevent="submitReport"
 					>
 						<estate-order-step
+							:step="4"
+							:step-count="stepCount"
 							:title="
 								$t(
-									'component.internal.faultReport.general.problemTitle'
+									'component.internal.order.general.descriptionTitle'
 								)
 							"
-							:step="stepCount - 1"
-							:step-count="stepCount"
-							class="mt-6"
 							ref="problemTitle"
+							class="mt-6"
 						>
 							<base-text-box
 								id="problem-description"
 								:label="
 									$t(
-										'component.internal.faultReport.general.problemLabel'
+										'component.internal.order.general.descriptionLabel'
 									)
 								"
 								v-model="problemDescription"
@@ -178,7 +142,7 @@
 							<p class="text-medium-emphasis">
 								{{
 									$t(
-										'component.internal.faultReport.general.problemHelpText'
+										'component.internal.order.general.descriptionHelpText'
 									)
 								}}
 							</p>
@@ -196,17 +160,17 @@
 						<estate-order-step
 							:title="
 								$t(
-									'component.internal.faultReport.general.contactLabel'
+									'component.internal.order.general.contactLabel'
 								)
 							"
-							:step="stepCount"
+							:step="5"
 							:step-count="stepCount"
 							class="mt-6"
 						>
 							<p class="text-medium-emphasis">
 								{{
 									$t(
-										'component.internal.faultReport.general.contactHelpText'
+										'component.internal.order.general.contactHelpText'
 									)
 								}}
 							</p>
@@ -246,9 +210,7 @@
 								@click="submitReport"
 							>
 								{{
-									$t(
-										'component.internal.faultReport.submitButton'
-									)
+									$t('component.internal.order.submitButton')
 								}}
 							</v-btn>
 						</div>
@@ -258,13 +220,13 @@
 			<div class="info-wrap">
 				<v-alert rounded="lg">
 					<h2>
-						{{ $t('component.internal.faultReport.info.title') }}
+						{{ $t('component.internal.order.info.title') }}
 					</h2>
 					<p>
-						{{ $t('component.internal.faultReport.info.text1') }}
+						{{ $t('component.internal.order.info.text1') }}
 					</p>
 					<p class="mt-4">
-						{{ $t('component.internal.faultReport.info.text2') }}
+						{{ $t('component.internal.order.info.text2') }}
 					</p>
 				</v-alert>
 			</div>
@@ -278,7 +240,7 @@ import AppContent from '@/components/app/AppContent.vue';
 import {
 	IBuildingDetails,
 	IBuildingRoom,
-	ISubmitEstateFaultReport,
+	ISubmitEstateOrder,
 } from '@/models/estate/Interfaces';
 import {
 	computed,
@@ -292,21 +254,21 @@ import {
 import { EstateRoutes, MyPagesRoutes } from '@/router/routes';
 import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
 import { useI18n } from 'vue-i18n';
-import { EstateFaultLocation } from '@/models/estate/Enums';
-import BuildingSelector from './buildingSelector/BuildingSelector.vue';
-import RoomSelector from './roomSelector/RoomSelector.vue';
+import { EstateOrderCategory } from '@/models/estate/Enums';
 import { useRoute, useRouter } from 'vue-router';
 import { DispatchType } from '@/models/Enums';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import BaseFileUpload from '@/components/base/BaseFileUpload.vue';
-import FaultLocationSelector from './FaultLocationSelector.vue';
-import EstateFaultReportCompleted from './EstateFaultReportCompleted.vue';
 import { Form as VeeForm } from 'vee-validate';
 import BaseTextBox from '@/components/base/BaseTextBox.vue';
 import ErrorService from '@/utils/ErrorService';
-import FaultContactInfo from './FaultContactInfo.vue';
-import EstateOrderStep from '../order/EstateOrderStep.vue';
+import BuildingSelector from '../faultReport/buildingSelector/BuildingSelector.vue';
+import RoomSelector from '../faultReport/roomSelector/RoomSelector.vue';
+import EstateOrderCompleted from './EstateOrderCompleted.vue';
+import OrderCategorySelector from './OrderCategorySelector.vue';
+import FaultContactInfo from '../faultReport/FaultContactInfo.vue';
+import EstateOrderStep from './EstateOrderStep.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -319,19 +281,19 @@ const breadcrumbs = [
 		to: { name: MyPagesRoutes.InternalStart },
 	},
 	{
-		title: t('component.internal.faultReport.title'),
-		to: { name: EstateRoutes.FaultReport },
+		title: t('component.internal.order.title'),
+		to: { name: EstateRoutes.Order },
 	},
 ];
 
-const locationTitleRef = useTemplateRef('locationTitle');
+const categoryTitleRef = useTemplateRef('categoryTitle');
 const roomTitleRef = useTemplateRef('roomTitle');
 const problemTitleRef = useTemplateRef('problemTitle');
 
 const selectedBuilding = ref<IBuildingDetails | null>(null);
 const selectedRoom = ref<IBuildingRoom | null>(null);
 const skippedRoom = ref(false);
-const problemLocation = ref<EstateFaultLocation | null>(null);
+const selectedCategory = ref<EstateOrderCategory | null>(null);
 
 const isLoadingFromQuery = ref(false);
 const isBusySubmitting = ref(false);
@@ -350,14 +312,7 @@ watch(
 	() => selectedBuilding.value,
 	(_, oldVal) => {
 		if (oldVal) {
-			problemLocation.value = null;
-		}
-	}
-);
-watch(
-	() => problemLocation.value,
-	(_, oldVal) => {
-		if (oldVal) {
+			selectedCategory.value = null;
 			selectedRoom.value = null;
 			skippedRoom.value = false;
 		}
@@ -366,10 +321,9 @@ watch(
 
 const showLastSteps = computed(() => {
 	return (
-		(selectedRoom.value &&
-			problemLocation.value === EstateFaultLocation.Indoor) ||
-		skippedRoom.value ||
-		problemLocation.value === EstateFaultLocation.Outdoor
+		(selectedRoom.value || skippedRoom.value) &&
+		selectedCategory.value &&
+		selectedBuilding.value
 	);
 });
 
@@ -399,29 +353,25 @@ const scrollToAfterUiUpdate = async (
 const selectBuilding = async (building: IBuildingDetails | null) => {
 	selectedRoom.value = null;
 	skippedRoom.value = false;
-	problemLocation.value = null;
+	selectedCategory.value = null;
 	selectedBuilding.value = building;
 
-	scrollToAfterUiUpdate(locationTitleRef);
+	scrollToAfterUiUpdate(roomTitleRef);
 	updateQueryParams();
-};
-
-const selectLocation = async (location: EstateFaultLocation | null) => {
-	selectedRoom.value = null;
-	skippedRoom.value = false;
-	problemLocation.value = location;
-
-	scrollToAfterUiUpdate(
-		location === EstateFaultLocation.Indoor ? roomTitleRef : problemTitleRef
-	);
 };
 
 const selectRoom = async (room: IBuildingRoom | null, skipped = false) => {
 	selectedRoom.value = room;
 	skippedRoom.value = skipped;
 
-	scrollToAfterUiUpdate(problemTitleRef);
+	scrollToAfterUiUpdate(categoryTitleRef);
 	updateQueryParams();
+};
+
+const selectCategory = async (category: EstateOrderCategory | null) => {
+	selectedCategory.value = category;
+
+	scrollToAfterUiUpdate(problemTitleRef);
 };
 
 const selectBuildingAndRoom = async ({
@@ -432,13 +382,10 @@ const selectBuildingAndRoom = async ({
 	room: IBuildingRoom;
 }) => {
 	selectedBuilding.value = building;
-	problemLocation.value = EstateFaultLocation.Indoor;
 	selectRoom(room);
 };
 
-const stepCount = computed(() =>
-	problemLocation.value === EstateFaultLocation.Outdoor ? 4 : 5
-);
+const stepCount = 5;
 
 const loadFromQueryParams = async () => {
 	const query = route.query;
@@ -463,9 +410,7 @@ const loadFromQueryParams = async () => {
 				}
 			);
 			selectBuilding(building ?? null);
-
 			if (building && roomId) {
-				problemLocation.value = EstateFaultLocation.Indoor;
 				const room = await store.dispatch(
 					DispatchType.GetBuildingRoomById,
 					{
@@ -479,7 +424,7 @@ const loadFromQueryParams = async () => {
 				err,
 				hidden: true,
 				message:
-					'Failed to load building/room from query params on fault report page, user have to manually select',
+					'Failed to load building from query params on order page, user have to manually select',
 			});
 		}
 	}
@@ -491,7 +436,8 @@ const submitReport = async () => {
 	const validationResult = await formValidator.value?.validate();
 	if (
 		!selectedBuilding.value ||
-		!problemLocation.value ||
+		!selectedCategory.value ||
+		(!selectedRoom.value && !skippedRoom.value) ||
 		!validationResult?.valid
 	) {
 		return;
@@ -499,9 +445,9 @@ const submitReport = async () => {
 
 	isBusySubmitting.value = true;
 
-	const reportData: ISubmitEstateFaultReport = {
+	const reportData: ISubmitEstateOrder = {
 		buildingId: selectedBuilding.value?.id,
-		location: problemLocation.value,
+		category: selectedCategory.value,
 		roomId: selectedRoom.value?.id,
 		description: problemDescription.value,
 		attachments: attachments.value,
@@ -511,7 +457,7 @@ const submitReport = async () => {
 	};
 
 	try {
-		await store.dispatch(DispatchType.SubmitFaultReport, reportData);
+		await store.dispatch(DispatchType.SubmitEstateOrder, reportData);
 
 		hasSubmitted.value = true;
 		updateQueryParams();
@@ -527,7 +473,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.estate-fault-report {
+.estate-order {
 	:deep(.v-container) {
 		padding-top: 1rem;
 	}
@@ -538,7 +484,7 @@ onMounted(() => {
 		gap: 2rem;
 		justify-content: space-between;
 
-		.report-wrap {
+		.order-wrap {
 			flex: 1;
 			max-width: 650px;
 			min-width: 500px;
@@ -555,7 +501,7 @@ onMounted(() => {
 			width: 300px;
 		}
 		@media only screen and (max-width: 920px) {
-			.report-wrap {
+			.order-wrap {
 				min-width: auto;
 				max-width: none;
 			}

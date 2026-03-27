@@ -101,7 +101,8 @@ const props = defineProps<{
 		| 'consents'
 		| 'kvittenser'
 		| 'internalPagesOverview'
-		| 'estateFaultReport';
+		| 'estateFaultReport'
+		| 'estateOrder';
 	additionalInfo?: Record<string, unknown>;
 }>();
 

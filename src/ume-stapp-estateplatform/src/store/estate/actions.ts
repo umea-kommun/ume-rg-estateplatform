@@ -6,6 +6,7 @@ import mapper from './mapper';
 import ErrorService from '@/utils/ErrorService';
 import {
 	ISubmitEstateFaultReport,
+	ISubmitEstateOrder,
 	SearchFilter,
 } from '@/models/estate/Interfaces';
 
@@ -311,6 +312,39 @@ export default {
 
 		return response.data;
 	},
+	async submitEstateOrder(
+		context: ActionContext<IRootState, IRootState>,
+		reportData: ISubmitEstateOrder
+	) {
+		const formData = new FormData();
+		formData.append('buildingId', reportData.buildingId.toString());
+		formData.append('category', reportData.category);
+		formData.append('workOrderType', 'building_service');
+		formData.append('description', reportData.description);
+		formData.append('notifierName', reportData.notifierName);
+		formData.append('notifierEmail', reportData.notifierEmail);
+
+		if (reportData.roomId) {
+			formData.append('roomId', reportData.roomId.toString());
+		}
+		if (reportData.notifierPhone) {
+			formData.append('notifierPhone', reportData.notifierPhone);
+		}
+
+		reportData.attachments.forEach((file) => {
+			formData.append('files', file, file.name);
+		});
+
+		const response = await httpClient.post('/workorders', formData, {
+			headers: {
+				Authorization: 'Bearer ' + context.rootState.user.token,
+				'Content-Type': 'multipart/form-data',
+			},
+		});
+
+		return response.data;
+	},
+
 	async setFavorite(
 		context: ActionContext<IRootState, IRootState>,
 		{ id, type }: { id: number; type: string }

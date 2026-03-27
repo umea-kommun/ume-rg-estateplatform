@@ -188,6 +188,21 @@
 							)
 						}}
 					</v-btn>
+					<v-btn
+						v-if="isErrorReportEnabled"
+						variant="outlined"
+						size="x-large"
+						prependIcon="handyman"
+						:to="{
+							name: EstateRoutes.Order,
+						}"
+					>
+						{{
+							$t(
+								'component.internal.internalStart.estate.goToEstateOrder'
+							)
+						}}
+					</v-btn>
 				</v-col>
 			</v-row>
 		</div>
