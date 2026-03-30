@@ -31,6 +31,20 @@ interface OnError {
 const isMocked = (Config.VUE_APP_MOCK_DATA || '').trim() === 'yes';
 export default class ErrorService {
 	/**
+	 * Benign browser errors that should be silently ignored (substring match)
+	 */
+	private static readonly suppressedErrorMessages: string[] = [
+		'ResizeObserver loop',
+	];
+
+	/**
+	 * Returns true if the error message should be suppressed
+	 */
+	static isSuppressedError(message: string): boolean {
+		return this.suppressedErrorMessages.some((s) => message.includes(s));
+	}
+
+	/**
 	 * Called when an unhandled error occurs or called manually using ErrorService.onError
 	 */
 	static onError({

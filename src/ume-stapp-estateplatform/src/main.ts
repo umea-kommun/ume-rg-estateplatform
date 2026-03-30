@@ -37,6 +37,10 @@ app.config.errorHandler = (err, instance, info) => {
 };
 // Catches general errors
 window.addEventListener('error', (e: ErrorEvent) => {
+	if (ErrorService.isSuppressedError(e.message)) {
+		e.stopImmediatePropagation();
+		return;
+	}
 	ErrorService.onError({
 		err: e.error,
 		log: true,
