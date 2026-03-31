@@ -127,7 +127,10 @@ const search = ref('');
 const { fetchSearchResults, searchResults, isBusyLoading } = useEstateSearch(
 	search,
 	undefined,
-	{ updateQueryParams: false, getBuildingLocations: false }
+	{
+		updateQueryParams: false,
+		getBuildingLocations: false,
+	}
 );
 
 const isBusyFetchingBuildingId = ref<number | null>(null);

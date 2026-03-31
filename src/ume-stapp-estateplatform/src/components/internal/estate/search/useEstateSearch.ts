@@ -7,6 +7,7 @@ import {
 	SearchFilter,
 } from '@/models/estate/Interfaces';
 import store from '@/store/store';
+import { sortByBoolean } from '@/utils/sortByBoolean';
 import { AxiosError } from 'axios';
 import { computed, Ref, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -110,7 +111,10 @@ export const useEstateSearch = (
 				abortController,
 			});
 
-			searchResults.value = result;
+			searchResults.value = sortByBoolean(
+				result,
+				(entry) => entry.isFavorite
+			);
 		} catch (ex) {
 			if ((ex as AxiosError).name === 'CanceledError') {
 				return;

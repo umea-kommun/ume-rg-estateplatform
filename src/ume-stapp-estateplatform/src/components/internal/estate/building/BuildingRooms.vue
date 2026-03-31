@@ -104,6 +104,7 @@ import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DispatchType } from '@/models/Enums';
 import { IRootState } from '@/models/Interfaces';
+import { sortByBoolean } from '@/utils/sortByBoolean';
 import { useStore } from 'vuex';
 import RoomList from './RoomList.vue';
 
@@ -203,9 +204,12 @@ const fetchFloors = async (buildingId: number) => {
 const isBusyFetching = ref(false);
 const fetchRooms = async (buildingId: number) => {
 	isBusyFetching.value = true;
-	rooms.value = await store.dispatch(DispatchType.GetBuildingRooms, {
+
+	const roomsResponse = await store.dispatch(DispatchType.GetBuildingRooms, {
 		buildingId,
 	});
+	rooms.value = sortByBoolean(roomsResponse, (room) => room.isFavorite);
+
 	isBusyFetching.value = false;
 };
 
