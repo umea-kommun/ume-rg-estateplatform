@@ -43,6 +43,8 @@ import Feature, { FeatureLike } from 'ol/Feature';
 import Map from 'ol/Map';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import View from 'ol/View';
+import MouseWheelZoom from 'ol/interaction/MouseWheelZoom';
+import { defaults as defaultInteractions } from 'ol/interaction/defaults';
 import MapBuildingCarousel from './MapBuildingCarousel.vue';
 import { useMagicKeys, useStorage, watchDebounced } from '@vueuse/core';
 import { createWmsLayer, SWEREF992015, to3016 } from './layer';
@@ -288,6 +290,19 @@ const initBaseLayers = (): TileLayer<TileWMS>[] => {
 	return Object.values(mapBaseLayers);
 };
 
+const initInteractions = () => {
+	const mouseWheelZoom = new MouseWheelZoom();
+	(
+		mouseWheelZoom as unknown as {
+			deltaPerZoom_: number;
+		}
+	).deltaPerZoom_ = 40; // Lower value makes touchpad zoom more responsive.
+
+	return defaultInteractions({
+		mouseWheelZoom: false,
+	}).extend([mouseWheelZoom]);
+};
+
 const initMap = () => {
 	const initialState = props.initialState
 		? props.initialState
@@ -298,6 +313,7 @@ const initMap = () => {
 	map = new Map({
 		target: props.mapId,
 		controls: [],
+		interactions: initInteractions(),
 		layers: [
 			...initBaseLayers(),
 			clusterLayer,
