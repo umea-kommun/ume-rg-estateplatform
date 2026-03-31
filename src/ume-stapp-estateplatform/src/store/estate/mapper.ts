@@ -4,7 +4,11 @@ import {
 	IBuildingDocumentTreeDto,
 } from '@/models/estate/Dto';
 import Config from '@/Config';
-import { EstateOrderCategory, EstateType } from '@/models/estate/Enums';
+import {
+	EstateOrderCategory,
+	EstateType,
+	ExternalOwnerStatus,
+} from '@/models/estate/Enums';
 import {
 	IBuildingDetails,
 	IBuildingDirectory,
@@ -18,6 +22,7 @@ import {
 	IEstateDetails,
 	IEstateSearchResultEntry,
 } from '@/models/estate/Interfaces';
+import ErrorService from '@/utils/ErrorService';
 
 function capitalizeWords(str?: string | null) {
 	if (str === null || str === undefined) {
@@ -64,6 +69,47 @@ function mapResponseToBuildingRoom(r: {
 		floorName: removeLeadingZerosRegex(r.floorName),
 		buildingId: r.buildingId,
 		isFavorite: r.isFavorite ?? false,
+	};
+}
+function mapExternalOwnerInfo(
+	r:
+		| {
+				status: string;
+				name: string;
+				note: string;
+		  }
+		| null
+		| undefined,
+
+	entityName?: string,
+	entityId?: number
+) {
+	if (!r) {
+		return null;
+	}
+
+	const status =
+		r.status === ExternalOwnerStatus.Inhyrd
+			? ExternalOwnerStatus.Inhyrd
+			: r.status === ExternalOwnerStatus.Egen
+			? ExternalOwnerStatus.Egen
+			: null;
+
+	if (!status) {
+		// If unable to map external owner status,
+		// log error but return null to avoid breaking the entire building/estate details page
+		ErrorService.onError({
+			err: new Error(
+				`Unknown external owner status "${r.status}" for building/estate "${entityName}" (ID: ${entityId})`
+			),
+			hidden: true,
+		});
+	}
+
+	return {
+		status,
+		name: r.name,
+		note: r.note,
 	};
 }
 
@@ -200,21 +246,17 @@ export default {
 			} | null;
 		} | null;
 	}): IEstateDetails => {
-		const rExternalOwner = r.extendedProperties?.externalOwnerInfo;
-
 		const estate: IEstateDetails = {
 			id: r.id,
 			type: r.type as EstateType,
 			name: r.name,
 			popularName: capitalizeWords(r.popularName),
 			isFavorite: r.isFavorite ?? false,
-			externalOwnerInfo: rExternalOwner
-				? {
-						status: rExternalOwner?.status,
-						name: rExternalOwner?.name,
-						note: rExternalOwner?.note,
-				  }
-				: null,
+			externalOwnerInfo: mapExternalOwnerInfo(
+				r.extendedProperties?.externalOwnerInfo,
+				r.name,
+				r.id
+			),
 			municipalityArea: capitalizeWords(
 				r.extendedProperties?.municipalityArea
 			),
@@ -359,13 +401,11 @@ export default {
 				'buildingServices',
 				'facilitiesManager',
 			] as EstateOrderCategory[],
-			externalOwnerInfo: r.extendedProperties?.externalOwnerInfo
-				? {
-						status: r.extendedProperties?.externalOwnerInfo?.status,
-						name: r.extendedProperties?.externalOwnerInfo?.name,
-						note: r.extendedProperties?.externalOwnerInfo?.note,
-				  }
-				: null,
+			externalOwnerInfo: mapExternalOwnerInfo(
+				r.extendedProperties?.externalOwnerInfo,
+				r.name,
+				r.id
+			),
 			address: r.address
 				? {
 						street: r.address.street,

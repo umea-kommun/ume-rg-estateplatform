@@ -655,6 +655,7 @@
 				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",
 				"changeAnswer": "Change",
 				"submitButton": "Submit Fault Report",
+				"rentedBuildingNotice": "This building is rented, which means that the property owner is responsible for maintenance and repairs.",
 				"building": {
 					"select": "Select building",
 					"selected": "Building"

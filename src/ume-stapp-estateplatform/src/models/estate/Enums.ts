@@ -24,3 +24,8 @@ export enum EstateOrderCategory {
 	BuildingServices = 'buildingServices', // Byggservice
 	FacilitiesManager = 'facilitiesManager', // Verksamhetsvaktmästare
 }
+
+export enum ExternalOwnerStatus {
+	Egen = 'Egen',
+	Inhyrd = 'Inhyrd',
+}

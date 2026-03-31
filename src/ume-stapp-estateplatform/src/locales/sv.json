@@ -656,6 +656,7 @@
 				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",
 				"changeAnswer": "Ändra",
 				"submitButton": "Skicka in felanmälan",
+				"rentedBuildingNotice": "Denna byggnad är inhyrd, vilket innebär att fastighetsägaren ansvarar för underhåll och reparationer.",
 				"building": {
 					"select": "Välj byggnad",
 					"selected": "Byggnad"

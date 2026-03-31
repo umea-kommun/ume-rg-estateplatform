@@ -1,5 +1,9 @@
 <template>
-	<v-alert class="external-owner-info mx-6" rounded="lg">
+	<v-alert
+		class="external-owner-info mx-6"
+		:class="{ transparent: transparent }"
+		rounded="lg"
+	>
 		<div class="properties">
 			<div class="prop">
 				<div class="label">
@@ -56,6 +60,7 @@ import { linkify } from './linkifyText';
 
 const props = defineProps<{
 	externalOwnerInfo: IExternalOwnerInfo;
+	transparent?: boolean;
 }>();
 
 const noteTokens = computed(() => {
@@ -68,6 +73,14 @@ const noteTokens = computed(() => {
 .external-owner-info {
 	.prop .label {
 		color: $grey-darken-2;
+	}
+
+	&.transparent {
+		background-color: transparent;
+
+		:deep(.v-alert__underlay) {
+			background-color: transparent;
+		}
 	}
 }
 </style>

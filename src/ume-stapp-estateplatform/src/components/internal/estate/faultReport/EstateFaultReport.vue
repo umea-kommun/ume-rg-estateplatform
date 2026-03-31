@@ -45,6 +45,30 @@
 							@select="selectBuilding"
 							@select-room="selectBuildingAndRoom"
 						/>
+						<v-alert
+							v-if="
+								selectedBuilding?.externalOwnerInfo?.status ===
+								ExternalOwnerStatus.Inhyrd
+							"
+							type="info"
+							variant="tonal"
+							rounded="lg"
+							class="mt-4"
+						>
+							{{
+								$t(
+									'component.internal.faultReport.rentedBuildingNotice'
+								)
+							}}
+
+							<external-owner-info
+								:externalOwnerInfo="
+									selectedBuilding.externalOwnerInfo
+								"
+								class="ml-0 mt-2 pa-0 d-flex"
+								transparent
+							/>
+						</v-alert>
 					</estate-order-step>
 
 					<!-- OUTDOOR / INDOOR SELECTOR -->
@@ -292,7 +316,10 @@ import {
 import { EstateRoutes, MyPagesRoutes } from '@/router/routes';
 import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
 import { useI18n } from 'vue-i18n';
-import { EstateFaultLocation } from '@/models/estate/Enums';
+import {
+	EstateFaultLocation,
+	ExternalOwnerStatus,
+} from '@/models/estate/Enums';
 import BuildingSelector from './buildingSelector/BuildingSelector.vue';
 import RoomSelector from './roomSelector/RoomSelector.vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -307,6 +334,7 @@ import BaseTextBox from '@/components/base/BaseTextBox.vue';
 import ErrorService from '@/utils/ErrorService';
 import FaultContactInfo from './FaultContactInfo.vue';
 import EstateOrderStep from '../order/EstateOrderStep.vue';
+import ExternalOwnerInfo from '../estate/ExternalOwnerInfo.vue';
 
 const route = useRoute();
 const router = useRouter();

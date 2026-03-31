@@ -1,4 +1,9 @@
-import { EstateFaultLocation, EstateOrderCategory, EstateType } from './Enums';
+import {
+	EstateFaultLocation,
+	EstateOrderCategory,
+	EstateType,
+	ExternalOwnerStatus,
+} from './Enums';
 
 export interface IEstateSearchResultEntry {
 	id: number;
@@ -77,7 +82,7 @@ export interface IBuildingNoticeBoard {
 }
 
 export interface IExternalOwnerInfo {
-	status: string | null;
+	status: ExternalOwnerStatus | null;
 	name: string | null;
 	note: string | null;
 }
