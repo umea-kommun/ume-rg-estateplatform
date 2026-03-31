@@ -74,18 +74,11 @@
 				}}
 			</v-alert>
 
-			<v-list>
-				<room-card
-					v-for="room in filteredRoomsForFloor"
-					:key="room.id"
-					:room="room"
-					:focusedRoomId="focusedRoomId"
-					:class="{
-						'px-6': !noPadding,
-					}"
-					@click="clickRoom(room.id)"
-				/>
-			</v-list>
+			<room-list
+				:rooms="filteredRoomsForFloor"
+				:focused-room-id="focusedRoomId"
+				@room-click="clickRoom"
+			/>
 			<div v-if="selectedFloorId && filteredRoomsForOtherFloors.length">
 				<h3 class="mt-6 mb-2" :class="{ 'mx-6': !noPadding }">
 					{{
@@ -94,12 +87,10 @@
 						)
 					}}
 				</h3>
-				<room-card
-					v-for="room in filteredRoomsForOtherFloors"
-					:key="room.id"
-					:room="room"
-					:focusedRoomId="focusedRoomId"
-					@click="clickRoom(room.id)"
+				<room-list
+					:rooms="filteredRoomsForOtherFloors"
+					:focused-room-id="focusedRoomId"
+					@room-click="clickRoom"
 				/>
 			</div>
 		</div>
@@ -114,7 +105,7 @@ import { useI18n } from 'vue-i18n';
 import { DispatchType } from '@/models/Enums';
 import { IRootState } from '@/models/Interfaces';
 import { useStore } from 'vuex';
-import RoomCard from './RoomCard.vue';
+import RoomList from './RoomList.vue';
 
 const props = defineProps<{
 	buildingId: number;

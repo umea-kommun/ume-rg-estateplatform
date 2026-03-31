@@ -630,7 +630,8 @@
 					"type": "Rumstyp",
 					"noMatches": "Det finns inga rum som matchar din sökning.",
 					"noMatchesSelectedFloor": "Det finns inga rum på våning {floor} som matchar din sökning.",
-					"matchesOnOtherFloors": "Resultat på andra våningar"
+					"matchesOnOtherFloors": "Rum på andra våningar",
+					"showMoreRooms": "Visa fler rum"
 				}
 			},
 			"buildingContact": {

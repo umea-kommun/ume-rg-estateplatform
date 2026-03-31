@@ -629,7 +629,8 @@
 					"type": "Room type",
 					"noMatches": "There are no rooms that match your search.",
 					"noMatchesSelectedFloor": "There are no rooms on floor {floor} that match your search.",
-					"matchesOnOtherFloors": "Results on other floors"
+					"matchesOnOtherFloors": "Rooms on other floors",
+					"showMoreRooms": "Show more rooms"
 				}
 			},
 			"buildingContact": {

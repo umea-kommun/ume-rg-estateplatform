@@ -75,7 +75,7 @@
 							$t('component.internal.buildingDetails.room.title')
 						}}
 					</h2>
-					<building-details-rooms
+					<building-rooms
 						ref="room-list"
 						class="list mb-4"
 						:buildingId="building.id"
@@ -128,7 +128,7 @@ import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import NavBreadcrumbs from '@/components/internal/shared/NavBreadcrumbs.vue';
-import BuildingDetailsRooms from '@/components/internal/estate/building/BuildingDetailsRooms.vue';
+import BuildingRooms from '@/components/internal/estate/building/BuildingRooms.vue';
 import BuildingBlueprint from '@/components/internal/estate/blueprint/BuildingBlueprint.vue';
 import { useScroll } from '@vueuse/core';
 import BuildingNoticeBoard from '@/components/internal/estate/building/BuildingNoticeBoard.vue';

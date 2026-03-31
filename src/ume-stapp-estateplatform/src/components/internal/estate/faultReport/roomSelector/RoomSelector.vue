@@ -26,7 +26,7 @@
 			<p class="text-medium-emphasis">
 				{{ $t('component.internal.roomSelector.description') }}
 			</p>
-			<building-details-rooms
+			<building-rooms
 				:building-id="building.id"
 				v-model:floor="floorId"
 				:return-object="true"
@@ -55,14 +55,14 @@
 						}}
 					</v-btn>
 				</template>
-			</building-details-rooms>
+			</building-rooms>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { IBuildingDetails, IBuildingRoom } from '@/models/estate/Interfaces';
-import BuildingDetailsRooms from '../../building/BuildingDetailsRooms.vue';
+import BuildingRooms from '../../building/BuildingRooms.vue';
 import { ref, useTemplateRef, watch } from 'vue';
 import RoomCard from '../../building/RoomCard.vue';
 import BuildingBlueprint from '../../blueprint/BuildingBlueprint.vue';

@@ -32,5 +32,4 @@ export enum EstateRoutes {
 	EstateDetailsBuildings = 'Estate.EstateDetails.Buildings',
 
 	BuildingDetails = 'Estate.BuildingDetails',
-	BuildingDetailsRooms = 'Estate.BuildingDetails.Rooms',
 }
