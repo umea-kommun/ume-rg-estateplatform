@@ -33,29 +33,7 @@
 				class="px-0"
 				@room-selected="selectRoom"
 				no-padding
-			>
-				<template #append-search>
-					<room-blueprint-selector
-						ref="roomBlueprintSelector"
-						:building-id="building.id"
-						@room-selected="selectRoom"
-					/>
-					<v-btn
-						v-if="building.blueprintAvailable"
-						class="regular-text ma-0 mt-2"
-						color="primary"
-						variant="tonal"
-						prepend-icon="map"
-						@click="selectRoomOnBlueprint"
-					>
-						{{
-							$t(
-								'component.internal.roomSelector.selectOnBlueprint'
-							)
-						}}
-					</v-btn>
-				</template>
-			</building-rooms>
+			/>
 		</div>
 	</div>
 </template>
@@ -66,8 +44,6 @@ import BuildingRooms from '../../building/BuildingRooms.vue';
 import { ref, useTemplateRef, watch } from 'vue';
 import RoomCard from '../../building/RoomCard.vue';
 import BuildingBlueprint from '../../blueprint/BuildingBlueprint.vue';
-import RoomBlueprintSelector from './RoomBlueprintSelector.vue';
-import { appInsights } from '@/plugins/appInsights';
 
 const props = defineProps<{
 	building: IBuildingDetails;
@@ -83,17 +59,6 @@ const selectRoom = (room: IBuildingRoom | null) => {
 const floorId = ref<number | null>(null);
 
 const buildingBlueprintRef = useTemplateRef('buildingBlueprintRef');
-const roomBlueprintSelectorRef = useTemplateRef('roomBlueprintSelector');
-
-const selectRoomOnBlueprint = () => {
-	roomBlueprintSelectorRef.value?.open();
-	appInsights?.trackEvent({
-		name: 'EstateSelectRoomOnBlueprintClicked',
-		properties: {
-			url: window.location.href,
-		},
-	});
-};
 
 watch(
 	[() => props.selectedRoom, () => buildingBlueprintRef.value],

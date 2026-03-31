@@ -38,6 +38,9 @@
 						:show-clear="!!selectedBuilding"
 						@clear="selectBuilding(null)"
 					>
+						<template #header-btn v-if="!selectedBuilding">
+							<building-map-selector @select="selectBuilding" />
+						</template>
 						<building-selector
 							:selected-building="selectedBuilding"
 							@select="selectBuilding"
@@ -80,7 +83,21 @@
 								}}
 							</span>
 						</template>
+						<template
+							#header-btn
+							v-if="
+								selectedBuilding.blueprintAvailable &&
+								!selectedRoom &&
+								!skippedRoom
+							"
+						>
+							<room-blueprint-selector
+								:building-id="selectedBuilding.id"
+								@room-selected="selectRoom"
+							/>
+						</template>
 						<room-selector
+							class="mt-2"
 							:building="selectedBuilding"
 							:skipped-room="skippedRoom"
 							:selected-room="selectedRoom"
@@ -269,6 +286,8 @@ import EstateOrderCompleted from './EstateOrderCompleted.vue';
 import OrderCategorySelector from './OrderCategorySelector.vue';
 import FaultContactInfo from '../faultReport/FaultContactInfo.vue';
 import EstateOrderStep from './EstateOrderStep.vue';
+import RoomBlueprintSelector from '../faultReport/roomSelector/RoomBlueprintSelector.vue';
+import BuildingMapSelector from '../faultReport/buildingSelector/BuildingMapSelector.vue';
 
 const route = useRoute();
 const router = useRouter();

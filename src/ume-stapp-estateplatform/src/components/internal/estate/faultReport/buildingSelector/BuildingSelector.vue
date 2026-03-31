@@ -37,19 +37,6 @@
 				>
 				</v-text-field>
 			</div>
-			<building-map-selector
-				ref="buildingMapSelector"
-				@select="selectBuilding"
-			/>
-			<v-btn
-				class="regular-text ma-0 mt-2"
-				color="primary"
-				variant="tonal"
-				prepend-icon="location_pin"
-				@click="selectBuildingOnMap"
-			>
-				{{ $t('component.internal.buildingSelector.selectOnMap') }}
-			</v-btn>
 
 			<v-alert
 				v-if="!isBusyLoading && searchResults?.length === 0 && search"
@@ -111,7 +98,7 @@
 
 <script setup lang="ts">
 import { IBuildingDetails } from '@/models/estate/Interfaces';
-import { computed, onMounted, ref, useTemplateRef } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useEstateSearch } from '@/components/internal/estate/search/useEstateSearch';
 import { watchDebounced } from '@vueuse/core';
 import { DispatchType } from '@/models/Enums';
@@ -121,10 +108,8 @@ import BuildingNoticeBoard from '@/components/internal/estate/building/BuildingN
 import BuildingSelectorItem from './BuildingSelectorItem.vue';
 import BuildingMap from '@/components/internal/estate/map/BuildingMap.vue';
 import EstateSearchResultItem from '@/components/internal/estate/search/EstateSearchResultItem.vue';
-import BuildingMapSelector from './BuildingMapSelector.vue';
 import FavoriteList from '../../favorite/FavoriteList.vue';
 import { EstateType } from '@/models/estate/Enums';
-import { appInsights } from '@/plugins/appInsights';
 
 const props = defineProps<{
 	selectedBuilding: IBuildingDetails | null;
@@ -134,7 +119,6 @@ const emit = defineEmits(['select', 'select-room']);
 
 const store = useStore<IRootState>();
 
-const buildingMapSelectorRef = useTemplateRef('buildingMapSelector');
 const hoveredSearchResultId = ref<number | null>(null);
 
 const SEARCH_RESULT_LIMIT = 10;
@@ -157,16 +141,6 @@ const selectBuilding = async (buildingId: number) => {
 	} finally {
 		isBusyFetchingBuildingId.value = null;
 	}
-};
-
-const selectBuildingOnMap = () => {
-	buildingMapSelectorRef.value?.open();
-	appInsights?.trackEvent({
-		name: 'EstateSelectOnMapClicked',
-		properties: {
-			url: window.location.href,
-		},
-	});
 };
 
 const selectedBuildingMapPoints = computed(() => {

@@ -1,19 +1,33 @@
 <template>
-	<building-blueprint
-		v-if="showBlueprint"
-		ref="building-blueprint"
-		:building-id="buildingId"
-		class="d-none"
-		:floor="null"
-		@fullscreen-closed="showBlueprint = false"
-		@room-selected="(room) => emit('room-selected', room)"
-		:selectable="true"
-	/>
+	<div>
+		<building-blueprint
+			v-if="showBlueprint"
+			ref="building-blueprint"
+			:building-id="buildingId"
+			class="d-none"
+			:floor="null"
+			@fullscreen-closed="showBlueprint = false"
+			@room-selected="selectRoom"
+			:selectable="true"
+		/>
+		<v-btn
+			class="regular-text ma-0"
+			color="primary"
+			variant="flat"
+			rounded="xl"
+			prepend-icon="map"
+			@click="open"
+		>
+			{{ $t('component.internal.roomSelector.selectOnBlueprint') }}
+		</v-btn>
+	</div>
 </template>
 
 <script setup lang="ts">
 import { nextTick, ref, useTemplateRef } from 'vue';
 import BuildingBlueprint from '../../blueprint/BuildingBlueprint.vue';
+import { appInsights } from '@/plugins/appInsights';
+import { IBuildingRoom } from '@/models/estate/Interfaces';
 
 defineProps<{
 	buildingId: number;
@@ -38,9 +52,28 @@ const open = async () => {
 	await waitForBlueprintToRender();
 
 	buildingBlueprintRef.value?.openFullscreen();
+
+	appInsights?.trackEvent({
+		name: 'EstateSelectRoomOnBlueprintClicked',
+		properties: {
+			url: window.location.href,
+		},
+	});
 };
 
-defineExpose({
-	open,
-});
+const selectRoom = (room: IBuildingRoom) => {
+	emit('room-selected', room);
+	showBlueprint.value = false;
+	appInsights?.trackEvent({
+		name: 'EstateRoomSelectedOnBlueprint',
+		properties: {
+			url: window.location.href,
+			roomId: room.id,
+			roomName: room.name,
+			roomPopularName: room.popularName,
+			floorName: room.floorName,
+			buildingId: room.buildingId,
+		},
+	});
+};
 </script>
