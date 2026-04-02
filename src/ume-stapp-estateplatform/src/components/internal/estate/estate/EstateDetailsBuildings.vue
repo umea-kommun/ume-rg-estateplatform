@@ -15,13 +15,16 @@
 			@mouseenter="() => emit('building-mouseenter', building.id)"
 			@mouseleave="() => emit('building-mouseleave')"
 		>
-			<v-card-title class="px-0 py-0 d-flex align-center ga-1">
-				{{ building.popularName || building.name }}
+			<v-card-title
+				class="px-0 py-0 d-flex align-start ga-1 justify-space-between"
+			>
+				<div class="building-name">
+					{{ building.popularName || building.name }}
+				</div>
 				<favorite-button
 					:id="building.id"
 					:type="EstateType.Building"
 					:isFavorite="building.isFavorite"
-					not-interactive
 				/>
 			</v-card-title>
 			<v-card-text class="pt-2 pb-3 px-0">
@@ -97,6 +100,10 @@ const sortedBuildings = computed(() => {
 		color: $black;
 		font-size: size(18);
 		white-space: normal;
+
+		.building-name {
+			align-self: center;
+		}
 	}
 	ul {
 		li {

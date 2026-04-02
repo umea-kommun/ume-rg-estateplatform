@@ -5,7 +5,7 @@
 		:data-room-id="room.id"
 		:class="{ focused: room.id === focusedRoomId }"
 	>
-		<div class="title d-flex align-center">
+		<div class="title d-flex align-start justify-space-between">
 			<span v-if="room.popularName">
 				{{ room.popularName }} - {{ room.name }}
 			</span>

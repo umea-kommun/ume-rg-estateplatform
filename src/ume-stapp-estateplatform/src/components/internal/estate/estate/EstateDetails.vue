@@ -18,7 +18,9 @@
 								:breadcrumbs="breadcrumbs"
 							/>
 
-							<div class="d-flex align-center">
+							<div
+								class="d-flex align-start justify-space-between"
+							>
 								<h1 :title="estateName">
 									{{ estateName }}
 								</h1>
@@ -26,17 +28,7 @@
 									:id="estate.id"
 									:type="EstateType.Estate"
 									:isFavorite="estate.isFavorite"
-									class="mr-2"
 								/>
-
-								<v-chip
-									class="flex-shrink-0"
-									:class="estate.type"
-									variant="flat"
-									color="info"
-								>
-									{{ $t('estateCommon.type.estate') }}
-								</v-chip>
 							</div>
 						</div>
 					</div>
@@ -54,18 +46,23 @@
 								</div>
 							</div>
 						</div>
-						<div class="chip-properties mt-4">
+						<div class="chip-properties">
 							<v-chip
-								v-if="estate.metrics?.buildingCount"
-								class="mr-4"
+								class="flex-shrink-0"
+								:class="estate.type"
+								variant="flat"
+								color="info"
 							>
+								{{ $t('estateCommon.type.estate') }}
+							</v-chip>
+							<v-chip v-if="estate.metrics?.buildingCount">
 								{{
 									$t('estateCommon.buildingCount', {
 										count: estate.metrics?.buildingCount,
 									})
 								}}
 							</v-chip>
-							<v-chip v-if="estate.metrics?.areaSqm" class="mr-4">
+							<v-chip v-if="estate.metrics?.areaSqm">
 								{{ estate.metrics?.areaSqm?.toLocaleString() }}
 								m²
 							</v-chip>
@@ -272,6 +269,12 @@ const { y } = useScroll(window);
 				opacity: 1;
 			}
 		}
+	}
+}
+.chip-properties {
+	.v-chip {
+		margin-top: 1rem;
+		margin-right: 1rem;
 	}
 }
 </style>

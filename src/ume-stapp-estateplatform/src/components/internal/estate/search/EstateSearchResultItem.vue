@@ -11,8 +11,8 @@
 			class="building-image-mobile"
 		/>
 		<div class="content">
-			<div class="d-flex align-center justify-space-between">
-				<v-card-title>
+			<div class="d-flex align-center">
+				<v-card-title class="justify-space-between">
 					<div class="title">
 						{{ entry.popularName || entry.name }}
 					</div>
@@ -23,13 +23,6 @@
 						size="small"
 					/>
 				</v-card-title>
-				<v-chip
-					class="estate-type mt-2 mr-4"
-					:class="entry.type"
-					variant="flat"
-					:color="typeColor"
-					>{{ estateType }}</v-chip
-				>
 			</div>
 			<div class="inner-content">
 				<v-card-text class="pt-1">
@@ -47,6 +40,13 @@
 						</div>
 					</div>
 					<div class="chip-properties">
+						<v-chip
+							class="estate-type"
+							:class="entry.type"
+							variant="flat"
+							:color="typeColor"
+							>{{ estateType }}</v-chip
+						>
 						<v-chip
 							v-if="
 								entry.type === EstateType.Estate &&
@@ -238,7 +238,7 @@ const estateType = computed(() => {
 		color: $black;
 		flex: 1;
 		display: flex;
-		align-items: center;
+		align-items: start;
 		gap: 4px;
 
 		.title {
@@ -267,8 +267,8 @@ const estateType = computed(() => {
 	}
 	.chip-properties {
 		.v-chip {
-			margin-top: 12px;
-			margin-right: 12px;
+			margin-top: 1rem;
+			margin-right: 1rem;
 		}
 	}
 	.building-image-mobile {

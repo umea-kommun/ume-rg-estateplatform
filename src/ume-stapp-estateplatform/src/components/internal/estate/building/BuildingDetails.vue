@@ -18,7 +18,9 @@
 								:breadcrumbs="breadcrumbs"
 							/>
 
-							<div class="d-flex align-center">
+							<div
+								class="d-flex align-start justify-space-between"
+							>
 								<h1 :title="buildingName">
 									{{ buildingName }}
 								</h1>
@@ -26,16 +28,7 @@
 									:id="building.id"
 									:type="EstateType.Building"
 									:isFavorite="building.isFavorite"
-									class="mr-2"
 								/>
-
-								<v-chip
-									variant="flat"
-									color="primary"
-									class="flex-shrink-0"
-								>
-									{{ $t('estateCommon.type.building') }}
-								</v-chip>
 							</div>
 						</div>
 					</div>

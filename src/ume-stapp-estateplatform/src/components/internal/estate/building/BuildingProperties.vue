@@ -17,6 +17,13 @@
 				</div>
 
 				<div class="chip-properties">
+					<v-chip
+						variant="flat"
+						color="primary"
+						class="flex-shrink-0"
+					>
+						{{ $t('estateCommon.type.building') }}
+					</v-chip>
 					<v-chip v-if="building.metrics?.floorCount">
 						{{
 							$t('estateCommon.floorCount', {
