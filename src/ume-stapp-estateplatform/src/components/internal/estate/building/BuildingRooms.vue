@@ -270,5 +270,7 @@ h3 {
 }
 .result-wrap {
 	min-height: 20svh;
+	overflow: hidden;
+	padding: 3px;
 }
 </style>

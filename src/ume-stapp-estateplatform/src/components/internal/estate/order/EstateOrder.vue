@@ -48,10 +48,28 @@
 						/>
 					</estate-order-step>
 
-					<!-- ROOM SELECTOR -->
+					<!-- CATEGORY SELECTOR -->
 					<estate-order-step
 						v-if="selectedBuilding"
 						:step="2"
+						:step-count="stepCount"
+						:title="$t('component.internal.order.category.title')"
+						ref="categoryTitle"
+						class="mt-6"
+					>
+						<order-category-selector
+							:available-categories="
+								selectedBuilding.orderCategories
+							"
+							:category="selectedCategory"
+							@select="selectCategory"
+						/>
+					</estate-order-step>
+
+					<!-- ROOM SELECTOR -->
+					<estate-order-step
+						v-if="selectedBuilding && selectedCategory"
+						:step="3"
 						:step-count="stepCount"
 						:show-clear="!!selectedRoom || skippedRoom"
 						@clear="selectRoom(null)"
@@ -102,24 +120,6 @@
 							:skipped-room="skippedRoom"
 							:selected-room="selectedRoom"
 							@select="selectRoom"
-						/>
-					</estate-order-step>
-
-					<!-- CATEGORY SELECTOR -->
-					<estate-order-step
-						v-if="selectedBuilding && (selectedRoom || skippedRoom)"
-						:step="3"
-						:step-count="stepCount"
-						:title="$t('component.internal.order.category.title')"
-						ref="categoryTitle"
-						class="mt-6"
-					>
-						<order-category-selector
-							:available-categories="
-								selectedBuilding.orderCategories
-							"
-							:category="selectedCategory"
-							@select="selectCategory"
 						/>
 					</estate-order-step>
 
@@ -375,7 +375,7 @@ const selectBuilding = async (building: IBuildingDetails | null) => {
 	selectedCategory.value = null;
 	selectedBuilding.value = building;
 
-	scrollToAfterUiUpdate(roomTitleRef);
+	scrollToAfterUiUpdate(categoryTitleRef);
 	updateQueryParams();
 };
 
@@ -383,14 +383,14 @@ const selectRoom = async (room: IBuildingRoom | null, skipped = false) => {
 	selectedRoom.value = room;
 	skippedRoom.value = skipped;
 
-	scrollToAfterUiUpdate(categoryTitleRef);
+	scrollToAfterUiUpdate(problemTitleRef);
 	updateQueryParams();
 };
 
 const selectCategory = async (category: EstateOrderCategory | null) => {
 	selectedCategory.value = category;
 
-	scrollToAfterUiUpdate(problemTitleRef);
+	scrollToAfterUiUpdate(roomTitleRef);
 };
 
 const selectBuildingAndRoom = async ({
