@@ -110,7 +110,7 @@ export interface IBuildingDetails {
 	numDocuments: number | null;
 	imageUrl: string | null;
 	isFavorite: boolean;
-	orderCategories: EstateOrderCategory[];
+	workOrderTypes: string[];
 	address: {
 		street: string;
 		zipCode: string;

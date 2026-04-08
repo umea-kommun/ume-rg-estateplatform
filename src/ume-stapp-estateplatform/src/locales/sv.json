@@ -733,7 +733,8 @@
 					"facilitiesManager": {
 						"title": "Verksamhetsvaktmästare",
 						"description": "Praktisk hjälp och fastighetsnära service i verksamheter."
-					}
+					},
+					"noneAvailable": "Det finns inga beställningstjänster tillgängliga för den här byggnaden."
 				},
 				"info": {
 					"title": "Information",

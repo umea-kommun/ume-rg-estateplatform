@@ -5,7 +5,6 @@ import {
 } from '@/models/estate/Dto';
 import Config from '@/Config';
 import {
-	EstateOrderCategory,
 	EstateType,
 	ExternalOwnerStatus,
 } from '@/models/estate/Enums';
@@ -378,6 +377,7 @@ export default {
 				rentalAdministrator: string | null;
 			} | null;
 		};
+		workOrderTypes?: string[];
 		geoLocation: {
 			lat: number;
 			lon: number;
@@ -395,12 +395,7 @@ export default {
 				r.extendedProperties?.blueprintAvailable ?? false,
 			imageUrl: r.imageUrl ? getBuildingImageUrl(r.id) : null,
 			isFavorite: r.isFavorite ?? false,
-			// TODO: map order categories from API when available instead of hardcoding
-			orderCategories: [
-				'townHallServices',
-				'buildingServices',
-				'facilitiesManager',
-			] as EstateOrderCategory[],
+			workOrderTypes: r.workOrderTypes ?? [],
 			externalOwnerInfo: mapExternalOwnerInfo(
 				r.extendedProperties?.externalOwnerInfo,
 				r.name,

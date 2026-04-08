@@ -50,7 +50,7 @@
 
 					<!-- CATEGORY SELECTOR -->
 					<estate-order-step
-						v-if="selectedBuilding"
+						v-if="selectedBuilding && availableCategories.length > 0"
 						:step="2"
 						:step-count="stepCount"
 						:title="$t('component.internal.order.category.title')"
@@ -58,13 +58,20 @@
 						class="mt-6"
 					>
 						<order-category-selector
-							:available-categories="
-								selectedBuilding.orderCategories
-							"
+							:available-categories="availableCategories"
 							:category="selectedCategory"
 							@select="selectCategory"
 						/>
 					</estate-order-step>
+					<v-alert
+						v-else-if="selectedBuilding"
+						type="info"
+						variant="tonal"
+						rounded="lg"
+						class="mt-6"
+					>
+						{{ $t('component.internal.order.category.noneAvailable') }}
+					</v-alert>
 
 					<!-- ROOM SELECTOR -->
 					<estate-order-step
@@ -336,6 +343,13 @@ watch(
 			skippedRoom.value = false;
 		}
 	}
+);
+
+const orderCategoryValues = Object.values(EstateOrderCategory) as string[];
+const availableCategories = computed(() =>
+	(selectedBuilding.value?.workOrderTypes ?? []).filter((t) =>
+		orderCategoryValues.includes(t)
+	) as EstateOrderCategory[]
 );
 
 const showLastSteps = computed(() => {

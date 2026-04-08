@@ -287,7 +287,7 @@ export default {
 		const formData = new FormData();
 		formData.append('buildingId', reportData.buildingId.toString());
 		formData.append('location', reportData.location);
-		formData.append('workOrderType', 'error_report');
+		formData.append('workOrderType', 'errorReport');
 		formData.append('description', reportData.description);
 		formData.append('notifierName', reportData.notifierName);
 		formData.append('notifierEmail', reportData.notifierEmail);
@@ -318,8 +318,7 @@ export default {
 	) {
 		const formData = new FormData();
 		formData.append('buildingId', reportData.buildingId.toString());
-		formData.append('category', reportData.category);
-		formData.append('workOrderType', 'building_service');
+		formData.append('workOrderType', reportData.category);
 		formData.append('description', reportData.description);
 		formData.append('notifierName', reportData.notifierName);
 		formData.append('notifierEmail', reportData.notifierEmail);

@@ -20,9 +20,9 @@ export enum MapBaseLayer {
 }
 
 export enum EstateOrderCategory {
-	TownHallServices = 'townHallServices', // Stadshusservice
-	BuildingServices = 'buildingServices', // Byggservice
-	FacilitiesManager = 'facilitiesManager', // Verksamhetsvaktmästare
+	TownHallService = 'townHallService', // Stadshusservice
+	BuildingService = 'buildingService', // Byggservice
+	FacilityService = 'facilityService', // Verksamhetsvaktmästare
 }
 
 export enum ExternalOwnerStatus {

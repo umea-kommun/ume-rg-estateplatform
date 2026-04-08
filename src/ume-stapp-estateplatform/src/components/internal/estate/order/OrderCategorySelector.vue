@@ -74,7 +74,7 @@ const { t } = useI18n();
 
 const allCategories = [
 	{
-		type: EstateOrderCategory.BuildingServices,
+		type: EstateOrderCategory.BuildingService,
 		icon: 'handyman',
 		title: t('component.internal.order.category.buildingServices.title'),
 		description: t(
@@ -82,7 +82,7 @@ const allCategories = [
 		),
 	},
 	{
-		type: EstateOrderCategory.TownHallServices,
+		type: EstateOrderCategory.TownHallService,
 		icon: 'account_balance',
 		title: t('component.internal.order.category.townHallServices.title'),
 		description: t(
@@ -90,7 +90,7 @@ const allCategories = [
 		),
 	},
 	{
-		type: EstateOrderCategory.FacilitiesManager,
+		type: EstateOrderCategory.FacilityService,
 		icon: 'engineering',
 		title: t('component.internal.order.category.facilitiesManager.title'),
 		description: t(
