@@ -221,7 +221,7 @@ export default {
 		{ buildingId }: { buildingId: number }
 	) {
 		const response = await httpClient.get(
-			`/documents/building/${buildingId}/tree`,
+			`/buildings/${buildingId}/documents`,
 			{
 				headers: {
 					Authorization: 'Bearer ' + context.rootState.user.token,
@@ -235,16 +235,14 @@ export default {
 		context: ActionContext<IRootState, IRootState>,
 		{
 			buildingId,
-			directoryId,
 			documentId,
 		}: {
 			buildingId: number;
-			directoryId: number;
 			documentId: number;
 		}
 	) {
 		const response = await httpClient.get(
-			`/documents/building/${buildingId}/directory/${directoryId}/download/${documentId}`,
+			`/buildings/${buildingId}/documents/${documentId}/download`,
 			{
 				headers: {
 					Authorization: 'Bearer ' + context.rootState.user.token,

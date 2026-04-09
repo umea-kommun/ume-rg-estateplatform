@@ -1,7 +1,5 @@
 import {
-	IBuildingDirectoryDto,
 	IBuildingDocumentDto,
-	IBuildingDocumentTreeDto,
 } from '@/models/estate/Dto';
 import Config from '@/Config';
 import {
@@ -10,9 +8,7 @@ import {
 } from '@/models/estate/Enums';
 import {
 	IBuildingDetails,
-	IBuildingDirectory,
 	IBuildingDocument,
-	IBuildingDocumentTree,
 	IBuildingFloor,
 	IBuildingGeoLocation,
 	IBuildingRoom,
@@ -495,41 +491,14 @@ export default {
 		return businessTypes;
 	},
 	mapResponseToBuildingDocuments: (
-		r: IBuildingDocumentTreeDto
-	): IBuildingDocumentTree => {
-		const mapDocuments = (
-			docs: IBuildingDocumentDto[]
-		): IBuildingDocument[] =>
-			docs.map((doc) => ({
-				id: doc.id,
-				name: doc.name,
-				directoryId: doc.directoryId,
-				sizeInBytes: doc.sizeInBytes,
-				actionTypeId: doc.actionTypeId,
-				actionTypeName: doc.actionTypeName,
-			}));
-
-		const mapDirectories = (
-			dirs: IBuildingDirectoryDto[]
-		): IBuildingDirectory[] => {
-			return dirs.map((dir) => ({
-				id: dir.id,
-				name: dir.name,
-				subDirectories: mapDirectories(dir.subdirectories),
-				documents: mapDocuments(dir.documents),
-			}));
-		};
-
-		const directories: IBuildingDirectory[] = mapDirectories(r.directories);
-		const rootDocuments: IBuildingDocument[] = mapDocuments(
-			r.rootDocuments
-		);
-
-		return {
-			totalDirectoryCount: r.totalDirectoryCount,
-			totalDocumentCount: r.totalDocumentCount,
-			directories,
-			rootDocuments,
-		};
-	},
+		r: IBuildingDocumentDto[]
+	): IBuildingDocument[] =>
+		r.map((doc) => ({
+			id: doc.id,
+			name: doc.name,
+			directoryId: doc.directoryId,
+			sizeInBytes: doc.sizeInBytes,
+			categoryId: doc.categoryId,
+			categoryName: doc.categoryName,
+		})),
 };

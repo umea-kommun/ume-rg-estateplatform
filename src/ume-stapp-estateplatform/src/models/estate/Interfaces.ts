@@ -165,23 +165,10 @@ export interface IBusinessType {
 export interface IBuildingDocument {
 	id: number;
 	name: string;
-	directoryId: number;
-	sizeInBytes: number;
-	actionTypeId: number | null;
-	actionTypeName: string | null;
-}
-export interface IBuildingDirectory {
-	id: number;
-	name: string;
-	subDirectories: IBuildingDirectory[];
-	documents: IBuildingDocument[];
-}
-
-export interface IBuildingDocumentTree {
-	totalDocumentCount?: number;
-	totalDirectoryCount?: number;
-	directories: IBuildingDirectory[];
-	rootDocuments: IBuildingDocument[];
+	directoryId: number | null;
+	sizeInBytes: number | null;
+	categoryId: number | null;
+	categoryName: string | null;
 }
 
 export interface IBlueprintPosition {

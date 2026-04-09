@@ -88,7 +88,6 @@
 				</v-card-text>
 			</div>
 			<v-card-actions>
-				<hr class="mb-4 mt-4" />
 				<v-btn
 					:href="blobUrl"
 					:download="document?.name"
@@ -173,7 +172,6 @@ const fetchFile = async (document: IBuildingDocument) => {
 			DispatchType.DownloadBuildingDocument,
 			{
 				buildingId: props.building.id,
-				directoryId: document.directoryId,
 				documentId: document.id,
 			}
 		);

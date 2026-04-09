@@ -660,6 +660,7 @@
 			"buildingDocument": {
 				"title": "Handlingar",
 				"searchPlaceholder": "Sök efter handlingar...",
+				"category": "Kategori",
 				"searchNoResults": "Inga handlingar matchade din sökning.",
 				"noContent": "Inget innehåll",
 				"downloadFile": "Ladda ner {filename}",

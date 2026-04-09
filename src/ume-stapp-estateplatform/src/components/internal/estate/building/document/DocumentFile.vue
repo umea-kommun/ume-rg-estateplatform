@@ -1,14 +1,7 @@
 <template>
 	<div class="document-file mb-1" :class="{ root: depth === 0 }">
-		<v-list-item class="pa-0" @click="emit('open', document)" rounded="lg">
-			<div
-				class="document-file-inner"
-				:title="
-					$t('component.internal.buildingDocument.downloadFile', {
-						filename: document.name,
-					})
-				"
-			>
+		<v-list-item class="pa-0" rounded="lg">
+			<div class="document-file-inner">
 				<v-icon
 					icon="insert_drive_file"
 					class="mx-2"
@@ -21,10 +14,25 @@
 						<div>
 							{{ humanFileSize }}
 						</div>
-						<div v-if="document.actionTypeName">
-							{{ document.actionTypeName }}
+						<div v-if="document.categoryName">
+							{{ document.categoryName }}
 						</div>
 					</div>
+				</div>
+				<div class="actions">
+					<v-btn
+						v-if="canPreview"
+						icon="visibility"
+						variant="text"
+						size="small"
+						@click="emit('open', document)"
+					/>
+					<v-btn
+						icon="download"
+						variant="text"
+						size="small"
+						@click="emit('download', document)"
+					/>
 				</div>
 			</div>
 		</v-list-item>
@@ -39,7 +47,7 @@ const props = defineProps<{
 	document: IBuildingDocument;
 	depth: number;
 }>();
-const emit = defineEmits(['open']);
+const emit = defineEmits(['open', 'download']);
 
 const getHumanFileSize = (sizeInBytes: number): string => {
 	const i =
@@ -54,7 +62,15 @@ const getHumanFileSize = (sizeInBytes: number): string => {
 };
 
 const humanFileSize = computed(() => {
-	return getHumanFileSize(props.document.sizeInBytes);
+	return props.document.sizeInBytes != null
+		? getHumanFileSize(props.document.sizeInBytes)
+		: '';
+});
+
+const previewExtensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg', 'pdf'];
+const canPreview = computed(() => {
+	const ext = props.document.name.toLowerCase().match(/\.([a-z0-9]+)$/)?.[1] ?? '';
+	return previewExtensions.includes(ext);
 });
 </script>
 
@@ -63,7 +79,11 @@ const humanFileSize = computed(() => {
 	.document-file-inner {
 		display: flex;
 		align-items: center;
-		flex-wrap: wrap;
+
+		.actions {
+			flex-shrink: 0;
+			display: flex;
+		}
 
 		.content {
 			flex: 1;

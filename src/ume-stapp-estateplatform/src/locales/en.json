@@ -659,6 +659,7 @@
 			"buildingDocument": {
 				"title": "Documents",
 				"searchPlaceholder": "Search documents...",
+				"category": "Category",
 				"searchNoResults": "No documents matched your search.",
 				"noContent": "No content",
 				"downloadFile": "Download {filename}",

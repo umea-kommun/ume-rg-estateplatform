@@ -13,38 +13,54 @@
 
 			<div class="content">
 				<v-card-text class="pa-0">
-					<v-text-field
-						v-model="search"
-						:placeholder="
-							$t(
-								'component.internal.buildingDocument.searchPlaceholder'
-							)
-						"
-						color="primary"
-						class="mx-6"
-						prepend-inner-icon="search"
-						rounded="lg"
-						density="comfortable"
-						clearable
-						variant="outlined"
-						autocomplete="off"
-					/>
+					<div class="d-flex ga-4 mx-6">
+						<v-text-field
+							v-model="search"
+							:placeholder="
+								$t(
+									'component.internal.buildingDocument.searchPlaceholder'
+								)
+							"
+							color="primary"
+							prepend-inner-icon="search"
+							rounded="lg"
+							density="comfortable"
+							clearable
+							variant="outlined"
+							autocomplete="off"
+							class="flex-grow-1"
+						/>
+						<v-select
+							v-if="categories.length > 0"
+							v-model="selectedCategory"
+							:items="categories"
+							:label="$t('component.internal.buildingDocument.category')"
+							rounded="lg"
+							density="comfortable"
+							variant="outlined"
+							clearable
+							class="flex-shrink-0"
+							style="max-width: 280px"
+						/>
+					</div>
 					<v-skeleton-loader
 						v-if="isBusyFetchingDocuments"
 						class="ma-4 mt-1"
 						type="list-item-two-line, list-item-two-line"
 					/>
-					<document-tree
-						class="px-6 mt-4"
-						v-else-if="nodeTree"
-						:tree="nodeTree"
-						:search="search"
-						@open="previewDocument = $event"
-					/>
+					<v-list v-else-if="filteredDocuments.length > 0" class="px-6 mt-4">
+						<document-file
+							v-for="doc in filteredDocuments"
+							:key="doc.id"
+							:document="doc"
+							:depth="0"
+							@open="previewDocument = $event"
+							@download="downloadDocument($event)"
+						/>
+					</v-list>
 				</v-card-text>
 			</div>
 			<v-card-actions>
-				<hr class="mb-4 mt-4" />
 				<v-btn @click="showModal = false">
 					{{ $t('app.nav.close') }}
 				</v-btn>
@@ -63,12 +79,11 @@ import { computed, ref, watch } from 'vue';
 import {
 	IBuildingDetails,
 	IBuildingDocument,
-	IBuildingDocumentTree,
 } from '@/models/estate/Interfaces';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import { DispatchType } from '@/models/Enums';
-import DocumentTree from './document/DocumentTree.vue';
+import DocumentFile from './document/DocumentFile.vue';
 import DocumentPreviewModal from './document/DocumentPreviewModal.vue';
 import ErrorService from '@/utils/ErrorService';
 import { useI18n } from 'vue-i18n';
@@ -99,13 +114,42 @@ const showPreview = computed({
 });
 
 const search = ref('');
-const nodeTree = ref<IBuildingDocumentTree | null>(null);
+const selectedCategory = ref<string | null>(null);
+const documents = ref<IBuildingDocument[]>([]);
+
+const categories = computed(() => {
+	const names = new Set(
+		documents.value
+			.map((d) => d.categoryName)
+			.filter((n): n is string => n != null)
+	);
+	return [...names].sort();
+});
+
+const filteredDocuments = computed(() => {
+	let result = documents.value;
+
+	if (selectedCategory.value) {
+		result = result.filter(
+			(d) => d.categoryName === selectedCategory.value
+		);
+	}
+
+	if (search.value) {
+		const term = search.value.toLowerCase();
+		result = result.filter((d) =>
+			d.name.toLowerCase().includes(term)
+		);
+	}
+
+	return result;
+});
 
 const isBusyFetchingDocuments = ref(false);
 const fetchDocuments = async () => {
 	isBusyFetchingDocuments.value = true;
 	try {
-		nodeTree.value = await store.dispatch(
+		documents.value = await store.dispatch(
 			DispatchType.GetBuildingDocuments,
 			{
 				buildingId: props.building.id,
@@ -119,6 +163,23 @@ const fetchDocuments = async () => {
 	} finally {
 		isBusyFetchingDocuments.value = false;
 	}
+};
+
+const downloadDocument = async (doc: IBuildingDocument) => {
+	const blobData = await store.dispatch(
+		DispatchType.DownloadBuildingDocument,
+		{
+			buildingId: props.building.id,
+			documentId: doc.id,
+		}
+	);
+	const blob = new Blob([blobData]);
+	const url = URL.createObjectURL(blob);
+	const a = document.createElement('a');
+	a.href = url;
+	a.download = doc.name;
+	a.click();
+	URL.revokeObjectURL(url);
 };
 
 watch(
