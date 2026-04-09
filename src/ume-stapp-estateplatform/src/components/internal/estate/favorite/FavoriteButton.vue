@@ -20,7 +20,9 @@
 import { DispatchType } from '@/models/Enums';
 import { EstateType } from '@/models/estate/Enums';
 import { IRootState } from '@/models/Interfaces';
+import ErrorService from '@/utils/ErrorService';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
 const props = defineProps<{
@@ -31,6 +33,7 @@ const props = defineProps<{
 }>();
 
 const store = useStore<IRootState>();
+const { t } = useI18n();
 
 const isFavorite = ref(props.isFavorite ?? false);
 
@@ -53,6 +56,13 @@ const toggleFavorite = async () => {
 		);
 
 		isFavorite.value = !isFavorite.value;
+	} catch (err) {
+		ErrorService.onError({
+			err,
+			message: isFavorite.value
+				? t('app.error.estate.unableToRemoveFavorite')
+				: t('app.error.estate.unableToAddFavorite'),
+		});
 	} finally {
 		isBusySettingFavorite.value = false;
 	}

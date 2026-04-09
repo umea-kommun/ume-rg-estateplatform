@@ -22,6 +22,15 @@
 				{{ $t('component.internal.estateFavorite.noFavorites') }}
 			</p>
 
+			<v-alert
+				v-if="failedToFetchFavorites"
+				class="mt-4"
+				rounded="lg"
+				icon="warning"
+			>
+				{{ $t('app.error.estate.unableToFetchFavorites') }}
+			</v-alert>
+
 			<div v-if="selectable">
 				<estate-search-result-item
 					v-for="entry in filteredFavorites ?? []"
@@ -61,6 +70,8 @@ import {
 	IEstateSearchResultEntry,
 } from '@/models/estate/Interfaces';
 import { EstateType } from '@/models/estate/Enums';
+import ErrorService from '@/utils/ErrorService';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
 	selectable?: boolean;
@@ -76,6 +87,7 @@ const emit = defineEmits<{
 }>();
 
 const store = useStore<IRootState>();
+const { t } = useI18n();
 
 const isBusyFetchingBuildingId = ref<number | null>(null);
 const selectBuilding = async (buildingId: number) => {
@@ -85,6 +97,8 @@ const selectBuilding = async (buildingId: number) => {
 			buildingId: buildingId,
 		});
 		emit('select-building', building);
+	} catch (err) {
+		ErrorService.onError({ err });
 	} finally {
 		isBusyFetchingBuildingId.value = null;
 	}
@@ -100,6 +114,11 @@ const selectRoom = async (roomId: number) => {
 			buildingId: room.buildingId,
 		});
 		emit('select-room', { room, building });
+	} catch (err) {
+		ErrorService.onError({
+			err,
+			message: t('app.error.estate.unableToFetchRoom'),
+		});
 	} finally {
 		isBusyFetchingRoomId.value = null;
 	}
@@ -128,6 +147,7 @@ const filteredFavorites = computed(() => {
 });
 
 const isFetchingFavorites = ref(false);
+const failedToFetchFavorites = ref(false);
 const fetchFavorites = async () => {
 	if (isFetchingFavorites.value) {
 		return;
@@ -136,6 +156,13 @@ const fetchFavorites = async () => {
 	isFetchingFavorites.value = true;
 	try {
 		favorites.value = await store.dispatch(DispatchType.GetFavorites);
+		failedToFetchFavorites.value = false;
+	} catch (err) {
+		failedToFetchFavorites.value = true;
+		ErrorService.onError({
+			err,
+			hidden: true,
+		});
 	} finally {
 		isFetchingFavorites.value = false;
 	}

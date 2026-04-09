@@ -50,7 +50,22 @@
 			"couldnotfindconversation": "Kunde inte hämta konversation",
 			"differentLogin": "Du är redan vara inloggad på annan e-tjänst. Logga ut från den och testa igen.",
 			"network": "Det gick inte att ansluta till Umeå kommun, kontrollera din internetanslutning och försök igen.",
-			"permissionDenied": "Du saknar behörighet för att komma åt denna sida."
+			"permissionDenied": "Du saknar behörighet för att komma åt denna sida.",
+			"estate": {
+				"unableToFetchEstateBuildings": "Det gick inte att hämta fastighetens byggnader. Försök igen senare.",
+				"unableToFetchFloors": "Det gick inte att hämta information om byggnadens våningar. Försök igen senare.",
+				"unableToFetchRooms": "Det gick inte att hämta byggnadens rum. Försök igen senare.",
+				"unableToFetchRoom": "Det gick inte att hämta information om rummet. Försök igen senare.",
+				"unableToFetchBlueprint": "Det gick inte att hämta ritningen. Försök igen senare.",
+				"unableToFetchSearchFilter": "Det gick inte att hämta sökfilter. Försök igen senare.",
+				"unableToFetchBuildingDocuments": "Det gick inte att hämta dokument. Försök igen senare.",
+				"unableToFetchBuildingDocument": "Det gick inte att hämta dokumentet. Försök igen senare.",
+				"unableToSubmitFaultReport": "Något oväntat gick fel och din felanmälan har inte skickats in. Försök igen senare.",
+				"unableToSubmitOrder": "Något oväntat gick fel och din beställning har inte skickats in. Försök igen senare.",
+				"unableToAddFavorite": "Hoppsan, något gick fel. Det gick inte att lägga till som favorit. Försök igen senare.",
+				"unableToRemoveFavorite": "Hoppsan, något gick fel. Det gick inte att ta bort som favorit. Försök igen senare.",
+				"unableToFetchFavorites": "Det gick inte att hämta dina favoriter. Försök igen senare."
+			}
 		},
 		"validation": {
 			"types": {

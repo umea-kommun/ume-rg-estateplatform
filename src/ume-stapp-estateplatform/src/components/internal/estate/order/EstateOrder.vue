@@ -444,12 +444,9 @@ const loadFromQueryParams = async () => {
 			);
 			selectBuilding(building ?? null);
 			if (building && roomId) {
-				const room = await store.dispatch(
-					DispatchType.GetBuildingRoomById,
-					{
-						roomId,
-					}
-				);
+				const room = await store.dispatch(DispatchType.GetRoomById, {
+					roomId,
+				});
 				selectRoom(room);
 			}
 		} catch (err) {
@@ -495,6 +492,13 @@ const submitReport = async () => {
 		hasSubmitted.value = true;
 		updateQueryParams();
 		window.scrollTo({ top: 0 });
+	} catch (err) {
+		// TODO: check if expected error (validation, file too big etc) and show proper message
+
+		ErrorService.onError({
+			err,
+			message: t('app.error.estate.unableToSubmitOrder'),
+		});
 	} finally {
 		isBusySubmitting.value = false;
 	}

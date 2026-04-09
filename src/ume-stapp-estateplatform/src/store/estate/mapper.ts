@@ -479,28 +479,6 @@ export default {
 
 		return floors;
 	},
-	mapResponseToRoomDetails: (r: {
-		id: number;
-		name: string;
-		popularName: string | null;
-		grossArea: number | null;
-		floorId: number;
-		floorName: string;
-		buildingId: number;
-		isFavorite?: boolean;
-	}): IBuildingRoom => {
-		const room: IBuildingRoom = {
-			id: r.id,
-			name: r.name,
-			popularName: r.popularName,
-			grossArea: Math.round(r.grossArea ?? 0),
-			floorId: r.floorId,
-			floorName: removeLeadingZerosRegex(r.floorName),
-			buildingId: r.buildingId,
-			isFavorite: r.isFavorite ?? false,
-		};
-		return room;
-	},
 	mapResponseToBusinessTypes: (
 		businessTypesResponse: {
 			id: number;

@@ -1,5 +1,14 @@
 <template>
 	<app-loading-spinner v-if="isBusyFetching" :is-visible="true" />
+	<v-alert
+		v-else-if="failedToFetchRooms"
+		class="mt-2 px-6"
+		:class="{ 'mx-6': !noPadding }"
+		rounded="lg"
+		icon="warning"
+	>
+		{{ t('app.error.estate.unableToFetchRooms') }}
+	</v-alert>
 	<v-alert v-else-if="rooms?.length === 0" icon="info" class="mt-2 mx-6">
 		{{ t('component.internal.buildingDetails.noRooms') }}
 	</v-alert>
@@ -107,6 +116,7 @@ import { IRootState } from '@/models/Interfaces';
 import { sortByBoolean } from '@/utils/sortByBoolean';
 import { useStore } from 'vuex';
 import RoomList from './RoomList.vue';
+import ErrorService from '@/utils/ErrorService';
 
 const props = defineProps<{
 	buildingId: number;
@@ -194,23 +204,45 @@ const filteredRoomsForOtherFloors = computed(() => {
 const isBusyFetchingFloors = ref(false);
 const fetchFloors = async (buildingId: number) => {
 	isBusyFetchingFloors.value = true;
-	floors.value = await store.dispatch(DispatchType.GetBuildingFloors, {
-		buildingId,
-		includeRooms: false,
-	});
-	isBusyFetchingFloors.value = false;
+	try {
+		floors.value = await store.dispatch(DispatchType.GetBuildingFloors, {
+			buildingId,
+			includeRooms: false,
+		});
+	} catch (err) {
+		ErrorService.onError({
+			err,
+			message: t('app.error.estate.unableToFetchFloors'),
+		});
+	} finally {
+		isBusyFetchingFloors.value = false;
+	}
 };
 
 const isBusyFetching = ref(false);
+const failedToFetchRooms = ref(false);
 const fetchRooms = async (buildingId: number) => {
 	isBusyFetching.value = true;
 
-	const roomsResponse = await store.dispatch(DispatchType.GetBuildingRooms, {
-		buildingId,
-	});
-	rooms.value = sortByBoolean(roomsResponse, (room) => room.isFavorite);
-
-	isBusyFetching.value = false;
+	try {
+		const roomsResponse = await store.dispatch(
+			DispatchType.GetBuildingRooms,
+			{
+				buildingId,
+			}
+		);
+		rooms.value = sortByBoolean(roomsResponse, (room) => room.isFavorite);
+		failedToFetchRooms.value = false;
+	} catch (err) {
+		failedToFetchRooms.value = true;
+		ErrorService.onError({
+			err,
+			message: t('app.error.estate.unableToFetchRooms'),
+			hidden: true,
+		});
+	} finally {
+		isBusyFetching.value = false;
+	}
 };
 
 watch(

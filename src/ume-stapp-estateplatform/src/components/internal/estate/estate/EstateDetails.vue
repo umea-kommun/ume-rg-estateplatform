@@ -95,6 +95,14 @@
 					<h2 class="px-6">
 						{{ $t('component.internal.estateDetails.buildings') }}
 					</h2>
+					<v-alert
+						v-if="failedToFetchBuildings"
+						class="mt-2 mx-6"
+						rounded="lg"
+						icon="warning"
+					>
+						{{ t('app.error.estate.unableToFetchEstateBuildings') }}
+					</v-alert>
 					<estate-details-buildings
 						:estateId="estate.id"
 						:loading="isBusyFetchingBuildings"
@@ -140,6 +148,7 @@ import BuildingMap from '../map/BuildingMap.vue';
 import BaseIconButton from '@/components/base/BaseIconButton.vue';
 import ExternalOwnerInfo from './ExternalOwnerInfo.vue';
 import FavoriteButton from '../favorite/FavoriteButton.vue';
+import ErrorService from '@/utils/ErrorService';
 
 const props = defineProps<{
 	estateId: string;
@@ -220,12 +229,27 @@ const buildingPoints = computed<IMapPoint[]>(() => {
 });
 
 const isBusyFetchingBuildings = ref(false);
+const failedToFetchBuildings = ref(false);
 const fetchBuildings = async (estateId: string) => {
 	isBusyFetchingBuildings.value = true;
-	buildings.value = await store.dispatch(DispatchType.GetEstateBuildings, {
-		estateId: estateId,
-	});
-	isBusyFetchingBuildings.value = false;
+	try {
+		buildings.value = await store.dispatch(
+			DispatchType.GetEstateBuildings,
+			{
+				estateId: estateId,
+			}
+		);
+		failedToFetchBuildings.value = false;
+	} catch (err) {
+		failedToFetchBuildings.value = true;
+		ErrorService.onError({
+			err,
+			message: t('app.error.estate.unableToFetchEstateBuildings'),
+			hidden: true,
+		});
+	} finally {
+		isBusyFetchingBuildings.value = false;
+	}
 };
 
 const isBusyFetchingEstate = ref(false);

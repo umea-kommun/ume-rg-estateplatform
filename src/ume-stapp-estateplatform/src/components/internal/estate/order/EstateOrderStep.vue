@@ -86,7 +86,7 @@ defineExpose({
 		flex: 1 1 20rem;
 		min-width: 0;
 		flex-wrap: wrap;
-		gap: 8px;
+		gap: 12px;
 	}
 	&__step {
 		flex: 0 1 auto;

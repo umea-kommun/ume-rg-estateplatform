@@ -70,6 +70,8 @@ import { IRootState } from '@/models/Interfaces';
 import { DispatchType } from '@/models/Enums';
 import DocumentTree from './document/DocumentTree.vue';
 import DocumentPreviewModal from './document/DocumentPreviewModal.vue';
+import ErrorService from '@/utils/ErrorService';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
 	modelValue: boolean;
@@ -79,6 +81,7 @@ const props = defineProps<{
 const emit = defineEmits(['update:modelValue']);
 
 const store = useStore<IRootState>();
+const { t } = useI18n();
 
 const showModal = computed({
 	get: () => props.modelValue,
@@ -108,6 +111,11 @@ const fetchDocuments = async () => {
 				buildingId: props.building.id,
 			}
 		);
+	} catch (err) {
+		ErrorService.onError({
+			err,
+			message: t('app.error.estate.unableToFetchBuildingDocuments'),
+		});
 	} finally {
 		isBusyFetchingDocuments.value = false;
 	}

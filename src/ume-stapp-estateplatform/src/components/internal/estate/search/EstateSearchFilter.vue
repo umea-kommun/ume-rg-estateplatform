@@ -34,7 +34,9 @@
 import { DispatchType } from '@/models/Enums';
 import { IBusinessType, SearchFilter } from '@/models/estate/Interfaces';
 import { IRootState } from '@/models/Interfaces';
+import ErrorService from '@/utils/ErrorService';
 import { computed, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
 const props = defineProps<{
@@ -43,6 +45,7 @@ const props = defineProps<{
 const emit = defineEmits(['update:modelValue', 'close']);
 
 const store = useStore<IRootState>();
+const { t } = useI18n();
 
 const searchFilter = computed({
 	get: () => props.modelValue,
@@ -77,6 +80,11 @@ const fetchSearchFilters = async () => {
 		).sort((a: IBusinessType, b: IBusinessType) =>
 			a.name.localeCompare(b.name)
 		);
+	} catch (err) {
+		ErrorService.onError({
+			err,
+			message: t('app.error.estate.unableToFetchSearchFilter'),
+		});
 	} finally {
 		isBusyFetchFilters.value = false;
 	}

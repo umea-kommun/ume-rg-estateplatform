@@ -7,6 +7,7 @@ import {
 	SearchFilter,
 } from '@/models/estate/Interfaces';
 import store from '@/store/store';
+import ErrorService from '@/utils/ErrorService';
 import { sortByBoolean } from '@/utils/sortByBoolean';
 import { AxiosError } from 'axios';
 import { computed, Ref, ref } from 'vue';
@@ -119,7 +120,9 @@ export const useEstateSearch = (
 			if ((ex as AxiosError).name === 'CanceledError') {
 				return;
 			}
-			throw ex;
+			ErrorService.onError({
+				err: ex,
+			});
 		} finally {
 			abortController = null;
 			isBusyLoading.value = false;

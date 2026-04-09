@@ -131,19 +131,6 @@ export default {
 
 		return mapper.mapResponseToEstateBuildings(response.data);
 	},
-	async getBuildingLocations(context: ActionContext<IRootState, IRootState>) {
-		try {
-			const response = await httpClient.get('/buildings/geolocations', {
-				headers: {
-					Authorization: 'Bearer ' + context.rootState.user.token,
-				},
-			});
-
-			return mapper.mapResponseToBuildingLocations(response.data);
-		} catch (err) {
-			ErrorService.onError({ err, errorPage: { visible: true } });
-		}
-	},
 	async getBuildingById(
 		context: ActionContext<IRootState, IRootState>,
 		{ buildingId }: { buildingId: string }
@@ -189,18 +176,6 @@ export default {
 
 		return mapper.mapResponseToBuildingRooms(response.data);
 	},
-	async getBuildingRoomById(
-		context: ActionContext<IRootState, IRootState>,
-		{ roomId }: { roomId: number }
-	) {
-		const response = await httpClient.get(`/rooms/${roomId}`, {
-			headers: {
-				Authorization: 'Bearer ' + context.rootState.user.token,
-			},
-		});
-
-		return mapper.mapResponseToBuildingRoom(response.data);
-	},
 	async getFloorBlueprint(
 		context: ActionContext<IRootState, IRootState>,
 		{
@@ -230,7 +205,7 @@ export default {
 			},
 		});
 
-		return mapper.mapResponseToRoomDetails(response.data);
+		return mapper.mapResponseToBuildingRoom(response.data);
 	},
 	async getBusinessTypes(context: ActionContext<IRootState, IRootState>) {
 		const response = await httpClient.get('/businessTypes', {

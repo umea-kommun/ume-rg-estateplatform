@@ -75,6 +75,7 @@
 							size="large"
 							flat
 							class="ma-0 regular-text"
+							:disabled="!blobUrl"
 						>
 							{{
 								$t(
@@ -93,6 +94,7 @@
 					:download="document?.name"
 					color="primary"
 					prepend-icon="download"
+					:disabled="!blobUrl"
 				>
 					{{ $t('component.internal.buildingDocument.downloadFile') }}
 				</v-btn>
@@ -112,7 +114,9 @@ import {
 	IBuildingDocument,
 } from '@/models/estate/Interfaces';
 import { IRootState } from '@/models/Interfaces';
+import ErrorService from '@/utils/ErrorService';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 
 const props = defineProps<{
@@ -124,6 +128,7 @@ const props = defineProps<{
 const emit = defineEmits(['update:modelValue']);
 
 const store = useStore<IRootState>();
+const { t } = useI18n();
 
 const showModal = computed({
 	get: () => props.modelValue,
@@ -180,6 +185,11 @@ const fetchFile = async (document: IBuildingDocument) => {
 		const href = URL.createObjectURL(blob);
 		blobUrl.value = href;
 		fileBlob.value = blob;
+	} catch (err) {
+		ErrorService.onError({
+			err,
+			message: t('app.error.estate.unableToFetchBuildingDocument'),
+		});
 	} finally {
 		isBusyFetchingDocument.value = false;
 	}

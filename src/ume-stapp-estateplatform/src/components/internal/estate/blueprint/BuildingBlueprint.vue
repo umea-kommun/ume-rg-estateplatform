@@ -53,6 +53,8 @@ import { IRootState } from '@/models/Interfaces';
 import { computed, ref, useTemplateRef, watch } from 'vue';
 import { useStore } from 'vuex';
 import BlueprintViewer from './BlueprintViewer.vue';
+import ErrorService from '@/utils/ErrorService';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
 	buildingId: number;
@@ -69,6 +71,7 @@ const emit = defineEmits([
 ]);
 
 const store = useStore<IRootState>();
+const { t } = useI18n();
 
 const selectedFloorId = ref<number | null>(null);
 const floors = ref<IBuildingFloor[] | null>(null);
@@ -126,15 +129,23 @@ const openRoom = async (roomId: number | null, emitEvent = false) => {
 		}
 
 		isBusyFetchingRoom.value = true;
-		const room = await store.dispatch(DispatchType.GetRoomById, {
-			roomId,
-		});
+		try {
+			const room = await store.dispatch(DispatchType.GetRoomById, {
+				roomId,
+			});
 
-		if (room && room.floorId !== selectedFloorId.value) {
-			await selectFloor(room.floorId);
+			if (room && room.floorId !== selectedFloorId.value) {
+				await selectFloor(room.floorId);
+			}
+			selectedRoom.value = room;
+		} catch (err) {
+			ErrorService.onError({
+				err,
+				message: t('app.error.estate.unableToFetchRoom'),
+			});
+		} finally {
+			isBusyFetchingRoom.value = false;
 		}
-		selectedRoom.value = room;
-		isBusyFetchingRoom.value = false;
 	}
 };
 
@@ -154,6 +165,16 @@ const fetchBlueprint = async (floorId: number) => {
 			floorId,
 			abortController,
 		});
+	} catch (err) {
+		if (abortController.signal.aborted) {
+			// Fetch was aborted, do not show an error
+			return;
+		}
+
+		ErrorService.onError({
+			err,
+			message: t('app.error.estate.unableToFetchBlueprint'),
+		});
 	} finally {
 		isBusyFetchingBlueprint.value = false;
 	}
@@ -162,14 +183,22 @@ const fetchBlueprint = async (floorId: number) => {
 const isBusyFetchingFloors = ref(false);
 const fetchFloors = async (buildingId: number) => {
 	isBusyFetchingFloors.value = true;
-	floors.value = await store.dispatch(DispatchType.GetBuildingFloors, {
-		buildingId,
-		includeRooms: false,
-	});
-	if (floors.value?.length && selectedFloorId.value === null) {
-		await selectFloor(floors.value[0].id);
+	try {
+		floors.value = await store.dispatch(DispatchType.GetBuildingFloors, {
+			buildingId,
+			includeRooms: false,
+		});
+		if (floors.value?.length && selectedFloorId.value === null) {
+			await selectFloor(floors.value[0].id);
+		}
+	} catch (err) {
+		ErrorService.onError({
+			err,
+			message: t('app.error.estate.unableToFetchFloors'),
+		});
+	} finally {
+		isBusyFetchingFloors.value = false;
 	}
-	isBusyFetchingFloors.value = false;
 };
 
 watch(

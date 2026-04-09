@@ -150,6 +150,7 @@ import { useI18n } from 'vue-i18n';
 import BuildingImage from '../building/BuildingImage.vue';
 import FavoriteButton from '../favorite/FavoriteButton.vue';
 import { EstateType } from '@/models/estate/Enums';
+import ErrorService from '@/utils/ErrorService';
 
 const props = defineProps<{
 	modelValue: number[] | null;
@@ -261,6 +262,8 @@ const fetchBuildings = async (buildingIds: number[]) => {
 				store.dispatch(DispatchType.GetBuildingById, { buildingId: id })
 			)
 		);
+	} catch (err) {
+		ErrorService.onError({ err });
 	} finally {
 		isBusyLoadingBuildings.value = false;
 	}

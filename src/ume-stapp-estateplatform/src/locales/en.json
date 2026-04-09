@@ -50,7 +50,22 @@
 			"couldnotfindconversation": "Could not get conversation",
 			"differentLogin": "You are already logged in to another e-service. Log out of it and try again.",
 			"network": "Could not connect to Umeå kommun, please check your internet connection and try again.",
-			"permissionDenied": "You are not authorized to access this page."
+			"permissionDenied": "You are not authorized to access this page.",
+			"estate": {
+				"unableToFetchEstateBuildings": "Unable to fetch estate buildings. Please try again later.",
+				"unableToFetchFloors": "Unable to fetch information about the building's floors. Please try again later.",
+				"unableToFetchRooms": "Unable to fetch the building's rooms. Please try again later.",
+				"unableToFetchRoom": "Unable to fetch information about the room. Please try again later.",
+				"unableToFetchBlueprint": "Unable to fetch the blueprint. Please try again later.",
+				"unableToFetchSearchFilter": "Unable to fetch search filter. Please try again later.",
+				"unableToFetchBuildingDocuments": "Unable to fetch documents. Please try again later.",
+				"unableToFetchBuildingDocument": "Unable to fetch the document. Please try again later.",
+				"unableToSubmitFaultReport": "Something unexpected went wrong and your fault report was not submitted. Please try again later.",
+				"unableToSubmitOrder": "Something unexpected went wrong and your order was not submitted. Please try again later.",
+				"unableToAddFavorite": "Oops, something went wrong. Unable to add to favorites. Please try again later.",
+				"unableToRemoveFavorite": "Oops, something went wrong. Unable to remove from favorites. Please try again later.",
+				"unableToFetchFavorites": "Unable to fetch your favorites. Please try again later."
+			}
 		},
 		"validation": {
 			"types": {
