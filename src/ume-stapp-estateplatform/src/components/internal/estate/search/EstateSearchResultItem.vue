@@ -15,6 +15,14 @@
 				<v-card-title class="justify-space-between">
 					<div class="title">
 						{{ entry.popularName || entry.name }}
+						<span
+							v-if="
+								entry.type === EstateType.Room &&
+								entry.popularName
+							"
+						>
+							- {{ entry.name }}
+						</span>
 					</div>
 					<favorite-button
 						:id="entry.id"
