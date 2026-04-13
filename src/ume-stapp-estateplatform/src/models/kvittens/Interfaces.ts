@@ -52,6 +52,13 @@ export interface IKvittensFilterClass {
 export interface IKvittensSummaryStudentAnswer {
 	templateId: string;
 	status: KvittensStatus;
+	responders: IKvittensSummaryResponder[] | null;
+}
+
+export interface IKvittensSummaryResponder {
+	name: string;
+	dateOfBirth: string;
+	hasAnswered: boolean;
 }
 
 export interface IKvittensSummaryStudent {

@@ -777,6 +777,14 @@ export default function (axios: AxiosInstance): void {
 						? KvittensStatus.Approved
 						: KvittensStatus.NotAnsweredByAll
 					: KvittensStatus.NotAnswered,
+				responders: kvittens.linkedPersons.map((linkedPerson) => ({
+					name: linkedPerson.name,
+					dateOfBirth: linkedPerson.socialSecurityNumber.substring(
+						0,
+						8
+					),
+					hasAnswered: linkedPerson.userHasAnswered,
+				})),
 			});
 		});
 

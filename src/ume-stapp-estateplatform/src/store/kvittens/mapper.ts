@@ -151,6 +151,13 @@ export default {
 			answers: {
 				templateId: string;
 				status: number;
+				responders?:
+					| {
+							name: string;
+							dateOfBirth: string;
+							hasAnswered: boolean;
+					  }[]
+					| null;
 			}[];
 		}[];
 	}): IKvittensSummary => {
@@ -167,6 +174,7 @@ export default {
 				const answer: IKvittensSummaryStudentAnswer = {
 					templateId: responseAnswer.templateId,
 					status: responseAnswer.status,
+					responders: responseAnswer.responders ?? null,
 				};
 				return answer;
 			});

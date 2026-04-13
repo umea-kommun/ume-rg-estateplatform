@@ -268,7 +268,6 @@ const contentSize = ref<AppContentSize>(
 	flex-basis: 250px;
 	max-width: 300px;
 	margin: 0px;
-	margin-top: 3%;
 	margin-right: 3%;
 }
 .print-btn {
@@ -276,7 +275,6 @@ const contentSize = ref<AppContentSize>(
 	height: 40px;
 	margin: 0px;
 	font-size: size(16);
-	margin-top: 3%;
 }
 .dropdowns {
 	flex-grow: 4;

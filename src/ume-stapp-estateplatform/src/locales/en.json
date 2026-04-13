@@ -538,7 +538,12 @@
 					"dateOfBirth": "Date of birth"
 				},
 				"noResults": "We found no students in this class.",
-				"noResultsMatchingFilter": "We found no students in this class that matched your search."
+				"noResultsMatchingFilter": "We found no students in this class that matched your search.",
+				"tooltip": {
+					"noAnswers": "No one has answered",
+					"nameHasAnswered": "{name} has answered",
+					"nameHasNotAnswered": "{name} has not answered"
+				}
 			},
 			"kvittensAgent": {
 				"title": "Receipt Agent",

@@ -31,12 +31,33 @@
 				<td
 					v-for="template in sortedTemplates"
 					:key="template.id"
-					:title="template.title"
 					:label="template.title"
 				>
-					<kvittens-answer
-						:status="asKvittensStatus(item[template.id])"
-					></kvittens-answer>
+					<v-tooltip
+						location="top"
+						theme="light"
+						:open-on-click="true"
+						:open-delay="200"
+					>
+						<template v-slot:activator="{ props }">
+							<kvittens-answer
+								v-bind="props"
+								:status="
+									asKvittensStatus(
+										item[template.id] as KvittensStatus
+									)
+								"
+							/>
+						</template>
+						<kvittens-summary-responder-tooltip
+							:title="template.title"
+							:responders="
+								item[
+									`${template.id}-responders`
+								] as IKvittensSummaryResponder[]
+							"
+						/>
+					</v-tooltip>
 				</td>
 			</tr>
 		</template>
@@ -73,6 +94,7 @@ import BaseTableHeader from '@/components/base/baseTable/BaseTableHeader.vue';
 import BaseTablePagination from '@/components/base/baseTable/BaseTablePagination.vue';
 import KvittensAnswer from '@/components/external/kvittens/KvittensAnswer.vue';
 import {
+	IKvittensSummaryResponder,
 	IKvittensSummaryStudent,
 	IKvittensSummaryTemplate,
 } from '@/models/kvittens/Interfaces';
@@ -82,6 +104,7 @@ import {
 	KvittensSummaryAnswerFilter,
 } from '@/models/kvittens/Enums';
 import moment from 'moment';
+import KvittensSummaryResponderTooltip from './KvittensSummaryResponderTooltip.vue';
 
 const props = defineProps({
 	students: {
@@ -192,7 +215,11 @@ const filteredStudents = computed(() => {
 
 	const studentsWithKvittensAnswers = students.map((student) => {
 		const studentWithKvittensAnswers: {
-			[key: string]: string | KvittensStatus;
+			[key: string]:
+				| string
+				| KvittensStatus
+				| IKvittensSummaryResponder[]
+				| null;
 		} = {
 			name: student.name,
 			dateOfBirth: formatDateOfBirth(student.dateOfBirth),
@@ -207,6 +234,9 @@ const filteredStudents = computed(() => {
 			studentWithKvittensAnswers[template.id] = studentAnswer
 				? studentAnswer.status
 				: KvittensStatus.NotAnswered;
+
+			studentWithKvittensAnswers[`${template.id}-responders`] =
+				studentAnswer ? studentAnswer.responders : null;
 		});
 		return studentWithKvittensAnswers;
 	});

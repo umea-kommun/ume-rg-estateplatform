@@ -539,7 +539,12 @@
 					"dateOfBirth": "Födelsedatum"
 				},
 				"noResults": "Vi hittade inga elever i denna klass.",
-				"noResultsMatchingFilter": "Vi hittade inga elever i denna klass som matchade din sökning."
+				"noResultsMatchingFilter": "Vi hittade inga elever i denna klass som matchade din sökning.",
+				"tooltip": {
+					"noAnswers": "Ingen har svarat",
+					"nameHasAnswered": "{name} har svarat",
+					"nameHasNotAnswered": "{name} har inte svarat"
+				}
 			},
 			"kvittensAgent": {
 				"title": "Kvittensombud",
