@@ -14,8 +14,8 @@
 		<v-btn
 			class="regular-text ma-0"
 			color="primary"
-			variant="flat"
-			rounded="xl"
+			variant="tonal"
+			rounded="lg"
 			prepend-icon="location_pin"
 			@click="open"
 		>

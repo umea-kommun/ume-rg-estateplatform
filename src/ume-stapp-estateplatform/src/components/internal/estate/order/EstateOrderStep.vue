@@ -14,7 +14,7 @@
 				<v-btn
 					v-if="showClear"
 					@click="emit('clear')"
-					rounded="xl"
+					rounded="lg"
 					variant="tonal"
 					size="small"
 					color="grey-darken-2"
@@ -27,7 +27,7 @@
 				<v-btn
 					v-if="showSkip"
 					@click="emit('skip')"
-					rounded="xl"
+					rounded="lg"
 					variant="tonal"
 					color="grey-darken-2"
 					class="regular-text ma-0"
