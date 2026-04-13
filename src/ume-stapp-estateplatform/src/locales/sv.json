@@ -678,6 +678,7 @@
 				"changeAnswer": "Ändra",
 				"submitButton": "Skicka in felanmälan",
 				"rentedBuildingNotice": "Denna byggnad är inhyrd, vilket innebär att fastighetsägaren ansvarar för underhåll och reparationer.",
+				"rentedBuildingNoticeConfirmButton": "Jag förstår, fortsätt ändå",
 				"building": {
 					"select": "Välj byggnad",
 					"selected": "Byggnad"

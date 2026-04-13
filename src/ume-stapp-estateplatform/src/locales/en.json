@@ -677,6 +677,7 @@
 				"changeAnswer": "Change",
 				"submitButton": "Submit Fault Report",
 				"rentedBuildingNotice": "This building is rented, which means that the property owner is responsible for maintenance and repairs.",
+				"rentedBuildingNoticeConfirmButton": "I understand, continue anyway",
 				"building": {
 					"select": "Select building",
 					"selected": "Building"

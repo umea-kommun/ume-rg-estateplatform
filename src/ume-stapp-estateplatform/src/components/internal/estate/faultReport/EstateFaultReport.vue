@@ -50,8 +50,8 @@
 						/>
 						<v-alert
 							v-if="
-								selectedBuilding?.externalOwnerInfo?.status ===
-								ExternalOwnerStatus.Inhyrd
+								selectedBuildingIsRented &&
+								selectedBuilding?.externalOwnerInfo
 							"
 							type="info"
 							variant="tonal"
@@ -71,12 +71,32 @@
 								class="ml-0 mt-2 pa-0 d-flex"
 								transparent
 							/>
+							<div class="d-flex justify-end">
+								<v-btn
+									v-if="!hasConfirmedRentedBuildingNotice"
+									flat
+									class="regular-text"
+									@click="
+										hasConfirmedRentedBuildingNotice = true
+									"
+								>
+									{{
+										$t(
+											'component.internal.faultReport.rentedBuildingNoticeConfirmButton'
+										)
+									}}
+								</v-btn>
+							</div>
 						</v-alert>
 					</estate-order-step>
 
 					<!-- OUTDOOR / INDOOR SELECTOR -->
 					<estate-order-step
-						v-if="selectedBuilding"
+						v-if="
+							selectedBuilding &&
+							(!selectedBuildingIsRented ||
+								hasConfirmedRentedBuildingNotice)
+						"
 						:show-clear="!!problemLocation"
 						@clear="selectLocation(null)"
 						:step="2"
@@ -384,6 +404,7 @@ const problemLocation = ref<EstateFaultLocation | null>(null);
 const isLoadingFromQuery = ref(false);
 const isBusySubmitting = ref(false);
 const hasSubmitted = ref(false);
+const hasConfirmedRentedBuildingNotice = ref(false);
 
 const user = computed(() => store.state.user);
 
@@ -394,11 +415,21 @@ const contactName = ref(user.value?.fullName ?? '');
 const contactEmail = ref(user.value?.email ?? '');
 const contactPhone = ref('');
 
+const selectedBuildingIsRented = computed(() => {
+	return (
+		selectedBuilding.value?.externalOwnerInfo?.status ===
+		ExternalOwnerStatus.Inhyrd
+	);
+});
+
 watch(
 	() => selectedBuilding.value,
-	(_, oldVal) => {
+	(newVal, oldVal) => {
 		if (oldVal) {
 			problemLocation.value = null;
+		}
+		if (newVal) {
+			hasConfirmedRentedBuildingNotice.value = false;
 		}
 	}
 );
