@@ -29,7 +29,7 @@
 <script lang="ts" setup>
 import { IBuildingRoom } from '@/models/estate/Interfaces';
 import RoomCard from './RoomCard.vue';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 const props = defineProps<{
 	rooms: IBuildingRoom[];
@@ -50,6 +50,13 @@ const showingAllRooms = computed(
 const showMoreRooms = () => {
 	roomsShowing.value = roomsShowing.value + ROOMS_SHOWING_INCREMENT;
 };
+
+watch(
+	() => props.rooms,
+	() => {
+		roomsShowing.value = INITIAL_ROOMS_SHOWING;
+	}
+);
 </script>
 
 <style lang="scss" scoped>
