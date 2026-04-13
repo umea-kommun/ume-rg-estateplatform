@@ -167,6 +167,7 @@ export function createPointLayers() {
 				geometry: new Point(coord),
 				id: p.id,
 				type: p.type,
+				grossArea: p.grossArea,
 			});
 			f.setId(p.id);
 			features[i] = f;

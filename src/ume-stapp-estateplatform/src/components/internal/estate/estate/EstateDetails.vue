@@ -223,6 +223,7 @@ const buildingPoints = computed<IMapPoint[]>(() => {
 				type: EstateType.Building,
 				lon: geo.lon,
 				lat: geo.lat,
+				grossArea: building.grossArea,
 			},
 		];
 	});

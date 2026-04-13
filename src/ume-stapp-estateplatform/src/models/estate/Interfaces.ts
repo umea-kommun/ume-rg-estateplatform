@@ -182,6 +182,7 @@ export interface IMapPoint {
 	type: EstateType;
 	lon: number;
 	lat: number;
+	grossArea?: number;
 }
 
 export interface IMapState {

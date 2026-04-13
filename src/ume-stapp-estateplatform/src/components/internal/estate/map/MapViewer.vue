@@ -148,6 +148,9 @@ const onClusterClick = (clustered: Feature[]) => {
 	if (allFeaturesAtSameLocation(clustered)) {
 		const buildingIds = clustered
 			.filter((f) => f.get('type') === EstateType.Building)
+			.sort(
+				(a, b) => (b.get('grossArea') ?? 0) - (a.get('grossArea') ?? 0)
+			)
 			.map((f) => f.get('id'));
 		buildingsClicked(buildingIds);
 
