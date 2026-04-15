@@ -64,7 +64,21 @@
 				"unableToSubmitOrder": "Något oväntat gick fel och din beställning har inte skickats in. Försök igen senare.",
 				"unableToAddFavorite": "Hoppsan, något gick fel. Det gick inte att lägga till som favorit. Försök igen senare.",
 				"unableToRemoveFavorite": "Hoppsan, något gick fel. Det gick inte att ta bort som favorit. Försök igen senare.",
-				"unableToFetchFavorites": "Det gick inte att hämta dina favoriter. Försök igen senare."
+				"unableToFetchFavorites": "Det gick inte att hämta dina favoriter. Försök igen senare.",
+				"validation": {
+					"required": "Fältet är obligatoriskt.",
+					"invalid_value": "Ogiltigt värde.",
+					"invalid_format": "Ogiltigt format.",
+					"max_length": "Värdet är för långt.",
+					"not_found": "Kunde inte hittas.",
+					"file_too_large": "Filen är för stor.",
+					"too_many_files": "För många filer.",
+					"invalid_content_type": "Filtypen stöds inte.",
+					"unrecognized_file_content": "Filen kunde inte identifieras.",
+					"content_type_mismatch": "Filinnehållet matchar inte den angivna filtypen.",
+					"not_supported": "Stöds inte för den valda byggnaden.",
+					"conflict": "Ogiltigt val i kombination med övriga val."
+				}
 			}
 		},
 		"validation": {
@@ -202,6 +216,7 @@
 			"selectFiles": "Välj fil",
 			"dropFiles": "eller släpp filen här | eller släpp filer här",
 			"rulesHint": "Max {size} | Upp till {maxFiles} filer, max {size} per fil",
+			"acceptedFormats": "Tillåtna format: {formats}",
 			"error": {
 				"fileTooLarge": "\"{filename}\" är för stor.",
 				"tooManyFiles": "Du kan inte ladda upp fler än {maxFiles} filer."

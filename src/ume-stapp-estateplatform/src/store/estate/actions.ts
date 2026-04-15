@@ -253,6 +253,15 @@ export default {
 
 		return response.data;
 	},
+	async getWorkOrderConfig(context: ActionContext<IRootState, IRootState>) {
+		const response = await httpClient.get('/workorders/config', {
+			headers: {
+				Authorization: 'Bearer ' + context.rootState.user.token,
+			},
+		});
+
+		return response.data;
+	},
 	async submitFaultReport(
 		context: ActionContext<IRootState, IRootState>,
 		reportData: ISubmitEstateFaultReport

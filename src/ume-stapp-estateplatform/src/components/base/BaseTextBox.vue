@@ -13,7 +13,7 @@
 				:labelFor="id"
 				:label="label"
 				:is-required="rules.indexOf('required') > -1"
-				:errorDisplay="!!errors.length"
+				:errorDisplay="!!errors.length || !!errorMessage"
 			>
 				<v-text-field
 					v-if="!textArea"
@@ -27,11 +27,11 @@
 					:aria-labelledby="ariaLabelledby"
 					:variant="variant"
 					:rounded="rounded"
-					:aria-describedby="!!errors.length ? 'error-' + id : null"
+					:aria-describedby="!!errors.length || !!errorMessage ? 'error-' + id : null"
 					:disabled="disabled"
 					single-line
 					:placeholder="placeholder"
-					:error="!!errors.length"
+					:error="!!errors.length || !!errorMessage"
 					@input="emit('input')"
 				/>
 				<v-textarea
@@ -47,10 +47,10 @@
 					:variant="variant"
 					:rounded="rounded"
 					:auto-grow="autoGrow"
-					:aria-describedby="!!errors.length ? 'error-' + id : null"
+					:aria-describedby="!!errors.length || !!errorMessage ? 'error-' + id : null"
 					:disabled="disabled"
 					:placeholder="placeholder"
-					:error="!!errors.length"
+					:error="!!errors.length || !!errorMessage"
 					@input="emit('input')"
 				/>
 				<base-help-text

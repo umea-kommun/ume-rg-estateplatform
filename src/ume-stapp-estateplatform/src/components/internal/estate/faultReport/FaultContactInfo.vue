@@ -9,6 +9,7 @@
 			rules="required"
 			variant="outlined"
 			rounded="lg"
+			:error-message="nameError"
 		/>
 		<div class="contact-fields">
 			<base-text-box
@@ -22,6 +23,7 @@
 				rules="required|email"
 				variant="outlined"
 				rounded="lg"
+				:error-message="emailError"
 			/>
 			<base-text-box
 				id="contact-phone"
@@ -34,6 +36,7 @@
 				rules="phone"
 				variant="outlined"
 				rounded="lg"
+				:error-message="phoneError"
 			/>
 		</div>
 	</div>
@@ -41,12 +44,13 @@
 
 <script setup lang="ts">
 import BaseTextBox from '@/components/base/BaseTextBox.vue';
-import { computed } from 'vue';
+import { computed, type ComputedRef } from 'vue';
 
 const props = defineProps<{
 	contactName: string;
 	contactEmail: string;
 	contactPhone: string;
+	fieldError: (field: string) => ComputedRef<string>;
 }>();
 
 const emit = defineEmits([
@@ -54,6 +58,10 @@ const emit = defineEmits([
 	'update:contactEmail',
 	'update:contactPhone',
 ]);
+
+const nameError = props.fieldError('notifierName');
+const emailError = props.fieldError('notifierEmail');
+const phoneError = props.fieldError('notifierPhone');
 
 const contactName = computed({
 	get: () => props.contactName,

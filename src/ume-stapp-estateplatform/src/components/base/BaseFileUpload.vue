@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="base-file-upload py-4"
-		:class="{ dragging: draggingOver }"
+		:class="{ dragging: draggingOver, 'has-error': hasErrors }"
 		variant="outlined"
 		@dragover.prevent
 		@drop.prevent="onDrop"
@@ -26,6 +26,9 @@
 			<p class="text-medium-emphasis mt-2">
 				{{ rulesHint }}
 			</p>
+			<p v-if="formatsHint" class="text-medium-emphasis">
+				{{ formatsHint }}
+			</p>
 		</div>
 
 		<!-- Hidden native file input -->
@@ -47,6 +50,16 @@
 			:text="error"
 		/>
 
+		<v-alert
+			v-if="generalFileErrors.length"
+			type="error"
+			variant="tonal"
+			class="mx-4 my-2"
+			rounded="lg"
+		>
+			<div v-for="msg in generalFileErrors" :key="msg">{{ msg }}</div>
+		</v-alert>
+
 		<v-list v-if="files.length" density="compact" class="mx-4 mt-4 py-0">
 			<v-list-item
 				v-for="(f, i) in files"
@@ -63,6 +76,14 @@
 				<v-list-item-subtitle>
 					{{ formatBytes(f.size) }}
 				</v-list-item-subtitle>
+				<div
+					v-if="fileErrorMessages(i).length"
+					class="file-error text-error mt-1"
+				>
+					<div v-for="msg in fileErrorMessages(i)" :key="msg">
+						{{ msg }}
+					</div>
+				</div>
 
 				<template #append>
 					<v-btn
@@ -88,6 +109,8 @@ const props = defineProps<{
 	multiple?: boolean;
 	maxFiles?: number;
 	maxSizeMegaBytes?: number;
+	/** Server validation errors keyed by field (e.g. "files" or "files[0]") with error message arrays. */
+	serverErrors?: Record<string, string[]>;
 }>();
 
 const emit = defineEmits<{
@@ -106,6 +129,22 @@ const maxSizeBytes = computed(() =>
 const files = computed(() => props.modelValue ?? []);
 const fileInput = ref<HTMLInputElement | null>(null);
 const error = ref<string>('');
+
+const hasErrors = computed(
+	() =>
+		!!error.value ||
+		Object.keys(props.serverErrors ?? {}).length > 0
+);
+
+const generalFileErrors = computed(() => {
+	const errs = props.serverErrors ?? {};
+	return errs['files'] ?? [];
+});
+
+function fileErrorMessages(index: number): string[] {
+	const errs = props.serverErrors ?? {};
+	return errs[`files[${index}]`] ?? [];
+}
 
 function formatBytes(bytes: number, decimals = 1) {
 	const units = ['B', 'KB', 'MB', 'GB'];
@@ -127,6 +166,36 @@ const rulesHint = computed(() => {
 		maxFiles: maxFiles.value,
 		size: formatBytes(maxSizeBytes.value, 0),
 		count: maxFiles.value,
+	});
+});
+
+const formatsHint = computed(() => {
+	if (!props.accept) return '';
+
+	const mimeToLabel: Record<string, string> = {
+		'image/*': 'Bilder',
+		'image/png': 'PNG',
+		'image/jpeg': 'JPEG',
+		'image/gif': 'GIF',
+		'image/webp': 'WebP',
+		'image/bmp': 'BMP',
+		'image/tiff': 'TIFF',
+		'image/heic': 'HEIC',
+		'application/pdf': 'PDF',
+	};
+
+	const labels = props.accept
+		.split(',')
+		.map((s) => s.trim())
+		.map((s) => {
+			if (mimeToLabel[s]) return mimeToLabel[s];
+			if (s.startsWith('.')) return s.substring(1).toUpperCase();
+			return s;
+		});
+
+	if (labels.length === 0) return '';
+	return t('component.baseFileUpload.acceptedFormats', {
+		formats: labels.join(', '),
 	});
 });
 
@@ -232,6 +301,9 @@ onUnmounted(() => {
 		outline: dashed 2px rgba($primary, 0.5);
 		background-color: rgba($primary, 0.1);
 	}
+	&.has-error {
+		outline: dashed 2px rgb(var(--v-theme-error));
+	}
 	.instruction {
 		font-size: size(16);
 
@@ -272,6 +344,10 @@ onUnmounted(() => {
 
 			.v-btn {
 				color: $grey-darken-2;
+			}
+
+			.file-error {
+				font-size: size(13);
 			}
 		}
 	}

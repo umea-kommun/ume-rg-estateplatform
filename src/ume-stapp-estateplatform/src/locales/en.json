@@ -64,7 +64,21 @@
 				"unableToSubmitOrder": "Something unexpected went wrong and your order was not submitted. Please try again later.",
 				"unableToAddFavorite": "Oops, something went wrong. Unable to add to favorites. Please try again later.",
 				"unableToRemoveFavorite": "Oops, something went wrong. Unable to remove from favorites. Please try again later.",
-				"unableToFetchFavorites": "Unable to fetch your favorites. Please try again later."
+				"unableToFetchFavorites": "Unable to fetch your favorites. Please try again later.",
+				"validation": {
+					"required": "This field is required.",
+					"invalid_value": "Invalid value.",
+					"invalid_format": "Invalid format.",
+					"max_length": "The value is too long.",
+					"not_found": "Could not be found.",
+					"file_too_large": "The file is too large.",
+					"too_many_files": "Too many files.",
+					"invalid_content_type": "The file type is not supported.",
+					"unrecognized_file_content": "The file could not be identified.",
+					"content_type_mismatch": "The file content does not match the declared file type.",
+					"not_supported": "Not supported for the selected building.",
+					"conflict": "Invalid selection in combination with other choices."
+				}
 			}
 		},
 		"validation": {
@@ -201,6 +215,7 @@
 			"selectFiles": "Select file",
 			"dropFiles": "or drop your file here | or drop files here",
 			"rulesHint": "Max {size} | Up to {maxFiles} files, max {size} per file",
+			"acceptedFormats": "Accepted formats: {formats}",
 			"error": {
 				"fileTooLarge": "\"{filename}\" is too large.",
 				"tooManyFiles": "You cannot upload more than {maxFiles} files."

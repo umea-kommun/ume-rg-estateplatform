@@ -162,6 +162,7 @@
 								aria-labelledby="problem-description-label"
 								text-area
 								auto-grow
+								:error-message="descriptionServerError"
 							/>
 							<p class="text-medium-emphasis">
 								{{
@@ -173,9 +174,10 @@
 
 							<base-file-upload
 								v-model="attachments"
-								accept=".pdf,image/*"
-								:max-files="10"
-								:max-size-mega-bytes="10"
+								:accept="uploadAccept"
+								:max-files="uploadMaxFiles"
+								:max-size-mega-bytes="uploadMaxSizeMb"
+								:server-errors="fileServerErrors"
 								class="mt-6"
 							/>
 						</estate-order-step>
@@ -202,6 +204,7 @@
 								v-model:contactName="contactName"
 								v-model:contactEmail="contactEmail"
 								v-model:contactPhone="contactPhone"
+								:field-error="fieldError"
 							/>
 						</estate-order-step>
 						<v-alert
@@ -217,6 +220,32 @@
 							>
 								<li>
 									<a :href="`#${fieldId}`">{{ error }}</a>
+								</li>
+							</ul>
+						</v-alert>
+						<v-alert
+							v-if="serverErrors"
+							type="error"
+							variant="outlined"
+							rounded="lg"
+							class="mt-4"
+						>
+							<ul>
+								<li
+									v-for="(codes, field) in serverErrors"
+									:key="field"
+								>
+									<span
+										v-for="code in codes"
+										:key="code"
+									>
+										{{
+											t(
+												`app.error.estate.validation.${code}`,
+												code
+											)
+										}}
+									</span>
 								</li>
 							</ul>
 						</v-alert>
@@ -287,6 +316,8 @@ import BaseFileUpload from '@/components/base/BaseFileUpload.vue';
 import { Form as VeeForm } from 'vee-validate';
 import BaseTextBox from '@/components/base/BaseTextBox.vue';
 import ErrorService from '@/utils/ErrorService';
+import { useServerValidation } from '@/utils/useServerValidation';
+import { useWorkOrderConfig } from '@/utils/useWorkOrderConfig';
 import BuildingSelector from '../faultReport/buildingSelector/BuildingSelector.vue';
 import RoomSelector from '../faultReport/roomSelector/RoomSelector.vue';
 import EstateOrderCompleted from './EstateOrderCompleted.vue';
@@ -330,9 +361,31 @@ const user = computed(() => store.state.user);
 const formValidator = useTemplateRef('formValidator');
 const problemDescription = ref('');
 const attachments = ref<File[]>([]);
+
+const {
+	maxFiles: uploadMaxFiles,
+	maxSizeMb: uploadMaxSizeMb,
+	accept: uploadAccept,
+} = useWorkOrderConfig();
+
+const {
+	serverErrors,
+	fileErrors: fileServerErrors,
+	fieldError,
+	setFromError,
+	clear: clearServerErrors,
+} = useServerValidation('app.error.estate.validation');
+const descriptionServerError = fieldError('description');
+
 const contactName = ref(user.value?.fullName ?? '');
 const contactEmail = ref(user.value?.email ?? '');
 const contactPhone = ref('');
+
+watch(
+	[problemDescription, attachments, contactName, contactEmail, contactPhone],
+	clearServerErrors,
+	{ deep: true }
+);
 
 watch(
 	() => selectedBuilding.value,
@@ -487,18 +540,19 @@ const submitReport = async () => {
 	};
 
 	try {
+		clearServerErrors();
 		await store.dispatch(DispatchType.SubmitEstateOrder, reportData);
 
 		hasSubmitted.value = true;
 		updateQueryParams();
 		window.scrollTo({ top: 0 });
 	} catch (err) {
-		// TODO: check if expected error (validation, file too big etc) and show proper message
-
-		ErrorService.onError({
-			err,
-			message: t('app.error.estate.unableToSubmitOrder'),
-		});
+		if (!setFromError(err)) {
+			ErrorService.onError({
+				err,
+				message: t('app.error.estate.unableToSubmitOrder'),
+			});
+		}
 	} finally {
 		isBusySubmitting.value = false;
 	}
