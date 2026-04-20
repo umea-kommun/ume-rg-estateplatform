@@ -1,6 +1,6 @@
 <template>
 	<div class="base-date-picker">
-		<Field
+		<field
 			:name="id"
 			:label="label"
 			v-model="value"
@@ -23,15 +23,16 @@
 					:min="minDate"
 					:max="maxDate"
 					:disabled="disabled"
+					variant="outlined"
 				/>
 
-				<BaseHelpText
+				<base-help-text
 					:helpText="helpText"
 					:getValidationId="id"
 					:errors="errors"
 				/>
 			</base-form-field>
-		</Field>
+		</field>
 	</div>
 </template>
 
@@ -96,4 +97,10 @@ const validationRules = computed(() => {
 });
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.base-date-picker {
+	:deep(input) {
+		background-color: transparent;
+	}
+}
+</style>

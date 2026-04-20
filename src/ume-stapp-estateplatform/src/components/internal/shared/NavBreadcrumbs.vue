@@ -4,7 +4,7 @@
 			<template v-slot:prepend>
 				<v-icon
 					icon="home"
-					size="small"
+					:size="20"
 					color="grey-darken-3"
 					class="mr-1"
 				></v-icon>

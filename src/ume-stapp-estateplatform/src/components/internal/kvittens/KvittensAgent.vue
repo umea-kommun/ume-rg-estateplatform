@@ -7,7 +7,7 @@
 	>
 		<base-back-button />
 		<consumer-tester />
-		<h1>{{ t('component.internal.kvittensAgent.title') }}</h1>
+		<h1 class="my-3">{{ t('component.internal.kvittensAgent.title') }}</h1>
 		<p class="description">
 			{{ t('component.internal.kvittensAgent.description') }}
 		</p>
@@ -28,7 +28,7 @@
 				selectedStudent && !kvittensListForSelectedStudent.length
 			"
 			icon="info"
-			class="mt-6"
+			class="mt-4"
 		>
 			{{ t('component.internal.kvittensAgent.noResults') }}
 		</v-alert>
@@ -73,7 +73,7 @@
 								<v-btn
 									variant="outlined"
 									color="primary"
-									class="register-btn regular-text"
+									class="register-btn"
 									@click="
 										openKvittensDetail = {
 											studentSsno: row.item.personSSNo,
@@ -230,6 +230,11 @@ watch(selectedStudent, () => {
 				}
 			}
 		}
+	}
+}
+.kvittens-agent.app-content {
+	:deep(.v-container) {
+		padding-top: calc($site-content-vertical-padding - 20px);
 	}
 }
 </style>

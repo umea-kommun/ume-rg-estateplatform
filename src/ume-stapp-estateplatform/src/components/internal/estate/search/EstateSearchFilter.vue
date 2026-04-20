@@ -21,7 +21,6 @@
 			<v-btn
 				variant="text"
 				color="primary"
-				class="regular-text"
 				prepend-icon="filter_list_off"
 				@click="clearFilters"
 			>

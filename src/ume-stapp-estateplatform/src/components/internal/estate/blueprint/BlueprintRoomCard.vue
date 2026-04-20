@@ -48,7 +48,6 @@
 				<div class="d-flex flex-grow-1 justify-end mt-2">
 					<v-btn
 						v-if="selectable"
-						class="regular-text ma-0"
 						flat
 						color="primary"
 						@click="$emit('select', room)"
@@ -57,7 +56,7 @@
 					</v-btn>
 					<v-btn
 						v-else-if="isEnabled('ErrorReport')"
-						class="report-btn regular-text ma-0"
+						class="report-btn"
 						variant="tonal"
 						color="error"
 						prepend-icon="warning"

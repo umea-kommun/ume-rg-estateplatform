@@ -40,6 +40,7 @@
 							id="guardian-answer"
 							v-model="guardianNewAnswer"
 							color="primary"
+							hide-details
 						>
 							<v-radio
 								:label="

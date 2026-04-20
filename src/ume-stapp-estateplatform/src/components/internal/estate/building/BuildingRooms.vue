@@ -58,11 +58,10 @@
 			/>
 		</div>
 		<slot name="append-search"></slot>
-		<div class="mt-2 result-wrap">
+		<div class="result-wrap mt-4">
 			<v-alert
 				v-if="!filteredRooms?.length"
 				icon="info"
-				class="mt-4"
 				:class="{ 'mx-6': !noPadding }"
 			>
 				{{ t('component.internal.buildingDetails.room.noMatches') }}
@@ -70,7 +69,6 @@
 			<v-alert
 				v-else-if="!filteredRoomsForFloor?.length"
 				icon="info"
-				class="mt-4"
 				:class="{ 'mx-6': !noPadding }"
 				>{{
 					t(

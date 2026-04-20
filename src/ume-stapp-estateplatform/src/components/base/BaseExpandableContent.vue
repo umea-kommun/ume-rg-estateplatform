@@ -12,7 +12,6 @@
 	</div>
 	<div class="expand-button-wrapper" v-if="!contentFits">
 		<v-btn
-			class="regular-text mt-0"
 			:append-icon="
 				contentExpanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
 			"

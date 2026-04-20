@@ -1,17 +1,13 @@
 <template>
 	<div class="room-list">
 		<div v-if="!showingAllRooms" class="show-more-wrap">
-			<v-btn
-				@click="showMoreRooms"
-				class="regular-text"
-				prepend-icon="add"
-			>
+			<v-btn @click="showMoreRooms" prepend-icon="add">
 				{{
 					$t('component.internal.buildingDetails.room.showMoreRooms')
 				}}
 			</v-btn>
 		</div>
-		<v-list>
+		<v-list class="pa-0">
 			<room-card
 				v-for="room in rooms.slice(0, roomsShowing)"
 				:key="room.id"
@@ -69,6 +65,7 @@ watch(
 		right: 0;
 		margin-left: -10px;
 		margin-right: -10px;
+		margin-bottom: -5px;
 		bottom: 0;
 		z-index: 100;
 		height: 100px;

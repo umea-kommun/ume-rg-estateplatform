@@ -99,7 +99,6 @@
 			</v-card-text>
 			<div v-if="selectable" class="d-flex justify-center pb-2">
 				<v-btn
-					class="regular-text"
 					flat
 					color="primary"
 					@click="$emit('select', building?.id)"

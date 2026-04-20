@@ -5,7 +5,7 @@
 			:class="{ 'has-skip': showSkip }"
 		>
 			<div class="estate-order-step__title">
-				<h2 ref="title">
+				<h2 ref="title" class="ma-0">
 					<slot name="title">
 						{{ title }}
 					</slot>
@@ -18,7 +18,6 @@
 					variant="tonal"
 					size="small"
 					color="grey-darken-2"
-					class="regular-text ma-0"
 				>
 					{{ $t('component.internal.faultReport.changeAnswer') }}
 				</v-btn>
@@ -30,7 +29,6 @@
 					rounded="lg"
 					variant="tonal"
 					color="grey-darken-2"
-					class="regular-text ma-0"
 				>
 					{{ $t('component.internal.faultReport.room.skip') }}
 				</v-btn>
@@ -96,6 +94,10 @@ defineExpose({
 		gap: 8px;
 
 		align-items: center;
+	}
+
+	.v-btn--size-small {
+		font-size: size(14);
 	}
 }
 </style>

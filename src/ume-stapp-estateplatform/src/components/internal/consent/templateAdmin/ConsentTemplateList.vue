@@ -9,7 +9,7 @@
 		<div v-if="!isBusyLoadingFromServer">
 			<v-row>
 				<v-col class="pa-0">
-					<h1>
+					<h1 class="my-3">
 						{{
 							$t('component.internal.consentTemplateAdmin.title')
 						}}
@@ -18,13 +18,17 @@
 			</v-row>
 			<v-row class="filter-wrap">
 				<v-col class="pl-0 search-bar">
-					<base-text-box
+					<v-text-field
 						id="search"
 						v-model="searchValue"
+						color="primary"
 						:label="
 							$t('component.internal.consentTemplateAdmin.search')
 						"
-						prependInnerIcon="search"
+						prepend-inner-icon="search"
+						density="comfortable"
+						hide-details
+						clearable
 					/>
 				</v-col>
 				<v-col>
@@ -53,14 +57,16 @@
 						class="ma-0 create-button"
 						color="primary"
 						size="large"
+						prepend-icon="add"
 						flat
-						><v-icon icon="add" class="mr-1 mt-1" />{{
-							$t('component.internal.consentTemplateAdmin.create')
-						}}</v-btn
 					>
+						{{
+							$t('component.internal.consentTemplateAdmin.create')
+						}}
+					</v-btn>
 				</v-col>
 			</v-row>
-			<v-row v-show="showFilter" class="filter-row mt-0">
+			<v-row v-show="showFilter" class="filter-row mt-4">
 				<template-group-select
 					id="group"
 					v-model="selectedGroups"
@@ -91,7 +97,11 @@
 					</template>
 				</template-group-select>
 			</v-row>
-			<v-alert v-if="!filteredTemplates.length" icon="warning">
+			<v-alert
+				v-if="!filteredTemplates.length"
+				icon="warning"
+				class="mt-4"
+			>
 				{{ $t('component.internal.consentTemplateAdmin.noResults') }}
 			</v-alert>
 			<!-- Display list of templates-->
@@ -399,6 +409,7 @@ onMounted(async () => {
 
 			&.search-bar {
 				flex: auto;
+				width: 100%;
 			}
 
 			:deep(.help-and-error-wrap) {
@@ -410,6 +421,10 @@ onMounted(async () => {
 				.v-icon {
 					margin-top: 4px;
 				}
+			}
+
+			.v-btn {
+				height: size(48);
 			}
 
 			.create-button {

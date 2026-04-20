@@ -58,7 +58,6 @@
 							</p>
 							<div class="text-right flex-fill pl-4">
 								<v-btn
-									class="ma-0 regular-text"
 									rounded="lg"
 									type="submit"
 									flat

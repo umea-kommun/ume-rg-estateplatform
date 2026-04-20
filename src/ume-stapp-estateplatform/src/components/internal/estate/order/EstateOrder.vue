@@ -14,10 +14,10 @@
 				<estate-order-completed v-if="hasSubmitted" />
 				<div v-else class="mt-2">
 					<div class="pb-4">
-						<h1>
+						<h1 class="ma-0 mb-2">
 							{{ $t('component.internal.order.title') }}
 						</h1>
-						<p>
+						<p class="ma-0">
 							{{ $t('component.internal.order.description') }}
 						</p>
 					</div>
@@ -50,7 +50,9 @@
 
 					<!-- CATEGORY SELECTOR -->
 					<estate-order-step
-						v-if="selectedBuilding && availableCategories.length > 0"
+						v-if="
+							selectedBuilding && availableCategories.length > 0
+						"
 						:step="2"
 						:step-count="stepCount"
 						:title="$t('component.internal.order.category.title')"
@@ -70,7 +72,11 @@
 						rounded="lg"
 						class="mt-6"
 					>
-						{{ $t('component.internal.order.category.noneAvailable') }}
+						{{
+							$t(
+								'component.internal.order.category.noneAvailable'
+							)
+						}}
 					</v-alert>
 
 					<!-- ROOM SELECTOR -->
@@ -255,7 +261,6 @@
 						>
 							<v-btn
 								color="primary"
-								class="regular-text"
 								size="large"
 								rounded="lg"
 								:disabled="isBusySubmitting"
@@ -272,13 +277,13 @@
 			</div>
 			<div class="info-wrap">
 				<v-alert rounded="lg">
-					<h2>
+					<h2 class="ma-0">
 						{{ $t('component.internal.order.info.title') }}
 					</h2>
 					<p>
 						{{ $t('component.internal.order.info.text1') }}
 					</p>
-					<p class="mt-4">
+					<p>
 						{{ $t('component.internal.order.info.text2') }}
 					</p>
 				</v-alert>
@@ -399,10 +404,11 @@ watch(
 );
 
 const orderCategoryValues = Object.values(EstateOrderCategory) as string[];
-const availableCategories = computed(() =>
-	(selectedBuilding.value?.workOrderTypes ?? []).filter((t) =>
-		orderCategoryValues.includes(t)
-	) as EstateOrderCategory[]
+const availableCategories = computed(
+	() =>
+		(selectedBuilding.value?.workOrderTypes ?? []).filter((t) =>
+			orderCategoryValues.includes(t)
+		) as EstateOrderCategory[]
 );
 
 const showLastSteps = computed(() => {

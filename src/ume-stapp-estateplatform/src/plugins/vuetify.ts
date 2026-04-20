@@ -6,6 +6,13 @@ import { aliases, md } from 'vuetify/iconsets/md';
 // Vuetify
 import { createVuetify } from 'vuetify';
 
+const roundedDefault = { rounded: 'lg' };
+const inputDefault = {
+	...roundedDefault,
+	variant: 'outlined',
+	hideDetails: true,
+};
+
 // Themes: https://next.vuetifyjs.com/en/features/theme/
 export default createVuetify({
 	icons: {
@@ -31,5 +38,13 @@ export default createVuetify({
 				},
 			},
 		},
+	},
+	defaults: {
+		VAlert: roundedDefault,
+		VAutocomplete: inputDefault,
+		VSelect: inputDefault,
+		VBtn: roundedDefault,
+		VCard: roundedDefault,
+		VTextField: inputDefault,
 	},
 });

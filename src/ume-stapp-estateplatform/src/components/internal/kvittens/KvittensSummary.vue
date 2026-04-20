@@ -8,7 +8,7 @@
 		<base-back-button />
 		<consumer-tester />
 		<div>
-			<h1 class="mt-2 mb-4">
+			<h1 class="my-3">
 				{{ $t('component.internal.kvittensSummary.title') }}
 			</h1>
 			<div class="filter">

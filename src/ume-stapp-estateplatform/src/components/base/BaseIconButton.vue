@@ -10,7 +10,7 @@
 			<div v-bind="props">
 				<v-btn
 					v-bind="$attrs"
-					class="base-icon-button regular-text ma-0"
+					class="base-icon-button"
 					:class="{ active }"
 					:disabled="disabled"
 					flat

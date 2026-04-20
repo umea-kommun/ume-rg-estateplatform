@@ -13,7 +13,7 @@
 		<div v-if="!isBusyLoadingFromServer && templateWithConsents">
 			<v-row>
 				<v-col class="pa-0">
-					<h1>
+					<h1 class="my-0">
 						<span class="mr-3 mb-3">{{
 							templateWithConsents?.title ??
 							$t(
@@ -26,7 +26,7 @@
 					</h1>
 				</v-col>
 			</v-row>
-			<v-row>
+			<v-row class="ma-0">
 				<v-col class="pt-0">
 					<div v-html="templateWithConsents?.text"></div>
 				</v-col>
@@ -34,7 +34,7 @@
 			<hr class="mb-4 mt-4" />
 			<v-row>
 				<v-col class="pa-0">
-					<h2>
+					<h2 class="my-0">
 						{{
 							$t(
 								'component.internal.consentConsumerDetails.persons'
@@ -45,7 +45,7 @@
 			</v-row>
 			<v-row>
 				<v-col class="pa-0">
-					<base-text-box
+					<v-text-field
 						id="search"
 						v-model="searchValue"
 						:label="
@@ -54,6 +54,10 @@
 							)
 						"
 						prependInnerIcon="search"
+						density="comfortable"
+						color="primary"
+						clearable
+						hide-details
 					/>
 				</v-col>
 			</v-row>
@@ -137,22 +141,11 @@
 import { computed, onMounted, ref } from 'vue';
 import AppContent from '@/components/app/AppContent.vue';
 import { useRoute } from 'vue-router';
-import {
-	AppContentSize,
-	TemplateConnectionType,
-	ConsentStatus,
-	DispatchType,
-} from '@/models/Enums';
+import { AppContentSize, ConsentStatus, DispatchType } from '@/models/Enums';
 import { useStore } from 'vuex';
-import {
-	IConsentTemplateGroup,
-	IRootState,
-	ISortBy,
-	ITableHeader,
-} from '@/models/Interfaces';
+import { IRootState, ISortBy, ITableHeader } from '@/models/Interfaces';
 import { useI18n } from 'vue-i18n';
 import BaseBackButton from '@/components/base/BaseBackButton.vue';
-import BaseTextBox from '@/components/base/BaseTextBox.vue';
 import BaseTableHeader from '@/components/base/baseTable/BaseTableHeader.vue';
 import ConsumerTester from '@/components/internal/shared/ConsumerTester.vue';
 

@@ -1,6 +1,8 @@
 <template>
-	<h3>{{ t('component.internal.kvittensAgent.registerTitle') }}</h3>
-	<p id="respodants-label">
+	<h3 class="my-0">
+		{{ t('component.internal.kvittensAgent.registerTitle') }}
+	</h3>
+	<p id="respodants-label" class="my-1">
 		{{ t('component.internal.kvittensAgent.registerRespondentsLabel') }}
 	</p>
 	<v-list aria-labelledby="respodants-label">
@@ -63,7 +65,6 @@
 			<v-btn
 				:text="t('component.internal.kvittensAgent.registerButton')"
 				color="primary"
-				class="regular-text"
 				size="large"
 				:disabled="
 					!selectedRespondantsSsno.length ||
@@ -76,7 +77,7 @@
 		</div>
 	</div>
 
-	<Transition name="done">
+	<transition name="done">
 		<v-alert
 			v-if="allRespondantsHasAnswered"
 			class="mt-6 mb-6"
@@ -86,7 +87,7 @@
 				t('component.internal.kvittensAgent.everyRespondentHasAnswered')
 			}}
 		</v-alert>
-	</Transition>
+	</transition>
 </template>
 
 <script setup lang="ts">

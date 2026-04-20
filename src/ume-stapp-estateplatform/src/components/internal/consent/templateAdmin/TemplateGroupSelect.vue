@@ -1,6 +1,6 @@
 <template>
 	<div class="template-group-select">
-		<Field
+		<field
 			:name="id"
 			:label="label"
 			v-model="selectedGroups"
@@ -22,6 +22,7 @@
 					:key="group.refId"
 					:closable="!disabled"
 					:disabled="disabled"
+					class="pr-4"
 					@click:close="removeGroup(group.refId)"
 					>{{ group.title }}</v-chip
 				>
@@ -37,9 +38,9 @@
 						>{{ addLabel }}</v-btn
 					>
 				</slot>
-				<BaseHelpText :getValidationId="id" :errors="[...errors]" />
+				<base-help-text :getValidationId="id" :errors="[...errors]" />
 			</base-form-field>
-		</Field>
+		</field>
 
 		<v-dialog v-model="showDialog" width="500">
 			<v-card v-if="showDialog">
@@ -104,11 +105,9 @@
 						<template v-slot:item="{ props, item }">
 							<v-list-item
 								v-bind="props"
-								:title="item.title"
+								:title="(item as IConsentTemplateGroup).title"
 								:subtitle="
-									classPeriod(
-										item.raw as IConsentTemplateGroup
-									)
+									classPeriod(item as IConsentTemplateGroup)
 								"
 							></v-list-item>
 						</template>

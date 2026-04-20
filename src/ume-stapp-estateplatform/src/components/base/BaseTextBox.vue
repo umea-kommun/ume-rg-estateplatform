@@ -33,6 +33,7 @@
 					:placeholder="placeholder"
 					:error="!!errors.length || !!errorMessage"
 					@input="emit('input')"
+					hide-details
 				/>
 				<v-textarea
 					v-else
@@ -52,6 +53,7 @@
 					:placeholder="placeholder"
 					:error="!!errors.length || !!errorMessage"
 					@input="emit('input')"
+					hide-details
 				/>
 				<base-help-text
 					:helpText="helpText"

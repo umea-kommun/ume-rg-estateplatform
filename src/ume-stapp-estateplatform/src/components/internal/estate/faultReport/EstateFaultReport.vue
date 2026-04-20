@@ -14,10 +14,10 @@
 				<estate-fault-report-completed v-if="hasSubmitted" />
 				<div v-else class="mt-2">
 					<div class="pb-4">
-						<h1>
+						<h1 class="ma-0 mb-2">
 							{{ $t('component.internal.faultReport.title') }}
 						</h1>
-						<p>
+						<p class="ma-0">
 							{{
 								$t('component.internal.faultReport.description')
 							}}
@@ -75,7 +75,6 @@
 								<v-btn
 									v-if="!hasConfirmedRentedBuildingNotice"
 									flat
-									class="regular-text"
 									@click="
 										hasConfirmedRentedBuildingNotice = true
 									"
@@ -329,7 +328,6 @@
 						>
 							<v-btn
 								color="primary"
-								class="regular-text"
 								size="large"
 								rounded="lg"
 								:disabled="isBusySubmitting"
@@ -348,13 +346,13 @@
 			</div>
 			<div class="info-wrap">
 				<v-alert rounded="lg">
-					<h2>
+					<h2 class="ma-0">
 						{{ $t('component.internal.faultReport.info.title') }}
 					</h2>
 					<p>
 						{{ $t('component.internal.faultReport.info.text1') }}
 					</p>
-					<p class="mt-4">
+					<p>
 						{{ $t('component.internal.faultReport.info.text2') }}
 					</p>
 				</v-alert>

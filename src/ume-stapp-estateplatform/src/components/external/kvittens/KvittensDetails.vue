@@ -19,7 +19,7 @@
 			<div class="d-flex justify-center">
 				<v-btn
 					@click="showGdprModal = true"
-					class="regular-text mt-3 mb-3 gdpr-button"
+					class="mt-3 mb-3 gdpr-button"
 				>
 					{{ $t('component.external.kvittensDetails.gdprButton') }}
 				</v-btn>
@@ -56,22 +56,16 @@
 			</div>
 			<div
 				v-else-if="!userHasAnswered"
-				class="response-buttons d-flex justify-center flex-wrap mt-10"
+				class="response-buttons d-flex justify-center flex-wrap mt-10 ga-4"
 			>
 				<v-btn
 					flat
 					variant="outlined"
-					class="regular-text"
 					:to="{ name: MyPagesRoutes.KvittensStart, replace: true }"
 				>
 					{{ $t('component.external.kvittensDetails.cancel') }}
 				</v-btn>
-				<v-btn
-					color="primary"
-					flat
-					class="regular-text"
-					@click="sendInAnswer"
-				>
+				<v-btn color="primary" flat @click="sendInAnswer">
 					{{ $t('component.external.kvittensDetails.sendIn') }}
 				</v-btn>
 			</div>
@@ -94,7 +88,6 @@
 				</div>
 				<v-btn
 					v-if="nextKvittensToAnswer"
-					class="regular-text ma-0"
 					color="primary"
 					append-icon="arrow_forward"
 					size="large"
@@ -356,7 +349,7 @@ const contentSize = ref<AppContentSize>(
 	.response-buttons .v-btn {
 		font-size: size(16);
 		height: auto;
-		padding: 14px 30px;
+		padding: 10px 30px;
 	}
 	#user-agreed-error {
 		color: $error;

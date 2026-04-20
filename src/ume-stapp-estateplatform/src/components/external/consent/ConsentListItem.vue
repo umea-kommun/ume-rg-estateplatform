@@ -40,7 +40,6 @@
 			<v-btn
 				flat
 				color="primary"
-				class="ma-0 regular-text"
 				:variant="
 					userHasAnswered || !consent.isActive
 						? 'outlined'
@@ -178,7 +177,7 @@ const consentStatus = computed(() => {
 	.v-btn {
 		font-size: size(16);
 		height: auto;
-		padding: 12px 26px;
+		padding: 8px 26px;
 	}
 }
 </style>

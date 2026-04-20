@@ -7,7 +7,9 @@
 			<v-layout justify-center class="content-layout">
 				<v-col class="pa-0">
 					<div class="footer-links">
-						<h2>{{ $t('component.appFooter.linksTitle') }}</h2>
+						<h2 class="mt-0">
+							{{ $t('component.appFooter.linksTitle') }}
+						</h2>
 						<a href="/">
 							{{ $t('component.appHeader.menu.appStart') }}
 						</a>

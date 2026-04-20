@@ -12,19 +12,17 @@
 			<v-card-text v-else-if="consentData">
 				<v-row>
 					<v-col>
-						<BaseExpandableContent>
-							<p v-html="consentData.data"></p>
-						</BaseExpandableContent>
+						<base-expandable-content>
+							<p
+								class="consent-content my-0"
+								v-html="consentData.data"
+							></p>
+						</base-expandable-content>
 					</v-col>
 				</v-row>
 				<hr aria-hidden="true" />
 
-				<h2 class="mt-10">
-					{{
-						$t('component.internal.consentAgentEdit.guardianTitle')
-					}}
-				</h2>
-				<v-alert class="mt-2" icon="info">
+				<v-alert class="my-4" icon="info">
 					{{
 						$t(
 							'component.internal.consentAgentEdit.handleConsentFor'
@@ -32,6 +30,11 @@
 					}}
 					<b>{{ consentData.childName }}.</b>
 				</v-alert>
+				<h2>
+					{{
+						$t('component.internal.consentAgentEdit.guardianTitle')
+					}}
+				</h2>
 				<v-row>
 					<v-col>
 						<div
@@ -64,7 +67,6 @@
 							<v-btn
 								size="large"
 								variant="outlined"
-								class="regular-text"
 								:disabled="!consentData.isActive"
 								@click="
 									guardianEditSSN =
@@ -81,14 +83,14 @@
 				</v-row>
 
 				<div v-if="consentData.currentlyResponsiblePersons">
-					<h3 class="mt-10">
+					<h3>
 						{{
 							$t(
 								'component.internal.consentAgentEdit.responsiblesHaveChangedTitle'
 							)
 						}}
 					</h3>
-					<v-alert class="mt-2" icon="info">
+					<v-alert class="mt-2 mb-4" icon="info">
 						{{
 							$t(
 								'component.internal.consentAgentEdit.responsiblesHaveChangedInfo'
@@ -246,12 +248,17 @@ watch(
 		margin-top: -12px;
 	}
 	hr {
-		margin: 16px 0;
+		margin: 8px 0;
 		border: solid 1px $grey-lighten-3;
 	}
 	.v-col {
 		padding-left: 0;
 		padding-right: 0;
+	}
+	.consent-content {
+		:first-child {
+			margin-top: 0;
+		}
 	}
 
 	.linked-person {

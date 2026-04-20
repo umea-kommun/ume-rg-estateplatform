@@ -13,7 +13,7 @@
 					$t('component.baseValidationSummary.resolution')
 				}}</span>
 			</label>
-			<ul>
+			<ul class="pa-0 mt-1">
 				<li
 					v-for="(error, id) in validationErrors"
 					:key="'validationerror' + id"

@@ -40,13 +40,13 @@
 				</v-card-title>
 				<v-card-text id="consent-text">
 					<hr class="mb-2 mt-2 ml-3 mr-3" aria-hidden="true" />
-					<v-row>
+					<v-row class="px-4">
 						<!-- eslint-disable-next-line vue/no-v-text-v-html-on-component -->
 						<v-col cols="12" v-html="guardianConsent.data"></v-col>
 					</v-row>
 
 					<hr class="mb-4 mt-4 ml-3 mr-3" aria-hidden="true" />
-					<v-row>
+					<v-row class="px-4">
 						<v-col cols="12">
 							{{
 								$t(
@@ -57,7 +57,7 @@
 						</v-col>
 					</v-row>
 					<hr class="mb-4 mt-4 ml-3 mr-3" aria-hidden="true" />
-					<v-row v-if="hasAnswered">
+					<v-row v-if="hasAnswered" class="px-4">
 						<v-col class="text-center">
 							<h3 class="mt-4 mb-8">
 								{{
@@ -85,9 +85,9 @@
 							</p>
 						</v-col>
 					</v-row>
-					<v-row class="mt-0">
+					<v-row class="mt-0 px-4">
 						<v-col
-							class="text-center mb-4 mt-4"
+							class="text-center mb-4 mt-4 ga-4 d-flex flex-wrap justify-center"
 							:style="
 								isBusySendingToServer
 									? { pointerEvents: 'none' }
@@ -149,12 +149,18 @@
 							>
 						</v-col>
 					</v-row>
-					<v-row v-if="!hasAnswered && !isExpiredConsent">
+					<v-row
+						v-if="!hasAnswered && !isExpiredConsent"
+						class="px-4"
+					>
 						<v-col class="mb-6 text-center">{{
 							$t('component.external.consent.youCanChangeLater')
 						}}</v-col>
 					</v-row>
-					<v-row v-if="guardianConsent.consentHistory.length > 0">
+					<v-row
+						v-if="guardianConsent.consentHistory.length > 0"
+						class="px-4"
+					>
 						<v-col cols="12">
 							<consent-history
 								:history="guardianConsent.consentHistory"

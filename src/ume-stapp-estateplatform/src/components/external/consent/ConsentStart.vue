@@ -8,7 +8,7 @@
 			:to="{ name: MyPagesRoutes.AppStart, replace: true }"
 		/>
 		<div class="d-flex flex-wrap justify-space-between top-wrap">
-			<h1>{{ $t('component.consentStart.title') }}</h1>
+			<h1 class="my-1">{{ $t('component.consentStart.title') }}</h1>
 			<div
 				v-if="guardianChildren.length > 1"
 				class="d-flex justify-end align-center mb-2 filter-on-child"

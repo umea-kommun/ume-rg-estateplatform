@@ -18,7 +18,7 @@
 			></app-loading-spinner>
 			<v-card-text v-else-if="kvittensDetails">
 				<base-expandable-content>
-					<h3>
+					<h3 class="my-0">
 						{{
 							t(
 								'component.internal.kvittensAgent.dialogDetailsTitle'

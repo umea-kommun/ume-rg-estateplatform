@@ -28,7 +28,7 @@
 				/>
 			</v-card-title>
 			<v-card-text class="pt-2 pb-3 px-0">
-				<ul>
+				<ul class="pa-0 ma-0">
 					<li v-if="building.address?.street" class="text-capitalize">
 						{{ building.address?.street.toLocaleLowerCase() }}
 					</li>

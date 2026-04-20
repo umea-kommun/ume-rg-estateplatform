@@ -10,12 +10,12 @@
 			<vee-form v-slot="{ errors }" :ref="(e) => (validator = e)">
 				<v-row>
 					<v-col class="pa-0">
-						<h1>
+						<h1 class="my-3">
 							{{ pageTitle }}
 						</h1>
 					</v-col>
 				</v-row>
-				<v-row>
+				<v-row v-if="errors" class="ma-0">
 					<v-col>
 						<base-validation-summary
 							id="validation-summary"
@@ -23,7 +23,7 @@
 						/>
 					</v-col>
 				</v-row>
-				<v-row>
+				<v-row class="ma-0">
 					<v-col>
 						<base-text-box
 							id="title"
@@ -45,7 +45,7 @@
 						/>
 					</v-col>
 				</v-row>
-				<v-row>
+				<v-row class="ma-0">
 					<v-col>
 						<base-html-editor
 							id="content"
@@ -453,6 +453,7 @@ onMounted(async () => {
 	.save-buttons-wrap {
 		display: flex;
 		justify-content: flex-end;
+		gap: 16px;
 
 		:deep(.app-loading-spinner) {
 			margin: 12px auto 12px;

@@ -74,7 +74,6 @@
 							prepend-icon="download"
 							size="large"
 							flat
-							class="ma-0 regular-text"
 							:disabled="!blobUrl"
 						>
 							{{

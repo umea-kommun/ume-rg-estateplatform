@@ -9,7 +9,9 @@
 			:to="{ name: MyPagesRoutes.AppStart, replace: true }"
 		/>
 		<div class="d-flex flex-wrap justify-space-between top-wrap">
-			<h1>{{ $t('component.external.kvittensStart.title') }}</h1>
+			<h1 class="my-1">
+				{{ $t('component.external.kvittensStart.title') }}
+			</h1>
 			<div
 				v-if="children.length"
 				class="d-flex justify-end align-center mb-2 filter-on-child"

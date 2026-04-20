@@ -8,6 +8,7 @@
 			itemValue="refId"
 			:menuProps="autocompleteMenuProps"
 			:loading="isBusyLoadingSchoolsAndGroups"
+			hide-details
 		/>
 		<base-autocomplete
 			:items="groupsInSelectedSchool"
@@ -17,6 +18,7 @@
 			itemValue="refId"
 			:menuProps="autocompleteMenuProps"
 			:disabled="!selectedSchoolId"
+			hide-details
 		/>
 		<base-autocomplete
 			:items="studentsInSelectedGroup"
@@ -27,14 +29,16 @@
 			:menuProps="autocompleteMenuProps"
 			:loading="isBusyLoadingStudents"
 			:disabled="!selectedGroupId"
+			hide-details
 		/>
 	</div>
 	<v-alert
 		v-if="!isBusyLoadingSchoolsAndGroups && !fetchedSchools.length"
 		icon="warning"
+		class="mt-4"
 		>{{ t('component.internal.studentFilter.noAccess') }}</v-alert
 	>
-	<v-alert v-else-if="!selectedStudentId" icon="info" class="mt-6">
+	<v-alert v-else-if="!selectedStudentId" icon="info" class="mt-4">
 		{{ selectInstruction }}
 	</v-alert>
 </template>

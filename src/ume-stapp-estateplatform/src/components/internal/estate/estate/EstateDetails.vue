@@ -21,12 +21,13 @@
 							<div
 								class="d-flex align-start justify-space-between"
 							>
-								<h1 :title="estateName">
+								<h1 :title="estateName" class="ma-0 mt-2">
 									{{ estateName }}
 								</h1>
 								<favorite-button
 									:id="estate.id"
 									:type="EstateType.Estate"
+									class="mt-2"
 									:isFavorite="estate.isFavorite"
 								/>
 							</div>

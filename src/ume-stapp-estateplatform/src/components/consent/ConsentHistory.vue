@@ -1,14 +1,14 @@
 <template>
 	<div class="consent-history">
 		<base-image-modal />
-		<h2 class="mt-4">
+		<h2 class="mt-2">
 			{{ $t('component.external.consent.historyTitle') }}
 		</h2>
 		<div v-for="(history, index) in sortedConsentHistory" :key="index">
 			<hr class="mb-4 mt-4" />
 			<div class="d-flex flex-wrap justify-space-between align-center">
 				<div class="mb-0">
-					<p v-html="historyText(history)"></p>
+					<p v-html="historyText(history)" class="ma-0"></p>
 					<div
 						class="d-flex flex-wrap align-center"
 						v-if="history.agentName"
@@ -30,7 +30,7 @@
 							}}
 						</span>
 						<v-btn
-							class="ma-0 mt-2 regular-text"
+							class="mt-2"
 							prepend-icon="image"
 							variant="tonal"
 							color="#444"

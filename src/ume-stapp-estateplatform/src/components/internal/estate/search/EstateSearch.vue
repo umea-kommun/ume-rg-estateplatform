@@ -25,8 +25,8 @@
 						<template #append-inner>
 							<v-btn
 								variant="flat"
-								class="regular-text"
 								color="primary"
+								class="ma-2"
 								@click="fetchSearchResults"
 							>
 								{{
@@ -43,7 +43,6 @@
 						<v-btn
 							variant="text"
 							color="primary"
-							class="regular-text ma-0"
 							@click="showSearchFilter = !showSearchFilter"
 							:active="showSearchFilter"
 						>
@@ -62,7 +61,7 @@
 						</v-btn>
 						<v-btn
 							variant="tonal"
-							class="map-btn regular-text ma-0 ml-2"
+							class="map-btn ma-0 ml-2"
 							color="primary"
 							prepend-icon="location_pin"
 							@click="selectBuildingOnMap"

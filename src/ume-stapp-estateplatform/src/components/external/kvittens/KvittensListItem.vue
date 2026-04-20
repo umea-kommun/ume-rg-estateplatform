@@ -75,7 +75,6 @@
 			<v-btn
 				flat
 				color="primary"
-				class="ma-0 regular-text"
 				:variant="userHasAnswered ? 'outlined' : undefined"
 				:to="{
 					name: MyPagesRoutes.KvittensDetails,
@@ -165,7 +164,7 @@ const kvittensSentInAnswersCount = computed(
 	.v-btn {
 		font-size: size(16);
 		height: auto;
-		padding: 12px 26px;
+		padding: 8px 26px;
 		&.bg-primary {
 			color: $white !important;
 		}

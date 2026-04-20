@@ -31,7 +31,6 @@
 						</div>
 						<v-btn
 							v-bind="props"
-							class="regular-text"
 							variant="flat"
 							size="large"
 							appendIcon="keyboard_arrow_down"

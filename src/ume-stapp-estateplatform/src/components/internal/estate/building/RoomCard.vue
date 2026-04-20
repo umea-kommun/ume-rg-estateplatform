@@ -19,7 +19,7 @@
 				size="small"
 			/>
 		</div>
-		<ul>
+		<ul class="pa-0 ma-0">
 			<li>
 				{{ $t('component.internal.buildingDetails.floorLabel') }}
 				{{ room.floorName }}

@@ -11,7 +11,6 @@
 			:selectable="true"
 		/>
 		<v-btn
-			class="regular-text ma-0"
 			color="primary"
 			variant="tonal"
 			rounded="lg"

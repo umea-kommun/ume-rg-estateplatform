@@ -25,7 +25,7 @@
 			</div>
 			<v-btn
 				v-if="historyPost.agentName"
-				class="ma-0 mt-2 regular-text"
+				class="mt-2"
 				prepend-icon="image"
 				variant="outlined"
 				color="grey-darken-4"

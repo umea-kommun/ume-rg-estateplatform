@@ -14,7 +14,7 @@
 		<div v-if="!isBusyLoadingFromServer">
 			<v-row>
 				<v-col class="pa-0">
-					<h1>
+					<h1 class="my-3">
 						{{ $t('component.internal.consentConsumerList.title') }}
 					</h1>
 				</v-col>
@@ -26,10 +26,18 @@
 				v-model:selectedGroupId="selectedGroupId"
 				v-model:searchValue="searchValue"
 			/>
-			<v-alert v-if="!consumerTemplates.length" icon="warning">
+			<v-alert
+				v-if="!consumerTemplates.length"
+				icon="warning"
+				class="mt-4"
+			>
 				{{ $t('component.internal.consentConsumerList.noResults') }}
 			</v-alert>
-			<v-alert v-else-if="!filteredTemplates.length" icon="warning">
+			<v-alert
+				v-else-if="!filteredTemplates.length"
+				icon="warning"
+				class="mt-4"
+			>
 				{{
 					$t('component.internal.consentConsumerList.noFilterResults')
 				}}

@@ -20,10 +20,10 @@
 		:disabled="props.disabled"
 	>
 		<template v-slot:item="{ props, item }">
-			<div v-if="item.raw.groupTitle" class="pl-4 pb-1 group-title">
-				<b>{{ item.raw.groupTitle }}</b>
+			<div v-if="item.groupTitle" class="pl-4 pb-1 group-title">
+				<b>{{ item.groupTitle }}</b>
 			</div>
-			<v-list-item v-bind="props" :title="item.title"></v-list-item>
+			<v-list-item v-bind="props" :title="item[itemTitle]"></v-list-item>
 		</template>
 	</v-autocomplete>
 </template>

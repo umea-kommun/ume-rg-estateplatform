@@ -11,8 +11,8 @@
 		<h1 class="mt-2 mb-4">
 			{{ $t('component.internal.defaultPasswords.title') }}
 		</h1>
-		<div class="filter">
-			<div class="dropdowns">
+		<div class="filter ga-6">
+			<div class="dropdowns ga-6">
 				<base-autocomplete
 					class="b-auto"
 					:items="fetchedSchools"
@@ -39,8 +39,9 @@
 			<v-btn
 				variant="outlined"
 				:disabled="fetchedPasswords.length === 0"
-				class="print-btn regular-text"
+				class="print-btn"
 				prepend-icon="print"
+				color="info"
 				@click="printClicked"
 				>{{ $t('component.internal.defaultPasswords.print') }}</v-btn
 			>
@@ -56,14 +57,14 @@
 				(fetchedSchools.length === 0 || fetchedGroups.length === 0)
 			"
 			icon="info"
-			class="mt-6"
+			class="mt-4"
 		>
 			{{ $t('component.internal.defaultPasswords.noAccess') }}
 		</v-alert>
 		<v-alert
 			v-else-if="!selectedSchoolId || !selectedGroupId"
 			icon="info"
-			class="mt-6"
+			class="mt-4"
 		>
 			{{ $t('component.internal.defaultPasswords.selectSchoolAndClass') }}
 		</v-alert>
@@ -74,7 +75,7 @@
 		<v-alert
 			v-else-if="fetchedPasswords.length === 0"
 			icon="info"
-			class="mt-6"
+			class="mt-4"
 		>
 			{{ $t('component.internal.defaultPasswords.noResults') }}
 		</v-alert>
@@ -262,18 +263,14 @@ const contentSize = ref<AppContentSize>(
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
-	align-items: end;
 }
 .b-auto {
 	flex-basis: 250px;
 	max-width: 300px;
-	margin: 0px;
-	margin-right: 3%;
 }
 .print-btn {
 	border: thin solid $grey-lighten-6;
-	height: 40px;
-	margin: 0px;
+	height: 48px;
 	font-size: size(16);
 }
 .dropdowns {
@@ -286,6 +283,11 @@ const contentSize = ref<AppContentSize>(
 @media print {
 	.default-passwords {
 		display: none;
+	}
+}
+.default-passwords.app-content {
+	:deep(.v-container) {
+		padding-top: calc($site-content-vertical-padding - 20px);
 	}
 }
 </style>

@@ -14,7 +14,7 @@
 				color="primary"
 				flat
 				prepend-icon="open_in_new"
-				class="regular-text ma-4"
+				class="ma-4"
 				rounded="lg"
 				:loading="isBusyFetchingGrade"
 			>

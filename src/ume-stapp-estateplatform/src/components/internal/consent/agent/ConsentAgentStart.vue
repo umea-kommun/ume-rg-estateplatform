@@ -6,8 +6,10 @@
 	>
 		<consumer-tester />
 		<base-back-button />
-		<h1>{{ $t('component.internal.consentAgentStart.title') }}</h1>
-		<p class="description">
+		<h1 class="my-3">
+			{{ $t('component.internal.consentAgentStart.title') }}
+		</h1>
+		<p class="description mt-0">
 			{{ $t('component.internal.consentAgentStart.description') }}
 		</p>
 
@@ -32,7 +34,7 @@
 		</v-row>
 		<v-row v-else-if="selectedStudent && childConsents?.length">
 			<v-col class="pa-0 mt-3">
-				<h2>
+				<h2 class="mb-2 mt-0">
 					{{
 						$t(
 							'component.internal.consentAgentStart.consentsTitle',

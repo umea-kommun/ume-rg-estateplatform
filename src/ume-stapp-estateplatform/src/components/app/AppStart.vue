@@ -8,7 +8,7 @@
 		<div v-if="!isBusyLoadingFromServer">
 			<v-row>
 				<v-col cols="12" class="pa-0">
-					<h1>
+					<h1 class="my-0">
 						{{
 							$t('component.appStart.welcomeMessage', {
 								name: user.firstName,
@@ -18,11 +18,11 @@
 				</v-col>
 			</v-row>
 			<v-row>
-				<p class="mb-6">
+				<p class="mb-6 mt-0">
 					{{ $t('component.appStart.description') }}
 				</p>
 			</v-row>
-			<v-row>
+			<v-row class="ma-0">
 				<v-col class="pa-0 action-cards">
 					<v-card
 						:to="{ name: MyPagesRoutes.ConsentStart }"

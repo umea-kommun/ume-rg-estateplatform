@@ -27,19 +27,7 @@ html {
 	background-color: $white;
 
 	a {
-		color: #333 !important;
-	}
-
-	a:hover {
-		color: rgba(#555555, 0.7);
-	}
-
-	.pb-2 {
-		padding-bottom: 8px !important;
-	}
-
-	.pt-3 {
-		padding-top: 16px !important;
+		color: #333;
 	}
 
 	.text-h1,
@@ -54,47 +42,11 @@ html {
 	}
 }
 
-/** Overwrite css manually in some cases
- * Icons inside button with left or right should have less margin, original value was margin-*: 16px
- * Reference file: node_modules/vuetify/stylus/components/_buttons.styl
- */
-.v-btn {
-	&--size-small {
-		font-size: size(12);
-		line-height: size(12) !important;
-	}
-	&--size-default {
-		font-size: size(14);
-		line-height: size(14) !important;
-	}
-	&__content {
-		display: flex;
-		align-items: center;
-	}
+.v-btn__prepend,
+.v-btn__append {
 	.v-icon {
-		&--right,
-		&.right {
-			margin-left: 6px;
-		}
-		&--left,
-		&.left {
-			margin-right: 6px;
-		}
+		font-size: size(20);
 	}
-	&.regular-text {
-		text-transform: none;
-		letter-spacing: normal;
-	}
-}
-
-.theme--light.v-chip {
-	&--removable {
-		background-color: rgba(#00a01e, 0.2);
-	}
-}
-
-.v-card {
-	border-radius: $border-radius;
 }
 
 .v-card__title {
@@ -107,42 +59,6 @@ html {
 	.theme--light.v-label {
 		color: rgba(0, 0, 0, 0.55);
 	}
-}
-
-.app-form .extra-info {
-	.theme--light.v-icon {
-		color: rgba(0, 0, 0, 0.55);
-	}
-}
-
-.v-list--disabled {
-	a {
-		color: #999;
-		background: #f2f2f2;
-	}
-}
-
-.v-text-field .v-input__append-inner {
-	padding-left: 20px;
-}
-.v-input .v-input__details {
-	display: none;
-}
-
-.v-btn {
-	border-radius: $border-radius;
-	margin: 6px 8px;
-
-	.v-btn__prepend {
-		padding-left: 2px;
-	}
-	.v-btn__content {
-		padding: 0 4px;
-	}
-}
-
-.v-row {
-	margin: 0;
 }
 
 .fullscreen-fixed {

@@ -8,14 +8,14 @@
 		<div v-if="!isBusyLoadingFromServer">
 			<v-row row class="pa-0">
 				<v-col class="pa-0">
-					<h1>
+					<h1 class="ma-0">
 						{{
 							$t('component.internal.internalStart.title', {
 								name: store.state.user.firstName,
 							})
 						}}
 					</h1>
-					<p class="mt-4">
+					<p class="mt-4 mb-0">
 						{{ $t('component.internal.internalStart.description') }}
 					</p>
 				</v-col>
@@ -25,7 +25,7 @@
 				class="mt-4"
 			>
 				<v-col cols="12" class="pa-0">
-					<hr class="mb-4" />
+					<hr class="mb-4 mt-0" />
 					<h2 class="mb-4">
 						{{
 							$t('component.internal.internalStart.consent.title')
@@ -80,7 +80,7 @@
 			</v-row>
 			<v-row class="mt-4" v-if="isKvittensConsumer">
 				<v-col cols="12" class="pa-0">
-					<hr class="mb-4" />
+					<hr class="mb-4 mt-0" />
 					<h2 class="mb-4">
 						{{
 							$t(
@@ -120,7 +120,7 @@
 			</v-row>
 			<v-row class="mt-4" v-if="isPasswordConsumer">
 				<v-col cols="12" class="pa-0">
-					<hr class="mb-4" />
+					<hr class="mb-4 mt-0" />
 					<h2 class="mb-4">
 						{{
 							$t(
@@ -146,7 +146,7 @@
 			</v-row>
 			<v-row class="mt-4" v-if="isEstateEnabled">
 				<v-col cols="12" class="pa-0">
-					<hr class="mb-4" />
+					<hr class="mb-4 mt-0" />
 					<h2 class="mb-2">
 						{{
 							$t('component.internal.internalStart.estate.title')

@@ -38,11 +38,7 @@
 						{{ location.description }}
 					</v-card-text>
 					<div class="d-flex justify-center">
-						<v-btn
-							class="regular-text mb-4"
-							color="primary"
-							variant="tonal"
-						>
+						<v-btn class="mb-4" color="primary" variant="tonal">
 							{{ location.buttonText }}
 						</v-btn>
 					</div>

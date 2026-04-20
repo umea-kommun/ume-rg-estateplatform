@@ -48,22 +48,19 @@
 				:disabled="!selectedSchoolId"
 			>
 				<template v-slot:item="{ props, item }">
-					<div
-						v-if="item.raw.groupTitle"
-						class="pl-4 pb-1 group-title"
-					>
-						<b>{{ item.raw.groupTitle }}</b>
+					<div v-if="item.groupTitle" class="pl-4 pb-1 group-title">
+						<b>{{ item.groupTitle }}</b>
 					</div>
 					<v-list-item
 						v-bind="props"
-						:title="item.title"
-						:subtitle="getGroupPeriod(item.raw)"
+						:title="item.name"
+						:subtitle="getGroupPeriod(item)"
 					></v-list-item>
 				</template>
 			</v-autocomplete>
 		</v-col>
 		<v-col cols="4" class="pr-0 pt-0" v-if="showSearch">
-			<base-text-box
+			<v-text-field
 				id="search"
 				v-model="searchValue"
 				variant="outlined"
@@ -71,6 +68,9 @@
 					$t('component.internal.consentConsumerList.filter.search')
 				"
 				prependInnerIcon="search"
+				density="comfortable"
+				color="primary"
+				hide-details
 			/>
 		</v-col>
 	</v-row>
@@ -78,7 +78,6 @@
 
 <script setup lang="ts">
 import { IConsumerGroup } from '@/models/Interfaces';
-import BaseTextBox from '@/components/base/BaseTextBox.vue';
 import moment from 'moment';
 import { computed, PropType, ref, watch } from 'vue';
 import { TemplateConnectionType } from '@/models/Enums';

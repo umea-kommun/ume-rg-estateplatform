@@ -9,12 +9,14 @@
 			:to="{ name: MyPagesRoutes.AppStart, replace: true }"
 		/>
 		<div class="d-flex flex-wrap justify-space-between top-wrap">
-			<h1>{{ $t('component.external.gradeStart.title') }}</h1>
+			<h1 class="my-1">
+				{{ $t('component.external.gradeStart.title') }}
+			</h1>
 		</div>
-		<p class="mt-2">
+		<p class="my-2">
 			{{ $t('component.external.gradeStart.description') }}
 		</p>
-		<p class="mt-2">
+		<p class="my-2">
 			{{ $t('component.external.gradeStart.explanationPart1') }}
 			<a :href="Config.VUE_APP_GRADE_HELP_URL" target="_blank">
 				{{ $t('component.external.gradeStart.explanationLink') }}
@@ -104,7 +106,7 @@ const contentSize = ref<AppContentSize>(
 		}
 	}
 }
-.kvittens-start.app-content {
+.grade-start.app-content {
 	:deep(.v-container) {
 		padding-top: calc($site-content-vertical-padding - 20px);
 	}

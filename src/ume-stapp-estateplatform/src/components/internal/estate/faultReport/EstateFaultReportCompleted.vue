@@ -11,7 +11,7 @@
 				{{ $t('component.internal.faultReport.completed.description') }}
 			</p>
 			<v-btn
-				class="mt-4 regular-text"
+				class="mt-4"
 				color="primary"
 				:to="{
 					name: MyPagesRoutes.InternalStart,
