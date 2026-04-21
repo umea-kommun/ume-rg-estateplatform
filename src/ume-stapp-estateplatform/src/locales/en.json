@@ -808,7 +808,7 @@
 		"BaseLoginMethods": {
 			"title": "Log in",
 			"externalTitle": "Log in as a private individual",
-			"internalTitle": "Are you an employee of Umeå municipality?",
+			"internalTitle": "Log in as an employee",
 			"helpTitle": "Help",
 			"loginMethodHelpTitle": "Which login method should I choose?",
 			"loginMethodHelpPart1": "Log in with your BankID or Freja eID+ to manage and track your private matters.",

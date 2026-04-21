@@ -809,7 +809,7 @@
 		"BaseLoginMethods": {
 			"title": "Logga in",
 			"externalTitle": "Logga in som privatperson",
-			"internalTitle": "Är du anställd i Umeå kommun?",
+			"internalTitle": "Logga in som medarbetare",
 			"helpTitle": "Hjälp",
 			"loginMethodHelpTitle": "Vilken inloggningsmetod ska jag välja?",
 			"loginMethodHelpPart1": "Logga in med BankID eller Freja eID+ för att hantera och följa dina privata ärenden.",

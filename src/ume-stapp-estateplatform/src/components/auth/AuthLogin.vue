@@ -23,7 +23,7 @@
 							$t('app.auth.loginInfo.externalFunctionalityTitle')
 						}}
 					</h3>
-					<ul>
+					<ul class="pa-0">
 						<li class="ml-6">
 							{{
 								$t('app.auth.loginInfo.externalFunctionality1')

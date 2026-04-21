@@ -16,7 +16,7 @@
 	"dependencies": {
 		"@microsoft/applicationinsights-web": "^2.8.11",
 		"@tinymce/tinymce-vue": "^6.1.0",
-		"@turkos/base-login-methods": "^3.2.0",
+		"@turkos/base-login-methods": "^3.2.2",
 		"@turkos/components": "^0.1.2",
 		"@vee-validate/rules": "^4.11.3",
 		"@vueuse/core": "^10.4.1",
