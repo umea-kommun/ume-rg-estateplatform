@@ -71,10 +71,14 @@ export default class AuthConfig {
 		this.authClients = [...authClientMap.values()];
 	}
 
-	public getAdminClientConfig(): IAuthClientConfig {
-		return this.authClients.filter(
-			(clientConfig) => clientConfig.scope === this.adminScope
-		)[0];
+	public getInternalClientConfig(): IAuthClientConfig {
+		const config = this.authClients.find(
+			(clientConfig) => clientConfig.scope === this.internalScope
+		);
+		if (!config) {
+			throw new Error('No internal auth client configuration found');
+		}
+		return config;
 	}
 
 	public getPublicAuthClientConfigs(): IAuthClientConfig[] {

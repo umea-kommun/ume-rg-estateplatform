@@ -13,7 +13,7 @@
 			<p class="mt-2" v-if="errorMessage">
 				{{ errorMessage }}
 			</p>
-			<div class="d-flex justify-center mt-4">
+			<div class="d-flex justify-center mt-4 ga-4">
 				<v-btn
 					target="_BLANK"
 					v-if="!errorPage?.hideReport"

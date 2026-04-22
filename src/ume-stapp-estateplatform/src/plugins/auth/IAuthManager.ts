@@ -37,10 +37,10 @@ export default interface IAuthManager {
 	): string | void;
 
 	/**
-	 * Login user as administrator, someone creating e-services (web forms)
+	 * Login user as internal user (UK employee)
 	 * @param routeAfterLogin
 	 */
-	loginAdmin(routeAfterLogin: string): void;
+	loginInternal(routeAfterLogin: string): void;
 
 	/**
 	 * Method that should logout the user, both in this app and over at the central authorization server.

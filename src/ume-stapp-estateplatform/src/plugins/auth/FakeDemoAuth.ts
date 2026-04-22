@@ -21,8 +21,8 @@ class FakeDemoAuth implements IAuthManager {
 		this.login(routeAfterLogin, this.config.publicScope, authClientName);
 	}
 
-	public loginAdmin(routeAfterLogin: string): void {
-		this.login(routeAfterLogin, this.config.adminScope);
+	public loginInternal(routeAfterLogin: string): void {
+		this.login(routeAfterLogin, this.config.internalScope);
 	}
 
 	public getAllClientsConfig(): IAuthClientConfig[] {

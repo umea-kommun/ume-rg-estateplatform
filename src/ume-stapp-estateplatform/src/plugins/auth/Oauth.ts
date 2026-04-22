@@ -34,8 +34,8 @@ class Oauth implements IAuthManager {
 		);
 	}
 
-	public loginAdmin(routeAfterLogin: string): void {
-		this.login(routeAfterLogin, this.config.adminScope);
+	public loginInternal(routeAfterLogin: string): void {
+		this.login(routeAfterLogin, this.config.internalScope);
 	}
 
 	public getAllClientsConfig(): IAuthClientConfig[] {
@@ -159,7 +159,7 @@ class Oauth implements IAuthManager {
 		store.commit(MutationType.UserLogOut);
 		const authClientConfig = authClientName
 			? this.config.getClientConfigByName(authClientName)
-			: this.config.getAdminClientConfig();
+			: this.config.getInternalClientConfig();
 		window.location.replace(
 			authClientConfig.logoutUrl +
 				'?redirect=' +
@@ -173,8 +173,8 @@ class Oauth implements IAuthManager {
 		authClientName: string | string[] | null = null
 	): string {
 		const clientConfig: IAuthClientConfig[] = [];
-		if (scope === this.config.adminScope) {
-			clientConfig.push(this.config.getAdminClientConfig());
+		if (scope === this.config.internalScope) {
+			clientConfig.push(this.config.getInternalClientConfig());
 		} else if (authClientName && Array.isArray(authClientName)) {
 			authClientName.forEach((element) => {
 				clientConfig.push(this.config.getClientConfigByName(element));
@@ -220,6 +220,12 @@ class Oauth implements IAuthManager {
 			clientConfig[0].redirectUrl +
 			'&state=' +
 			state;
+
+		// Internal login directly
+		if (scope === this.config.internalScope) {
+			window.location.replace(loginUrl);
+		}
+
 		return (
 			loginUrl +
 			'&client_name=' +

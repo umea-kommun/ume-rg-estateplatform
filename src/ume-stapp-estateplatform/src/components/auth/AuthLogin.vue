@@ -75,8 +75,12 @@ function login(): void {
 				path: route.query.comeBack.toString(),
 			});
 			// Set the comeBackUrl if it is valid
-			if (name && path) {
+			if (name && path && !path.startsWith('//')) {
 				comeBackUrl = path;
+
+				if (path.startsWith('/internt')) {
+					return $auth.loginInternal(comeBackUrl);
+				}
 			}
 		}
 
