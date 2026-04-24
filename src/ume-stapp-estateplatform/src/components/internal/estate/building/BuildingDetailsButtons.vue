@@ -147,8 +147,8 @@ const onBlueprintClick = () => {
 
 const contactPersonsCount = computed(() => {
 	return Object.values(props.building?.contactPersons || {}).reduce(
-		(count, value) => {
-			if (value && value.trim() !== '') {
+		(count, contact) => {
+			if (contact && contact.name?.trim() !== '') {
 				return count + 1;
 			}
 			return count;

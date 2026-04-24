@@ -14,19 +14,45 @@
 					<div class="persons-wrap">
 						<div
 							v-for="person in persons"
-							:key="person.label + person.value"
+							:key="person.label + (person.value?.name ?? '')"
 							class="person"
 						>
 							<h3>
 								{{ person.label }}
 							</h3>
 							<div class="value">
-								{{
-									person.value ??
-									$t(
-										'component.internal.buildingContact.valueMissing'
-									)
-								}}
+								<template v-if="person.value">
+									<div class="name">{{ person.value.name }}</div>
+									<div v-if="person.value.email" class="contact-link">
+										<BaseAutoLinkText
+											:text="person.value.email"
+											:link-aria-label="
+												$t(
+													'component.internal.buildingContact.emailAriaLabel',
+													{ name: person.value.name }
+												)
+											"
+										/>
+									</div>
+									<div v-if="person.value.phone" class="contact-link">
+										<BaseAutoLinkText
+											:text="person.value.phone"
+											:link-aria-label="
+												$t(
+													'component.internal.buildingContact.callAriaLabel',
+													{ name: person.value.name }
+												)
+											"
+										/>
+									</div>
+								</template>
+								<template v-else>
+									{{
+										$t(
+											'component.internal.buildingContact.valueMissing'
+										)
+									}}
+								</template>
 							</div>
 						</div>
 					</div>
@@ -46,6 +72,7 @@
 import { computed } from 'vue';
 import { IBuildingDetails } from '@/models/estate/Interfaces';
 import { useI18n } from 'vue-i18n';
+import BaseAutoLinkText from '@/components/base/BaseAutoLinkText.vue';
 
 const props = defineProps<{
 	modelValue: boolean;
@@ -96,8 +123,27 @@ const persons = computed(() => {
 
 		.person {
 			flex: 11 45%;
+
+			h3 {
+				margin-bottom: 0;
+				font-size: size(14);
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.02em;
+				opacity: 0.75;
+			}
+
 			.value {
 				font-size: size(16);
+
+				.name {
+					font-weight: 400;
+				}
+
+				.contact-link {
+					display: block;
+					margin-top: 2px;
+				}
 			}
 		}
 	}

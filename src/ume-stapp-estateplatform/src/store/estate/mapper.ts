@@ -7,6 +7,7 @@ import {
 	ExternalOwnerStatus,
 } from '@/models/estate/Enums';
 import {
+	IBuildingContact,
 	IBuildingDetails,
 	IBuildingDocument,
 	IBuildingFloor,
@@ -367,10 +368,10 @@ export default {
 				note: string;
 			};
 			contactPersons: {
-				propertyManager: string | null;
-				operationsManager: string | null;
-				operationCoordinator: string | null;
-				rentalAdministrator: string | null;
+				propertyManager: IBuildingContact | null;
+				operationsManager: IBuildingContact | null;
+				operationCoordinator: IBuildingContact | null;
+				rentalAdministrator: IBuildingContact | null;
 			} | null;
 		};
 		workOrderTypes?: string[];
@@ -435,12 +436,13 @@ export default {
 				: null,
 			contactPersons: rContactPersons
 				? {
-						propertyManager: rContactPersons?.propertyManager,
-						operationsManager: rContactPersons?.operationsManager,
+						propertyManager: rContactPersons.propertyManager ?? null,
+						operationsManager:
+							rContactPersons.operationsManager ?? null,
 						operationCoordinator:
-							rContactPersons?.operationCoordinator,
+							rContactPersons.operationCoordinator ?? null,
 						rentalAdministrator:
-							rContactPersons?.rentalAdministrator,
+							rContactPersons.rentalAdministrator ?? null,
 				  }
 				: null,
 		};

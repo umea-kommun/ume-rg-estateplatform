@@ -27,18 +27,8 @@
 					{{ $t('estateCommon.externalOwner.note') }}
 				</div>
 				<div class="value">
-					<span v-if="noteTokens.length">
-						<template v-for="(t, i) in noteTokens" :key="i">
-							<span v-if="t.type === 'text'">{{ t.value }}</span>
-							<a
-								v-else
-								:href="t.href"
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								{{ t.value }}
-							</a>
-						</template>
+					<span v-if="externalOwnerInfo?.note">
+						<BaseAutoLinkText :text="externalOwnerInfo.note" />
 					</span>
 					<span class="font-italic font-weight-light" v-else>
 						{{
@@ -55,18 +45,12 @@
 
 <script setup lang="ts">
 import { IExternalOwnerInfo } from '@/models/estate/Interfaces';
-import { computed } from 'vue';
-import { linkify } from './linkifyText';
+import BaseAutoLinkText from '@/components/base/BaseAutoLinkText.vue';
 
-const props = defineProps<{
+defineProps<{
 	externalOwnerInfo: IExternalOwnerInfo;
 	transparent?: boolean;
 }>();
-
-const noteTokens = computed(() => {
-	const note = props.externalOwnerInfo?.note ?? '';
-	return note ? linkify(note) : [];
-});
 </script>
 
 <style scoped lang="scss">

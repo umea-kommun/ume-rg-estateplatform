@@ -675,7 +675,9 @@
 				"operationsManager": "Driftområdeschef",
 				"operationCoordinator": "Driftsamordnare",
 				"rentalAdministrator": "Hyresadministratör",
-				"valueMissing": "Ej angivet"
+				"valueMissing": "Ej angivet",
+				"callAriaLabel": "Ring {name}",
+				"emailAriaLabel": "Skicka e-post till {name}"
 			},
 			"buildingDocument": {
 				"title": "Handlingar",

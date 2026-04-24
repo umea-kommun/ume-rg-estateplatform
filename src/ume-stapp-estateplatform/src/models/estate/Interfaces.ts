@@ -87,11 +87,17 @@ export interface IExternalOwnerInfo {
 	note: string | null;
 }
 
+export interface IBuildingContact {
+	name: string;
+	phone?: string | null;
+	email?: string | null;
+}
+
 export interface IBuildingContactPersons {
-	propertyManager: string | null;
-	operationsManager: string | null;
-	operationCoordinator: string | null;
-	rentalAdministrator: string | null;
+	propertyManager: IBuildingContact | null;
+	operationsManager: IBuildingContact | null;
+	operationCoordinator: IBuildingContact | null;
+	rentalAdministrator: IBuildingContact | null;
 }
 
 export interface IBuildingGeoLocation {
