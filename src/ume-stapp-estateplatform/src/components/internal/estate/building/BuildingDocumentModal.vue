@@ -12,7 +12,7 @@
 			</v-card-title>
 
 			<div class="content">
-				<v-card-text class="pa-0">
+				<v-card-text>
 					<div class="d-flex ga-4 mx-6">
 						<v-text-field
 							v-model="search"
@@ -34,7 +34,11 @@
 							v-if="categories.length > 0"
 							v-model="selectedCategory"
 							:items="categories"
-							:label="$t('component.internal.buildingDocument.category')"
+							:label="
+								$t(
+									'component.internal.buildingDocument.category'
+								)
+							"
 							rounded="lg"
 							density="comfortable"
 							variant="outlined"
@@ -48,7 +52,10 @@
 						class="ma-4 mt-1"
 						type="list-item-two-line, list-item-two-line"
 					/>
-					<v-list v-else-if="filteredDocuments.length > 0" class="px-6 mt-4">
+					<v-list
+						v-else-if="filteredDocuments.length > 0"
+						class="px-6 mt-4"
+					>
 						<document-file
 							v-for="doc in filteredDocuments"
 							:key="doc.id"
@@ -137,9 +144,7 @@ const filteredDocuments = computed(() => {
 
 	if (search.value) {
 		const term = search.value.toLowerCase();
-		result = result.filter((d) =>
-			d.name.toLowerCase().includes(term)
-		);
+		result = result.filter((d) => d.name.toLowerCase().includes(term));
 	}
 
 	return result;
