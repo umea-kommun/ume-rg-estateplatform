@@ -13,9 +13,11 @@
 			:selected-room="selectedRoom"
 			@room-opened="(roomId) => openRoom(roomId, true)"
 			@room-selected="(room) => emit('room-selected', room)"
+			@print="print"
 			:hide-controls="hideControls"
 			:room-zoom-padding="roomZoomPadding"
 			:selectable="selectable"
+			:print-title="printTitle"
 		/>
 		<v-dialog
 			v-model="fullScreen"
@@ -35,8 +37,10 @@
 				:selected-room="selectedRoom"
 				@room-opened="(roomId) => openRoom(roomId, true)"
 				@room-selected="(room) => emit('room-selected', room)"
+				@print="print"
 				:room-zoom-padding="roomZoomPadding"
 				:selectable="selectable"
+				:print-title="printTitle"
 			/>
 		</v-dialog>
 	</div>
@@ -46,6 +50,7 @@
 import { DispatchType } from '@/models/Enums';
 import {
 	IBlueprintPosition,
+	IBuildingDetails,
 	IBuildingFloor,
 	IBuildingRoom,
 } from '@/models/estate/Interfaces';
@@ -57,7 +62,7 @@ import ErrorService from '@/utils/ErrorService';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
-	buildingId: number;
+	building: IBuildingDetails;
 	floor: number | null;
 	hideControls?: boolean;
 	roomZoomPadding?: number;
@@ -202,9 +207,11 @@ const fetchFloors = async (buildingId: number) => {
 };
 
 watch(
-	() => props.buildingId,
-	(newId) => {
-		fetchFloors(newId);
+	() => props.building,
+	(newBuilding) => {
+		if (newBuilding) {
+			fetchFloors(newBuilding.id);
+		}
 	},
 	{ immediate: true }
 );
@@ -215,6 +222,28 @@ watch(
 		selectFloor(newFloorId);
 	}
 );
+
+const print = async () => {
+	document.body.classList.add('printing-blueprint');
+
+	const cleanup = () => {
+		document.body.classList.remove('printing-blueprint');
+		window.removeEventListener('afterprint', cleanup);
+	};
+
+	window.addEventListener('afterprint', cleanup, { once: true });
+	window.print();
+};
+
+const printTitle = computed(() => {
+	const buildingName = props.building.popularName || props.building.name;
+	const floorName = floors.value?.find((f) => f.id === selectedFloorId.value)
+		?.name;
+
+	return `${buildingName} - ${t(
+		'component.blueprintMap.floor'
+	)} ${floorName}`;
+});
 
 const openFullscreen = () => {
 	fullScreen.value = true;
@@ -240,6 +269,41 @@ defineExpose({
 
 		:deep(svg) {
 			z-index: 1;
+		}
+	}
+}
+</style>
+
+<style lang="scss">
+@media print {
+	@page {
+		margin: 0;
+		size: auto;
+	}
+	body.printing-blueprint {
+		margin: 0 !important;
+		padding: 0 !important;
+		height: 100vh;
+		overflow: hidden !important;
+
+		* {
+			visibility: hidden;
+		}
+
+		.estate-default .container .map,
+		.building-blueprint-dialog {
+			visibility: visible;
+			position: fixed !important;
+			inset: 0 !important;
+			overflow: hidden;
+
+			.blueprint-viewer {
+				padding: 36px;
+			}
+
+			* {
+				visibility: visible;
+			}
 		}
 	}
 }

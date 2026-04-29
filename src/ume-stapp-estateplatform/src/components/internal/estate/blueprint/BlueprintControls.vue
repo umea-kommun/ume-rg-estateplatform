@@ -23,24 +23,27 @@
 				rounded="lg"
 				hide-details
 			/>
-			<v-btn-group direction="vertical" :elevation="2">
-				<v-btn
-					rounded="0"
-					icon="add"
-					:title="t('component.map.zoomIn')"
-					@click="emit('zoom-in')"
-					size="small"
-					:disabled="zoomInDisabled"
-				/>
-				<v-btn
-					rounded="0"
-					icon="remove"
-					:title="t('component.map.zoomOut')"
-					@click="emit('zoom-out')"
-					size="small"
-					:disabled="zoomOutDisabled"
-				/>
-			</v-btn-group>
+			<div class="d-flex flex-column ga-4">
+				<v-btn icon="print" size="small" @click="emit('print')" />
+				<v-btn-group direction="vertical" :elevation="2">
+					<v-btn
+						rounded="0"
+						icon="add"
+						:title="t('component.map.zoomIn')"
+						@click="emit('zoom-in')"
+						size="small"
+						:disabled="zoomInDisabled"
+					/>
+					<v-btn
+						rounded="0"
+						icon="remove"
+						:title="t('component.map.zoomOut')"
+						@click="emit('zoom-out')"
+						size="small"
+						:disabled="zoomOutDisabled"
+					/>
+				</v-btn-group>
+			</div>
 		</div>
 	</div>
 </template>
@@ -65,6 +68,7 @@ const emit = defineEmits([
 	'update:fullScreen',
 	'zoom-in',
 	'zoom-out',
+	'print',
 ]);
 
 const selectedFloorId = computed({
@@ -123,6 +127,10 @@ const fullScreen = computed({
 				border-bottom: none;
 			}
 		}
+	}
+
+	@media print {
+		display: none;
 	}
 }
 </style>

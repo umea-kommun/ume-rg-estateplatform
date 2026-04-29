@@ -14,7 +14,7 @@
 					v-if="building.blueprintAvailable"
 					ref="buildingBlueprintRef"
 					class="selected-room-blueprint"
-					:building-id="building.id"
+					:building="building"
 					:floor="selectedRoom.floorId"
 					:room-zoom-padding="0.5"
 					hide-controls

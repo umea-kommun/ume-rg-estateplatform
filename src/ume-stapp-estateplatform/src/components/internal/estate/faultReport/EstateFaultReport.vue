@@ -190,7 +190,7 @@
 							"
 						>
 							<room-blueprint-selector
-								:building-id="selectedBuilding.id"
+								:building="selectedBuilding"
 								@room-selected="selectRoom"
 							/>
 						</template>
@@ -308,10 +308,7 @@
 									v-for="(codes, field) in serverErrors"
 									:key="field"
 								>
-									<span
-										v-for="code in codes"
-										:key="code"
-									>
+									<span v-for="code in codes" :key="code">
 										{{
 											t(
 												`app.error.estate.validation.${code}`,

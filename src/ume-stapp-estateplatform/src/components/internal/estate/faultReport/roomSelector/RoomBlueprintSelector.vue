@@ -3,7 +3,7 @@
 		<building-blueprint
 			v-if="showBlueprint"
 			ref="building-blueprint"
-			:building-id="buildingId"
+			:building="building"
 			class="d-none"
 			:floor="null"
 			@fullscreen-closed="showBlueprint = false"
@@ -26,10 +26,10 @@
 import { nextTick, ref, useTemplateRef } from 'vue';
 import BuildingBlueprint from '../../blueprint/BuildingBlueprint.vue';
 import { appInsights } from '@/plugins/appInsights';
-import { IBuildingRoom } from '@/models/estate/Interfaces';
+import { IBuildingDetails, IBuildingRoom } from '@/models/estate/Interfaces';
 
 defineProps<{
-	buildingId: number;
+	building: IBuildingDetails;
 }>();
 
 const emit = defineEmits(['room-selected']);

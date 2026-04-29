@@ -150,5 +150,9 @@ const properties = computed(() => {
 			margin: 4px;
 		}
 	}
+
+	@media print {
+		display: none;
+	}
 }
 </style>

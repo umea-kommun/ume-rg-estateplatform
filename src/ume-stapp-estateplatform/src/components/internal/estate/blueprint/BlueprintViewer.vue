@@ -1,5 +1,6 @@
 <template>
 	<div class="blueprint-viewer">
+		<h1 class="print-title">{{ printTitle }}</h1>
 		<div v-if="loading" class="loader-lazy d-flex align-center h-100">
 			<app-loading-spinner :is-visible="true" />
 		</div>
@@ -19,6 +20,7 @@
 			v-model:fullScreen="fullScreen"
 			v-model:selectedFloorId="selectedFloorId"
 			:floors="floors"
+			@print="emit('print')"
 			@zoom-in="blueprintMap?.zoomIn()"
 			@zoom-out="blueprintMap?.zoomOut()"
 			:zoom-in-disabled="blueprintMap?.zoomInDisabled"
@@ -64,6 +66,7 @@ const props = defineProps<{
 	hideControls?: boolean;
 	roomZoomPadding?: number;
 	selectable?: boolean;
+	printTitle?: string;
 }>();
 
 const emit = defineEmits<{
@@ -72,6 +75,7 @@ const emit = defineEmits<{
 	(e: 'update:full-screen', value: boolean): void;
 	(e: 'update:selected-floor-id', value: number | null): void;
 	(e: 'update:start-position', value: IBlueprintPosition | null): void;
+	(e: 'print'): void;
 }>();
 
 const blueprintMap = useTemplateRef('blueprint-map');
@@ -169,5 +173,13 @@ onBeforeUnmount(() => {
 	overflow: hidden;
 
 	background-color: $estate-blueprint-background;
+
+	.print-title {
+		display: none;
+
+		@media print {
+			display: block;
+		}
+	}
 }
 </style>

@@ -85,7 +85,7 @@
 					v-if="building && building.blueprintAvailable"
 					v-show="activeMap === ActiveMapType.Blueprint"
 					ref="building-blueprint"
-					:buildingId="building.id"
+					:building="building"
 					@room-opened="(roomId) => roomList?.focusRoom(roomId)"
 					v-model:floor="selectedFloorId"
 				/>
