@@ -14,7 +14,7 @@
 				<button type="button" @click="openPicker" class="select-button">
 					{{ $t('component.baseFileUpload.selectFiles') }}
 				</button>
-				<p>
+				<p class="ma-0">
 					{{
 						$t('component.baseFileUpload.dropFiles', {
 							count: maxFiles,
@@ -23,10 +23,10 @@
 				</p>
 			</div>
 
-			<p class="text-medium-emphasis mt-2">
+			<p class="text-medium-emphasis mb-0 mt-2">
 				{{ rulesHint }}
 			</p>
-			<p v-if="formatsHint" class="text-medium-emphasis">
+			<p v-if="formatsHint" class="text-medium-emphasis mb-0">
 				{{ formatsHint }}
 			</p>
 		</div>
@@ -131,9 +131,7 @@ const fileInput = ref<HTMLInputElement | null>(null);
 const error = ref<string>('');
 
 const hasErrors = computed(
-	() =>
-		!!error.value ||
-		Object.keys(props.serverErrors ?? {}).length > 0
+	() => !!error.value || Object.keys(props.serverErrors ?? {}).length > 0
 );
 
 const generalFileErrors = computed(() => {

@@ -141,16 +141,20 @@ const selectedFloorId = computed<number | null>({
 	},
 });
 
+const normalizeRoomType = (roomType: string | null) => {
+	if (roomType?.startsWith('Mötesrum')) {
+		return 'Mötesrum';
+	}
+	return roomType?.trim() ?? '';
+};
+
 const roomTypes = computed(() => {
 	// Room types are based on popular names
 	const roomTypes = Array.from(
 		new Set(
 			(rooms.value ?? [])
-				.map((room) => room.popularName)
-				.filter(
-					(name): name is string =>
-						typeof name === 'string' && name.length > 0
-				)
+				.map((room) => normalizeRoomType(room.popularName))
+				.filter((name) => name.length > 0)
 		)
 	);
 
@@ -172,7 +176,8 @@ const filteredRooms = computed(() => {
 
 	if (selectedRoomType.value) {
 		filtered = filtered.filter(
-			(room) => room.popularName === selectedRoomType.value
+			(room) =>
+				normalizeRoomType(room.popularName) === selectedRoomType.value
 		);
 	}
 
