@@ -4,6 +4,7 @@ using Azure.Storage.Blobs;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Umea.se.Toolkit.Images.Caching;
@@ -18,7 +19,7 @@ public static class ServiceCollectionExtensions
     /// Adds ImageService with FusionCache-based L1/L2 caching.
     /// </summary>
     /// <param name="services">The service collection.</param>
-    /// <param name="cacheKeyPrefix">Required prefix for all cache keys (e.g., "estateservice").</param>
+    /// <param name="cacheKeyPrefix">Required prefix for all cache keys (e.g., "myapp").</param>
     /// <param name="configureOptions">Configure additional image service options.</param>
     /// <param name="configureBlobCache">Configure blob storage for L2 cache. If null or not configured, uses memory-only caching.</param>
     public static IServiceCollection AddImageService(
@@ -29,55 +30,64 @@ public static class ServiceCollectionExtensions
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(cacheKeyPrefix);
 
-        // Register ImageServiceOptions
         ImageServiceOptions imageOptions = new() { CacheKeyPrefix = cacheKeyPrefix };
         configureOptions?.Invoke(imageOptions);
+        ArgumentException.ThrowIfNullOrWhiteSpace(imageOptions.CacheKeyPrefix);
         services.AddSingleton(imageOptions);
 
-        // Register BlobCacheOptions
         BlobCacheOptions blobOptions = new();
         configureBlobCache?.Invoke(blobOptions);
         services.AddSingleton(blobOptions);
 
+        RegisterCoreServices(services, blobOptions.IsConfigured);
+
+        return services;
+    }
+
+    private static void RegisterCoreServices(IServiceCollection services, bool useBlobCache)
+    {
+        if (useBlobCache)
+        {
+            // Shared BlobContainerClient: used by BlobDistributedCache (FusionCache L2) and made
+            // available to consumers that store related payloads in the same container.
+            services.AddSingleton<BlobContainerClient>(sp =>
+            {
+                BlobCacheOptions options = sp.GetRequiredService<BlobCacheOptions>();
+                ILogger<BlobDistributedCache> logger = sp.GetRequiredService<ILogger<BlobDistributedCache>>();
+
+                logger.LogInformation(
+                    "BlobCacheOptions - UseConnectionString: {HasConnStr}, ServiceUri: {ServiceUri}, ContainerName: {Container}",
+                    !string.IsNullOrWhiteSpace(options.ConnectionString),
+                    options.ServiceUri,
+                    options.ContainerName);
+
+                return CreateBlobContainerClient(options, logger);
+            });
+        }
+
         // L2 Distributed Cache (Blob Storage or Memory fallback)
         services.AddSingleton<IDistributedCache>(sp =>
         {
-            BlobCacheOptions options = sp.GetRequiredService<BlobCacheOptions>();
             ILogger<BlobDistributedCache> logger = sp.GetRequiredService<ILogger<BlobDistributedCache>>();
 
-            logger.LogInformation(
-                "BlobCacheOptions - UseConnectionString: {HasConnStr}, ServiceUri: {ServiceUri}, ContainerName: {Container}, IsConfigured: {IsConfigured}",
-                !string.IsNullOrWhiteSpace(options.ConnectionString),
-                options.ServiceUri,
-                options.ContainerName,
-                options.IsConfigured);
-
-            if (!options.IsConfigured)
+            if (!useBlobCache)
             {
-                logger.LogInformation("Blob cache not configured, using memory-only distributed cache");
+                logger.LogInformation("Falling back to memory-only distributed cache.");
                 return new MemoryDistributedCache(Options.Create(new MemoryDistributedCacheOptions()));
             }
 
-            try
-            {
-                BlobContainerClient container = CreateBlobContainerClient(options, logger);
-                return new BlobDistributedCache(container, logger);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Failed to initialize blob cache, falling back to memory-only");
-                return new MemoryDistributedCache(Options.Create(new MemoryDistributedCacheOptions()));
-            }
+            BlobContainerClient container = sp.GetRequiredService<BlobContainerClient>();
+            return new BlobDistributedCache(container, logger);
         });
 
-        // FusionCache with L1 (Memory, 500MB limit) + L2 (Blob Storage) + Protobuf serialization
+        // FusionCache with L1 memory + L2 Blob Storage + Protobuf serialization
         // Size is set via adaptive caching in factory, with a default fallback for L2 cache hits
         // No backplane needed: single-node deployment with immutable image content
         services.AddFusionCache()
             .WithOptions(o => o.EnableBestPracticesAdvisor = false)
             .WithMemoryCache(new MemoryCache(new MemoryCacheOptions
             {
-                SizeLimit = 500 * 1024 * 1024, // 500 MB
+                SizeLimit = 500L * 1024 * 1024, // 500 MB
                 CompactionPercentage = 0.25
             }))
             .WithSerializer(new FusionCacheProtoBufNetSerializer())
@@ -102,10 +112,8 @@ public static class ServiceCollectionExtensions
 #endif
             });
 
-        // Register ImageService
-        services.AddSingleton<ImageService>();
-
-        return services;
+        services.TryAddSingleton<ImageService>();
+        services.TryAddSingleton<IImageService>(sp => sp.GetRequiredService<ImageService>());
     }
 
     private static BlobContainerClient CreateBlobContainerClient(BlobCacheOptions options, ILogger logger)

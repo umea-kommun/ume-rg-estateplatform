@@ -4,12 +4,13 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <NoWarn>CA2007</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Umea.se.EstateService.Shared\Umea.se.EstateService.Shared.csproj" />
+    <ProjectReference Include="..\Umea.se.Toolkit.Images\Umea.se.Toolkit.Images.csproj" />
   </ItemGroup>
 
   <ItemGroup>

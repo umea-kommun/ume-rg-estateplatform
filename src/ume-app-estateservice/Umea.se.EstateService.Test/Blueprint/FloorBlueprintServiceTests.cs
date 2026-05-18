@@ -12,19 +12,15 @@ using Umea.se.EstateService.Shared.Data;
 using Umea.se.EstateService.Shared.Data.Entities;
 using Umea.se.EstateService.Shared.Exceptions;
 using Umea.se.EstateService.Test.TestHelpers;
-using Umea.se.Toolkit.Images;
 using ZiggyCreatures.Caching.Fusion;
 
 namespace Umea.se.EstateService.Test.Blueprint;
 
 public class FloorBlueprintServiceTests
 {
-    private static ImageService CreateImageService()
-    {
-        ImageServiceOptions options = new() { CacheKeyPrefix = "test" };
-        FusionCache cache = new(new FusionCacheOptions());
-        return new ImageService(cache, options, NullLogger<ImageService>.Instance);
-    }
+    private const string GzipContentEncoding = "gzip";
+
+    private static IFusionCache CreateFusionCache() => new FusionCache(new FusionCacheOptions());
 
     private static InMemoryDataStore CreateDataStore(params RoomEntity[] rooms)
     {
@@ -47,7 +43,7 @@ public class FloorBlueprintServiceTests
     {
         blueprint.Content.Position = 0;
 
-        if (blueprint.IsGzipped)
+        if (blueprint.ContentEncoding == GzipContentEncoding)
         {
             await using GZipStream gzip = new(blueprint.Content, CompressionMode.Decompress, leaveOpen: true);
             using StreamReader reader = new(gzip, Encoding.UTF8);
@@ -80,7 +76,7 @@ public class FloorBlueprintServiceTests
         };
 
         InMemoryDataStore dataStore = CreateDataStore();
-        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateImageService(), NullLogger<FloorBlueprintHandler>.Instance);
+        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateFusionCache(), NullLogger<FloorBlueprintHandler>.Instance);
 
         FloorBlueprint result = await fbHandler.GetBlueprintAsync(42, BlueprintFormat.Pdf, includeWorkspaceTexts: false);
 
@@ -101,7 +97,7 @@ public class FloorBlueprintServiceTests
         };
 
         InMemoryDataStore dataStore = CreateDataStore();
-        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateImageService(), NullLogger<FloorBlueprintHandler>.Instance);
+        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateFusionCache(), NullLogger<FloorBlueprintHandler>.Instance);
 
         await Should.ThrowAsync<ExternalServiceUnavailableException>(() =>
             fbHandler.GetBlueprintAsync(5, BlueprintFormat.Svg, includeWorkspaceTexts: false));
@@ -126,13 +122,13 @@ public class FloorBlueprintServiceTests
         };
 
         InMemoryDataStore dataStore = CreateDataStore();
-        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateImageService(), NullLogger<FloorBlueprintHandler>.Instance);
+        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateFusionCache(), NullLogger<FloorBlueprintHandler>.Instance);
 
         FloorBlueprint result = await fbHandler.GetBlueprintAsync(11, BlueprintFormat.Svg, includeWorkspaceTexts: false);
 
         result.FileName.ShouldBe("floor-11.svg");
         result.ContentType.ShouldBe("image/svg+xml");
-        result.IsGzipped.ShouldBeTrue();
+        result.ContentEncoding.ShouldBe(GzipContentEncoding);
     }
 
     [Fact]
@@ -157,13 +153,13 @@ public class FloorBlueprintServiceTests
         };
 
         InMemoryDataStore dataStore = CreateDataStore();
-        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateImageService(), NullLogger<FloorBlueprintHandler>.Instance);
+        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateFusionCache(), NullLogger<FloorBlueprintHandler>.Instance);
 
         FloorBlueprint result = await fbHandler.GetBlueprintAsync(11, BlueprintFormat.Pdf, includeWorkspaceTexts: false);
 
         result.FileName.ShouldBe("floor.pdf");
         result.ContentType.ShouldBe("application/pdf");
-        result.IsGzipped.ShouldBeFalse();
+        result.ContentEncoding.ShouldBeNull();
     }
 
     [Fact]
@@ -171,7 +167,7 @@ public class FloorBlueprintServiceTests
     {
         FakePythagorasClient client = new();
         InMemoryDataStore dataStore = CreateDataStore();
-        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateImageService(), NullLogger<FloorBlueprintHandler>.Instance);
+        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateFusionCache(), NullLogger<FloorBlueprintHandler>.Instance);
 
         await Should.ThrowAsync<BusinessValidationException>(() =>
             fbHandler.GetBlueprintAsync(0, BlueprintFormat.Pdf, includeWorkspaceTexts: false));
@@ -202,7 +198,7 @@ public class FloorBlueprintServiceTests
             new RoomEntity { Id = 5, Name = "Alpha", PopularName = "Popular Alpha", BuildingId = 1, FloorId = 99 },
             new RoomEntity { Id = 6, Name = "Beta", BuildingId = 1, FloorId = 99 });
 
-        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateImageService(), NullLogger<FloorBlueprintHandler>.Instance);
+        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateFusionCache(), NullLogger<FloorBlueprintHandler>.Instance);
 
         FloorBlueprint result = await fbHandler.GetBlueprintAsync(99, BlueprintFormat.Pdf, includeWorkspaceTexts: true);
         result.ShouldNotBeNull();
@@ -250,11 +246,11 @@ public class FloorBlueprintServiceTests
         };
 
         InMemoryDataStore dataStore = CreateDataStore();
-        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateImageService(), NullLogger<FloorBlueprintHandler>.Instance);
+        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateFusionCache(), NullLogger<FloorBlueprintHandler>.Instance);
 
         FloorBlueprint result = await fbHandler.GetBlueprintAsync(5, BlueprintFormat.Svg, includeWorkspaceTexts: false);
 
-        result.IsGzipped.ShouldBeTrue();
+        result.ContentEncoding.ShouldBe(GzipContentEncoding);
         string cleaned = await ReadContentAsync(result);
 
         cleaned.ShouldNotContain("svgPageBorder");
@@ -294,11 +290,11 @@ public class FloorBlueprintServiceTests
         };
 
         InMemoryDataStore dataStore = CreateDataStore();
-        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateImageService(), NullLogger<FloorBlueprintHandler>.Instance);
+        FloorBlueprintHandler fbHandler = new(client, dataStore, CreateFusionCache(), NullLogger<FloorBlueprintHandler>.Instance);
 
         FloorBlueprint result = await fbHandler.GetBlueprintAsync(7, BlueprintFormat.Svg, includeWorkspaceTexts: false);
 
-        result.IsGzipped.ShouldBeTrue();
+        result.ContentEncoding.ShouldBe(GzipContentEncoding);
         string cleaned = await ReadContentAsync(result);
 
         cleaned.ShouldContain("font-size=\"0.4px\"");

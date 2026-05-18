@@ -27,23 +27,15 @@ public class SyncScheduleConfiguration
     /// </summary>
     public string? Documents { get; set; }
 
-    /// <summary>
-    /// Cron for image pre-warm. Null = disabled (no fallback to Default).
-    /// Image pre-warm is an optimization, not a data sync — must be explicitly enabled.
-    /// </summary>
-    public string? Images { get; set; }
-
     /// <summary>Resolve the effective cron for a supplementary sync type.</summary>
     public string? Resolve(SyncType type) => type switch
     {
         SyncType.Documents => Documents ?? Default,
-        SyncType.Images => Images,  // No fallback — opt-in only
         _ => Default
     };
 }
 
 public enum SyncType
 {
-    Documents,
-    Images
+    Documents
 }

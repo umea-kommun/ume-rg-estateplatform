@@ -8,7 +8,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Umea.se.EstateService.DataStore;
 using Umea.se.EstateService.Logic.Data;
 using Umea.se.EstateService.Logic.Handlers;
-using Umea.se.EstateService.Logic.Handlers.Images;
+using Umea.se.EstateService.Logic.Images;
+using Umea.se.EstateService.Logic.Sync;
 using Umea.se.EstateService.ServiceAccess;
 using Umea.se.EstateService.ServiceAccess.Pythagoras.Api;
 using Umea.se.EstateService.Shared.Data;
@@ -74,6 +75,7 @@ public sealed class TestApiFactory : WebAppFactoryBase<Program, HttpClientNames>
             services.RemoveAll<IPythagorasClient>();
             services.RemoveAll<IEstateDataQueryHandler>();
             services.RemoveAll<IBuildingImageService>();
+            services.RemoveAll<IBuildingImageSyncHandler>();
             services.RemoveAll<IDataStore>();
             services.RemoveAll<IDataStorePersistence>();
             services.RemoveAll<InMemoryDataStore>();
@@ -82,6 +84,7 @@ public sealed class TestApiFactory : WebAppFactoryBase<Program, HttpClientNames>
             services.AddSingleton<IPythagorasClient>(_ => _fakeClient);
             services.AddSingleton<StubBuildingImageService>(_ => _stubImageService);
             services.AddSingleton<IBuildingImageService>(_ => _stubImageService);
+            services.AddSingleton<IBuildingImageSyncHandler, NoOpBuildingImageSyncHandler>();
 
             services.AddSingleton<InMemoryDataStore>();
             services.AddSingleton<IDataStore>(sp => sp.GetRequiredService<InMemoryDataStore>());

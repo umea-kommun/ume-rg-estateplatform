@@ -17,7 +17,6 @@ namespace Umea.se.EstateService.Logic.Sync;
 public sealed class DataSyncService(
     IDataStore dataStore,
     DocumentSyncHandler documentSyncHandler,
-    ImagePreWarmHandler imagePreWarmHandler,
     RefreshPipelineRunner refreshPipeline,
     ApplicationConfig appConfig,
     ILogger<DataSyncService> logger) : BackgroundService
@@ -39,13 +38,17 @@ public sealed class DataSyncService(
         string version = typeof(DataSyncService).Assembly.GetName().Version?.ToString() ?? "unknown";
         string informationalVersion = System.Reflection.CustomAttributeExtensions
             .GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(typeof(DataSyncService).Assembly)?.InformationalVersion ?? "unknown";
-        logger.LogWarning("DataSyncService starting. Assembly version: {Version}, Informational: {InformationalVersion}",
+        logger.LogInformation("DataSyncService starting. Assembly version: {Version}, Informational: {InformationalVersion}",
             version, informationalVersion);
 
         (bool loadedFromCache, DateTimeOffset? lastRefresh) =
             await refreshPipeline.TryRestoreFromCacheAsync(stoppingToken);
 
-        bool hasCron = CronHelper.TryParse(_options.Schedule.Default, _options.TimeZone, out CronExpression? cron, out TimeZoneInfo? tz);
+        bool hasCron = CronHelper.TryParse(
+            _options.Schedule.Default,
+            _options.TimeZone,
+            out CronExpression? cron,
+            out TimeZoneInfo? tz);
 
         if (!hasCron && !string.IsNullOrWhiteSpace(_options.Schedule.Default))
         {
@@ -60,19 +63,22 @@ public sealed class DataSyncService(
         {
             logger.LogInformation("Last refresh was {Ago} ago — running catch-up refresh.",
                 DateTimeOffset.UtcNow - lastRefresh);
-            await RunStartupRefreshWithRetriesAsync(stoppingToken).ConfigureAwait(false);
+            await RunCatchUpRefreshAsync(stoppingToken).ConfigureAwait(false);
         }
 
         if (hasCron)
         {
-            _ = RunScheduledRefreshAsync(cron!, tz!, stoppingToken);
+            RunInBackground(RunScheduledRefreshAsync(cron!, tz!, stoppingToken), "Refresh loop", stoppingToken);
         }
         else if (string.IsNullOrWhiteSpace(_options.Schedule.Default))
         {
             logger.LogInformation("Scheduled refresh disabled (no Schedule configured). Manual triggers are still allowed.");
         }
 
-        _ = RunSupplementarySyncLoopsAsync(stoppingToken);
+        RunInBackground(
+            RunSupplementarySyncLoopsAsync(stoppingToken),
+            "Supplementary sync loops",
+            stoppingToken);
 
         // Manual trigger queue
         try
@@ -119,13 +125,6 @@ public sealed class DataSyncService(
             : RefreshStatus.AlreadyRunning;
     }
 
-    public RefreshStatus TriggerImagePreWarm()
-    {
-        return imagePreWarmHandler.TryTriggerSync()
-            ? RefreshStatus.Started
-            : RefreshStatus.AlreadyRunning;
-    }
-
     public DataStoreInfo GetDataStoreInfo()
     {
         return new DataStoreInfo
@@ -140,14 +139,13 @@ public sealed class DataSyncService(
             NextRefreshTime = _nextRefreshTime,
             RefreshSchedule = _options.Schedule.Default,
             DocumentSyncSchedule = _options.Schedule.Resolve(SyncType.Documents),
-            ImagePreWarmSchedule = _options.Schedule.Resolve(SyncType.Images),
             IsRefreshing = IsBusy()
         };
     }
 
     // ── Core refresh scheduling ──────────────────────────────────────
 
-    private async Task RunStartupRefreshWithRetriesAsync(CancellationToken cancellationToken)
+    private async Task<bool> RunStartupRefreshWithRetriesAsync(CancellationToken cancellationToken)
     {
         int maxAttempts = _options.MaxRetries + 1;
 
@@ -160,16 +158,21 @@ public sealed class DataSyncService(
                 await Task.Delay(TimeSpan.FromSeconds(delaySeconds), cancellationToken).ConfigureAwait(false);
             }
 
-            await RunRefreshOwnedAsync(RefreshTriggerSource.Startup, cancellationToken).ConfigureAwait(false);
+            bool refreshSucceeded = await RunRefreshOwnedAsync(RefreshTriggerSource.Startup, cancellationToken)
+                .ConfigureAwait(false);
 
-            if (dataStore.IsReady)
+            if (refreshSucceeded)
             {
-                return;
+                return true;
             }
         }
 
         logger.LogCritical("Startup refresh failed after {Attempts} attempts.", maxAttempts);
+        return false;
     }
+
+    private Task<bool> RunCatchUpRefreshAsync(CancellationToken cancellationToken)
+        => RunRefreshOwnedAsync(RefreshTriggerSource.Startup, cancellationToken);
 
     private Task RunScheduledRefreshAsync(CronExpression cron, TimeZoneInfo tz, CancellationToken ct)
     {
@@ -183,14 +186,14 @@ public sealed class DataSyncService(
         }, setNextRefreshTime: true, ct);
     }
 
-    private async Task RunRefreshOwnedAsync(RefreshTriggerSource source, CancellationToken cancellationToken)
+    private async Task<bool> RunRefreshOwnedAsync(RefreshTriggerSource source, CancellationToken cancellationToken)
     {
         Interlocked.Exchange(ref _isRefreshing, 1);
 
         try
         {
             using IDisposable? scope = logger.BeginScope("Refresh source: {Source}", source);
-            await refreshPipeline.RunAsync(cancellationToken).ConfigureAwait(false);
+            return await refreshPipeline.RunAsync(cancellationToken).ConfigureAwait(false);
         }
         finally
         {
@@ -206,14 +209,13 @@ public sealed class DataSyncService(
 
         TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(_options.TimeZone);
 
-        var syncs = new (string Name, SyncType Type, Func<CancellationToken, Task> Action)[]
+        (string Name, SyncType Type, Func<CancellationToken, Task> Action)[] syncs =
         {
             ("Documents", SyncType.Documents, documentSyncHandler.SyncAllBuildingsAsync),
-            ("Images", SyncType.Images, imagePreWarmHandler.SyncAllBuildingsAsync),
         };
 
         List<Task> loops = [];
-        foreach (var (name, type, action) in syncs)
+        foreach ((string name, SyncType type, Func<CancellationToken, Task> action) in syncs)
         {
             CronExpression? cron = CronHelper.ParseOrNull(_options.Schedule.Resolve(type));
             if (cron is null)
@@ -231,7 +233,6 @@ public sealed class DataSyncService(
         string name, Func<CancellationToken, Task> action,
         CronExpression cron, TimeZoneInfo tz, CancellationToken ct)
     {
-        // First run immediately after data is ready
         logger.LogInformation("{SyncName} sync loop started. Running initial sync.", name);
         try
         {
@@ -308,6 +309,25 @@ public sealed class DataSyncService(
 
     private bool IsBusy()
         => Volatile.Read(ref _isRefreshing) == 1 || Volatile.Read(ref _hasPendingTrigger) == 1;
+
+    private void RunInBackground(Task task, string name, CancellationToken ct)
+        => _ = LogBackgroundTaskFailureAsync(task, name, ct);
+
+    private async Task LogBackgroundTaskFailureAsync(Task task, string name, CancellationToken ct)
+    {
+        try
+        {
+            await task.ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            logger.LogDebug("{Name} stopped.", name);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "{Name} stopped unexpectedly.", name);
+        }
+    }
 
     private enum RefreshTriggerSource
     {

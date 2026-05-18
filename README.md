@@ -11,9 +11,9 @@ This project provides a API layer that communicates with the Pythagoras system t
 - **.NET 10 / ASP.NET Core**
 - **Entity Framework Core** - Persistence layer
 - **Pythagoras API** - External data source integration
-- **Azure Blob Storage** - Image and file storage
+- **Azure Blob Storage** - Synced building image originals, cached image variants, and file storage
 - **Azure OpenAI** - AI-assisted features
-- **FusionCache** - Distributed L1/L2 caching
+- **FusionCache** - Distributed L1/L2 caching for image variants and other heavy reads
 - **Polly / Microsoft.Extensions.Http.Resilience** - Retry and circuit breaker policies
 - **JWT Bearer Authentication** - API authentication
 - **Swagger / Swashbuckle** - OpenAPI documentation
@@ -84,7 +84,7 @@ Most secrets are resolved from Azure Key Vault via the `@KeyVault(...)` placehol
 - **Pythagoras API**: `Pythagoras:ApiKey` and `Pythagoras:BaseUrl`
 - **Authentication**: `Authentication:TokenServiceUrl` and `Authentication:Audience` for JWT bearer auth, plus `Api:Keys`
 - **Azure OpenAI**: `OpenAI:Endpoint`, `OpenAI:Model`, and `OpenAI:Enabled`
-- **Image cache**: `ImageCache:BlobServiceUrl` and `ImageCache:BlobContainerName`
+- **Images**: `ImageCache:BlobServiceUrl` and `ImageCache:BlobContainerName` for durable synced image originals and FusionCache-backed variants
 - **Work orders**: `WorkOrder:FileStorage`, `WorkOrder:FileStorageContainer`, and processing/validation settings
 - **Data sync**: `DataSync:Schedule` cron expressions
 - **Application Insights**: `ApplicationInsights:ConnectionString`

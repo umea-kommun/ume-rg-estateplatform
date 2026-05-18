@@ -18,6 +18,7 @@ public sealed class RefreshPipelineRunner(
     IDataStorePersistence persistence,
     IDbContextFactory<EstateDbContext> dbContextFactory,
     SearchHandler searchHandler,
+    IBuildingImageSyncHandler imageSyncHandler,
     ILogger<RefreshPipelineRunner> logger)
 {
     // ── Startup restore ──────────────────────────────────────────────
@@ -54,11 +55,20 @@ public sealed class RefreshPipelineRunner(
 
     // ── Core refresh pipeline ────────────────────────────────────────
 
-    public async Task RunAsync(CancellationToken cancellationToken)
+    public async Task<bool> RunAsync(CancellationToken cancellationToken)
     {
         try
         {
             await dataRefreshService.RefreshDataAsync(cancellationToken).ConfigureAwait(false);
+
+            try
+            {
+                await imageSyncHandler.SyncAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                logger.LogError(ex, "Building image sync failed after data refresh.");
+            }
 
             try
             {
@@ -72,16 +82,26 @@ public sealed class RefreshPipelineRunner(
             await StampDocumentCountsAsync(cancellationToken).ConfigureAwait(false);
 
             DataSnapshot snapshot = dataStore.GetCurrentSnapshot();
+            if (!snapshot.IsReady)
+            {
+                logger.LogWarning("Refresh pipeline completed without a ready snapshot.");
+                return false;
+            }
+
             DateTimeOffset refreshTime = dataStore.LastRefreshUtc ?? DateTimeOffset.UtcNow;
             await persistence.SaveAsync(snapshot, refreshTime, cancellationToken).ConfigureAwait(false);
+
+            return true;
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             logger.LogDebug("Refresh cancelled.");
+            return false;
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Refresh failed.");
+            return false;
         }
     }
 

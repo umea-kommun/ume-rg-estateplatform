@@ -4,7 +4,7 @@ namespace Umea.se.EstateService.API.Extensions;
 
 internal static class HttpResponseExtensions
 {
-    public static void SetPublicCacheHeaders(this HttpResponse response, bool isGzipped, int maxAgeHours = 24)
+    public static void SetPublicCacheHeaders(this HttpResponse response, string? contentEncoding = null, int maxAgeHours = 24)
     {
         response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue
         {
@@ -12,9 +12,9 @@ internal static class HttpResponseExtensions
             MaxAge = TimeSpan.FromHours(maxAgeHours)
         };
 
-        if (isGzipped)
+        if (!string.IsNullOrWhiteSpace(contentEncoding))
         {
-            response.Headers.ContentEncoding = "gzip";
+            response.Headers.ContentEncoding = contentEncoding;
         }
     }
 }

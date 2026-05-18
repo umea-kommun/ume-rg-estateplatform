@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Umea.se.EstateService.DataStore;
 using Umea.se.EstateService.Logic.Data;
@@ -32,7 +31,7 @@ public sealed class DataSyncServiceTests
         SearchHandler searchHandler = CreateSearchHandler(appConfig);
         FakePythagorasClient pythagorasClient = new();
         DocumentSyncHandler documentSyncHandler = new(pythagorasClient, dataStore, new FakeDbContextFactory(), NullLogger<DocumentSyncHandler>.Instance);
-        ImagePreWarmHandler imagePreWarmHandler = new(new FakeServiceScopeFactory(), dataStore, NullLogger<ImagePreWarmHandler>.Instance);
+        NoOpBuildingImageSyncHandler imageSyncHandler = new();
 
         RefreshPipelineRunner refreshPipeline = new(
             dataRefreshService,
@@ -40,12 +39,12 @@ public sealed class DataSyncServiceTests
             persistence,
             new FakeDbContextFactory(),
             searchHandler,
+            imageSyncHandler,
             NullLogger<RefreshPipelineRunner>.Instance);
 
         DataSyncService sut = new(
             dataStore,
             documentSyncHandler,
-            imagePreWarmHandler,
             refreshPipeline,
             appConfig,
             NullLogger<DataSyncService>.Instance);
@@ -115,9 +114,8 @@ public sealed class DataSyncServiceTests
             => throw new NotSupportedException("Not used in this test.");
     }
 
-    private sealed class FakeServiceScopeFactory : IServiceScopeFactory
+    private sealed class NoOpBuildingImageSyncHandler : IBuildingImageSyncHandler
     {
-        public IServiceScope CreateScope()
-            => throw new NotSupportedException("Not used in this test.");
+        public Task SyncAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }

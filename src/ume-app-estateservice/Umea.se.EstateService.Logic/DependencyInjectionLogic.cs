@@ -4,7 +4,7 @@ using Umea.se.EstateService.Logic.Sync.Pythagoras;
 using Umea.se.EstateService.Logic.Handlers;
 using Umea.se.EstateService.Logic.Handlers.Blueprint;
 using Umea.se.EstateService.Logic.Handlers.Favorite;
-using Umea.se.EstateService.Logic.Handlers.Images;
+using Umea.se.EstateService.Logic.Images;
 using Umea.se.EstateService.Logic.Handlers.WorkOrder;
 using Umea.se.EstateService.Logic.HostedServices;
 using Umea.se.EstateService.Logic.Sync;
@@ -29,7 +29,7 @@ public static class DependencyInjectionLogic
         services.AddSingleton<IFloorBlueprintService, FloorBlueprintHandler>();
         services.AddScoped<IBuildingImageService, BuildingImageService>();
         services.AddSingleton<DocumentSyncHandler>();
-        services.AddSingleton<ImagePreWarmHandler>();
+        services.AddSingleton<IBuildingImageSyncHandler, BuildingImageSyncHandler>();
 
         services.AddTransient<IFileDocumentHandler, FileDocumentHandler>();
 

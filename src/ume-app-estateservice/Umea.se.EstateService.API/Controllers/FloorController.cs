@@ -76,7 +76,7 @@ public class FloorController(IFloorBlueprintService blueprintService, IEstateDat
 
         blueprint.Content.Position = 0;
 
-        Response.SetPublicCacheHeaders(blueprint.IsGzipped);
+        Response.SetPublicCacheHeaders(blueprint.ContentEncoding);
 
         return File(blueprint.Content, blueprint.ContentType, blueprint.FileName);
     }

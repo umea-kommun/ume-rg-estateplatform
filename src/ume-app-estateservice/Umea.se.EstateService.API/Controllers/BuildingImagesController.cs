@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Umea.se.EstateService.API.Extensions;
 using Umea.se.EstateService.API.Responses;
-using Umea.se.EstateService.Logic.Handlers.Images;
+using Umea.se.EstateService.Logic.Images;
 using Umea.se.EstateService.Logic.Models;
 using Umea.se.Toolkit.Images;
 
@@ -106,15 +106,15 @@ public class BuildingImagesController(IBuildingImageService buildingImageService
         w = SnapToAllowedSize(w);
         h = SnapToAllowedSize(h);
 
-        ImageResult? result = await buildingImageService.GetImageResultAsync(buildingId, imageId, w, h, cancellationToken);
+        ImageVariantBytes? image = await buildingImageService.GetImageAsync(buildingId, imageId, w, h, cancellationToken);
 
-        if (result is null)
+        if (image is null)
         {
             return NotFound(new ProblemDetails { Status = 404, Title = "Not found", Detail = imageId.HasValue ? "Image not found." : "No images found for this building." });
         }
 
-        Response.SetPublicCacheHeaders(result.IsGzipped);
+        Response.SetPublicCacheHeaders();
 
-        return File(result.Data, result.ContentType);
+        return File(image.Bytes, image.ContentType);
     }
 }

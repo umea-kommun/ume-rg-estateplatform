@@ -1,6 +1,8 @@
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Xml.Linq;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Umea.se.EstateService.Logic.Models;
 using Umea.se.EstateService.ServiceAccess.Pythagoras.Api;
@@ -13,7 +15,7 @@ using ZiggyCreatures.Caching.Fusion;
 
 namespace Umea.se.EstateService.Logic.Handlers.Blueprint;
 
-public sealed class FloorBlueprintHandler(IPythagorasClient pythagorasClient, IDataStore dataStore, ImageService imageService, ILogger<FloorBlueprintHandler> logger) : IFloorBlueprintService
+public sealed class FloorBlueprintHandler(IPythagorasClient pythagorasClient, IDataStore dataStore, IFusionCache cache, ILogger<FloorBlueprintHandler> logger) : IFloorBlueprintService
 {
     private static readonly string[] _nodesToRemove =
     [
@@ -22,9 +24,23 @@ public sealed class FloorBlueprintHandler(IPythagorasClient pythagorasClient, ID
         "svgStamp"
     ];
 
+    private static readonly FusionCacheEntryOptions _svgCacheOptions = new()
+    {
+        Duration = TimeSpan.FromDays(30),
+        MemoryCacheDuration = TimeSpan.FromHours(1),
+        Size = 200 * 1024,
+        Priority = CacheItemPriority.High,
+        IsFailSafeEnabled = true,
+        FailSafeMaxDuration = TimeSpan.FromDays(365),
+        FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
+        FactorySoftTimeout = TimeSpan.FromSeconds(45),
+        FactoryHardTimeout = TimeSpan.FromSeconds(120),
+        AllowTimedOutFactoryBackgroundCompletion = true,
+    };
+
     private readonly IPythagorasClient _pythagorasClient = pythagorasClient;
     private readonly IDataStore _dataStore = dataStore;
-    private readonly ImageService _imageService = imageService;
+    private readonly IFusionCache _cache = cache;
     private readonly ILogger<FloorBlueprintHandler> _logger = logger;
 
     public async Task<FloorBlueprint> GetBlueprintAsync(int floorId, BlueprintFormat format, bool includeWorkspaceTexts = true, CancellationToken cancellationToken = default)
@@ -68,26 +84,44 @@ public sealed class FloorBlueprintHandler(IPythagorasClient pythagorasClient, ID
 
     private async Task<FloorBlueprint> GetCachedSvgBlueprintAsync(int floorId, IDictionary<int, IReadOnlyList<string>>? workspaceTexts, CancellationToken cancellationToken)
     {
-        string cacheKey = $"floors:{floorId}";
-        string? svgSuffix = workspaceTexts is not null ? "wt" : null;
-        string fileName = $"floor-{floorId}.svg";
+        bool includeWorkspaceTexts = workspaceTexts is not null;
+        string suffix = includeWorkspaceTexts ? "blueprint_wt" : "blueprint";
+        string cacheKey = $"cache/floors/{floorId}/{suffix}.svg.gz";
 
-        ImageResult result;
         try
         {
-            result = await _imageService.GetSvgResultAsync(
+            byte[] gzippedSvg = await _cache.GetOrSetAsync<byte[]>(
                 cacheKey,
-                fetchOriginal: async ct => await FetchAndCleanSvgAsync(floorId, workspaceTexts, ct).ConfigureAwait(false),
-                svgSuffix: svgSuffix,
-                cancellationToken).ConfigureAwait(false);
+                async (ctx, token) =>
+                {
+                    _logger.LogDebug("Fetching SVG blueprint for floor {FloorId}", floorId);
+                    byte[] raw = await FetchAndCleanSvgAsync(floorId, workspaceTexts, token).ConfigureAwait(false);
+
+                    if (raw is null || raw.Length == 0)
+                    {
+                        throw new ImageNotFoundException($"SVG blueprint not found for floor {floorId}.");
+                    }
+
+                    using MemoryStream output = new();
+                    using (GZipStream gzip = new(output, CompressionLevel.Optimal))
+                    {
+                        gzip.Write(raw);
+                    }
+
+                    byte[] compressed = output.ToArray();
+                    ctx.Options.SetSize(compressed.Length);
+                    return compressed;
+                },
+                _svgCacheOptions,
+                CancellationToken.None).ConfigureAwait(false);
+
+            return new FloorBlueprint(new MemoryStream(gzippedSvg), "image/svg+xml", $"floor-{floorId}.svg", "gzip");
         }
         catch (SyntheticTimeoutException ex)
         {
             _logger.LogWarning("Blueprint generation timed out for floor {FloorId}. The result will be cached in the background for the next request.", floorId);
             throw new ExternalServiceUnavailableException($"Blueprint generation for floor {floorId} timed out. Try again shortly — the result is being generated in the background.", ex);
         }
-
-        return new FloorBlueprint(new MemoryStream(result.Data), result.ContentType, fileName, result.IsGzipped);
     }
 
     private async Task<byte[]> FetchAndCleanSvgAsync(int floorId, IDictionary<int, IReadOnlyList<string>>? workspaceTexts, CancellationToken cancellationToken)

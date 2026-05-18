@@ -72,28 +72,6 @@ public class AdminController(DataSyncService dataSyncService, SearchHandler sear
     }
 
     /// <summary>
-    /// Triggers a manual image cache pre-warm.
-    /// </summary>
-    /// <remarks>
-    /// Pre-warms the image cache for all building primary images. If a pre-warm is already running, the request is accepted but no new one is started.
-    /// </remarks>
-    /// <response code="202">Image pre-warm started or already running</response>
-    [HttpPost("trigger-sync/images")]
-    [SwaggerOperation(
-        Summary = "Trigger manual image pre-warm",
-        Description = "Pre-warms the image cache for all building primary images. If a pre-warm is already running, the request is accepted but no new one is started."
-    )]
-    [ProducesResponseType(typeof(object), StatusCodes.Status202Accepted)]
-    public IActionResult TriggerImagePreWarm()
-    {
-        RefreshStatus status = dataSyncService.TriggerImagePreWarm();
-
-        return Accepted(new { message = status == RefreshStatus.Started
-            ? "Image pre-warm started"
-            : "Image pre-warm already running" });
-    }
-
-    /// <summary>
     /// Gets information about the current data sync status.
     /// </summary>
     /// <remarks>
@@ -120,7 +98,6 @@ public class AdminController(DataSyncService dataSyncService, SearchHandler sear
             NextRefreshTime = dataInfo.NextRefreshTime?.UtcDateTime,
             RefreshSchedule = dataInfo.RefreshSchedule,
             DocumentSyncSchedule = dataInfo.DocumentSyncSchedule,
-            ImagePreWarmSchedule = dataInfo.ImagePreWarmSchedule,
             IsRefreshing = dataInfo.IsRefreshing
         };
 

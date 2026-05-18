@@ -14,6 +14,7 @@ using Umea.se.EstateService.Logic;
 using Umea.se.EstateService.Logic.Handlers.WorkOrder;
 using Umea.se.EstateService.ServiceAccess;
 using Umea.se.EstateService.ServiceAccess.FileStorage;
+using Umea.se.EstateService.ServiceAccess.Images;
 using Umea.se.EstateService.Shared;
 using Umea.se.EstateService.Shared.Infrastructure;
 using Umea.se.EstateService.Shared.Infrastructure.ConfigurationModels;
@@ -54,6 +55,17 @@ builder.Services.AddImageService(
             : null;
         blobCache.ContainerName = config.ImageCache.BlobContainerName ?? "imagecache";
     });
+
+// IOriginalImageStore: durable storage for normalized building original-image bytes.
+// Resolves the shared BlobContainerClient registered by AddImageService and writes
+// under the "originals/{prefix}/..." path, mirroring FusionCache L2's "cache/{prefix}/..."
+// in the same container.
+builder.Services.AddSingleton<IOriginalImageStore>(sp =>
+{
+    BlobContainerClient container = sp.GetService<BlobContainerClient>()
+        ?? throw new InvalidOperationException("Blob storage is not configured — IOriginalImageStore requires it.");
+    return ActivatorUtilities.CreateInstance<BlobOriginalImageStore>(sp, container);
+});
 
 builder.Services
     .AddApplicationConfig(config)
@@ -132,6 +144,13 @@ builder.Services.AddHttpClient(HttpClientNames.PythagorasImages, client =>
 {
     client.BaseAddress = new Uri(config.PythagorasBaseUrl);
     client.DefaultRequestHeaders.Add("api_key", config.PythagorasApiKey);
+})
+.ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+{
+    // Recycle pooled connections so stale sockets (NAT idle-timeouts, DNS changes on App Service)
+    // don't get reused and hang on first send. Idle timeout closes connections sitting unused.
+    PooledConnectionLifetime = TimeSpan.FromMinutes(2),
+    PooledConnectionIdleTimeout = TimeSpan.FromSeconds(30),
 })
 .AddStandardResilienceHandler(options =>
 {

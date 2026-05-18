@@ -218,7 +218,7 @@ public class BuildingControllerTests : ControllerTestCloud<TestApiFactory, Progr
         _stubImageService.Reset();
 
         byte[] expected = [1, 2, 3, 4];
-        _stubImageService.ImageResult = Umea.se.Toolkit.Images.ImageResult.WebP(expected);
+        _stubImageService.ImageBytes = expected;
 
         HttpResponseMessage result = await _client.GetAsync($"{ApiRoutes.Buildings}/1/image");
 
@@ -236,7 +236,7 @@ public class BuildingControllerTests : ControllerTestCloud<TestApiFactory, Progr
     public async Task GetBuildingImageAsync_NoImages_ReturnsNotFound()
     {
         _stubImageService.Reset();
-        _stubImageService.ImageResult = null;
+        _stubImageService.ImageBytes = null;
 
         HttpResponseMessage result = await _client.GetAsync($"{ApiRoutes.Buildings}/1/image");
 
