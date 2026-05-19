@@ -33,7 +33,7 @@
 					)
 				"
 				v-model="contactPhone"
-				rules="phone"
+				rules="required|phone"
 				variant="outlined"
 				rounded="lg"
 				:error-message="phoneError"
