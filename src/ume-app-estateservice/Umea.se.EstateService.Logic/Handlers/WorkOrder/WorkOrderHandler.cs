@@ -65,7 +65,9 @@ public class WorkOrderHandler(
 
         int? roomId = null;
         string? roomName = null;
-        if (isErrorReport && request.RoomId.HasValue)
+        // Room applies to all work order types (fault reports and orders). For orders
+        // location is never set, so the Outdoor conflict check below is a no-op for them.
+        if (request.RoomId.HasValue)
         {
             if (location == WorkOrderLocation.Outdoor)
             {

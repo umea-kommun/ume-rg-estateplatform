@@ -256,7 +256,7 @@ public class WorkOrderHandlerTests : IDisposable
     }
 
     [Fact]
-    public async Task SubmitWorkOrder_BuildingService_IgnoresLocationAndRoomId()
+    public async Task SubmitWorkOrder_BuildingService_KeepsRoomButIgnoresLocation()
     {
         CreateWorkOrderRequest request = new()
         {
@@ -271,7 +271,7 @@ public class WorkOrderHandlerTests : IDisposable
 
         WorkOrderDetailModel detail = await _handler.GetWorkOrderAsync(result.Id, "test@example.com");
         detail.Location.ShouldBeNull();
-        detail.RoomName.ShouldBeNull();
+        detail.RoomName.ShouldBe("Room Ten");
     }
 
     [Fact]
