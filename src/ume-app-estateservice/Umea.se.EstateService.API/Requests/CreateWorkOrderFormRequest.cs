@@ -43,11 +43,12 @@ public class CreateWorkOrderFormRequest
     [StringLength(200, ErrorMessage = ValidationErrorCode.MaxLength)]
     public string? NotifierName { get; init; }
 
+    [Required(ErrorMessage = ValidationErrorCode.Required)]
     [JsonPropertyName("notifierPhone")]
-    [SwaggerSchema("Notifier phone number.", Nullable = true)]
+    [SwaggerSchema("Notifier phone number.")]
     [RegularExpression(@"^[\d\s+\-()]+$", ErrorMessage = ValidationErrorCode.InvalidFormat)]
     [StringLength(50, ErrorMessage = ValidationErrorCode.MaxLength)]
-    public string? NotifierPhone { get; init; }
+    public string NotifierPhone { get; init; } = "";
 
     [JsonPropertyName("files")]
     [SwaggerSchema("Attached files (images, documents).")]

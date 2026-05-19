@@ -70,6 +70,7 @@ public class WorkOrderControllerTests : ControllerTestCloud<TestApiFactory, Prog
         content.Add(new StringContent("indoor"), "Location");
         content.Add(new StringContent("200"), "RoomId");
         content.Add(new StringContent("Broken window"), "Description");
+        content.Add(new StringContent("+46 70 123 45 67"), "NotifierPhone");
 
         HttpResponseMessage createResponse = await _client.PostAsync(ApiRoutes.WorkOrders, content);
         createResponse.StatusCode.ShouldBe(HttpStatusCode.Created);
@@ -117,6 +118,7 @@ public class WorkOrderControllerTests : ControllerTestCloud<TestApiFactory, Prog
         content.Add(new StringContent("ErrorReport"), "WorkOrderType");
         content.Add(new StringContent("indoor"), "Location");
         content.Add(new StringContent("Sync test"), "Description");
+        content.Add(new StringContent("+46 70 123 45 67"), "NotifierPhone");
 
         HttpResponseMessage createResponse = await _client.PostAsync(ApiRoutes.WorkOrders, content);
         WorkOrderSubmissionModel? created = await createResponse.Content.ReadFromJsonAsync<WorkOrderSubmissionModel>();
@@ -147,6 +149,7 @@ public class WorkOrderControllerTests : ControllerTestCloud<TestApiFactory, Prog
         content.Add(new StringContent("ErrorReport"), "WorkOrderType");
         content.Add(new StringContent("indoor"), "Location");
         content.Add(new StringContent("Photo attached"), "Description");
+        content.Add(new StringContent("+46 70 123 45 67"), "NotifierPhone");
 
         ByteArrayContent fileContent = new([0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, .. Encoding.UTF8.GetBytes("fake image data")]);
         fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
@@ -221,6 +224,26 @@ public class WorkOrderControllerTests : ControllerTestCloud<TestApiFactory, Prog
 
         HttpResponseMessage response = await _client.PostAsync(ApiRoutes.WorkOrders, content);
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
+    }
+
+    [Fact]
+    public async Task CreateWorkOrder_MissingNotifierPhone_ReturnsRequiredError()
+    {
+        using MultipartFormDataContent content = new();
+        content.Add(new StringContent("100"), "BuildingId");
+        content.Add(new StringContent("ErrorReport"), "WorkOrderType");
+        content.Add(new StringContent("indoor"), "Location");
+        content.Add(new StringContent("200"), "RoomId");
+        content.Add(new StringContent("Broken window"), "Description");
+        // NotifierPhone intentionally omitted
+
+        HttpResponseMessage response = await _client.PostAsync(ApiRoutes.WorkOrders, content);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+
+        ValidationProblemDetails? problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        problem.ShouldNotBeNull();
+        problem.Errors.ShouldContainKey("notifierPhone");
+        problem.Errors["notifierPhone"].ShouldContain("required");
     }
 
     [Fact]
