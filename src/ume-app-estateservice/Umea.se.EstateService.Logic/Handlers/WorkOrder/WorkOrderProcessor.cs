@@ -218,6 +218,9 @@ public class WorkOrderProcessor(
             NotifierUsername = workOrder.NotifierEmail ?? workOrder.CreatedByEmail,
             CategoryId = payloadCategoryId,
             OperatingGroupId = operatingGroupId,
+            // When we don't supply an operating group (e.g. ErrorReport), let Pythagoras
+            // assign the driftgrupp via its own assignment rules, like Pythagoras Web does.
+            UseAssignmentSuggestion = operatingGroupId is null ? true : null,
         };
 
         WorkOrderDto? created = await pythagorasClient.CreateWorkOrderAsync(

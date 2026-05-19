@@ -14,7 +14,12 @@ internal static class PythagorasWorkOrderCreateRequirements
     private static readonly IReadOnlyDictionary<PythagorasWorkOrderType, Requirements> Map =
         new Dictionary<PythagorasWorkOrderType, Requirements>
         {
-            [PythagorasWorkOrderType.ErrorReport] = new(Category: false, OperatingGroup: true),
+            // ErrorReport: Pythagoras marks operating group MANDATORY_WHEN_CREATED, but supplying
+            // it overrides Pythagoras's own assignment routing and forces every portal-created
+            // fault report into the configured default inbox (Byggservice). Fault reports created
+            // in Pythagoras Web without an operating group route correctly, so we deliberately do
+            // not send the field and let Pythagoras assign the driftgrupp itself.
+            [PythagorasWorkOrderType.ErrorReport] = new(Category: false, OperatingGroup: false),
             [PythagorasWorkOrderType.BuildingService] = new(Category: true, OperatingGroup: false),
             [PythagorasWorkOrderType.FacilityService] = new(Category: false, OperatingGroup: true),
             [PythagorasWorkOrderType.TownHallService] = new(Category: false, OperatingGroup: true),

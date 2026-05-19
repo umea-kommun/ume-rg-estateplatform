@@ -52,6 +52,14 @@ public sealed class CreatePythagorasWorkOrderRequest
     public int? CategoryId { get; init; }
     public int? OperatingGroupId { get; init; }
     public List<int?>? AssigneeIds { get; init; }
+
+    /// <summary>
+    /// Asks Pythagoras to apply its own assignment rules to populate the operating group
+    /// (driftgrupp)/assignee instead of us supplying one. Set this when no
+    /// <see cref="OperatingGroupId"/> is provided so Pythagoras routes the work order itself,
+    /// the same way it does when created in Pythagoras Web.
+    /// </summary>
+    public bool? UseAssignmentSuggestion { get; init; }
     public Dictionary<string, object>? CustomFieldsValueMap { get; init; }
     public List<WorkOrderInlineDocument>? Documents { get; init; }
 }

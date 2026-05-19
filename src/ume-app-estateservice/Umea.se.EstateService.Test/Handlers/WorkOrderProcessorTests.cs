@@ -164,14 +164,17 @@ public class WorkOrderProcessorTests : IDisposable
     }
 
     [Fact]
-    public async Task ErrorReport_SuppliesConfiguredOperatingGroupId()
+    public async Task ErrorReport_DoesNotSupplyOperatingGroupId()
     {
+        // Pythagoras assigns the driftgrupp itself for fault reports; supplying one would
+        // override its routing and force every report into Byggservice.
         WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport);
 
         await _processor.ProcessPendingAsync(CancellationToken.None);
 
         CreatePythagorasWorkOrderRequest payload = _fakeClient.CreateWorkOrderPayloads.ShouldHaveSingleItem();
-        payload.OperatingGroupId.ShouldBe(16);
+        payload.OperatingGroupId.ShouldBeNull();
+        payload.UseAssignmentSuggestion.ShouldBe(true);
     }
 
     [Fact]
@@ -183,6 +186,7 @@ public class WorkOrderProcessorTests : IDisposable
 
         CreatePythagorasWorkOrderRequest payload = _fakeClient.CreateWorkOrderPayloads.ShouldHaveSingleItem();
         payload.OperatingGroupId.ShouldBe(21);
+        payload.UseAssignmentSuggestion.ShouldBeNull();
     }
 
     [Fact]

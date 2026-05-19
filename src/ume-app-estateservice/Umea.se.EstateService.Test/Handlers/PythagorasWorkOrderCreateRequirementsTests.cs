@@ -22,7 +22,7 @@ public class PythagorasWorkOrderCreateRequirementsTests
         => PythagorasWorkOrderCreateRequirements.RequiresCategory(type).ShouldBe(expected);
 
     [Theory]
-    [InlineData(PythagorasWorkOrderType.ErrorReport, true)]
+    [InlineData(PythagorasWorkOrderType.ErrorReport, false)]
     [InlineData(PythagorasWorkOrderType.FacilityService, true)]
     [InlineData(PythagorasWorkOrderType.TownHallService, true)]
     [InlineData(PythagorasWorkOrderType.BuildingService, false)]
@@ -53,11 +53,11 @@ public class PythagorasWorkOrderCreateRequirementsTests
     public void Validate_MissingOperatingGroupDefault_ReportsKey()
     {
         WorkOrderConfiguration config = BuildValidConfig();
-        config.DefaultOperatingGroupIdByType.Remove((int)PythagorasWorkOrderType.ErrorReport);
+        config.DefaultOperatingGroupIdByType.Remove((int)PythagorasWorkOrderType.FacilityService);
 
         IReadOnlyList<string> problems = PythagorasWorkOrderCreateRequirements.Validate(config);
 
-        problems.ShouldHaveSingleItem().ShouldContain("DefaultOperatingGroupIdByType:1");
+        problems.ShouldHaveSingleItem().ShouldContain("DefaultOperatingGroupIdByType:8");
     }
 
     [Fact]
@@ -69,8 +69,8 @@ public class PythagorasWorkOrderCreateRequirementsTests
 
         IReadOnlyList<string> problems = PythagorasWorkOrderCreateRequirements.Validate(config);
 
-        // 1 category-required type + 3 operating-group-required types = 4 problems
-        problems.Count.ShouldBe(4);
+        // 1 category-required type + 2 operating-group-required types = 3 problems
+        problems.Count.ShouldBe(3);
     }
 
     [Theory]
@@ -111,7 +111,6 @@ public class PythagorasWorkOrderCreateRequirementsTests
         },
         DefaultOperatingGroupIdByType = new Dictionary<int, int>
         {
-            [(int)PythagorasWorkOrderType.ErrorReport] = 16,
             [(int)PythagorasWorkOrderType.FacilityService] = 21,
             [(int)PythagorasWorkOrderType.TownHallService] = 22,
         },
