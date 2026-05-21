@@ -20,6 +20,7 @@ using Umea.se.EstateService.Shared.Infrastructure;
 using Umea.se.EstateService.Shared.Infrastructure.ConfigurationModels;
 using Umea.se.Toolkit.EntryPoints;
 using Umea.se.Toolkit.Filters;
+using Umea.se.Toolkit.HealthChecks;
 using Umea.se.Toolkit.Images;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -246,5 +247,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<EstateServiceFeatureGateMiddleware>();
 app.MapControllers();
+app.UseDefaultHealthChecks();
 
-app.Run();
+await app.RunAsync();

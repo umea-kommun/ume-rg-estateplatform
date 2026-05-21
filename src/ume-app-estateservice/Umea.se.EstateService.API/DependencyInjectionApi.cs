@@ -16,6 +16,15 @@ public static class DependencyInjectionApi
         services.AddOpenTelemetry()
             .WithTracing(tracing => tracing.AddProcessor<HttpStatusSuccessProcessor>());
 
+        // HealthChecks
+        services.AddHealthChecks()
+            .AddCheck<HealthChecks.DatabaseHealthCheck>("EstateServiceDatabase",
+            failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy)
+            .AddCheck<HealthChecks.PythagorasHealthCheck>("PythagorasApi",
+            failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded,
+            timeout: TimeSpan.FromSeconds(20))
+            ;
+
         return services;
     }
 }
