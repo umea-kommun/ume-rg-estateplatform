@@ -95,6 +95,7 @@ import ErrorService from '@/utils/ErrorService';
 const props = defineProps<{
 	feedbackTitle: string;
 	feedbackSubtitle?: string;
+	//This list must match the validated categories in the backend (ValidFeedbackCategories)
 	category:
 		| 'grades'
 		| 'consents'
