@@ -33,6 +33,8 @@ let camera: SVGGElement | null = null;
 
 const DOUBLE_CLICK_THRESHOLD = 300;
 const ZOOM_STEP = 1.7;
+const WHEEL_DELTA_PER_ZOOM_STEP = 40;
+const MOUSE_WHEEL_ZOOM_INTENSITY = 0.0015;
 
 const { interactiveSvg } = useBlueprintSvg(props.blueprintSvg);
 
@@ -519,12 +521,18 @@ const onTouchMove = (e: TouchEvent) => {
 
 let wheelAccum = 0;
 let wheelScheduled = false;
+let wheelTouchpad = false;
+const isTouchpadWheel = (e: WheelEvent) =>
+	Math.abs(e.deltaY) < WHEEL_DELTA_PER_ZOOM_STEP ||
+	!Number.isInteger(e.deltaY);
+
 const onWheel = (e: WheelEvent) => {
 	if (!svgElement) return;
 	e.preventDefault();
 	cancelAnimation();
 
 	wheelAccum += e.deltaY;
+	wheelTouchpad ||= isTouchpadWheel(e);
 	// clamp accumulation to avoid overflow -> Infinity
 	wheelAccum = Math.max(-2000, Math.min(2000, wheelAccum));
 	if (wheelScheduled) return;
@@ -535,11 +543,14 @@ const onWheel = (e: WheelEvent) => {
 
 		const mouseSvg = clientToSvgPoint(e.clientX, e.clientY); // USER units
 
-		const zoomIntensity = 0.0015;
+		const zoomIntensity = wheelTouchpad
+			? Math.log(ZOOM_STEP) / WHEEL_DELTA_PER_ZOOM_STEP
+			: MOUSE_WHEEL_ZOOM_INTENSITY;
 		let factorExp = Math.exp(-wheelAccum * zoomIntensity); // >1 in, <1 out
 		if (!Number.isFinite(factorExp))
 			factorExp = wheelAccum < 0 ? 1e6 : 1e-6;
 		wheelAccum = 0;
+		wheelTouchpad = false;
 
 		zoomBy(factorExp, mouseSvg, false);
 	});
