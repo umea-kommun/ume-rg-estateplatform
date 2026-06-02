@@ -116,7 +116,6 @@ class FakeDemoAuth implements IAuthManager {
 			exp: new Date().getTime() + 10 * 60 * 60, // 10h expiretime on token
 			isAuthenticated: true,
 			protectedIdentity: 'YES',
-			userId: '8ca9c914-xxxx-4208-b071-xxxxxxxxxxxx',
 			authClientName,
 		} as IUser;
 		store.commit(MutationType.UserLogIn, { jwtPayload });

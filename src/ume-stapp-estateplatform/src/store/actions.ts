@@ -16,13 +16,14 @@ import {
 	IChild,
 } from '@/models/Interfaces';
 import setupMock from '@/store/mock';
-import Axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
+import { createHttpClient } from '@/utils/httpClient';
 import { ActionContext } from 'vuex';
 import ErrorService, { ComposedError } from '@/utils/ErrorService';
 import { mappingHelper } from '../store/mappingHelper';
 import mapper from './mapper';
 
-const httpClient = Axios.create();
+const httpClient = createHttpClient();
 if ((Config.VUE_APP_MOCK_DATA || '').trim() === 'yes') {
 	console.warn('Using Mocked Axios Client!');
 	setupMock(httpClient);

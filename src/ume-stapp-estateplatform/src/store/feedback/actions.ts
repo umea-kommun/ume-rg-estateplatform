@@ -2,10 +2,10 @@ import Config from '@/Config';
 import { MutationType } from '@/models/Enums';
 import { IFeedback } from '@/models/feedback/Interfaces';
 import { IRootState } from '@/models/Interfaces';
-import Axios from 'axios';
+import { createHttpClient } from '@/utils/httpClient';
 import { ActionContext } from 'vuex';
 
-const httpClient = Axios.create();
+const httpClient = createHttpClient();
 
 export default {
 	async feedbackRate(

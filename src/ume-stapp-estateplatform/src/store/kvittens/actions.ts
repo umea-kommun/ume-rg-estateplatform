@@ -1,6 +1,6 @@
 import Config from '@/Config';
 import setupMock from '@/store/mock';
-import Axios from 'axios';
+import { createHttpClient } from '@/utils/httpClient';
 import { ActionContext } from 'vuex';
 import ErrorService from '@/utils/ErrorService';
 import {
@@ -14,7 +14,7 @@ import { MutationType } from '@/models/Enums';
 import kvittensMapper from './mapper';
 import { mappingHelper } from '../mappingHelper';
 
-const httpClient = Axios.create();
+const httpClient = createHttpClient();
 if ((Config.VUE_APP_MOCK_DATA || '').trim() === 'yes') {
 	console.warn('Using Mocked Axios Client!');
 	setupMock(httpClient);

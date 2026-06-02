@@ -31,7 +31,6 @@ export enum MutationType {
 	// User
 	UserLogIn = 'userLogIn',
 	UserLogOut = 'userLogOut',
-	UserEnterPage = 'userEnterPage',
 
 	// Guardian consent
 	GetGuardianConsent = 'getGuardianConsent',

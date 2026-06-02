@@ -1,6 +1,8 @@
 import { ref, readonly } from 'vue';
-import Axios from 'axios';
+import { createHttpClient } from '@/utils/httpClient';
 import Config from '@/utils/Config';
+
+const httpClient = createHttpClient();
 
 const features = ref<Set<string>>(new Set());
 const loaded = ref(false);
@@ -12,10 +14,12 @@ async function loadFeatures(): Promise<void> {
 	loading.value = true;
 
 	try {
-		const response = await Axios.get<string[]>(
+		const response = await httpClient.get<string[]>(
 			`${Config.VUE_APP_ESTATE_SERVICE}/features`
 		);
-		features.value = new Set(response.data.map((f: string) => f.toLowerCase()));
+		features.value = new Set(
+			response.data.map((f: string) => f.toLowerCase())
+		);
 		failed.value = false;
 	} catch {
 		features.value = new Set();

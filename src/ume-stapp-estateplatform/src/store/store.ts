@@ -22,7 +22,6 @@ import feedbackStore from './feedback/store';
 const state: IRootState = {
 	user: {
 		isAuthenticated: false,
-		userId: '',
 		authClientName: '',
 	} as IUser,
 	consumer: {},

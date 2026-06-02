@@ -51,19 +51,9 @@ export default {
 		} as IUser;
 	},
 
-	[MutationType.UserEnterPage]: (
-		state: IRootState,
-		{ userId }: { userId: string }
-	) => {
-		if (!state.user.userId) {
-			state.user.userId = userId;
-		}
-	},
-
 	[MutationType.UserLogOut]: (state: IRootState) => {
 		state.user = {
 			isAuthenticated: false,
-			userId: '',
 			authClientName: '',
 		} as IUser;
 

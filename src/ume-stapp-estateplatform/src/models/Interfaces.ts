@@ -80,7 +80,6 @@ export interface IUser {
 	userContactInfo?: IUserContactInfo | null;
 	isAuthenticated: boolean;
 	protectedIdentity?: string;
-	userId: string;
 
 	/**
 	 * Unix timestamp telling when user session expires

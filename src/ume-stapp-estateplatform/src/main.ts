@@ -9,7 +9,6 @@ import Config from '@/utils/Config';
 import IAuthManager from './plugins/auth/IAuthManager';
 import Validation from './plugins/validation';
 import Auth from '@/plugins/auth/index';
-import GenerateUserId from '@/plugins/generateUserId';
 import BaseLoginMethods from '@turkos/base-login-methods';
 import '@turkos/base-login-methods/style.css';
 import '@turkos/components/styles';
@@ -18,6 +17,7 @@ import 'moment/dist/locale/sv';
 import ErrorService from './utils/ErrorService';
 import appInsights from './plugins/appInsights';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+import { trackAppInsightsContext } from '@/utils/appInsightsContext';
 // import './registerServiceWorker';
 
 moment.locale(i18n.global.locale);
@@ -49,7 +49,7 @@ window.addEventListener('error', (e: ErrorEvent) => {
 });
 
 app.use(appInsights, {
-	baseName: '(MyPage Vue)',
+	baseName: 'ume-stapp-minasidor',
 	router,
 	appInsightsConfig: {
 		connectionString: Config.VUE_APP_APPINSIGHT_CONNECTION_STRING,
@@ -57,12 +57,9 @@ app.use(appInsights, {
 		enableCorsCorrelation: true,
 	},
 	onAfterScriptLoaded: (appInsights: ApplicationInsights) => {
-		appInsights.setAuthenticatedUserContext(store.state.user.userId);
+		trackAppInsightsContext(appInsights);
 	},
 });
-
-/** Generate user id */
-GenerateUserId();
 
 Validation(i18n);
 app.use(BaseLoginMethods)

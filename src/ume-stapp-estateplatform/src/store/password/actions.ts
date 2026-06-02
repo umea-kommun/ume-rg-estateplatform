@@ -2,10 +2,10 @@ import Config from '@/Config';
 import { ActionContext } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import ErrorService from '@/utils/ErrorService';
-import Axios from 'axios';
+import { createHttpClient } from '@/utils/httpClient';
 import mapper from './mapper';
 
-const httpClient = Axios.create();
+const httpClient = createHttpClient();
 
 export default {
 	async getConsumerGroupsAndSchools(

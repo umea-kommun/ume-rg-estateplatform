@@ -1,7 +1,7 @@
 import Config from '@/Config';
 import { ActionContext } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
-import Axios from 'axios';
+import { createHttpClient } from '@/utils/httpClient';
 import mapper from './mapper';
 import ErrorService from '@/utils/ErrorService';
 import {
@@ -10,7 +10,7 @@ import {
 	SearchFilter,
 } from '@/models/estate/Interfaces';
 
-const httpClient = Axios.create({
+const httpClient = createHttpClient({
 	baseURL: Config.VUE_APP_ESTATE_SERVICE,
 });
 

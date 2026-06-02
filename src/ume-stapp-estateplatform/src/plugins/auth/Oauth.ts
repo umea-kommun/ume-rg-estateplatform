@@ -151,7 +151,6 @@ class Oauth implements IAuthManager {
 			rawJwt,
 			authClientName: clientConfig.clientName,
 		});
-		store.commit(MutationType.UserEnterPage, { userId: stateData.userId });
 		return stateData.routeAfterLogin;
 	}
 
@@ -197,7 +196,6 @@ class Oauth implements IAuthManager {
 		// add a random id to make it unique, be vary of 414 Request URI too long
 		const stateData = {
 			id: Math.random(),
-			userId: store.state.user.userId,
 			authClientName: clientNames.join(','),
 			routeAfterLogin,
 			scope,
@@ -244,7 +242,6 @@ interface IStateData {
 	routeAfterLogin: string;
 	scope: string;
 	id: number;
-	userId: string;
 	authClientName: string;
 }
 
