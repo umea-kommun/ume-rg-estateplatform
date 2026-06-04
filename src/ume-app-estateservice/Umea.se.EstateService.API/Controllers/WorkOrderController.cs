@@ -98,6 +98,18 @@ public class WorkOrderController(IWorkOrderHandler workOrderHandler, UserToken u
         return Ok(await workOrderHandler.GetWorkOrderAsync(id, email, cancellationToken));
     }
 
+    [HttpGet("defaults")]
+    [SwaggerOperation(Summary = "Get work order form defaults", Description = "Returns prefill values for the current user, e.g. the phone number from their most recent submission.")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Form prefill defaults.", typeof(WorkOrderDefaultsResponse))]
+    public async Task<ActionResult<WorkOrderDefaultsResponse>> GetDefaultsAsync(CancellationToken cancellationToken)
+    {
+        string email = userToken.GetRequiredEmail();
+
+        string? notifierPhone = await workOrderHandler.GetLatestNotifierPhoneAsync(email, cancellationToken);
+
+        return Ok(new WorkOrderDefaultsResponse { NotifierPhone = notifierPhone });
+    }
+
     [HttpGet("config")]
     [AllowAnonymous]
     [SwaggerOperation(Summary = "Get work order config", Description = "Returns file upload validation rules for the client.")]

@@ -266,6 +266,85 @@ public class WorkOrderControllerTests : ControllerTestCloud<TestApiFactory, Prog
     }
 
     [Fact]
+    public async Task GetDefaults_NoHistory_ReturnsNullPhone()
+    {
+        HttpResponseMessage response = await _client.GetAsync($"{ApiRoutes.WorkOrders}/defaults");
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        WorkOrderDefaultsResponse? defaults = await response.Content.ReadFromJsonAsync<WorkOrderDefaultsResponse>();
+        defaults.ShouldNotBeNull();
+        defaults.NotifierPhone.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task GetDefaults_AfterSubmissions_ReturnsMostRecentNotifierPhone()
+    {
+        await SubmitErrorReportWithPhone("+46 70 111 11 11");
+        await SubmitErrorReportWithPhone("+46 70 222 22 22");
+
+        HttpResponseMessage response = await _client.GetAsync($"{ApiRoutes.WorkOrders}/defaults");
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        WorkOrderDefaultsResponse? defaults = await response.Content.ReadFromJsonAsync<WorkOrderDefaultsResponse>();
+        defaults.ShouldNotBeNull();
+        defaults.NotifierPhone.ShouldBe("+46 70 222 22 22");
+    }
+
+    [Fact]
+    public async Task GetDefaults_WhitespaceOnlyPhoneOnNewestReport_IsIgnored()
+    {
+        // The API rejects whitespace-only phones, but legacy rows (created before phone became
+        // required) can hold them. A whitespace-only phone is not "a phone", so the real phone
+        // on the older report should win rather than prefilling blanks.
+        SeedWorkOrder("+46 70 111 11 11", createdAt: DateTimeOffset.UtcNow.AddMinutes(-10));
+        SeedWorkOrder("   ", createdAt: DateTimeOffset.UtcNow);
+
+        HttpResponseMessage response = await _client.GetAsync($"{ApiRoutes.WorkOrders}/defaults");
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        WorkOrderDefaultsResponse? defaults = await response.Content.ReadFromJsonAsync<WorkOrderDefaultsResponse>();
+        defaults.ShouldNotBeNull();
+        defaults.NotifierPhone.ShouldBe("+46 70 111 11 11");
+    }
+
+    private void SeedWorkOrder(string? notifierPhone, DateTimeOffset createdAt)
+    {
+        if (WebAppFactory.Services.GetService(typeof(IDbContextFactory<EstateDbContext>)) is not IDbContextFactory<EstateDbContext> factory)
+        {
+            return;
+        }
+
+        using EstateDbContext db = factory.CreateDbContext();
+        db.WorkOrders.Add(new WorkOrderEntity
+        {
+            Uid = Guid.NewGuid(),
+            BuildingId = 100,
+            BuildingName = "Test Building",
+            Description = "Seeded",
+            WorkOrderTypeId = 1,
+            CreatedByEmail = "test@example.com",
+            NotifierPhone = notifierPhone,
+            CreatedAt = createdAt,
+            UpdatedAt = createdAt
+        });
+        db.SaveChanges();
+    }
+
+    private async Task SubmitErrorReportWithPhone(string phone)
+    {
+        using MultipartFormDataContent content = new();
+        content.Add(new StringContent("100"), "BuildingId");
+        content.Add(new StringContent("ErrorReport"), "WorkOrderType");
+        content.Add(new StringContent("indoor"), "Location");
+        content.Add(new StringContent("200"), "RoomId");
+        content.Add(new StringContent("Broken window"), "Description");
+        content.Add(new StringContent(phone), "NotifierPhone");
+
+        HttpResponseMessage response = await _client.PostAsync(ApiRoutes.WorkOrders, content);
+        response.StatusCode.ShouldBe(HttpStatusCode.Created);
+    }
+
+    [Fact]
     public async Task GetConfig_ReturnsFileUploadConfig()
     {
         HttpResponseMessage response = await _client.GetAsync($"{ApiRoutes.WorkOrders}/config");

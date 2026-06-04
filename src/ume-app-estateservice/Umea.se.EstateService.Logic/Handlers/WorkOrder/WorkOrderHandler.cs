@@ -148,6 +148,9 @@ public class WorkOrderHandler(
         return WorkOrderMapper.MapToListItems(entities);
     }
 
+    public Task<string?> GetLatestNotifierPhoneAsync(string email, CancellationToken cancellationToken = default)
+        => workOrderRepository.GetLatestNotifierPhoneAsync(email, cancellationToken);
+
     public async Task<WorkOrderDetailModel> GetWorkOrderAsync(Guid uid, string email, CancellationToken cancellationToken = default)
     {
         WorkOrderEntity? workOrder = await workOrderRepository.GetByUidAsync(uid, email, cancellationToken);

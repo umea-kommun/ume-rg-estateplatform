@@ -15,19 +15,36 @@ public class WorkOrderRepository(EstateDbContext dbContext) : IWorkOrderReposito
 
     public async Task<IReadOnlyList<WorkOrderEntity>> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
+        string normalizedEmail = NormalizeEmail(email);
         return await dbContext.WorkOrders
             .AsNoTracking()
             .Include(e => e.Files)
-            .Where(e => e.CreatedByEmail == email || e.NotifierEmail == email)
+            .Where(e => e.CreatedByEmail == normalizedEmail || e.NotifierEmail == normalizedEmail)
             .OrderByDescending(e => e.CreatedAt)
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<string?> GetLatestNotifierPhoneAsync(string email, CancellationToken cancellationToken = default)
+    {
+        // Most recent phone with real content that the user entered on their own reports.
+        // Trim() (translated to LTRIM(RTRIM(...))) excludes whitespace-only values, not just
+        // null/empty. Id breaks CreatedAt ties for a deterministic "most recent".
+        string normalizedEmail = NormalizeEmail(email);
+        return await dbContext.WorkOrders
+            .AsNoTracking()
+            .Where(e => e.CreatedByEmail == normalizedEmail && e.NotifierPhone != null && e.NotifierPhone.Trim() != "")
+            .OrderByDescending(e => e.CreatedAt)
+            .ThenByDescending(e => e.Id)
+            .Select(e => e.NotifierPhone)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<WorkOrderEntity?> GetByUidAsync(Guid uid, string email, CancellationToken cancellationToken = default)
     {
+        string normalizedEmail = NormalizeEmail(email);
         return await dbContext.WorkOrders
             .Include(e => e.Files)
-            .FirstOrDefaultAsync(e => e.Uid == uid && (e.CreatedByEmail == email || e.NotifierEmail == email), cancellationToken);
+            .FirstOrDefaultAsync(e => e.Uid == uid && (e.CreatedByEmail == normalizedEmail || e.NotifierEmail == normalizedEmail), cancellationToken);
     }
 
     public async Task<IReadOnlyList<WorkOrderEntity>> GetDueForProcessingAsync(DateTimeOffset asOf, CancellationToken cancellationToken = default)
@@ -68,4 +85,8 @@ public class WorkOrderRepository(EstateDbContext dbContext) : IWorkOrderReposito
         // Entities are already tracked from the query — just save changes
         await dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    // Emails are persisted lower-cased on save (see WorkOrderHandler.SubmitWorkOrderAsync),
+    // so every lookup by email must normalise the same way to match.
+    private static string NormalizeEmail(string email) => email.ToLowerInvariant();
 }
