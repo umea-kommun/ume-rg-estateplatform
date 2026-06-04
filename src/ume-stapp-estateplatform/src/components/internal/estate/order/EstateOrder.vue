@@ -320,6 +320,7 @@ import BaseTextBox from '@/components/base/BaseTextBox.vue';
 import ErrorService from '@/utils/ErrorService';
 import { useServerValidation } from '@/utils/useServerValidation';
 import { useWorkOrderConfig } from '@/utils/useWorkOrderConfig';
+import { useWorkOrderDefaults } from '@/utils/useWorkOrderDefaults';
 import BuildingSelector from '../faultReport/buildingSelector/BuildingSelector.vue';
 import RoomSelector from '../faultReport/roomSelector/RoomSelector.vue';
 import EstateOrderCompleted from './EstateOrderCompleted.vue';
@@ -382,6 +383,7 @@ const descriptionServerError = fieldError('description');
 const contactName = ref(user.value?.fullName ?? '');
 const contactEmail = ref(user.value?.email ?? '');
 const contactPhone = ref('');
+useWorkOrderDefaults(contactPhone);
 
 watch(
 	[problemDescription, attachments, contactName, contactEmail, contactPhone],

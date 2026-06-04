@@ -122,6 +122,7 @@ export enum DispatchType {
 	GetBuildingDocuments = 'getBuildingDocuments',
 	DownloadBuildingDocument = 'downloadBuildingDocument',
 	GetWorkOrderConfig = 'getWorkOrderConfig',
+	GetWorkOrderDefaults = 'getWorkOrderDefaults',
 	SubmitFaultReport = 'submitFaultReport',
 	SubmitEstateOrder = 'submitEstateOrder',
 	SetFavorite = 'setFavorite',
