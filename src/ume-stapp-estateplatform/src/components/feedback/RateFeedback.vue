@@ -137,8 +137,10 @@ const submitRating = async () => {
 		await store.dispatch(DispatchType.FeedbackRate, feedback);
 		hasSubmittedRating.value = true;
 
-		comment.value = '';
-		hasSubmittedComment.value = false;
+		if (hasSubmittedComment.value) {
+			comment.value = '';
+			hasSubmittedComment.value = false;
+		}
 	} catch (err) {
 		rating.value = null;
 		ErrorService.onError({ err });
