@@ -15,7 +15,9 @@ public class WorkOrderHandler(
     IDataStore dataStore,
     WorkOrderChannel workOrderChannel,
     IWorkOrderFileStorage fileStorage,
-    IWorkOrderFileValidator fileValidator,
+    WorkOrderFileValidator fileValidator,
+    WorkOrderCategoryProvider categoryProvider,
+    WorkOrderAccessPolicy accessPolicy,
     ILogger<WorkOrderHandler> logger) : IWorkOrderHandler
 {
     private static readonly Dictionary<WorkOrderType, PythagorasWorkOrderType> _workOrderTypeMap = new()
@@ -24,15 +26,32 @@ public class WorkOrderHandler(
         [WorkOrderType.BuildingService] = PythagorasWorkOrderType.BuildingService,
         [WorkOrderType.FacilityService] = PythagorasWorkOrderType.FacilityService,
         [WorkOrderType.TownHallService] = PythagorasWorkOrderType.TownHallService,
+        [WorkOrderType.SpaceRequirement] = PythagorasWorkOrderType.SpaceRequirement,
     };
 
-    public async Task<WorkOrderSubmissionModel> SubmitWorkOrderAsync(CreateWorkOrderRequest request, string email, CancellationToken cancellationToken = default)
+    public IReadOnlyList<WorkOrderCategoryOption> GetCategoriesForType(WorkOrderType type, IReadOnlyCollection<string>? userGroups = null)
+    {
+        return accessPolicy.IsTypeAllowed(type, userGroups)
+            && _workOrderTypeMap.TryGetValue(type, out PythagorasWorkOrderType pythagorasType)
+            ? categoryProvider.GetLeafCategoriesForType((int)pythagorasType)
+            : [];
+    }
+
+    public async Task<WorkOrderSubmissionModel> SubmitWorkOrderAsync(CreateWorkOrderRequest request, string email, IReadOnlyCollection<string>? userGroups = null, CancellationToken cancellationToken = default)
     {
         ValidationErrorBuilder errors = new();
 
-        if (!_workOrderTypeMap.TryGetValue(request.WorkOrderType, out PythagorasWorkOrderType workOrderType))
+        bool typeResolved = _workOrderTypeMap.TryGetValue(request.WorkOrderType, out PythagorasWorkOrderType workOrderType);
+        if (!typeResolved)
         {
             errors.AddError("workOrderType", ValidationErrorCode.InvalidValue);
+        }
+        else if (!accessPolicy.IsTypeAllowed(request.WorkOrderType, userGroups))
+        {
+            // Type is restricted to an AAD group the user isn't in. Reported as NotSupported so
+            // it can't be distinguished from "building doesn't offer this type" — the type is
+            // never advertised to non-members in the first place (building info strips it).
+            errors.AddError("workOrderType", ValidationErrorCode.NotSupported);
         }
 
         bool isErrorReport = request.WorkOrderType == WorkOrderType.ErrorReport;
@@ -88,6 +107,18 @@ public class WorkOrderHandler(
             }
         }
 
+        // When the user explicitly picks a category (e.g. SpaceRequirement), validate it is a
+        // real leaf category for the type. A persisted CategoryId makes the processor skip the
+        // classifier, so a bad id would otherwise be sent straight to Pythagoras.
+        if (typeResolved && request.CategoryId.HasValue)
+        {
+            IReadOnlyList<WorkOrderCategoryOption> categories = categoryProvider.GetLeafCategoriesForType((int)workOrderType);
+            if (categories.All(c => c.Id != request.CategoryId.Value))
+            {
+                errors.AddError("categoryId", ValidationErrorCode.InvalidValue);
+            }
+        }
+
         errors.ThrowIfErrors();
 
         WorkOrderEntity workOrder = new()
@@ -99,6 +130,7 @@ public class WorkOrderHandler(
             RoomName = roomName,
             Location = location,
             WorkOrderTypeId = (int)workOrderType,
+            CategoryId = request.CategoryId,
             Description = request.Description,
             SyncStatus = WorkOrderSyncStatus.Pending,
             NextSyncAt = DateTimeOffset.UtcNow,

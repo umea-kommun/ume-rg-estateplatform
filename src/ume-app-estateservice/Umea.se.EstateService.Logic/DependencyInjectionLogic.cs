@@ -10,6 +10,7 @@ using Umea.se.EstateService.Logic.HostedServices;
 using Umea.se.EstateService.Logic.Sync;
 using Umea.se.EstateService.Logic.Search.Providers;
 using Umea.se.EstateService.Shared.Data;
+using Umea.se.EstateService.Shared.Infrastructure;
 
 namespace Umea.se.EstateService.Logic;
 
@@ -34,9 +35,12 @@ public static class DependencyInjectionLogic
         services.AddTransient<IFileDocumentHandler, FileDocumentHandler>();
 
         services.AddSingleton<WorkOrderChannel>();
-        services.AddScoped<IWorkOrderStatusSyncService, WorkOrderStatusSyncService>();
-        services.AddScoped<IWorkOrderProcessor, WorkOrderProcessor>();
-        services.AddSingleton<IWorkOrderFileValidator, WorkOrderFileValidator>();
+        services.AddScoped<WorkOrderStatusSyncService>();
+        services.AddScoped<WorkOrderProcessor>();
+        services.AddSingleton<WorkOrderFileValidator>();
+        services.AddSingleton<WorkOrderCategoryProvider>();
+        services.AddSingleton<WorkOrderAccessPolicy>(sp =>
+            new WorkOrderAccessPolicy(sp.GetRequiredService<ApplicationConfig>().WorkOrderProcessing));
         services.AddScoped<IWorkOrderHandler, WorkOrderHandler>();
         services.AddScoped<IFavoriteHandler, FavoriteHandler>();
 

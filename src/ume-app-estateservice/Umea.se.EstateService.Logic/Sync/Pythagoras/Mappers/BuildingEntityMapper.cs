@@ -216,7 +216,7 @@ public static class BuildingEntityMapper
             return [];
         }
 
-        List<WorkOrderType> types = [WorkOrderType.ErrorReport, WorkOrderType.BuildingService];
+        List<WorkOrderType> types = [WorkOrderType.ErrorReport, WorkOrderType.BuildingService, WorkOrderType.SpaceRequirement];
 
         if (TryGetPropertyValue(propertyValues, PropertyCategoryId.TownHallServiceOrder) == "Ja")
         {

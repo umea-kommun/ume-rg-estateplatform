@@ -17,7 +17,7 @@ public class PythagorasWorkOrderCreateRequirementsTests
     [InlineData(PythagorasWorkOrderType.ErrorReport, false)]
     [InlineData(PythagorasWorkOrderType.FacilityService, false)]
     [InlineData(PythagorasWorkOrderType.TownHallService, false)]
-    [InlineData(PythagorasWorkOrderType.SpaceRequirement, false)] // not submissible from this app
+    [InlineData(PythagorasWorkOrderType.SpaceRequirement, true)] // category MANDATORY_WHEN_CREATED
     public void RequiresCategory_ReturnsExpected(PythagorasWorkOrderType type, bool expected)
         => PythagorasWorkOrderCreateRequirements.RequiresCategory(type).ShouldBe(expected);
 
@@ -26,7 +26,7 @@ public class PythagorasWorkOrderCreateRequirementsTests
     [InlineData(PythagorasWorkOrderType.FacilityService, true)]
     [InlineData(PythagorasWorkOrderType.TownHallService, true)]
     [InlineData(PythagorasWorkOrderType.BuildingService, false)]
-    [InlineData(PythagorasWorkOrderType.SpaceRequirement, false)]
+    [InlineData(PythagorasWorkOrderType.SpaceRequirement, false)] // driftgrupp assigned by Pythagoras, not sent
     public void RequiresOperatingGroup_ReturnsExpected(PythagorasWorkOrderType type, bool expected)
         => PythagorasWorkOrderCreateRequirements.RequiresOperatingGroup(type).ShouldBe(expected);
 
@@ -69,8 +69,8 @@ public class PythagorasWorkOrderCreateRequirementsTests
 
         IReadOnlyList<string> problems = PythagorasWorkOrderCreateRequirements.Validate(config);
 
-        // 1 category-required type + 2 operating-group-required types = 3 problems
-        problems.Count.ShouldBe(3);
+        // 2 category-required types (BuildingService, SpaceRequirement) + 2 operating-group-required types = 4 problems
+        problems.Count.ShouldBe(4);
     }
 
     [Theory]
@@ -108,6 +108,7 @@ public class PythagorasWorkOrderCreateRequirementsTests
         DefaultCategoryIdByType = new Dictionary<int, int>
         {
             [(int)PythagorasWorkOrderType.BuildingService] = 82,
+            [(int)PythagorasWorkOrderType.SpaceRequirement] = 89,
         },
         DefaultOperatingGroupIdByType = new Dictionary<int, int>
         {

@@ -62,6 +62,7 @@ public sealed class TestApiFactory : WebAppFactoryBase<Program, HttpClientNames>
                 ["WorkOrder:StatusCheckIntervalMinutes"] = "60",
                 // Pythagoras per-type defaults (tests assert these in WorkOrderProcessorTests)
                 ["WorkOrder:DefaultCategoryIdByType:2"] = "82",
+                ["WorkOrder:DefaultCategoryIdByType:3"] = "89",
                 ["WorkOrder:DefaultOperatingGroupIdByType:1"] = "16",
                 ["WorkOrder:DefaultOperatingGroupIdByType:8"] = "21",
                 ["WorkOrder:DefaultOperatingGroupIdByType:9"] = "22"

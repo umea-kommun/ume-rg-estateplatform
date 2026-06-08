@@ -34,6 +34,7 @@ public class WorkOrderController(IWorkOrderHandler workOrderHandler, UserToken u
             WorkOrderType = form.WorkOrderType,
             Location = form.Location,
             RoomId = form.RoomId is > 0 ? form.RoomId : null,
+            CategoryId = form.CategoryId is > 0 ? form.CategoryId : null,
             Description = form.Description,
             NotifierEmail = form.NotifierEmail,
             NotifierName = form.NotifierName,
@@ -49,7 +50,7 @@ public class WorkOrderController(IWorkOrderHandler workOrderHandler, UserToken u
 
         string email = userToken.GetRequiredEmail();
 
-        WorkOrderSubmissionModel result = await workOrderHandler.SubmitWorkOrderAsync(request, email, cancellationToken);
+        WorkOrderSubmissionModel result = await workOrderHandler.SubmitWorkOrderAsync(request, email, userToken.Groups, cancellationToken);
 
         return CreatedAtAction("GetWorkOrder", new { id = result.Id }, result);
     }
@@ -108,6 +109,14 @@ public class WorkOrderController(IWorkOrderHandler workOrderHandler, UserToken u
         string? notifierPhone = await workOrderHandler.GetLatestNotifierPhoneAsync(email, cancellationToken);
 
         return Ok(new WorkOrderDefaultsResponse { NotifierPhone = notifierPhone });
+    }
+
+    [HttpGet("categories")]
+    [SwaggerOperation(Summary = "List work order categories", Description = "List the selectable leaf categories for a work order type, for types where the user picks the category (e.g. SpaceRequirement).")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Selectable categories.", typeof(IReadOnlyList<WorkOrderCategoryOption>))]
+    public ActionResult<IReadOnlyList<WorkOrderCategoryOption>> GetCategories([FromQuery] WorkOrderType workOrderType)
+    {
+        return Ok(workOrderHandler.GetCategoriesForType(workOrderType, userToken.Groups));
     }
 
     [HttpGet("config")]

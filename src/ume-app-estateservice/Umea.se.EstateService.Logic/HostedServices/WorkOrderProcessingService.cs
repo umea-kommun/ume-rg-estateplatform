@@ -73,7 +73,7 @@ public sealed class WorkOrderProcessingService(
         try
         {
             await using AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
-            IWorkOrderProcessor processor = scope.ServiceProvider.GetRequiredService<IWorkOrderProcessor>();
+            WorkOrderProcessor processor = scope.ServiceProvider.GetRequiredService<WorkOrderProcessor>();
             await processor.ProcessPendingAsync(cancellationToken);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)

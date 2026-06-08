@@ -1,3 +1,5 @@
+using Umea.se.EstateService.Shared.Models;
+
 namespace Umea.se.EstateService.Shared.Infrastructure.ConfigurationModels;
 
 public class WorkOrderConfiguration
@@ -43,6 +45,15 @@ public class WorkOrderConfiguration
     /// OPGROUPASSIGNEES_GROUP is MANDATORY_WHEN_CREATED.
     /// </summary>
     public Dictionary<int, int> DefaultOperatingGroupIdByType { get; set; } = [];
+
+    /// <summary>
+    /// AAD group membership required to see and submit a work order type. Maps a public-facing
+    /// <see cref="WorkOrderType"/> to the object id (GUID) of the AAD group whose members may use
+    /// that type (e.g. SpaceRequirement / "Förändrade lokalbehov"). Types absent from the map, or
+    /// mapped to a blank value, are unrestricted. Matched case-insensitively against the user's
+    /// "groups" claim; a user with no matching group is denied (fail-closed).
+    /// </summary>
+    public Dictionary<WorkOrderType, string> RequiredGroupByType { get; set; } = [];
 
     public WorkOrderFileValidationConfig FileValidation { get; set; } = new();
 

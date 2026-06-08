@@ -26,6 +26,10 @@ public class CreateWorkOrderFormRequest
     [SwaggerSchema("Room ID. Required for indoor, must be omitted for outdoor.", Nullable = true)]
     public int? RoomId { get; init; } = null;
 
+    [JsonPropertyName("categoryId")]
+    [SwaggerSchema("Pythagoras category id chosen by the user. Used by types where the user picks the category (e.g. SpaceRequirement); omit to let the classifier/default decide.", Nullable = true)]
+    public int? CategoryId { get; init; } = null;
+
     [Required(ErrorMessage = ValidationErrorCode.Required)]
     [StringLength(2000, ErrorMessage = ValidationErrorCode.MaxLength)]
     [JsonPropertyName("description")]

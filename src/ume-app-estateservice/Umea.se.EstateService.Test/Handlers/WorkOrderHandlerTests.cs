@@ -12,6 +12,7 @@ using Umea.se.EstateService.Shared.Data;
 using Umea.se.EstateService.Shared.Data.Entities;
 using Umea.se.EstateService.Shared.Exceptions;
 using Umea.se.EstateService.Shared.Infrastructure;
+using Umea.se.EstateService.Shared.Infrastructure.ConfigurationModels;
 using Umea.se.EstateService.Shared.Models;
 using Umea.se.EstateService.Test.TestHelpers;
 
@@ -45,13 +46,21 @@ public class WorkOrderHandlerTests : IDisposable
 
         DataStoreSeeder.Seed(
             _dataStore,
-            buildings: [new BuildingEntity { Id = 1, Name = "Building One", PopularName = "B1", WorkOrderTypes = [WorkOrderType.ErrorReport, WorkOrderType.BuildingService] }],
-            rooms: [new RoomEntity { Id = 10, Name = "Room Ten", PopularName = "R10", BuildingId = 1 }]);
+            buildings: [new BuildingEntity { Id = 1, Name = "Building One", PopularName = "B1", WorkOrderTypes = [WorkOrderType.ErrorReport, WorkOrderType.BuildingService, WorkOrderType.SpaceRequirement] }],
+            rooms: [new RoomEntity { Id = 10, Name = "Room Ten", PopularName = "R10", BuildingId = 1 }],
+            // SpaceRequirement (Pythagoras type 3) leaf categories the user can pick from.
+            workOrderCategories:
+            [
+                new WorkOrderCategoryNode { Id = 89, Name = "Generella utredningar", WorkOrderTypeIds = [3] },
+                new WorkOrderCategoryNode { Id = 91, Name = "Ombyggnad", WorkOrderTypeIds = [3] },
+            ]);
 
         ApplicationConfig config = CreateTestConfig();
         IWorkOrderFileStorage fileStorage = new LocalWorkOrderFileStorage(config);
-        IWorkOrderFileValidator fileValidator = new WorkOrderFileValidator(config);
-        _handler = new WorkOrderHandler(workOrderRepository, _dataStore, new WorkOrderChannel(), fileStorage, fileValidator, NullLogger<WorkOrderHandler>.Instance);
+        WorkOrderFileValidator fileValidator = new(config);
+        WorkOrderCategoryProvider categoryProvider = new(_dataStore);
+        WorkOrderAccessPolicy accessPolicy = new(new WorkOrderConfiguration());
+        _handler = new WorkOrderHandler(workOrderRepository, _dataStore, new WorkOrderChannel(), fileStorage, fileValidator, categoryProvider, accessPolicy, NullLogger<WorkOrderHandler>.Instance);
     }
 
     [Fact]
@@ -272,6 +281,212 @@ public class WorkOrderHandlerTests : IDisposable
         WorkOrderDetailModel detail = await _handler.GetWorkOrderAsync(result.Id, "test@example.com");
         detail.Location.ShouldBeNull();
         detail.RoomName.ShouldBe("Room Ten");
+    }
+
+    [Fact]
+    public async Task SubmitWorkOrder_SpaceRequirement_WithoutLocation_StoresTypeAndNullLocation()
+    {
+        CreateWorkOrderRequest request = new()
+        {
+            BuildingId = 1,
+            WorkOrderType = WorkOrderType.SpaceRequirement,
+            Description = "Behöver större lokal"
+        };
+
+        WorkOrderSubmissionModel result = await _handler.SubmitWorkOrderAsync(request, "test@example.com");
+
+        WorkOrderDetailModel detail = await _handler.GetWorkOrderAsync(result.Id, "test@example.com");
+        detail.WorkOrderType.ShouldBe(WorkOrderType.SpaceRequirement);
+        detail.Location.ShouldBeNull();
+        detail.RoomName.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task SubmitWorkOrder_SpaceRequirement_WithRoom_BindsRoom()
+    {
+        CreateWorkOrderRequest request = new()
+        {
+            BuildingId = 1,
+            WorkOrderType = WorkOrderType.SpaceRequirement,
+            RoomId = 10,
+            Description = "Behöver anpassa rum"
+        };
+
+        WorkOrderSubmissionModel result = await _handler.SubmitWorkOrderAsync(request, "test@example.com");
+
+        WorkOrderDetailModel detail = await _handler.GetWorkOrderAsync(result.Id, "test@example.com");
+        detail.WorkOrderType.ShouldBe(WorkOrderType.SpaceRequirement);
+        detail.RoomName.ShouldBe("Room Ten");
+    }
+
+    [Fact]
+    public async Task SubmitWorkOrder_SpaceRequirement_WithChosenCategory_PersistsCategoryId()
+    {
+        CreateWorkOrderRequest request = new()
+        {
+            BuildingId = 1,
+            WorkOrderType = WorkOrderType.SpaceRequirement,
+            CategoryId = 91,
+            Description = "Behöver bygga om"
+        };
+
+        WorkOrderSubmissionModel result = await _handler.SubmitWorkOrderAsync(request, "test@example.com");
+
+        WorkOrderEntity? entity = await _dbContext.WorkOrders.FirstOrDefaultAsync(w => w.Uid == result.Id);
+        entity.ShouldNotBeNull();
+        entity.CategoryId.ShouldBe(91);
+    }
+
+    [Fact]
+    public async Task SubmitWorkOrder_WithCategoryNotValidForType_ThrowsInvalidValue()
+    {
+        CreateWorkOrderRequest request = new()
+        {
+            BuildingId = 1,
+            WorkOrderType = WorkOrderType.SpaceRequirement,
+            CategoryId = 999, // not a leaf category for type 3
+            Description = "Behöver större lokal"
+        };
+
+        BusinessValidationException exception = await Should.ThrowAsync<BusinessValidationException>(
+            () => _handler.SubmitWorkOrderAsync(request, "test@example.com"));
+
+        exception.Errors.ShouldContainKey("categoryId");
+    }
+
+    [Fact]
+    public void GetCategoriesForType_SpaceRequirement_ReturnsLeafCategories()
+    {
+        IReadOnlyList<WorkOrderCategoryOption> categories = _handler.GetCategoriesForType(WorkOrderType.SpaceRequirement);
+
+        categories.Select(c => c.Id).ShouldBe([89, 91], ignoreOrder: true);
+        categories.Single(c => c.Id == 89).Name.ShouldBe("Generella utredningar");
+    }
+
+    [Fact]
+    public void GetCategoriesForType_TypeWithoutCategories_ReturnsEmpty()
+    {
+        _handler.GetCategoriesForType(WorkOrderType.ErrorReport).ShouldBeEmpty();
+    }
+
+    // --- AAD group gating: SpaceRequirement restricted to a configured group ---
+
+    private const string SpaceRequirementGroup = "11111111-2222-3333-4444-555555555555";
+
+    [Fact]
+    public async Task SubmitWorkOrder_GatedType_UserInGroup_Succeeds()
+    {
+        WorkOrderHandler handler = CreateGatedHandler();
+        CreateWorkOrderRequest request = new()
+        {
+            BuildingId = 1,
+            WorkOrderType = WorkOrderType.SpaceRequirement,
+            Description = "Behöver större lokal"
+        };
+
+        WorkOrderSubmissionModel result = await handler.SubmitWorkOrderAsync(request, "test@example.com", [SpaceRequirementGroup]);
+
+        WorkOrderEntity? entity = await _dbContext.WorkOrders.FirstOrDefaultAsync(w => w.Uid == result.Id);
+        entity.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public async Task SubmitWorkOrder_GatedType_UserNotInGroup_ThrowsNotSupported()
+    {
+        WorkOrderHandler handler = CreateGatedHandler();
+        CreateWorkOrderRequest request = new()
+        {
+            BuildingId = 1,
+            WorkOrderType = WorkOrderType.SpaceRequirement,
+            Description = "Behöver större lokal"
+        };
+
+        BusinessValidationException exception = await Should.ThrowAsync<BusinessValidationException>(
+            () => handler.SubmitWorkOrderAsync(request, "test@example.com", ["some-other-group"]));
+
+        exception.Errors.ShouldContainKey("workOrderType");
+    }
+
+    [Fact]
+    public async Task SubmitWorkOrder_GatedType_NoGroups_ThrowsNotSupported()
+    {
+        WorkOrderHandler handler = CreateGatedHandler();
+        CreateWorkOrderRequest request = new()
+        {
+            BuildingId = 1,
+            WorkOrderType = WorkOrderType.SpaceRequirement,
+            Description = "Behöver större lokal"
+        };
+
+        // Fail-closed: omitting groups entirely is treated as "not a member".
+        await Should.ThrowAsync<BusinessValidationException>(
+            () => handler.SubmitWorkOrderAsync(request, "test@example.com"));
+    }
+
+    [Fact]
+    public async Task SubmitWorkOrder_UngatedType_UserNotInGroup_Succeeds()
+    {
+        WorkOrderHandler handler = CreateGatedHandler();
+        CreateWorkOrderRequest request = new()
+        {
+            BuildingId = 1,
+            WorkOrderType = WorkOrderType.ErrorReport,
+            Location = "Indoor",
+            RoomId = 10,
+            Description = "Trasig lampa"
+        };
+
+        WorkOrderSubmissionModel result = await handler.SubmitWorkOrderAsync(request, "test@example.com", ["some-other-group"]);
+
+        result.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void GetCategoriesForType_GatedType_UserInGroup_ReturnsCategories()
+    {
+        WorkOrderHandler handler = CreateGatedHandler();
+
+        handler.GetCategoriesForType(WorkOrderType.SpaceRequirement, [SpaceRequirementGroup])
+            .Select(c => c.Id).ShouldBe([89, 91], ignoreOrder: true);
+    }
+
+    [Fact]
+    public void GetCategoriesForType_GatedType_UserNotInGroup_ReturnsEmpty()
+    {
+        WorkOrderHandler handler = CreateGatedHandler();
+
+        handler.GetCategoriesForType(WorkOrderType.SpaceRequirement, ["some-other-group"]).ShouldBeEmpty();
+    }
+
+    private WorkOrderHandler CreateGatedHandler()
+    {
+        ApplicationConfig config = CreateTestConfig();
+        IWorkOrderRepository repository = new WorkOrderRepository(_dbContext);
+        IWorkOrderFileStorage fileStorage = new LocalWorkOrderFileStorage(config);
+        WorkOrderFileValidator fileValidator = new(config);
+        WorkOrderCategoryProvider categoryProvider = new(_dataStore);
+        WorkOrderAccessPolicy accessPolicy = new(new WorkOrderConfiguration
+        {
+            RequiredGroupByType = { [WorkOrderType.SpaceRequirement] = SpaceRequirementGroup }
+        });
+        return new WorkOrderHandler(repository, _dataStore, new WorkOrderChannel(), fileStorage, fileValidator, categoryProvider, accessPolicy, NullLogger<WorkOrderHandler>.Instance);
+    }
+
+    [Fact]
+    public async Task SubmitWorkOrder_TypeNotSupportedByBuilding_ThrowsNotSupported()
+    {
+        // FacilityService is not in Building One's WorkOrderTypes
+        CreateWorkOrderRequest request = new()
+        {
+            BuildingId = 1,
+            WorkOrderType = WorkOrderType.FacilityService,
+            Description = "Should be rejected"
+        };
+
+        BusinessValidationException exception = await Should.ThrowAsync<BusinessValidationException>(
+            () => _handler.SubmitWorkOrderAsync(request, "test@example.com"));
+
+        exception.Errors.ShouldContainKey("workOrderType");
     }
 
     [Fact]

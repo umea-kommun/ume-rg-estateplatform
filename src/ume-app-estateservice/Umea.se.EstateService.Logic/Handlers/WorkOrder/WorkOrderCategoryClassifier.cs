@@ -1,12 +1,12 @@
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
-using Umea.se.EstateService.Shared.Data;
 using Umea.se.EstateService.Shared.Data.Entities;
+using Umea.se.EstateService.Shared.Models;
 
 namespace Umea.se.EstateService.Logic.Handlers.WorkOrder;
 
 public class WorkOrderCategoryClassifier(
-    IDataStore dataStore,
+    WorkOrderCategoryProvider categoryProvider,
     IChatClient chatClient,
     ILogger<WorkOrderCategoryClassifier> logger) : IWorkOrderCategoryClassifier
 {
@@ -19,23 +19,17 @@ public class WorkOrderCategoryClassifier(
         Svara med en JSON-array av objekt med CategoryId, CategoryName och Confidence (0.0–1.0).
         """;
 
-    public IReadOnlyList<WorkOrderCategoryNode> GetCategoriesForType(int workOrderTypeId)
-    {
-        return [.. dataStore.WorkOrderCategories.Where(c =>
-            c.WorkOrderTypeIds.Count == 0 || c.WorkOrderTypeIds.Contains(workOrderTypeId))];
-    }
-
     public async Task<IReadOnlyList<WorkOrderCategorySuggestion>> ClassifyAsync(
         string description, int workOrderTypeId, CancellationToken ct = default)
     {
-        IReadOnlyList<WorkOrderCategoryNode> categories = GetCategoriesForType(workOrderTypeId);
-        if (categories.Count == 0)
+        IReadOnlyList<WorkOrderCategoryOption> leaves = categoryProvider.GetLeafCategoriesForType(workOrderTypeId);
+        if (leaves.Count == 0)
         {
             logger.LogWarning("No categories found for work order type {WorkOrderTypeId}", workOrderTypeId);
             return [];
         }
 
-        string categoryTree = BuildCategoryTree(categories);
+        string categoryTree = string.Join('\n', leaves.Select(leaf => $"- {leaf.Name} (id: {leaf.Id})"));
         string userMessage = $"""
             Tillgängliga kategorier:
             {categoryTree}
@@ -44,7 +38,7 @@ public class WorkOrderCategoryClassifier(
             {description}
             """;
 
-        logger.LogDebug("Classifying work order with {CategoryCount} available categories", categories.Count);
+        logger.LogDebug("Classifying work order with {CategoryCount} available categories", leaves.Count);
 
         ChatResponse<List<WorkOrderCategorySuggestion>> result = await chatClient.GetResponseAsync<List<WorkOrderCategorySuggestion>>(
             [
@@ -56,37 +50,5 @@ public class WorkOrderCategoryClassifier(
         List<WorkOrderCategorySuggestion> suggestions = result.Result ?? [];
 
         return [.. suggestions.OrderByDescending(s => s.Confidence)];
-    }
-
-    private string BuildCategoryTree(IReadOnlyList<WorkOrderCategoryNode> categories)
-    {
-        Dictionary<int, WorkOrderCategoryNode> byId = categories.ToDictionary(c => c.Id);
-        HashSet<int> childIds = [.. categories.Where(c => c.ParentId.HasValue).Select(c => c.ParentId!.Value)];
-        List<WorkOrderCategoryNode> leaves = [.. categories.Where(c => !childIds.Contains(c.Id))];
-
-        List<string> lines = [];
-        foreach (WorkOrderCategoryNode? leaf in leaves)
-        {
-            string path = BuildPath(leaf, byId);
-            lines.Add($"- {path} (id: {leaf.Id})");
-        }
-
-        return string.Join('\n', lines);
-    }
-
-    private static string BuildPath(WorkOrderCategoryNode node, Dictionary<int, WorkOrderCategoryNode> byId)
-    {
-        List<string> parts = [];
-        WorkOrderCategoryNode? current = node;
-        while (current is not null)
-        {
-            parts.Add(current.Name);
-            current = current.ParentId.HasValue && byId.TryGetValue(current.ParentId.Value, out WorkOrderCategoryNode? parent)
-                ? parent
-                : null;
-        }
-
-        parts.Reverse();
-        return string.Join(" / ", parts);
     }
 }

@@ -13,11 +13,11 @@ namespace Umea.se.EstateService.Logic.Handlers.WorkOrder;
 public class WorkOrderProcessor(
     IWorkOrderRepository workOrderRepository,
     IPythagorasClient pythagorasClient,
-    IWorkOrderStatusSyncService statusSyncService,
+    WorkOrderStatusSyncService statusSyncService,
     IWorkOrderCategoryClassifier categoryClassifier,
     IWorkOrderFileStorage fileStorage,
     ApplicationConfig appConfig,
-    ILogger<WorkOrderProcessor> logger) : IWorkOrderProcessor
+    ILogger<WorkOrderProcessor> logger)
 {
     private readonly WorkOrderConfiguration _config = appConfig.WorkOrderProcessing;
 

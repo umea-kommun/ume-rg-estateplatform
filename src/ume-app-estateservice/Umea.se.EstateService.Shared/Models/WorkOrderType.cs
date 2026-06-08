@@ -9,4 +9,5 @@ public enum WorkOrderType
     BuildingService,
     TownHallService,
     FacilityService,
+    SpaceRequirement,
 }

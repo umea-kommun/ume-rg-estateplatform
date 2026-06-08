@@ -23,6 +23,13 @@ internal static class PythagorasWorkOrderCreateRequirements
             [PythagorasWorkOrderType.BuildingService] = new(Category: true, OperatingGroup: false),
             [PythagorasWorkOrderType.FacilityService] = new(Category: false, OperatingGroup: true),
             [PythagorasWorkOrderType.TownHallService] = new(Category: false, OperatingGroup: true),
+            // SpaceRequirement: Pythagoras marks both category and operating group
+            // MANDATORY_WHEN_CREATED. We supply a category (classifier pick, else the configured
+            // default), but deliberately do not send an operating group: existing type-3 orders
+            // are routed to varying geographic/role driftgrupper (e.g. Västra, Fastighetsförvaltare)
+            // by Pythagoras's own assignment rules based on the bound object. Sending a single
+            // default would mis-route every order, so we let Pythagoras assign it (like ErrorReport).
+            [PythagorasWorkOrderType.SpaceRequirement] = new(Category: true, OperatingGroup: false),
         };
 
     public static bool RequiresCategory(PythagorasWorkOrderType type)

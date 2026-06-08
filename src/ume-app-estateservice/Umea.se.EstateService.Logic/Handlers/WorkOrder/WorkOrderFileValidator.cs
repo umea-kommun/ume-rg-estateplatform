@@ -4,7 +4,7 @@ using Umea.se.EstateService.Shared.Infrastructure.ConfigurationModels;
 
 namespace Umea.se.EstateService.Logic.Handlers.WorkOrder;
 
-public class WorkOrderFileValidator(ApplicationConfig appConfig) : IWorkOrderFileValidator
+public class WorkOrderFileValidator(ApplicationConfig appConfig)
 {
     private readonly WorkOrderFileValidationConfig _config = appConfig.WorkOrderProcessing.FileValidation;
 

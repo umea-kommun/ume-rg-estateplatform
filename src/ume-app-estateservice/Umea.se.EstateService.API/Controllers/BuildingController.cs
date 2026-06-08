@@ -6,6 +6,7 @@ using Umea.se.EstateService.API.Extensions;
 using Umea.se.EstateService.API.Requests;
 using Umea.se.EstateService.Logic.Handlers;
 using Umea.se.EstateService.Logic.Handlers.Favorite;
+using Umea.se.EstateService.Logic.Handlers.WorkOrder;
 using Umea.se.EstateService.Shared.Models;
 using Umea.se.Toolkit.UserFromToken;
 using QueryArgs = Umea.se.EstateService.Logic.Models.QueryArgs;
@@ -16,7 +17,7 @@ namespace Umea.se.EstateService.API.Controllers;
 [Produces("application/json")]
 [Route(ApiRoutes.Buildings)]
 [Authorize]
-public class BuildingController(IEstateDataQueryHandler pythagorasHandler, IFavoriteHandler favoriteHandler, UserToken userToken) : ControllerBase
+public class BuildingController(IEstateDataQueryHandler pythagorasHandler, IFavoriteHandler favoriteHandler, WorkOrderAccessPolicy workOrderAccessPolicy, UserToken userToken) : ControllerBase
 {
     /// <summary>
     /// Gets a list of buildings.
@@ -47,6 +48,7 @@ public class BuildingController(IEstateDataQueryHandler pythagorasHandler, IFavo
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
+        workOrderAccessPolicy.StampAllowedWorkOrderTypes(buildings, userToken.Groups);
         await favoriteHandler.StampFavoritesAsync(userToken.GetRequiredEmail(), buildings, cancellationToken);
 
         return Ok(buildings);
@@ -156,6 +158,7 @@ public class BuildingController(IEstateDataQueryHandler pythagorasHandler, IFavo
             .GetBuildingByIdAsync(buildingId, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
+        workOrderAccessPolicy.StampAllowedWorkOrderTypes(building, userToken.Groups);
         await favoriteHandler.StampFavoriteAsync(userToken.GetRequiredEmail(), building, cancellationToken);
 
         return Ok(building);

@@ -12,6 +12,7 @@ internal static class WorkOrderMapper
         [PythagorasWorkOrderType.BuildingService] = WorkOrderType.BuildingService,
         [PythagorasWorkOrderType.FacilityService] = WorkOrderType.FacilityService,
         [PythagorasWorkOrderType.TownHallService] = WorkOrderType.TownHallService,
+        [PythagorasWorkOrderType.SpaceRequirement] = WorkOrderType.SpaceRequirement,
     };
 
     private static WorkOrderType? MapWorkOrderType(int workOrderTypeId) =>

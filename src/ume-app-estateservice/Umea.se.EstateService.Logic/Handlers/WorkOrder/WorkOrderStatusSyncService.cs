@@ -9,24 +9,19 @@ using Umea.se.EstateService.Shared.Infrastructure.ConfigurationModels;
 
 namespace Umea.se.EstateService.Logic.Handlers.WorkOrder;
 
-public interface IWorkOrderStatusSyncService
-{
-    /// <summary>
-    /// Syncs status and notifier info from Pythagoras for submitted work orders that haven't been checked recently.
-    /// Uses a single batch call to Pythagoras for all stale orders.
-    /// </summary>
-    Task SyncStaleWorkOrdersAsync(IReadOnlyList<WorkOrderEntity> workOrders, CancellationToken cancellationToken = default);
-}
-
 public class WorkOrderStatusSyncService(
     IWorkOrderRepository workOrderRepository,
     IPythagorasClient pythagorasClient,
     ApplicationConfig appConfig,
-    ILogger<WorkOrderStatusSyncService> logger) : IWorkOrderStatusSyncService
+    ILogger<WorkOrderStatusSyncService> logger)
 {
     private const int BatchSize = 100;
     private readonly WorkOrderConfiguration _config = appConfig.WorkOrderProcessing;
 
+    /// <summary>
+    /// Syncs status and notifier info from Pythagoras for submitted work orders that haven't been checked recently.
+    /// Uses a single batch call to Pythagoras for all stale orders.
+    /// </summary>
     public async Task SyncStaleWorkOrdersAsync(IReadOnlyList<WorkOrderEntity> workOrders, CancellationToken cancellationToken = default)
     {
         DateTimeOffset now = DateTimeOffset.UtcNow;

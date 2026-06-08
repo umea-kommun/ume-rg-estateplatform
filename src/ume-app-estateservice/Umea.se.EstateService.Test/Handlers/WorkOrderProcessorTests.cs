@@ -29,7 +29,7 @@ public class WorkOrderProcessorTests : IDisposable
     private readonly FakePythagorasClient _fakeClient;
     private readonly StubCategoryClassifier _classifier;
     private readonly StubFileStorage _fileStorage;
-    private readonly StubStatusSyncService _statusSync;
+    private readonly WorkOrderStatusSyncService _statusSync;
     private readonly WorkOrderProcessor _processor;
 
     public WorkOrderProcessorTests()
@@ -54,7 +54,11 @@ public class WorkOrderProcessorTests : IDisposable
 
         _classifier = new StubCategoryClassifier();
         _fileStorage = new StubFileStorage();
-        _statusSync = new StubStatusSyncService();
+        _statusSync = new WorkOrderStatusSyncService(
+            _repository,
+            _fakeClient,
+            CreateConfig(),
+            NullLogger<WorkOrderStatusSyncService>.Instance);
 
         _processor = new WorkOrderProcessor(
             _repository,
@@ -201,6 +205,42 @@ public class WorkOrderProcessorTests : IDisposable
     }
 
     [Fact]
+    public async Task SpaceRequirement_NoClassifierMatch_UsesConfiguredCategoryAndAssignmentSuggestion()
+    {
+        // Förändrade lokalbehov: category is MANDATORY_WHEN_CREATED (fall back to configured
+        // default when the classifier has no confident pick), but the driftgrupp is assigned by
+        // Pythagoras via its own routing — like ErrorReport — so we don't supply one.
+        WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.SpaceRequirement);
+        _classifier.SetSuggestions([]);
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        CreatePythagorasWorkOrderRequest payload = _fakeClient.CreateWorkOrderPayloads.ShouldHaveSingleItem();
+        payload.CategoryId.ShouldBe(89); // DefaultCategoryIdByType[3]
+        payload.OperatingGroupId.ShouldBeNull();
+        payload.UseAssignmentSuggestion.ShouldBe(true);
+        // No room on the seeded order -> bound to the building.
+        payload.BoundObjectType.ShouldBe(WorkOrderBoundObjectType.BUILDING);
+    }
+
+    [Fact]
+    public async Task SpaceRequirement_UserChosenCategory_SkipsClassifierAndUsesIt()
+    {
+        // When the user picked a category up front it is persisted on the entity. The processor
+        // must honor it and never invoke the classifier or fall back to the configured default,
+        // even if the classifier would have produced a confident (different) suggestion.
+        WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.SpaceRequirement, categoryId: 91);
+        _classifier.SetSuggestions([new WorkOrderCategorySuggestion { CategoryId = 89, CategoryName = "Generella utredningar", Confidence = 1.0 }]);
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        CreatePythagorasWorkOrderRequest payload = _fakeClient.CreateWorkOrderPayloads.ShouldHaveSingleItem();
+        payload.CategoryId.ShouldBe(91); // user pick — not the classifier (89) nor the default
+        payload.OperatingGroupId.ShouldBeNull();
+        payload.UseAssignmentSuggestion.ShouldBe(true);
+    }
+
+    [Fact]
     public async Task BuildingService_NoClassifierHitNoDefault_MarksWorkOrderFailed()
     {
         // Rebuild processor with config missing the BuildingService default
@@ -223,7 +263,7 @@ public class WorkOrderProcessorTests : IDisposable
         reloaded.ErrorMessage.ShouldContain("DefaultCategoryIdByType");
     }
 
-    private async Task<WorkOrderEntity> SeedPendingAsync(PythagorasWorkOrderType type)
+    private async Task<WorkOrderEntity> SeedPendingAsync(PythagorasWorkOrderType type, int? categoryId = null)
     {
         WorkOrderEntity workOrder = new()
         {
@@ -232,6 +272,7 @@ public class WorkOrderProcessorTests : IDisposable
             BuildingName = "Test Building",
             Description = "Test",
             WorkOrderTypeId = (int)type,
+            CategoryId = categoryId,
             SyncStatus = WorkOrderSyncStatus.Pending,
             CreatedByEmail = "test@example.com",
             NotifierEmail = "test@example.com",
@@ -255,6 +296,7 @@ public class WorkOrderProcessorTests : IDisposable
             ["WorkOrder:DefaultOperatingGroupIdByType:1"] = "16",
             ["WorkOrder:DefaultOperatingGroupIdByType:8"] = "21",
             ["WorkOrder:DefaultOperatingGroupIdByType:9"] = "22",
+            ["WorkOrder:DefaultCategoryIdByType:3"] = "89",
             ["Pythagoras:ApiKey"] = "test",
             ["Pythagoras:BaseUrl"] = "https://localhost/",
             ["Authentication:TokenServiceUrl"] = "https://localhost/",
@@ -291,8 +333,6 @@ public class WorkOrderProcessorTests : IDisposable
         public void SetSuggestions(IReadOnlyList<WorkOrderCategorySuggestion> suggestions)
             => _suggestions = suggestions;
 
-        public IReadOnlyList<WorkOrderCategoryNode> GetCategoriesForType(int workOrderTypeId) => [];
-
         public Task<IReadOnlyList<WorkOrderCategorySuggestion>> ClassifyAsync(
             string description, int workOrderTypeId, CancellationToken ct = default)
             => Task.FromResult(_suggestions);
@@ -307,9 +347,4 @@ public class WorkOrderProcessorTests : IDisposable
         public Task DeleteWorkOrderFilesAsync(Guid workOrderUid, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
-    private sealed class StubStatusSyncService : IWorkOrderStatusSyncService
-    {
-        public Task SyncStaleWorkOrdersAsync(IReadOnlyList<WorkOrderEntity> workOrders, CancellationToken cancellationToken = default)
-            => Task.CompletedTask;
-    }
 }
