@@ -215,10 +215,21 @@ export interface ISubmitEstateFaultReport {
 export interface ISubmitEstateOrder {
 	buildingId: number;
 	category: EstateOrderCategory;
+	/**
+	 * Optional Pythagoras leaf category chosen by the user (space requirement flow).
+	 * When set, the backend uses it directly and bypasses the LLM classifier.
+	 */
+	categoryId?: number;
 	roomId: number | undefined;
 	description: string;
 	attachments: File[];
 	notifierName: string;
 	notifierEmail: string;
 	notifierPhone: string;
+}
+
+/** A selectable Pythagoras leaf category from GET /workorders/categories. */
+export interface IWorkOrderCategoryOption {
+	id: number;
+	name: string;
 }

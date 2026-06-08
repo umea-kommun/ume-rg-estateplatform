@@ -115,7 +115,8 @@
 				"internalDefaultPasswords": "Lösenord",
 				"internalEstate": "Fastigheter (beta)",
 				"internalEstateFaultReport": "Felanmälan - Fastigheter",
-				"internalEstateOrder": "Beställning - Fastigheter"
+				"internalEstateOrder": "Beställning - Fastigheter",
+				"internalEstateSpaceRequirement": "Förändrade lokalbehov - Fastigheter"
 			},
 			"locale": {
 				"change": "Other languages"
@@ -375,7 +376,8 @@
 					"description": "Hitta information om fastigheter, byggnader och rum inom Umeå kommun.",
 					"goToEstateSearch": "Sök efter fastigheter",
 					"goToEstateFaultReport": "Felanmälan",
-					"goToEstateOrder": "Beställning"
+					"goToEstateOrder": "Beställning",
+					"goToEstateSpaceRequirement": "Förändrade lokalbehov"
 				},
 				"feedbackTitle": "Vill du hjälpa oss att bli bättre?",
 				"feedbackSubtitle": "Lämna ett omdöme"
@@ -773,6 +775,10 @@
 						"title": "Verksamhetsvaktmästare",
 						"description": "Praktisk hjälp och fastighetsnära service i verksamheter."
 					},
+					"spaceRequirement": {
+						"title": "Förändrade lokalbehov",
+						"description": "Anmäl behov av förändrade lokaler, till exempel mer eller mindre yta."
+					},
 					"noneAvailable": "Det finns inga beställningstjänster tillgängliga för den här byggnaden."
 				},
 				"info": {
@@ -785,6 +791,33 @@
 					"description": "Vi har mottagit din beställning och kommer att hantera den så snart som möjligt.",
 					"goHome": "Gå till startsidan",
 					"feedbackTitle": "Hur fungerade det att göra en beställning?"
+				}
+			},
+			"spaceRequirement": {
+				"title": "Förändrade lokalbehov",
+				"description": "Anmäl behov av förändrade lokaler, till exempel mer eller mindre yta, anpassningar eller andra förändringar i din verksamhets lokaler.",
+				"submitButton": "Skicka in anmälan",
+				"general": {
+					"descriptionTitle": "Beskrivning",
+					"descriptionLabel": "Beskriv ditt förändrade lokalbehov",
+					"descriptionHelpText": "Beskriv så tydligt som möjligt vilket behov du har, varför det uppstått och när förändringen behöver vara på plats. Ju mer information du kan ge, desto bättre kan anmälan hanteras.",
+					"contactLabel": "Kontaktuppgifter",
+					"contactHelpText": "Ange vem som ska kontaktas om mer information behövs för att hantera anmälan, eller om det finns frågor kring den."
+				},
+				"category": {
+					"title": "Typ av lokalbehov",
+					"noneAvailable": "Det går inte att anmäla förändrade lokalbehov för den här byggnaden."
+				},
+				"info": {
+					"title": "Information",
+					"text1": "Här ska det stå information som är viktig när man anmäler förändrade lokalbehov.",
+					"text2": "Efter att anmälan är inskickad hanteras den av ansvarig handläggare."
+				},
+				"completed": {
+					"title": "Tack för din anmälan!",
+					"description": "Vi har mottagit din anmälan om förändrade lokalbehov och kommer att hantera den så snart som möjligt.",
+					"goHome": "Gå till startsidan",
+					"feedbackTitle": "Hur fungerade det att anmäla förändrade lokalbehov?"
 				}
 			},
 			"buildingSelector": {

@@ -7,6 +7,7 @@ import ErrorService from '@/utils/ErrorService';
 import {
 	ISubmitEstateFaultReport,
 	ISubmitEstateOrder,
+	IWorkOrderCategoryOption,
 	SearchFilter,
 } from '@/models/estate/Interfaces';
 
@@ -271,6 +272,19 @@ export default {
 
 		return response.data;
 	},
+	async getWorkOrderCategories(
+		context: ActionContext<IRootState, IRootState>,
+		{ workOrderType }: { workOrderType: string }
+	): Promise<IWorkOrderCategoryOption[]> {
+		const response = await httpClient.get('/workorders/categories', {
+			headers: {
+				Authorization: 'Bearer ' + context.rootState.user.token,
+			},
+			params: { workOrderType },
+		});
+
+		return response.data;
+	},
 	async submitFaultReport(
 		context: ActionContext<IRootState, IRootState>,
 		reportData: ISubmitEstateFaultReport
@@ -314,6 +328,9 @@ export default {
 		formData.append('notifierName', reportData.notifierName);
 		formData.append('notifierEmail', reportData.notifierEmail);
 
+		if (reportData.categoryId) {
+			formData.append('categoryId', reportData.categoryId.toString());
+		}
 		if (reportData.roomId) {
 			formData.append('roomId', reportData.roomId.toString());
 		}

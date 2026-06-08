@@ -203,6 +203,21 @@
 							)
 						}}
 					</v-btn>
+					<v-btn
+						v-if="isErrorReportEnabled"
+						variant="outlined"
+						size="x-large"
+						prependIcon="space_dashboard"
+						:to="{
+							name: EstateRoutes.SpaceRequirement,
+						}"
+					>
+						{{
+							$t(
+								'component.internal.internalStart.estate.goToEstateSpaceRequirement'
+							)
+						}}
+					</v-btn>
 				</v-col>
 			</v-row>
 		</div>

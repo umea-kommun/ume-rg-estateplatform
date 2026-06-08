@@ -114,7 +114,8 @@
 				"agentKvittens": "Receipt agent",
 				"internalDefaultPasswords": "Password",
 				"internalEstate": "Real Estate (beta)",
-				"internalEstateFaultReport": "Fault Report - Real Estate"
+				"internalEstateFaultReport": "Fault Report - Real Estate",
+				"internalEstateSpaceRequirement": "Changed space requirements - Real Estate"
 			},
 			"locale": {
 				"change": "Other languages"
@@ -374,7 +375,8 @@
 					"description": "Find information about properties, buildings and rooms in the municipality of Umeå.",
 					"goToEstateSearch": "Search properties and buildings",
 					"goToEstateFaultReport": "Report a fault",
-					"goToEstateOrder": "Place an order"
+					"goToEstateOrder": "Place an order",
+					"goToEstateSpaceRequirement": "Changed space requirements"
 				},
 				"feedbackTitle": "Would you like to help us improve?",
 				"feedbackSubtitle": "Leave feedback"
@@ -772,6 +774,10 @@
 						"title": "Facilities Manager",
 						"description": "Practical help and property-related services in operations."
 					},
+					"spaceRequirement": {
+						"title": "Changed Space Requirements",
+						"description": "Report a need for changed premises, for example more or less space."
+					},
 					"noneAvailable": "There are no order services available for this building."
 				},
 				"info": {
@@ -784,6 +790,33 @@
 					"description": "We have received your order and will handle it as soon as possible.",
 					"goHome": "Go to the homepage",
 					"feedbackTitle": "How did placing an order work?"
+				}
+			},
+			"spaceRequirement": {
+				"title": "Changed space requirements",
+				"description": "Report a need for changed premises, for example more or less space, adaptations, or other changes to your operation's premises.",
+				"submitButton": "Submit report",
+				"general": {
+					"descriptionTitle": "Description",
+					"descriptionLabel": "Describe your changed space requirement",
+					"descriptionHelpText": "Describe as clearly as possible what you need, why it has arisen, and when the change needs to be in place. The more information you can provide, the better the report can be handled.",
+					"contactLabel": "Contact information",
+					"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to handle the report, or if there are questions regarding it."
+				},
+				"category": {
+					"title": "Type of space requirement",
+					"noneAvailable": "Changed space requirements cannot be reported for this building."
+				},
+				"info": {
+					"title": "Information",
+					"text1": "Here is some important information when reporting changed space requirements.",
+					"text2": "After the report is submitted, it is handled by the responsible administrator."
+				},
+				"completed": {
+					"title": "Thank you for your report!",
+					"description": "We have received your report of changed space requirements and will handle it as soon as possible.",
+					"goHome": "Go to the homepage",
+					"feedbackTitle": "How did reporting changed space requirements work?"
 				}
 			},
 			"buildingSelector": {

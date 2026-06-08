@@ -97,6 +97,8 @@ const allCategories = [
 			'component.internal.order.category.facilitiesManager.description'
 		),
 	},
+	// SpaceRequirement (Förändrade lokalbehov) is now its own top-level flow
+	// (EstateSpaceRequirement.vue); it is intentionally no longer an order category.
 ];
 
 const categories = computed(() => {

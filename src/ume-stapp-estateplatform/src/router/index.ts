@@ -230,6 +230,19 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
+		path: '/internt/fastigheter/lokalbehov',
+		name: EstateRoutes.SpaceRequirement,
+		component: () =>
+			import(
+				'@/components/internal/estate/spaceRequirement/EstateSpaceRequirement.vue'
+			),
+		meta: {
+			requiresInternalLogin: true,
+			requiresFeature: 'ErrorReport',
+			title: AppHeaderTitle.InternalEstate,
+		},
+	},
+	{
 		path: '/internt/fastighet/:estateId/:slug?',
 		name: EstateRoutes.EstateDetails,
 		component: () =>

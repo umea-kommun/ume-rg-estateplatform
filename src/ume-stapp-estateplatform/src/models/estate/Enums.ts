@@ -23,6 +23,7 @@ export enum EstateOrderCategory {
 	TownHallService = 'townHallService', // Stadshusservice
 	BuildingService = 'buildingService', // Byggservice
 	FacilityService = 'facilityService', // Verksamhetsvaktmästare
+	SpaceRequirement = 'spaceRequirement', // Förändrade lokalbehov
 }
 
 export enum ExternalOwnerStatus {
