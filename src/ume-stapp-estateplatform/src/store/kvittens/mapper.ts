@@ -10,8 +10,38 @@ import {
 	IKvittensSummaryStudent,
 	IKvittensSummaryStudentAnswer,
 	IAgentKvittens,
+	IKvittensTemplate,
+	ISchoolYearPerSchoolForm,
 } from '@/models/kvittens/Interfaces';
 import { Helper } from '@/utils/helper';
+
+const mapResponseToTemplate = (r: {
+	id: string;
+	title: string;
+	shortTitle: string;
+	text: string;
+	confirmText: string;
+	gdprText: string;
+	targets: {
+		schoolForm: string;
+		schoolYear: string;
+	}[];
+}): IKvittensTemplate => {
+	const kvittens: IKvittensTemplate = {
+		id: r.id,
+		title: r.title,
+		shortTitle: r.shortTitle,
+		text: r.text,
+		confirmText: r.confirmText,
+		gdprText: r.gdprText,
+		targets: r.targets.map((target) => ({
+			schoolForm: target.schoolForm,
+			schoolYear: target.schoolYear,
+		})),
+	};
+
+	return kvittens;
+};
 
 export default {
 	mapResponseToKvittensList: (
@@ -208,5 +238,33 @@ export default {
 
 			return kvittens;
 		});
+	},
+	mapResponseToTemplate: mapResponseToTemplate,
+	mapResponseToTemplateList: (
+		response: {
+			id: string;
+			title: string;
+			shortTitle: string;
+			text: string;
+			confirmText: string;
+			gdprText: string;
+			targets: {
+				schoolForm: string;
+				schoolYear: string;
+			}[];
+		}[]
+	): IKvittensTemplate[] => {
+		return response.map(mapResponseToTemplate);
+	},
+	mapResponseToSchoolYearsPerSchoolForm: (
+		response: {
+			schoolForm: string;
+			schoolYears: string[];
+		}[]
+	): ISchoolYearPerSchoolForm[] => {
+		return response.map((item) => ({
+			schoolForm: item.schoolForm,
+			schoolYears: item.schoolYears,
+		}));
 	},
 };

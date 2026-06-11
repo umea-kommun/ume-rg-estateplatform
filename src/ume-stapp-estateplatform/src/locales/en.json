@@ -93,7 +93,8 @@
 				"maxDate": "Select date no later than {1}.",
 				"validPersNumber": "Enter a valid social security number.",
 				"email": "Enter a valid email address.",
-				"phone": "Enter a valid phone number."
+				"phone": "Enter a valid phone number.",
+				"max": "The field can contain a maximum of {1} characters."
 			}
 		}
 	},
@@ -364,7 +365,8 @@
 				"kvittens": {
 					"title": "Receipts",
 					"goToKvittens": "See students' responses to receipts",
-					"goToKvittensAgent": "Register receipt for student"
+					"goToKvittensAgent": "Register receipt for student",
+					"goToKvittensAdmin": "Manage receipt templates"
 				},
 				"passwords": {
 					"title": "Passwords",
@@ -593,6 +595,40 @@
 				"registerButton": "Register receipt",
 				"registerRespondentsLabel": "Who are you answering for?",
 				"registerTitle": "Register receipt"
+			},
+			"kvittensTemplateList": {
+				"title": "Receipt templates",
+				"noTemplates": "No templates found",
+				"open": "Open"
+			},
+			"kvittensTemplateEdit": {
+				"title": "Edit receipt template",
+				"saveButton": "Save and publish template",
+				"publishedAndLocked": "This template is published and cannot be edited.",
+				"field": {
+					"titleLabel": "Title",
+					"titleHelpText": "The title is displayed to students and guardians",
+					"shortTitleLabel": "Short title",
+					"shortTitleHelpText": "The short title is displayed in the teachers' overview of receipts",
+					"confirmTextLabel": "Confirmation text",
+					"confirmTextHelpText": "This text is displayed next to the checkbox when you answer a receipt, to confirm that you understand what you are acknowledging.",
+					"textLabel": "Text",
+					"gdprTextLabel": "GDPR text",
+					"schoolFormAndYearLabel": "School form and year",
+					"addSchoolFormAndYear": "Add school form and year"
+				},
+				"targetDialog": {
+					"title": "Add school form and year",
+					"schoolForm": "School form",
+					"schoolYear": "School year",
+					"cancel": "Cancel",
+					"add": "Add"
+				},
+				"publishConfirm": {
+					"title": "Publish template?",
+					"text": "Are you sure you want to publish the template? You cannot edit the template after it has been published. Users will be able to see and respond to this receipt as soon as it has been published.",
+					"yes": "Yes, publish template"
+				}
 			},
 			"defaultPasswords": {
 				"title": "Assigned passwords",

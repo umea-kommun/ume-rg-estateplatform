@@ -178,6 +178,37 @@ const routes: Array<RouteRecordRaw> = [
 			breadcrumb: () => [],
 		},
 	},
+
+	{
+		path: '/internt/kvittens/mallar',
+		name: MyPagesRoutes.InternalKvittensTemplateList,
+		component: () =>
+			import(
+				'@/components/internal/kvittens/template/KvittensTemplateList.vue'
+			),
+		meta: {
+			requiresInternalLogin: true,
+			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_TEMPLATE_ID,
+			contentSize: AppContentSize.Wide,
+			title: AppHeaderTitle.InternalKvittens,
+			breadcrumb: () => [],
+		},
+	},
+	{
+		path: '/internt/kvittens/mallar/:id',
+		name: MyPagesRoutes.InternalKvittensTemplateEdit,
+		component: () =>
+			import(
+				'@/components/internal/kvittens/template/KvittensTemplateEdit.vue'
+			),
+		meta: {
+			requiresInternalLogin: true,
+			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_TEMPLATE_ID,
+			contentSize: AppContentSize.Wide,
+			title: AppHeaderTitle.InternalKvittens,
+			breadcrumb: () => [],
+		},
+	},
 	{
 		path: '/internt/tilldelade-losenord',
 		name: MyPagesRoutes.InternalDefaultPassword,

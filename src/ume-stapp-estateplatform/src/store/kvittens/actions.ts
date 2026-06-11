@@ -5,6 +5,7 @@ import { ActionContext } from 'vuex';
 import ErrorService from '@/utils/ErrorService';
 import {
 	IAgentKvittens,
+	ICreateKvittensTemplate,
 	IKvittens,
 	IKvittensDetails,
 	IKvittensState,
@@ -363,5 +364,101 @@ export default {
 		});
 
 		return kvittensDetails;
+	},
+	async getKvittensTemplates(
+		context: ActionContext<IKvittensState, IRootState>
+	) {
+		try {
+			const response = await httpClient.get(
+				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_BASE_URL +
+					'/kvittenstemplate',
+				{
+					headers: {
+						Authorization: 'Bearer ' + context.rootState.user.token,
+					},
+				}
+			);
+
+			return kvittensMapper.mapResponseToTemplateList(response.data);
+		} catch (err) {
+			ErrorService.onError({
+				err,
+				errorPage: {
+					visible: true,
+				},
+			});
+		}
+	},
+	async getKvittensTemplate(
+		context: ActionContext<IKvittensState, IRootState>,
+		{ templateId }: { templateId: string }
+	) {
+		try {
+			const response = await httpClient.get(
+				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_BASE_URL +
+					'/kvittenstemplate/' +
+					templateId,
+				{
+					headers: {
+						Authorization: 'Bearer ' + context.rootState.user.token,
+					},
+				}
+			);
+
+			return kvittensMapper.mapResponseToTemplate(response.data);
+		} catch (err) {
+			ErrorService.onError({
+				err,
+				errorPage: {
+					visible: true,
+				},
+			});
+		}
+	},
+	async createKvittensTemplate(
+		context: ActionContext<IKvittensState, IRootState>,
+		kvittensTemplate: ICreateKvittensTemplate
+	) {
+		try {
+			const response = await httpClient.post(
+				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_BASE_URL +
+					'/kvittenstemplate/',
+				kvittensTemplate,
+				{
+					headers: {
+						Authorization: 'Bearer ' + context.rootState.user.token,
+					},
+				}
+			);
+
+			return kvittensMapper.mapResponseToTemplate(response.data);
+		} catch (err) {
+			ErrorService.onError({
+				err,
+			});
+		}
+	},
+	async getSchoolYearsPerSchoolForm(
+		context: ActionContext<IKvittensState, IRootState>
+	) {
+		try {
+			const response = await httpClient.get(
+				Config.VUE_APP_CONSENT_BRIDGE_SERVICE_BASE_URL +
+					'/organization/getSchoolYearsPerSchoolForm',
+				{
+					headers: {
+						Authorization: 'Bearer ' + context.rootState.user.token,
+					},
+				}
+			);
+
+			return kvittensMapper.mapResponseToSchoolYearsPerSchoolForm(
+				response.data
+			);
+		} catch (err) {
+			ErrorService.onError({
+				err,
+			});
+		}
 	},
 };

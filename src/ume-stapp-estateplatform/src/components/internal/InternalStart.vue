@@ -78,7 +78,7 @@
 					</v-btn>
 				</v-col>
 			</v-row>
-			<v-row class="mt-4" v-if="isKvittensConsumer">
+			<v-row class="mt-4" v-if="isKvittensConsumer || isKvittensAdmin">
 				<v-col cols="12" class="pa-0">
 					<hr class="mb-4 mt-0" />
 					<h2 class="mb-4">
@@ -89,6 +89,7 @@
 						}}
 					</h2>
 					<v-btn
+						v-if="isKvittensConsumer"
 						variant="outlined"
 						size="x-large"
 						prependIcon="playlist_add_check"
@@ -103,6 +104,7 @@
 						}}
 					</v-btn>
 					<v-btn
+						v-if="isKvittensConsumer"
 						variant="outlined"
 						size="x-large"
 						prependIcon="post_add"
@@ -113,6 +115,21 @@
 						{{
 							$t(
 								'component.internal.internalStart.kvittens.goToKvittensAgent'
+							)
+						}}
+					</v-btn>
+					<v-btn
+						v-if="isKvittensAdmin"
+						variant="outlined"
+						size="x-large"
+						prependIcon="text_snippet"
+						:to="{
+							name: MyPagesRoutes.InternalKvittensTemplateList,
+						}"
+					>
+						{{
+							$t(
+								'component.internal.internalStart.kvittens.goToKvittensAdmin'
 							)
 						}}
 					</v-btn>
@@ -279,6 +296,15 @@ const isKvittensConsumer = computed(() => {
 	if (user.value.groups) {
 		return user.value.groups.includes(
 			Config.VUE_APP_AUTH_GROUP_KVITTENS_CONSUMER_ID
+		);
+	}
+	return false;
+});
+
+const isKvittensAdmin = computed(() => {
+	if (user.value.groups) {
+		return user.value.groups.includes(
+			Config.VUE_APP_AUTH_GROUP_CONSENT_TEMPLATE_ID
 		);
 	}
 	return false;

@@ -93,7 +93,8 @@
 				"maxDate": "Ange ett datum som är {1} eller tidigare.",
 				"validPersNumber": "Ange ett giltigt personnummer.",
 				"email": "Ange en giltig mejladress.",
-				"phone": "Ange ett giltigt telefonnummer."
+				"phone": "Ange ett giltigt telefonnummer.",
+				"max": "Fältet får maximalt innehålla {1} tecken."
 			}
 		}
 	},
@@ -365,7 +366,8 @@
 				"kvittens": {
 					"title": "Kvittenser",
 					"goToKvittens": "Se elevers svar på kvittenser",
-					"goToKvittensAgent": "Registrera kvittens för elev"
+					"goToKvittensAgent": "Registrera kvittens för elev",
+					"goToKvittensAdmin": "Hantera kvittensmallar"
 				},
 				"passwords": {
 					"title": "Lösenord",
@@ -594,6 +596,40 @@
 				"registerButton": "Registrera kvittens",
 				"registerRespondentsLabel": "Vem/vilka svarar du för?",
 				"registerTitle": "Registrera kvittens"
+			},
+			"kvittensTemplateList": {
+				"title": "Kvittensmallar",
+				"noTemplates": "Inga mallar hittades",
+				"open": "Öppna"
+			},
+			"kvittensTemplateEdit": {
+				"title": "Redigera kvittensmall",
+				"saveButton": "Spara och publicera mall",
+				"publishedAndLocked": "Denna mall är publicerad och kan inte redigeras.",
+				"field": {
+					"titleLabel": "Rubrik",
+					"titleHelpText": "Rubriken visas för elever och vårdnadshavare",
+					"shortTitleLabel": "Kort rubrik",
+					"shortTitleHelpText": "Den korta rubriken visas i lärares översikt över kvittenser",
+					"confirmTextLabel": "Bekräftelsetext",
+					"confirmTextHelpText": "Denna text visas bredvid bekräftelsekryssrutan när elev/vårdnadshavare besvarar en kvittens",
+					"textLabel": "Text",
+					"gdprTextLabel": "GDPR-text",
+					"schoolFormAndYearLabel": "Skolform och år",
+					"addSchoolFormAndYear": "Lägg till skolform och år"
+				},
+				"targetDialog": {
+					"title": "Lägg till skolform och år",
+					"schoolForm": "Skolform",
+					"schoolYear": "Årskurs",
+					"cancel": "Avbryt",
+					"add": "Lägg till"
+				},
+				"publishConfirm": {
+					"title": "Publicera mall?",
+					"text": "Är du säker på att du vill publicera mallen, du kan inte redigera mallen efter att den har publicerats. Användare kommer att se och kunna besvara denna kvittens så fort den har publicerats.",
+					"yes": "Ja, publicera mall"
+				}
 			},
 			"defaultPasswords": {
 				"title": "Tilldelade lösenord",

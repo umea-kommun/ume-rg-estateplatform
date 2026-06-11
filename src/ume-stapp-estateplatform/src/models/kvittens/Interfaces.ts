@@ -85,3 +85,33 @@ export interface IAgentKvittens {
 	personSSNo: string;
 	status: KvittensStatus;
 }
+
+export interface ICreateKvittensTemplate {
+	title: string;
+	shortTitle: string;
+	text: string;
+	confirmText: string;
+	gdprText: string;
+	targets: IKvittensTemplateTarget[];
+}
+
+export interface IKvittensTemplate extends ICreateKvittensTemplate {
+	id: string;
+}
+
+export interface IKvittensTemplateTarget {
+	schoolForm: string;
+	schoolYear: string;
+}
+
+export interface IDisplayKvittensTemplateTarget {
+	schoolForm: string;
+	schoolFormLabel: string;
+	schoolYears: string[];
+	schoolYearsLabel: string;
+}
+
+export interface ISchoolYearPerSchoolForm {
+	schoolForm: string;
+	schoolYears: string[];
+}
