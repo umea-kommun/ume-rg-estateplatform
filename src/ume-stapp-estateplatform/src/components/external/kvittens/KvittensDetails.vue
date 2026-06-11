@@ -340,6 +340,7 @@ const contentSize = ref<AppContentSize>(
 	}
 	:deep(.v-checkbox) {
 		.v-selection-control {
+			min-height: auto;
 			align-items: start;
 		}
 		.v-label {
