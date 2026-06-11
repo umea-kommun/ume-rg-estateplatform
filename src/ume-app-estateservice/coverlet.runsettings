@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <!-- Type filters: [AssemblyFilter]TypeFilter, '*'/'?' wildcards. -->
+          <Exclude>
+            [*]Umea.se.EstateService.DataStore.Migrations.*,
+            [*]Program,
+            [*]*.Program,
+            [*]*Dto,
+            [*]*Request,
+            [*]*Response
+          </Exclude>
+          <!-- File-path globs (covers types coverlet can't match by name, e.g. EF snapshot). -->
+          <ExcludeByFile>**/Migrations/*.cs,**/obj/**/*.cs</ExcludeByFile>
+          <!-- Anything tagged with these attributes is dropped from the report. -->
+          <ExcludeByAttribute>GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverageAttribute</ExcludeByAttribute>
+          <SkipAutoProps>true</SkipAutoProps>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

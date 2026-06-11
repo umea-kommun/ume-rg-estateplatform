@@ -79,7 +79,9 @@ Collect and inspect coverage to find under-tested code:
 dotnet test src/ume-app-estateservice/Umea.se.EstateService.Test/ --collect:"XPlat Code Coverage" --results-directory ./TestResults
 ```
 
-Parse the newest `TestResults/**/coverage.cobertura.xml`. When ranking by missed lines, **aggregate async state-machine subclasses** (`<MethodName>d__N`, `<>c__DisplayClassN_0`) back into their declaring class, and filter generated/boilerplate noise (Migrations, `*Dto`, `*Request`, `*Response`, enums, JSON converters, `Program`, `obj/`, and the test files themselves) so the ranking reflects real logic.
+Boilerplate is excluded from the report automatically: the test project sets `<RunSettingsFilePath>` to `src/ume-app-estateservice/coverlet.runsettings`, so `dotnet test` applies it with no `--settings` flag — locally and in CI alike. The runsettings excludes Migrations, `*Dto`/`*Request`/`*Response`, `Program`, generated/compiler code, and `obj/`. To exclude more, edit its `<Exclude>` (type filter `[*]Namespace.Type`) or `<ExcludeByFile>` (path glob) lists rather than filtering after the fact.
+
+When parsing the newest `TestResults/**/coverage.cobertura.xml` and ranking by missed lines, still **aggregate async state-machine subclasses** (`<MethodName>d__N`, `<>c__DisplayClassN_0`) back into their declaring class so the ranking reflects real logic.
 
 ## Example
 
