@@ -47,6 +47,33 @@ public class WorkOrderRepository(EstateDbContext dbContext) : IWorkOrderReposito
             .FirstOrDefaultAsync(e => e.Uid == uid && (e.CreatedByEmail == normalizedEmail || e.NotifierEmail == normalizedEmail), cancellationToken);
     }
 
+    // Admin overload: no email scoping. Tracking (no AsNoTracking) so the retry/dismiss paths
+    // can mutate and persist the returned entity.
+    public async Task<WorkOrderEntity?> GetByUidAsync(Guid uid, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.WorkOrders
+            .Include(e => e.Files)
+            .FirstOrDefaultAsync(e => e.Uid == uid, cancellationToken);
+    }
+
+    public async Task<int> GetFailedCountAsync(CancellationToken cancellationToken = default)
+    {
+        return await dbContext.WorkOrders
+            .AsNoTracking()
+            .CountAsync(e => e.SyncStatus == WorkOrderSyncStatus.Failed && e.NextSyncAt == null, cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<WorkOrderEntity>> GetFailedWorkOrdersAsync(CancellationToken cancellationToken = default)
+    {
+        // Permanently failed = exhausted all retries (Failed with no NextSyncAt scheduled).
+        return await dbContext.WorkOrders
+            .AsNoTracking()
+            .Include(e => e.Files)
+            .Where(e => e.SyncStatus == WorkOrderSyncStatus.Failed && e.NextSyncAt == null)
+            .OrderByDescending(e => e.UpdatedAt)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<IReadOnlyList<WorkOrderEntity>> GetDueForProcessingAsync(DateTimeOffset asOf, CancellationToken cancellationToken = default)
     {
         return await dbContext.WorkOrders

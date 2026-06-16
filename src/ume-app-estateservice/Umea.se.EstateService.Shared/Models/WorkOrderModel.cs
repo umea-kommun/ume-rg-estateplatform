@@ -46,3 +46,24 @@ public class WorkOrderFileModel
     public long FileSize { get; init; }
     public bool Uploaded { get; init; }
 }
+
+/// <summary>
+/// Admin view of a permanently failed work order, surfaced on the status dashboard. Carries the
+/// diagnostic fields the dashboard needs (error message, retry count, timestamps) plus the
+/// attached file names for the manual-upload workflow.
+/// </summary>
+public class FailedWorkOrderModel
+{
+    public Guid Id { get; init; }
+    public WorkOrderType? WorkOrderType { get; init; }
+    public string BuildingName { get; init; } = null!;
+    public string? RoomName { get; init; }
+    public string Description { get; init; } = null!;
+    public string SyncStatus { get; init; } = null!;
+    public string? ErrorMessage { get; init; }
+    public int RetryCount { get; init; }
+    public int FileCount { get; init; }
+    public List<WorkOrderFileModel> Files { get; init; } = [];
+    public DateTimeOffset CreatedAt { get; init; }
+    public DateTimeOffset UpdatedAt { get; init; }
+}

@@ -48,6 +48,27 @@ internal static class WorkOrderMapper
         SubmittedAt = entity.SubmittedAt
     };
 
+    public static FailedWorkOrderModel MapToFailed(WorkOrderEntity entity) => new()
+    {
+        Id = entity.Uid,
+        WorkOrderType = MapWorkOrderType(entity.WorkOrderTypeId),
+        BuildingName = entity.BuildingName,
+        RoomName = entity.RoomName,
+        Description = entity.Description,
+        SyncStatus = entity.SyncStatus.ToString(),
+        ErrorMessage = entity.ErrorMessage,
+        RetryCount = entity.RetryCount,
+        FileCount = entity.Files.Count,
+        Files = [.. entity.Files.Select(f => new WorkOrderFileModel
+        {
+            FileName = f.FileName,
+            FileSize = f.FileSize,
+            Uploaded = f.Uploaded
+        })],
+        CreatedAt = entity.CreatedAt,
+        UpdatedAt = entity.UpdatedAt
+    };
+
     public static List<WorkOrderListItemModel> MapToListItems(IReadOnlyList<WorkOrderEntity> entities) =>
     [
         .. entities.Select(e => new WorkOrderListItemModel

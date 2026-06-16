@@ -10,6 +10,7 @@ using Umea.se.EstateService.Logic.HostedServices;
 using Umea.se.EstateService.ServiceAccess.FileStorage;
 using Umea.se.EstateService.Shared.Data;
 using Umea.se.EstateService.Shared.Data.Entities;
+using Umea.se.EstateService.Shared.Data.Enums;
 using Umea.se.EstateService.Shared.Exceptions;
 using Umea.se.EstateService.Shared.Infrastructure;
 using Umea.se.EstateService.Shared.Infrastructure.ConfigurationModels;
@@ -590,6 +591,174 @@ public class WorkOrderHandlerTests : IDisposable
         result.Id.ShouldNotBe(Guid.Empty);
         result.CreatedAt.ShouldBeGreaterThanOrEqualTo(before);
     }
+
+    // --- Existing user-facing retry: now keeps ErrorMessage while the retry is in flight ---
+
+    [Fact]
+    public async Task RetryWorkOrder_PermanentlyFailed_ResetsButKeepsErrorMessage()
+    {
+        WorkOrderEntity failed = await InsertWorkOrderAsync(
+            WorkOrderSyncStatus.Failed, nextSyncAt: null, errorMessage: "Pythagoras rejected the request", retryCount: 3);
+
+        WorkOrderDetailModel result = await _handler.RetryWorkOrderAsync(failed.Uid, "test@example.com");
+
+        result.SyncStatus.ShouldBe("Pending");
+        result.ErrorMessage.ShouldBe("Pythagoras rejected the request");
+
+        WorkOrderEntity reloaded = await ReloadAsync(failed.Uid);
+        reloaded.SyncStatus.ShouldBe(WorkOrderSyncStatus.Pending);
+        reloaded.RetryCount.ShouldBe(0);
+        reloaded.NextSyncAt.ShouldNotBeNull();
+        reloaded.ErrorMessage.ShouldBe("Pythagoras rejected the request");
+    }
+
+    // --- Admin: failed work order monitoring & remediation ---
+
+    [Fact]
+    public async Task GetFailedCount_CountsOnlyPermanentlyFailed()
+    {
+        await InsertWorkOrderAsync(WorkOrderSyncStatus.Failed, nextSyncAt: null); // permanently failed
+        await InsertWorkOrderAsync(WorkOrderSyncStatus.Failed, nextSyncAt: null); // permanently failed
+        await InsertWorkOrderAsync(WorkOrderSyncStatus.Failed, nextSyncAt: DateTimeOffset.UtcNow); // retry scheduled
+        await InsertWorkOrderAsync(WorkOrderSyncStatus.Pending, nextSyncAt: DateTimeOffset.UtcNow);
+        await InsertWorkOrderAsync(WorkOrderSyncStatus.Dismissed, nextSyncAt: null);
+
+        (await _handler.GetFailedCountAsync()).ShouldBe(2);
+    }
+
+    [Fact]
+    public async Task GetFailedWorkOrders_ReturnsOnlyPermanentlyFailed_OrderedByUpdatedAtDesc()
+    {
+        WorkOrderEntity older = await InsertWorkOrderAsync(
+            WorkOrderSyncStatus.Failed, nextSyncAt: null, description: "older", updatedAt: DateTimeOffset.UtcNow.AddHours(-2));
+        WorkOrderEntity newer = await InsertWorkOrderAsync(
+            WorkOrderSyncStatus.Failed, nextSyncAt: null, description: "newer", updatedAt: DateTimeOffset.UtcNow.AddHours(-1));
+        await InsertWorkOrderAsync(WorkOrderSyncStatus.Failed, nextSyncAt: DateTimeOffset.UtcNow, description: "retry scheduled");
+        await InsertWorkOrderAsync(WorkOrderSyncStatus.Dismissed, nextSyncAt: null, description: "dismissed");
+
+        IReadOnlyList<FailedWorkOrderModel> result = await _handler.GetFailedWorkOrdersAsync();
+
+        result.Select(r => r.Id).ShouldBe([newer.Uid, older.Uid]);
+    }
+
+    [Fact]
+    public async Task GetFailedWorkOrders_MapsDiagnosticFields()
+    {
+        WorkOrderEntity failed = await InsertWorkOrderAsync(
+            WorkOrderSyncStatus.Failed, nextSyncAt: null, errorMessage: "boom", retryCount: 3, description: "broken");
+
+        FailedWorkOrderModel model = (await _handler.GetFailedWorkOrdersAsync()).Single();
+
+        model.Id.ShouldBe(failed.Uid);
+        model.BuildingName.ShouldBe("Building One");
+        model.Description.ShouldBe("broken");
+        model.SyncStatus.ShouldBe("Failed");
+        model.ErrorMessage.ShouldBe("boom");
+        model.RetryCount.ShouldBe(3);
+    }
+
+    [Fact]
+    public async Task AdminRetry_PermanentlyFailed_ResetsButKeepsErrorMessage()
+    {
+        WorkOrderEntity failed = await InsertWorkOrderAsync(
+            WorkOrderSyncStatus.Failed, nextSyncAt: null, errorMessage: "boom", retryCount: 3);
+
+        FailedWorkOrderModel result = await _handler.AdminRetryWorkOrderAsync(failed.Uid);
+
+        result.SyncStatus.ShouldBe("Pending");
+        result.ErrorMessage.ShouldBe("boom");
+
+        WorkOrderEntity reloaded = await ReloadAsync(failed.Uid);
+        reloaded.SyncStatus.ShouldBe(WorkOrderSyncStatus.Pending);
+        reloaded.RetryCount.ShouldBe(0);
+        reloaded.NextSyncAt.ShouldNotBeNull();
+        reloaded.ErrorMessage.ShouldBe("boom");
+    }
+
+    [Fact]
+    public async Task AdminRetry_NotFailed_ThrowsStateConflict()
+    {
+        WorkOrderEntity pending = await InsertWorkOrderAsync(WorkOrderSyncStatus.Pending, nextSyncAt: DateTimeOffset.UtcNow);
+
+        await Should.ThrowAsync<StateConflictException>(() => _handler.AdminRetryWorkOrderAsync(pending.Uid));
+    }
+
+    [Fact]
+    public async Task AdminRetry_RetryScheduled_ThrowsStateConflict()
+    {
+        // Failed but with a pending retry (NextSyncAt set) is not "permanently" failed.
+        WorkOrderEntity transient = await InsertWorkOrderAsync(WorkOrderSyncStatus.Failed, nextSyncAt: DateTimeOffset.UtcNow);
+
+        await Should.ThrowAsync<StateConflictException>(() => _handler.AdminRetryWorkOrderAsync(transient.Uid));
+    }
+
+    [Fact]
+    public async Task AdminRetry_NotFound_ThrowsNotFound()
+    {
+        await Should.ThrowAsync<EntityNotFoundException>(() => _handler.AdminRetryWorkOrderAsync(Guid.NewGuid()));
+    }
+
+    [Fact]
+    public async Task AdminDismiss_PermanentlyFailed_SetsDismissedAndKeepsErrorMessage()
+    {
+        WorkOrderEntity failed = await InsertWorkOrderAsync(
+            WorkOrderSyncStatus.Failed, nextSyncAt: null, errorMessage: "boom", retryCount: 3);
+
+        FailedWorkOrderModel result = await _handler.AdminDismissWorkOrderAsync(failed.Uid);
+
+        result.SyncStatus.ShouldBe("Dismissed");
+        result.ErrorMessage.ShouldBe("boom");
+
+        WorkOrderEntity reloaded = await ReloadAsync(failed.Uid);
+        reloaded.SyncStatus.ShouldBe(WorkOrderSyncStatus.Dismissed);
+        reloaded.NextSyncAt.ShouldBeNull();
+        reloaded.ErrorMessage.ShouldBe("boom");
+    }
+
+    [Fact]
+    public async Task AdminDismiss_NotFailed_ThrowsStateConflict()
+    {
+        WorkOrderEntity submitted = await InsertWorkOrderAsync(WorkOrderSyncStatus.Submitted, nextSyncAt: null);
+
+        await Should.ThrowAsync<StateConflictException>(() => _handler.AdminDismissWorkOrderAsync(submitted.Uid));
+    }
+
+    [Fact]
+    public async Task AdminDismiss_NotFound_ThrowsNotFound()
+    {
+        await Should.ThrowAsync<EntityNotFoundException>(() => _handler.AdminDismissWorkOrderAsync(Guid.NewGuid()));
+    }
+
+    private async Task<WorkOrderEntity> InsertWorkOrderAsync(
+        WorkOrderSyncStatus syncStatus,
+        DateTimeOffset? nextSyncAt,
+        string? errorMessage = null,
+        int retryCount = 0,
+        DateTimeOffset? updatedAt = null,
+        string description = "Failed order")
+    {
+        WorkOrderEntity entity = new()
+        {
+            Uid = Guid.NewGuid(),
+            BuildingId = 1,
+            BuildingName = "Building One",
+            Description = description,
+            WorkOrderTypeId = 1,
+            SyncStatus = syncStatus,
+            NextSyncAt = nextSyncAt,
+            ErrorMessage = errorMessage,
+            RetryCount = retryCount,
+            CreatedByEmail = "test@example.com",
+            CreatedAt = DateTimeOffset.UtcNow,
+            UpdatedAt = updatedAt ?? DateTimeOffset.UtcNow
+        };
+        _dbContext.WorkOrders.Add(entity);
+        await _dbContext.SaveChangesAsync();
+        return entity;
+    }
+
+    private async Task<WorkOrderEntity> ReloadAsync(Guid uid) =>
+        (await _dbContext.WorkOrders.AsNoTracking().FirstOrDefaultAsync(w => w.Uid == uid))!;
 
     private static ApplicationConfig CreateTestConfig()
     {

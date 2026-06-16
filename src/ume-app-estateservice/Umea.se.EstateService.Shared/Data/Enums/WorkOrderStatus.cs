@@ -9,5 +9,11 @@ public enum WorkOrderSyncStatus
     Pending,
     Processing,
     Submitted,
-    Failed
+    Failed,
+
+    /// <summary>
+    /// Manually resolved by an admin: a permanently failed order that will not be sent to
+    /// Pythagoras. Excluded from the background sync loops and from the failed-orders list.
+    /// </summary>
+    Dismissed
 }

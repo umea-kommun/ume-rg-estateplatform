@@ -223,11 +223,7 @@ public class WorkOrderHandler(
             throw new StateConflictException("Work order is not in a permanently failed state.");
         }
 
-        workOrder.SyncStatus = WorkOrderSyncStatus.Pending;
-        workOrder.RetryCount = 0;
-        workOrder.ErrorMessage = null;
-        workOrder.NextSyncAt = DateTimeOffset.UtcNow;
-        workOrder.UpdatedAt = DateTimeOffset.UtcNow;
+        RequeueForRetry(workOrder);
         await workOrderRepository.UpdateAsync(workOrder, cancellationToken);
 
         workOrderChannel.Notify(workOrder.Uid);
@@ -235,5 +231,71 @@ public class WorkOrderHandler(
         logger.LogInformation("WorkOrder {WorkOrderUid} manually queued for retry by {Email}.", workOrder.Uid, email);
 
         return WorkOrderMapper.MapToDetail(workOrder);
+    }
+
+    public Task<int> GetFailedCountAsync(CancellationToken cancellationToken = default)
+        => workOrderRepository.GetFailedCountAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<FailedWorkOrderModel>> GetFailedWorkOrdersAsync(CancellationToken cancellationToken = default)
+    {
+        IReadOnlyList<WorkOrderEntity> entities = await workOrderRepository.GetFailedWorkOrdersAsync(cancellationToken);
+        return [.. entities.Select(WorkOrderMapper.MapToFailed)];
+    }
+
+    public async Task<FailedWorkOrderModel> AdminRetryWorkOrderAsync(Guid uid, CancellationToken cancellationToken = default)
+    {
+        WorkOrderEntity workOrder = await GetPermanentlyFailedAsync(uid, cancellationToken);
+
+        RequeueForRetry(workOrder);
+        await workOrderRepository.UpdateAsync(workOrder, cancellationToken);
+
+        workOrderChannel.Notify(workOrder.Uid);
+
+        logger.LogInformation("WorkOrder {WorkOrderUid} manually queued for retry by admin.", workOrder.Uid);
+
+        return WorkOrderMapper.MapToFailed(workOrder);
+    }
+
+    public async Task<FailedWorkOrderModel> AdminDismissWorkOrderAsync(Guid uid, CancellationToken cancellationToken = default)
+    {
+        WorkOrderEntity workOrder = await GetPermanentlyFailedAsync(uid, cancellationToken);
+
+        // Keep ErrorMessage as-is — it documents why the order could never be submitted.
+        workOrder.SyncStatus = WorkOrderSyncStatus.Dismissed;
+        workOrder.UpdatedAt = DateTimeOffset.UtcNow;
+        await workOrderRepository.UpdateAsync(workOrder, cancellationToken);
+
+        logger.LogInformation("WorkOrder {WorkOrderUid} dismissed (manually resolved) by admin.", workOrder.Uid);
+
+        return WorkOrderMapper.MapToFailed(workOrder);
+    }
+
+    // Loads a work order by uid (no email scope) and enforces that it is permanently failed —
+    // the only state from which an admin may retry or dismiss it.
+    private async Task<WorkOrderEntity> GetPermanentlyFailedAsync(Guid uid, CancellationToken cancellationToken)
+    {
+        WorkOrderEntity? workOrder = await workOrderRepository.GetByUidAsync(uid, cancellationToken);
+        if (workOrder is null)
+        {
+            throw new EntityNotFoundException($"Work order {uid} not found.");
+        }
+
+        if (workOrder.SyncStatus is not WorkOrderSyncStatus.Failed || workOrder.NextSyncAt is not null)
+        {
+            throw new StateConflictException("Work order is not in a permanently failed state.");
+        }
+
+        return workOrder;
+    }
+
+    // Resets a permanently failed order back to the processing queue. ErrorMessage is deliberately
+    // left intact: the processor overwrites it on the next failed attempt and clears it on success,
+    // so nulling it here would just hide the failure reason while the retry is in flight.
+    private static void RequeueForRetry(WorkOrderEntity workOrder)
+    {
+        workOrder.SyncStatus = WorkOrderSyncStatus.Pending;
+        workOrder.RetryCount = 0;
+        workOrder.NextSyncAt = DateTimeOffset.UtcNow;
+        workOrder.UpdatedAt = DateTimeOffset.UtcNow;
     }
 }

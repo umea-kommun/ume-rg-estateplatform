@@ -10,6 +10,10 @@ public interface IWorkOrderHandler
     Task<WorkOrderDetailModel> GetWorkOrderAsync(Guid uid, string email, CancellationToken cancellationToken = default);
     Task<WorkOrderDetailModel> SyncWorkOrderAsync(Guid uid, string email, CancellationToken cancellationToken = default);
     Task<WorkOrderDetailModel> RetryWorkOrderAsync(Guid uid, string email, CancellationToken cancellationToken = default);
+    Task<int> GetFailedCountAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<FailedWorkOrderModel>> GetFailedWorkOrdersAsync(CancellationToken cancellationToken = default);
+    Task<FailedWorkOrderModel> AdminRetryWorkOrderAsync(Guid uid, CancellationToken cancellationToken = default);
+    Task<FailedWorkOrderModel> AdminDismissWorkOrderAsync(Guid uid, CancellationToken cancellationToken = default);
     IReadOnlyList<WorkOrderCategoryOption> GetCategoriesForType(WorkOrderType type, IReadOnlyCollection<string>? userGroups = null);
 }
 

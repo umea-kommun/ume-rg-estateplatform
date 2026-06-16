@@ -5,13 +5,16 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Umea.se.EstateService.API;
+using Umea.se.EstateService.API.Controllers;
 using Umea.se.EstateService.DataStore;
 using Umea.se.EstateService.ServiceAccess;
 using Umea.se.EstateService.API.Responses;
 using Umea.se.EstateService.Shared.Data.Entities;
+using Umea.se.EstateService.Shared.Data.Enums;
 using Umea.se.EstateService.Shared.Models;
 using Umea.se.EstateService.Test.TestHelpers;
 using Umea.se.TestToolkit.TestInfrastructure;
+using Umea.se.Toolkit.Auth;
 
 namespace Umea.se.EstateService.Test.API;
 
@@ -356,5 +359,131 @@ public class WorkOrderControllerTests : ControllerTestCloud<TestApiFactory, Prog
         config.MaxFileSizeBytes.ShouldBeGreaterThan(0);
         config.AllowedContentTypes.ShouldNotBeEmpty();
         config.AllowedContentTypes.ShouldContain("application/pdf");
+    }
+
+    // --- Admin: failed work orders (status dashboard) ---
+
+    [Fact]
+    public async Task GetFailedCount_ReturnsPermanentlyFailedCount()
+    {
+        SeedFailedWorkOrder();
+        SeedFailedWorkOrder();
+        SeedFailedWorkOrder(nextSyncAt: DateTimeOffset.UtcNow); // retry scheduled, not counted
+
+        HttpResponseMessage response = await _client.GetAsync($"{ApiRoutes.WorkOrders}/failed/count");
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        FailedWorkOrdersCountResponse? body = await response.Content.ReadFromJsonAsync<FailedWorkOrdersCountResponse>();
+        body.ShouldNotBeNull();
+        body.Count.ShouldBe(2);
+    }
+
+    [Fact]
+    public async Task GetFailedList_ReturnsFailedOrders()
+    {
+        Guid uid = SeedFailedWorkOrder(errorMessage: "Pythagoras rejected");
+
+        HttpResponseMessage response = await _client.GetAsync($"{ApiRoutes.WorkOrders}/failed");
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        List<FailedWorkOrderModel>? body = await response.Content.ReadFromJsonAsync<List<FailedWorkOrderModel>>();
+        body.ShouldNotBeNull();
+        body.Count.ShouldBe(1);
+        body[0].Id.ShouldBe(uid);
+        body[0].ErrorMessage.ShouldBe("Pythagoras rejected");
+        body[0].SyncStatus.ShouldBe("Failed");
+    }
+
+    [Fact]
+    public async Task AdminRetry_PermanentlyFailed_ReturnsOk()
+    {
+        Guid uid = SeedFailedWorkOrder();
+
+        HttpResponseMessage response = await _client.PostAsync($"{ApiRoutes.WorkOrders}/failed/{uid}/retry", null);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        FailedWorkOrderModel? body = await response.Content.ReadFromJsonAsync<FailedWorkOrderModel>();
+        body.ShouldNotBeNull();
+        body.SyncStatus.ShouldBe("Pending");
+    }
+
+    [Fact]
+    public async Task AdminRetry_NotFound_Returns404()
+    {
+        HttpResponseMessage response = await _client.PostAsync($"{ApiRoutes.WorkOrders}/failed/{Guid.NewGuid()}/retry", null);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task AdminRetry_NotPermanentlyFailed_Returns409()
+    {
+        Guid uid = SeedFailedWorkOrder(nextSyncAt: DateTimeOffset.UtcNow); // retry scheduled
+
+        HttpResponseMessage response = await _client.PostAsync($"{ApiRoutes.WorkOrders}/failed/{uid}/retry", null);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.Conflict);
+    }
+
+    [Fact]
+    public async Task AdminDismiss_PermanentlyFailed_ReturnsOk()
+    {
+        Guid uid = SeedFailedWorkOrder();
+
+        HttpResponseMessage response = await _client.PostAsync($"{ApiRoutes.WorkOrders}/failed/{uid}/dismiss", null);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        FailedWorkOrderModel? body = await response.Content.ReadFromJsonAsync<FailedWorkOrderModel>();
+        body.ShouldNotBeNull();
+        body.SyncStatus.ShouldBe("Dismissed");
+    }
+
+    [Fact]
+    public async Task AdminDismiss_NotPermanentlyFailed_Returns409()
+    {
+        Guid uid = SeedFailedWorkOrder(nextSyncAt: DateTimeOffset.UtcNow); // retry scheduled
+
+        HttpResponseMessage response = await _client.PostAsync($"{ApiRoutes.WorkOrders}/failed/{uid}/dismiss", null);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.Conflict);
+    }
+
+    [Fact]
+    public void WorkOrderAdminController_IsProtectedByApiKey()
+    {
+        // The admin failed-workorder endpoints carry no user context and must be API-key protected.
+        // Actual enforcement is mocked out in integration tests (ApiKeyAuthorizerMock always allows),
+        // so guard the intent at the type level: the controller must be decorated with [AuthorizeApiKey].
+        Attribute? attribute = Attribute.GetCustomAttribute(typeof(WorkOrderAdminController), typeof(AuthorizeApiKeyAttribute));
+
+        attribute.ShouldNotBeNull();
+    }
+
+    private Guid SeedFailedWorkOrder(DateTimeOffset? nextSyncAt = null, string errorMessage = "boom")
+    {
+        Guid uid = Guid.NewGuid();
+        if (WebAppFactory.Services.GetService(typeof(IDbContextFactory<EstateDbContext>)) is not IDbContextFactory<EstateDbContext> factory)
+        {
+            return uid;
+        }
+
+        using EstateDbContext db = factory.CreateDbContext();
+        db.WorkOrders.Add(new WorkOrderEntity
+        {
+            Uid = uid,
+            BuildingId = 100,
+            BuildingName = "Test Building",
+            Description = "Failed order",
+            WorkOrderTypeId = 1,
+            SyncStatus = WorkOrderSyncStatus.Failed,
+            NextSyncAt = nextSyncAt,
+            ErrorMessage = errorMessage,
+            RetryCount = 3,
+            CreatedByEmail = "test@example.com",
+            CreatedAt = DateTimeOffset.UtcNow,
+            UpdatedAt = DateTimeOffset.UtcNow
+        });
+        db.SaveChanges();
+        return uid;
     }
 }

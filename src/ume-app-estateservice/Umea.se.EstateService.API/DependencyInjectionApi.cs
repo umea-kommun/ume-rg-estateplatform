@@ -23,6 +23,8 @@ public static class DependencyInjectionApi
             .AddCheck<HealthChecks.PythagorasHealthCheck>("PythagorasApi",
             failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded,
             timeout: TimeSpan.FromSeconds(20))
+            .AddCheck<HealthChecks.FailedWorkOrdersHealthCheck>("FailedWorkOrders",
+            failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded)
             ;
 
         return services;
