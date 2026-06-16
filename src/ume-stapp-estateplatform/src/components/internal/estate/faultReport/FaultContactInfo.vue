@@ -45,6 +45,7 @@
 <script setup lang="ts">
 import BaseTextBox from '@/components/base/BaseTextBox.vue';
 import { computed, type ComputedRef } from 'vue';
+import { useWorkOrderDefaults } from '@/utils/useWorkOrderDefaults';
 
 const props = defineProps<{
 	contactName: string;
@@ -77,6 +78,11 @@ const contactPhone = computed({
 	get: () => props.contactPhone,
 	set: (newValue: string) => emit('update:contactPhone', newValue),
 });
+
+// Prefill the phone from the user's most recent work order submission. Lives here
+// so every form that renders this component (fault report, order, space requirement)
+// gets the prefill automatically, rather than each parent wiring it up separately.
+useWorkOrderDefaults(contactPhone);
 </script>
 
 <style lang="scss" scoped>

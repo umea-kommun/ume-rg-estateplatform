@@ -396,7 +396,6 @@ import BaseTextBox from '@/components/base/BaseTextBox.vue';
 import ErrorService from '@/utils/ErrorService';
 import { useServerValidation } from '@/utils/useServerValidation';
 import { useWorkOrderConfig } from '@/utils/useWorkOrderConfig';
-import { useWorkOrderDefaults } from '@/utils/useWorkOrderDefaults';
 import FaultContactInfo from './FaultContactInfo.vue';
 import EstateOrderStep from '../order/EstateOrderStep.vue';
 import RoomBlueprintSelector from './roomSelector/RoomBlueprintSelector.vue';
@@ -457,7 +456,6 @@ const descriptionServerError = fieldError('description');
 const contactName = ref(user.value?.fullName ?? '');
 const contactEmail = ref(user.value?.email ?? '');
 const contactPhone = ref('');
-useWorkOrderDefaults(contactPhone);
 
 const selectedBuildingIsRented = computed(() => {
 	return (
