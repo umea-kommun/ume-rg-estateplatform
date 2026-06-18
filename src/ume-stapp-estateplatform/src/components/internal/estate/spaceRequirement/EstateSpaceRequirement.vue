@@ -119,7 +119,7 @@
 							<span v-else>
 								{{
 									$t(
-										'component.internal.faultReport.room.select'
+										'component.internal.spaceRequirement.room.select'
 									)
 								}}
 							</span>
@@ -189,6 +189,12 @@
 							</p>
 
 							<base-file-upload
+								id="file-upload"
+								:label="
+									$t(
+										'component.internal.spaceRequirement.general.fileUploadLabel'
+									)
+								"
 								v-model="attachments"
 								:accept="uploadAccept"
 								:max-files="uploadMaxFiles"

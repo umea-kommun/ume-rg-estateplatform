@@ -107,11 +107,7 @@
 								}}
 							</span>
 							<span v-else>
-								{{
-									$t(
-										'component.internal.faultReport.room.select'
-									)
-								}}
+								{{ $t('component.internal.order.room.select') }}
 							</span>
 						</template>
 						<template
@@ -179,6 +175,12 @@
 							</p>
 
 							<base-file-upload
+								id="file-upload"
+								:label="
+									$t(
+										'component.internal.order.general.fileUploadLabel'
+									)
+								"
 								v-model="attachments"
 								:accept="uploadAccept"
 								:max-files="uploadMaxFiles"
@@ -282,6 +284,12 @@
 					</p>
 					<p>
 						{{ $t('component.internal.order.info.text2') }}
+					</p>
+					<p>
+						{{ $t('component.internal.order.info.text3') }}
+					</p>
+					<p>
+						{{ $t('component.internal.order.info.text4') }}
 					</p>
 				</v-alert>
 			</div>

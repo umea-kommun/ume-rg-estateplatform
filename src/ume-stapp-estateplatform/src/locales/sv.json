@@ -375,7 +375,7 @@
 				},
 				"estate": {
 					"title": "Fastigheter (beta)",
-					"description": "Hitta information om fastigheter, byggnader och rum inom Umeå kommun.",
+					"description": "I Fastighetsportalen kan du göra felanmälningar, lägga beställningar till Fastighet, Stadshusservice och Verksamhetsservice samt ta del av lokal- och fastighetsinformation.",
 					"goToEstateSearch": "Sök efter fastigheter",
 					"goToEstateFaultReport": "Felanmälan",
 					"goToEstateOrder": "Beställning",
@@ -660,12 +660,12 @@
 			},
 			"estateSearch": {
 				"breadcrumb": "Fastighetssök",
-				"searchPlaceholder": "Sök på fastighet, adress eller byggnad...",
+				"searchPlaceholder": "Sök efter fastighet, adress eller byggnad...",
 				"searchButton": "Sök",
 				"filter": "Filtrera",
 				"selectOnMap": "Välj på karta",
 				"noResults": "Vi kunde inte hitta några fastigheter eller byggnader som matchade din sökning.",
-				"searchHelp": "Skriv i sökrutan eller använd filter för att hitta fastigheter och byggnader."
+				"searchHelp": "Använd sökrutan eller filtrera för att hitta den byggnad eller fastighet du söker."
 			},
 			"estateSearchFilter": {
 				"businessTypeLabel": "Huvudsaklig verksamhetstyp",
@@ -729,7 +729,7 @@
 			},
 			"faultReport": {
 				"title": "Felanmälan",
-				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",
+				"description": "Här kan du göra en felanmälan om något inte fungerar som det ska i verksamhetens lokaler.",
 				"changeAnswer": "Ändra",
 				"submitButton": "Skicka in felanmälan",
 				"rentedBuildingNotice": "Denna byggnad är inhyrd, vilket innebär att fastighetsägaren ansvarar för underhåll och reparationer.",
@@ -742,21 +742,21 @@
 					"select": "Är problemet utvändigt eller invändigt?",
 					"indoor": {
 						"title": "Problemet är invändigt",
-						"description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+						"description": "Välj invändigt om felet finns inne i byggnaden, till exempel i rum, korridorer eller gemensamma utrymmen.",
 						"select": "Invändigt",
 						"selectButton": "Välj invändigt",
-						"selected": "Du har valt att felanmälan gäller byggnadens insida."
+						"selected": "Du har valt att anmäla ett fel på byggnadens insida."
 					},
 					"outdoor": {
 						"title": "Problemet är utvändigt",
-						"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et",
+						"description": "Välj utvändigt om felet finns utanför byggnaden, till exempel på fasad, tak, eller omkringliggande ytor.",
 						"select": "Utvändigt",
 						"selectButton": "Välj utvändigt",
-						"selected": "Du har valt att felanmälan gäller byggnadens utsida."
+						"selected": "Du har valt att anmäla ett fel på byggnadens utsida."
 					}
 				},
 				"room": {
-					"select": "Vilket rum gäller det?",
+					"select": "Vilket rum gäller felanmälan?",
 					"selected": "Rum",
 					"none": "Inget rum",
 					"skip": "Hoppa över"
@@ -764,17 +764,19 @@
 				"general": {
 					"problemTitle": "Problembeskrivning",
 					"problemLabel": "Beskriv problemet",
-					"problemHelpText": "Beskriv så tydligt som möjligt vad problemet är, var det är och när det uppstod. Ju mer information du kan ge, desto bättre kan fastighetsförvaltaren åtgärda problemet.",
+					"problemHelpText": "Beskriv problemet så tydligt som möjligt – vad det gäller och när det uppstod. Ju mer information du lämnar, desto bättre kan vi åtgärda problemet.",
+					"fileUploadLabel": "Bifoga gärna en bild som visar felet (frivilligt)",
 					"contactLabel": "Kontaktuppgifter",
-					"contactHelpText": "Ange vem som ska kontaktas om mer information behövs för att åtgärda problemet, eller om det finns frågor kring felanmälan.",
+					"contactHelpText": "Ange vem vi kan kontakta om vi behöver mer information eller har frågor om felanmälan.",
 					"contactNameLabel": "Namn",
 					"contactEmailLabel": "E-post",
 					"contactPhoneLabel": "Telefonnummer"
 				},
 				"info": {
 					"title": "Information",
-					"text1": "Det är viktigt att tänka på detta när du felanmäler, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-					"text2": "Efter felanmälan är inskickad duis aute irure dolor in reprehenderit in voluptatevelit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident."
+					"text1": "Viktigt att tänka på: Beskriv felet så tydligt som möjligt och ange var det finns (byggnad, våning, rum). Ju mer information du lämnar, desto snabbare kan vi hjälpa dig. Bifoga gärna en bild om det underlättar.",
+					"text2": "När din felanmälan är registrerad tas den om hand av fastighetsdriften. Ärenden bedöms och prioriteras utifrån hur brådskande de är och vilken påverkan felet har på verksamheten. Du kan bli kontaktad om vi behöver kompletterande information eller för att boka tid för åtgärd.",
+					"text3": "<b>Vid akuta fel</b> (t.ex. vattenläcka, strömavbrott eller fara för person eller egendom) ska du kontakta växeln via telefon (090-16 10 00) istället för att göra en felanmälan i portalen. De säkerställer att rätt person kontaktas omedelbart och åtgärd påbörjas direkt."
 				},
 				"completed": {
 					"title": "Tack för din felanmälan!",
@@ -785,14 +787,15 @@
 			},
 			"order": {
 				"title": "Beställning",
-				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+				"description": "Här kan du beställa mindre bygg- och monteringsarbeten från Byggservice samt praktisk hjälp och fastighetsnära service från Stadshusservice och Verksamhetsservice.",
 				"submitButton": "Skicka in beställning",
 				"general": {
 					"descriptionTitle": "Beskrivning",
 					"descriptionLabel": "Beskriv vad du vill beställa",
-					"descriptionHelpText": "Beskriv så tydligt som möjligt vad du vill beställa, varför du vill beställa det och när du önskar att det ska vara på plats. Ju mer information du kan ge, desto bättre kan beställningen hanteras.",
+					"descriptionHelpText": "Beskriv beställningen så tydligt som möjligt – vad du vill beställa, varför och när du önskar att det ska vara på plats. Ju mer information du lämnar, desto bättre kan vi hantera din beställning.",
+					"fileUploadLabel": "Bifoga gärna en bild som visar var arbetet ska utföras (frivilligt)",
 					"contactLabel": "Kontaktuppgifter",
-					"contactHelpText": "Ange vem som ska kontaktas om mer information behövs för att hantera beställningen, eller om det finns frågor kring beställningen."
+					"contactHelpText": "Ange vem vi kan kontakta om vi behöver mer information eller har frågor om beställningen."
 				},
 				"category": {
 					"title": "Typ av beställning",
@@ -801,15 +804,15 @@
 
 					"townHallServices": {
 						"title": "Stadshusservice",
-						"description": "Ärenden kopplade till kommunhus och liknande lokaler."
+						"description": "Praktisk hjälp och fastighetsnära service inom Stadshusområdet, Majorsbostället och Leoparden."
 					},
 					"buildingServices": {
 						"title": "Byggservice",
-						"description": "Reparationer, enklare byggjobb och underhåll."
+						"description": "Reparationer och enklare byggarbeten, till exempel uppsättning av hyllor, krokar och anslagstavlor samt mindre målningsarbeten."
 					},
 					"facilitiesManager": {
 						"title": "Verksamhetsvaktmästare",
-						"description": "Praktisk hjälp och fastighetsnära service i verksamheter."
+						"description": "Praktisk hjälp och fastighetsnära service i verksamheter, till exempel skyltning, återvinning och enklare transporter."
 					},
 					"spaceRequirement": {
 						"title": "Förändrade lokalbehov",
@@ -817,10 +820,13 @@
 					},
 					"noneAvailable": "Det finns inga beställningstjänster tillgängliga för den här byggnaden."
 				},
+				"room": { "select": "Vilket rum gäller beställningen?" },
 				"info": {
 					"title": "Information",
-					"text1": "Här ska det stå information som är viktig när man beställer något, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-					"text2": "Efter att beställningen är inskickad duis aute ir..."
+					"text1": "Byggservice utför mindre bygg- och monteringsarbeten, till exempel uppsättning av hyllor, krokar, lister och anslagstavlor samt enklare målningsarbeten.",
+					"text2": "Observera! Rena elarbeten utförs ej av Byggservice (till exempel komplettering av eluttag eller belysning) utan beställs via Proceedo. Beställaren (oftast enhetschef) ansvarar för arbetsmiljön, även vid arbete som utförs av extern entreprenör.",
+					"text3": "Efter att din beställning är inskickad kommer Byggservice att göra en första bedömning av ditt behovs genomförbarhet, vid behov konsulteras även ansvarig fastighetsförvaltare. Ofta bokas därefter ett platsbesök för bedömning på plats avseende exempelvis arbetets omfattning innan beslut fattas om beställningen ska genomföras eller ej.",
+					"text4": "Säkerställ att din beskrivning är så tydlig som möjligt för att undvika behov av komplettering av ärendet, samt att kontaktuppgifterna är korrekta."
 				},
 				"completed": {
 					"title": "Tack för din beställning!",
@@ -837,6 +843,7 @@
 					"descriptionTitle": "Beskrivning",
 					"descriptionLabel": "Beskriv ditt förändrade lokalbehov",
 					"descriptionHelpText": "Beskriv så tydligt som möjligt vilket behov du har, varför det uppstått och när förändringen behöver vara på plats. Ju mer information du kan ge, desto bättre kan anmälan hanteras.",
+					"fileUploadLabel": "Bifoga filer (frivilligt)",
 					"contactLabel": "Kontaktuppgifter",
 					"contactHelpText": "Ange vem som ska kontaktas om mer information behövs för att hantera anmälan, eller om det finns frågor kring den."
 				},
@@ -844,6 +851,7 @@
 					"title": "Typ av lokalbehov",
 					"noneAvailable": "Det går inte att anmäla förändrade lokalbehov för den här byggnaden."
 				},
+				"room": { "select": "Vilket rum gäller det?" },
 				"info": {
 					"title": "Information",
 					"text1": "Här ska det stå information som är viktig när man anmäler förändrade lokalbehov.",
@@ -857,16 +865,16 @@
 				}
 			},
 			"buildingSelector": {
-				"searchLabel": "Sök efter byggnad eller adress",
+				"searchLabel": "Sök efter byggnad eller ange adress",
 				"noResults": "Vi kunde inte hitta några byggnader som matchade din sökning.",
 				"selectOnMap": "Välj på karta",
-				"searchHelp": "Börja skriva i sökfältet för att hitta en byggnad.",
+				"searchHelp": "Använd sökrutan eller välj på kartan för att hitta den byggnad du söker.",
 				"favoritesTitle": "Mina favoriter ({count})",
 				"favoritesDescription": "Du kan också välja byggnad eller rum direkt från dina favoriter."
 			},
 			"roomSelector": {
 				"none": "Du har inte valt något rum.",
-				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula cursus vestibulum. Duis et nisl ut ipsum fermentum",
+				"description": "Välj rum i listan eller markera det på planritningen.",
 				"selectOnBlueprint": "Välj på planritning"
 			}
 		},

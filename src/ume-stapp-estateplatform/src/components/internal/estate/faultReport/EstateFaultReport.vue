@@ -78,6 +78,7 @@
 									@click="
 										hasConfirmedRentedBuildingNotice = true
 									"
+									class="mt-4"
 								>
 									{{
 										$t(
@@ -246,6 +247,12 @@
 							</p>
 
 							<base-file-upload
+								id="file-upload"
+								:label="
+									$t(
+										'component.internal.faultReport.general.fileUploadLabel'
+									)
+								"
 								v-model="attachments"
 								:accept="uploadAccept"
 								:max-files="uploadMaxFiles"
@@ -352,6 +359,9 @@
 					<p>
 						{{ $t('component.internal.faultReport.info.text2') }}
 					</p>
+					<p
+						v-html="$t('component.internal.faultReport.info.text3')"
+					></p>
 				</v-alert>
 			</div>
 		</div>

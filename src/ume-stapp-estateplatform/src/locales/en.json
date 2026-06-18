@@ -374,7 +374,7 @@
 				},
 				"estate": {
 					"title": "Properties and buildings (beta)",
-					"description": "Find information about properties, buildings and rooms in the municipality of Umeå.",
+					"description": "In the Property Portal, you can report faults, place orders with Property Services, City Hall Services and Business Services, and access information about premises and properties.",
 					"goToEstateSearch": "Search properties and buildings",
 					"goToEstateFaultReport": "Report a fault",
 					"goToEstateOrder": "Place an order",
@@ -659,12 +659,12 @@
 			},
 			"estateSearch": {
 				"breadcrumb": "Property Search",
-				"searchPlaceholder": "Search by property name, address or building name...",
+				"searchPlaceholder": "Search by property, address or building...",
 				"searchButton": "Search",
 				"filter": "Filter",
 				"selectOnMap": "Select on map",
 				"noResults": "We could not find any properties or buildings that matched your search.",
-				"searchHelp": "Type in the search box or use filters to find properties and buildings."
+				"searchHelp": "Use the search box or apply filters to find the building or property you are looking for."
 			},
 			"estateSearchFilter": {
 				"businessTypeLabel": "Main business type",
@@ -728,7 +728,7 @@
 			},
 			"faultReport": {
 				"title": "Fault Report",
-				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",
+				"description": "If something isn’t working properly on the premises, you can report the fault here.",
 				"changeAnswer": "Change",
 				"submitButton": "Submit Fault Report",
 				"rentedBuildingNotice": "This building is rented, which means that the property owner is responsible for maintenance and repairs.",
@@ -741,14 +741,14 @@
 					"select": "Is the problem indoor or outdoor?",
 					"indoor": {
 						"title": "The problem is indoor",
-						"description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+						"description": "Select indoor if the fault is located inside the building, for example in rooms, corridors or communal areas.",
 						"select": "Indoor",
 						"selectButton": "Select indoor",
-						"selected": "You have selected that the fault report concerns the interior of the building."
+						"selected": "You have chosen to report a fault inside the building."
 					},
 					"outdoor": {
 						"title": "The problem is outdoor",
-						"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et",
+						"description": "Select outdoor if the fault is located outside the building, for example on the façade, roof or surrounding areas.",
 						"select": "Outdoor",
 						"selectButton": "Select outdoor",
 						"selected": "You have selected that the fault report concerns the exterior of the building."
@@ -763,17 +763,19 @@
 				"general": {
 					"problemTitle": "Problem description",
 					"problemLabel": "Describe the problem",
-					"problemHelpText": "Describe as clearly as possible what the problem is, where it is, and when it occurred. The more information you can provide, the better the property manager can address the issue.",
+					"problemHelpText": "Please describe the problem as clearly as possible – what it involves and when it occurred. The more information you provide, the better we can resolve the issue.",
+					"fileUploadLabel": "Please feel free to attach a photo showing the fault (optional)",
 					"contactLabel": "Contact information",
-					"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to resolve the issue, or if there are questions regarding the fault report.",
+					"contactHelpText": "Please let us know who we can contact if we need further information or have any questions regarding the fault report.",
 					"contactNameLabel": "Name",
 					"contactEmailLabel": "Email",
 					"contactPhoneLabel": "Phone number"
 				},
 				"info": {
 					"title": "Information",
-					"text1": "It is important to consider this when reporting a fault, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-					"text2": "After the fault report is submitted, duis aute irure dolor in reprehenderit in voluptatevelit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident."
+					"text1": "Important to bear in mind. Please describe the fault as clearly as possible and state where it is located (building, floor, room). The more information you provide, the quicker we can help you. Please feel free to attach a photo if this helps.",
+					"text2": "Once your fault report has been registered, it will be handled by the property management team. Issues are assessed and prioritised based on their urgency and the impact the fault has on operations. We may contact you if we need further information or to arrange a time for the work to be carried out.",
+					"text3": "<b>In the event of an emergency</b> (e.g. a water leak, power cut or danger to life or property), please contact the switchboard by telephone (090-16 10 00) rather than reporting the fault via the portal. They will ensure that the right person is contacted immediately and that action is taken straight away."
 				},
 				"completed": {
 					"title": "Thank you for your fault report!",
@@ -784,12 +786,13 @@
 			},
 			"order": {
 				"title": "Order",
-				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				"description": "Here you can order minor building and fitting work from Byggservice, as well as practical assistance and property-related services from Stadshusservice and Verksamhetsservice.",
 				"submitButton": "Submit your order",
 				"general": {
 					"descriptionTitle": "Description",
 					"descriptionLabel": "Describe what you want to order",
 					"descriptionHelpText": "Describe as clearly as possible what you want to order, why you want to order it, and when you want it to be in place. The more information you can provide, the better the order can be handled.",
+					"fileUploadLabel": "Please feel free to attach a photo showing where the work is to be carried out (optional)",
 					"contactLabel": "Contact information",
 					"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to handle the order, or if there are questions regarding the order."
 				},
@@ -800,15 +803,15 @@
 
 					"townHallServices": {
 						"title": "Town Hall Services",
-						"description": "Matters related to the town hall and similar premises."
+						"description": "Practical assistance and local services in the City Hall area, Majorsbostället and Leoparden."
 					},
 					"buildingServices": {
 						"title": "Building Services",
-						"description": "Repairs, minor construction work, and maintenance."
+						"description": "Repairs and minor building work, such as putting up shelves, hooks and noticeboards, as well as minor painting jobs."
 					},
 					"facilitiesManager": {
 						"title": "Facilities Manager",
-						"description": "Practical help and property-related services in operations."
+						"description": "Practical assistance and on-site services for businesses, such as signage, recycling and simple transport services."
 					},
 					"spaceRequirement": {
 						"title": "Changed Space Requirements",
@@ -816,10 +819,13 @@
 					},
 					"noneAvailable": "There are no order services available for this building."
 				},
+				"room": { "select": "Which room does the order concern?" },
 				"info": {
 					"title": "Information",
-					"text1": "Here is some important information when placing an order, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-					"text2": "After the order is submitted, duis aute ir..."
+					"text1": "Byggservice carries out minor construction and fitting work, such as installing shelves, hooks, mouldings and noticeboards, as well as simple painting jobs.",
+					"text2": "Please note! Purely electrical work is not carried out by Byggservice (such as the installation of additional sockets or lighting) but must be ordered via Proceedo. The client (usually the unit manager) is responsible for the working environment, even when work is carried out by an external contractor.",
+					"text3": "Once your order has been submitted, Byggservice will make an initial assessment of the feasibility of your request; if necessary, the responsible property manager will also be consulted. A site visit is then often booked to assess the scope of the work, for example, before a decision is made on whether or not to proceed with the order.",
+					"text4": "Ensure that your description is as clear as possible to avoid the need for further information, and that your contact details are correct."
 				},
 				"completed": {
 					"title": "Thank you for your order!",
@@ -836,6 +842,7 @@
 					"descriptionTitle": "Description",
 					"descriptionLabel": "Describe your changed space requirement",
 					"descriptionHelpText": "Describe as clearly as possible what you need, why it has arisen, and when the change needs to be in place. The more information you can provide, the better the report can be handled.",
+					"fileUploadLabel": "Attach files (optional)",
 					"contactLabel": "Contact information",
 					"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to handle the report, or if there are questions regarding it."
 				},
@@ -843,6 +850,7 @@
 					"title": "Type of space requirement",
 					"noneAvailable": "Changed space requirements cannot be reported for this building."
 				},
+				"room": { "select": "Which room does it concern?" },
 				"info": {
 					"title": "Information",
 					"text1": "Here is some important information when reporting changed space requirements.",
@@ -856,10 +864,10 @@
 				}
 			},
 			"buildingSelector": {
-				"searchLabel": "Search for building or address",
+				"searchLabel": "Search for a building or enter an address",
 				"noResults": "No buildings matched your search.",
 				"selectOnMap": "Select on map",
-				"searchHelp": "Start typing in the search field to find a building.",
+				"searchHelp": "Use the search box or select a location on the map to find the building you are looking for.",
 				"favoritesTitle": "My favorites ({count})",
 				"favoritesDescription": "You can also select a building or room directly from your favorites."
 			},

@@ -1,101 +1,113 @@
 <template>
-	<div
-		class="base-file-upload py-4"
-		:class="{ dragging: draggingOver, 'has-error': hasErrors }"
-		variant="outlined"
-		@dragover.prevent
-		@drop.prevent="onDrop"
-	>
+	<div>
+		<label v-if="label" :for="id" class="pb-1 d-block">{{ label }}</label>
 		<div
-			class="instruction d-flex flex-column align-center justify-center py-2"
+			class="base-file-upload py-4"
+			:class="{ dragging: draggingOver, 'has-error': hasErrors }"
+			variant="outlined"
+			@dragover.prevent
+			@drop.prevent="onDrop"
 		>
-			<v-icon icon="upload_file" class="mb-4" :size="32" />
-			<div class="d-flex align-center">
-				<button type="button" @click="openPicker" class="select-button">
-					{{ $t('component.baseFileUpload.selectFiles') }}
-				</button>
-				<p class="ma-0">
-					{{
-						$t('component.baseFileUpload.dropFiles', {
-							count: maxFiles,
-						})
-					}}
+			<div
+				class="instruction d-flex flex-column align-center justify-center py-2"
+			>
+				<v-icon icon="upload_file" class="mb-4" :size="32" />
+				<div class="d-flex align-center">
+					<button
+						type="button"
+						@click="openPicker"
+						class="select-button"
+					>
+						{{ $t('component.baseFileUpload.selectFiles') }}
+					</button>
+					<p class="ma-0">
+						{{
+							$t('component.baseFileUpload.dropFiles', {
+								count: maxFiles,
+							})
+						}}
+					</p>
+				</div>
+
+				<p class="text-medium-emphasis mb-0 mt-2">
+					{{ rulesHint }}
+				</p>
+				<p v-if="formatsHint" class="text-medium-emphasis mb-0">
+					{{ formatsHint }}
 				</p>
 			</div>
 
-			<p class="text-medium-emphasis mb-0 mt-2">
-				{{ rulesHint }}
-			</p>
-			<p v-if="formatsHint" class="text-medium-emphasis mb-0">
-				{{ formatsHint }}
-			</p>
-		</div>
+			<!-- Hidden native file input -->
+			<input
+				ref="fileInput"
+				:id="id"
+				type="file"
+				class="d-none"
+				:accept="accept"
+				:multiple="maxFiles > 1"
+				@change="onPicked"
+			/>
 
-		<!-- Hidden native file input -->
-		<input
-			ref="fileInput"
-			type="file"
-			class="d-none"
-			:accept="accept"
-			:multiple="maxFiles > 1"
-			@change="onPicked"
-		/>
-
-		<v-alert
-			v-if="error"
-			type="error"
-			variant="tonal"
-			class="mx-4 my-2"
-			rounded="lg"
-			:text="error"
-		/>
-
-		<v-alert
-			v-if="generalFileErrors.length"
-			type="error"
-			variant="tonal"
-			class="mx-4 my-2"
-			rounded="lg"
-		>
-			<div v-for="msg in generalFileErrors" :key="msg">{{ msg }}</div>
-		</v-alert>
-
-		<v-list v-if="files.length" density="compact" class="mx-4 mt-4 py-0">
-			<v-list-item
-				v-for="(f, i) in files"
-				:key="fileKey(f)"
+			<v-alert
+				v-if="error"
+				type="error"
+				variant="tonal"
+				class="mx-4 my-2"
 				rounded="lg"
-				class="mt-2 pl-4 pr-2 py-2"
-			>
-				<template #prepend>
-					<v-icon icon="insert_drive_file" :size="24" />
-				</template>
-				<v-list-item-title>
-					{{ f.name }}
-				</v-list-item-title>
-				<v-list-item-subtitle>
-					{{ formatBytes(f.size) }}
-				</v-list-item-subtitle>
-				<div
-					v-if="fileErrorMessages(i).length"
-					class="file-error text-error mt-1"
-				>
-					<div v-for="msg in fileErrorMessages(i)" :key="msg">
-						{{ msg }}
-					</div>
-				</div>
+				:text="error"
+			/>
 
-				<template #append>
-					<v-btn
-						icon="close"
-						variant="text"
-						class="ma-0"
-						rounded="xl"
-						@click="removeAt(i)"
-					/>
-				</template>
-			</v-list-item>
-		</v-list>
+			<v-alert
+				v-if="generalFileErrors.length"
+				type="error"
+				variant="tonal"
+				class="mx-4 my-2"
+				rounded="lg"
+			>
+				<div v-for="msg in generalFileErrors" :key="msg">{{ msg }}</div>
+			</v-alert>
+
+			<v-list
+				v-if="files.length"
+				density="compact"
+				class="mx-4 mt-4 py-0"
+			>
+				<v-list-item
+					v-for="(f, i) in files"
+					:key="fileKey(f)"
+					rounded="lg"
+					class="mt-2 pl-4 pr-2 py-2"
+				>
+					<template #prepend>
+						<v-icon icon="insert_drive_file" :size="24" />
+					</template>
+					<v-list-item-title>
+						{{ f.name }}
+					</v-list-item-title>
+					<v-list-item-subtitle>
+						{{ formatBytes(f.size) }}
+					</v-list-item-subtitle>
+					<div
+						v-if="fileErrorMessages(i).length"
+						class="file-error text-error mt-1"
+					>
+						<div v-for="msg in fileErrorMessages(i)" :key="msg">
+							{{ msg }}
+						</div>
+					</div>
+
+					<template #append>
+						<v-btn
+							icon="close"
+							variant="text"
+							class="ma-0"
+							rounded="xl"
+							@click="removeAt(i)"
+						/>
+					</template>
+				</v-list-item>
+			</v-list>
+		</div>
 	</div>
 </template>
 
@@ -104,6 +116,8 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
+	id: string;
+	label?: string;
 	modelValue: File[];
 	accept?: string; // e.g. "image/*,.pdf"
 	multiple?: boolean;
