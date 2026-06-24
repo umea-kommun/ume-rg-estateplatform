@@ -11,6 +11,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <!-- Transitive pin: patched SQLite native binary, see Directory.Packages.props (CVE-2025-6965). -->
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
     <PackageReference Include="Umea.se.Toolkit" />
   </ItemGroup>

@@ -5,33 +5,36 @@
   <ItemGroup>
     <PackageVersion Include="Cronos" Version="0.13.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.23.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.8" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.8" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8" />
-    <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.9" />
+    <!-- Transitively pinned to patch CVE-2025-6965 (GHSA-2m69-gcr7-jv3q): EF Core 10.0.9 pulls SQLitePCLRaw.lib.e_sqlite3 2.1.11 (SQLite < 3.50.2). 3.50.3 bundles SQLite 3.50.3. Native binary only; managed layer stays on the EF-provided version. -->
+    <PackageVersion Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
-    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.8" />
-    <PackageVersion Include="Microsoft.Extensions.AI" Version="10.6.0" />
-    <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="10.6.0" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.6.0" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.AI" Version="10.7.0" />
+    <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="10.7.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.7.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.9" />
     <PackageVersion Include="Azure.AI.OpenAI" Version="2.1.0" />
     <PackageVersion Include="OpenAI" Version="2.8.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.1.7" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="10.1.7" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="10.2.3" />
     <PackageVersion Include="SymSpell" Version="6.7.3" />
     <PackageVersion Include="System.Collections.Immutable" Version="10.0.2" />
     <PackageVersion Include="Umea.se.TestToolkit" Version="2026.3.9.1" />
-    <PackageVersion Include="Umea.se.Toolkit" Version="2026.5.18.12" />
+    <PackageVersion Include="Umea.se.Toolkit" Version="2026.6.8.16" />
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.8" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.7.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.12" />
+    <!-- Pinned to 3.1.x: ImageSharp 4.x switched to a commercial license requiring a license key/file at build time. Do not bump to 4.0.0+ without sorting out licensing. -->
+    <PackageVersion Include="SixLabors.ImageSharp" Version="[3.1.12]" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
-    <PackageVersion Include="Azure.Storage.Blobs" Version="12.28.0" />
+    <PackageVersion Include="Azure.Storage.Blobs" Version="12.29.1" />
     <PackageVersion Include="ZiggyCreatures.FusionCache" Version="2.6.0" />
     <PackageVersion Include="ZiggyCreatures.FusionCache.Serialization.ProtobufNet" Version="2.6.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />

@@ -21,9 +21,13 @@ public class FailedWorkOrdersHealthCheck(IWorkOrderRepository workOrderRepositor
 
         Dictionary<string, object> data = new() { ["count"] = count };
 
+        string description = count == 1
+            ? "1 misslyckad arbetsorder"
+            : $"{count} misslyckade arbetsordrar";
+
         return count == 0
             ? HealthCheckResult.Healthy("Inga misslyckade arbetsordrar.", data)
-            : HealthCheckResult.Degraded($"{count} misslyckade arbetsordrar väntar på åtgärd.", data: data);
+            : HealthCheckResult.Degraded(description, data: data);
     }
 
     // Failing to read the count is itself only a Degraded signal — it must never turn the
