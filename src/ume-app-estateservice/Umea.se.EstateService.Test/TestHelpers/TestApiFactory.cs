@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Umea.se.EstateService.DataStore;
 using Umea.se.EstateService.Logic.Data;
 using Umea.se.EstateService.Logic.Handlers;
+using Umea.se.EstateService.Logic.HostedServices;
 using Umea.se.EstateService.Logic.Images;
 using Umea.se.EstateService.Logic.Sync;
 using Umea.se.EstateService.ServiceAccess;
@@ -73,6 +74,18 @@ public sealed class TestApiFactory : WebAppFactoryBase<Program, HttpClientNames>
 
         builder.ConfigureTestServices(services =>
         {
+            // Don't run the background work order processor during integration tests. Its polling
+            // loop fires on startup and on every submit signal, picks up seeded "failed/pending"
+            // rows via GetDueForProcessing, and mutates their state (e.g. nulls NextSyncAt once
+            // retries are exhausted) — which races the admin retry/dismiss tests that assert on
+            // that exact state. The processor's own logic is covered by WorkOrderProcessorTests.
+            ServiceDescriptor? processingService = services.FirstOrDefault(
+                d => d.ImplementationType == typeof(WorkOrderProcessingService));
+            if (processingService is not null)
+            {
+                services.Remove(processingService);
+            }
+
             services.RemoveAll<IPythagorasClient>();
             services.RemoveAll<IEstateDataQueryHandler>();
             services.RemoveAll<IBuildingImageService>();
