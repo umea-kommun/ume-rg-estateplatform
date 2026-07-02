@@ -34,7 +34,9 @@ export function useWorkOrderConfig() {
 
 	onMounted(async () => {
 		try {
-			config.value = await store.dispatch(DispatchType.GetWorkOrderConfig);
+			config.value = await store.dispatch(
+				DispatchType.GetWorkOrderConfig
+			);
 		} catch {
 			// Use defaults if config fetch fails
 		}

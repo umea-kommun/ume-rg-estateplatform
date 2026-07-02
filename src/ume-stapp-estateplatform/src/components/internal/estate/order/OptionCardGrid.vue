@@ -1,5 +1,8 @@
 <template>
-	<div class="option-card-grid pt-4">
+	<div
+		class="option-card-grid pt-4"
+		:class="{ 'option-card-grid--dense': dense }"
+	>
 		<v-card
 			v-for="option in options"
 			:key="option.value"
@@ -29,7 +32,10 @@
 				{{ option.title }}
 			</div>
 
-			<div class="text-body-2 text-medium-emphasis mb-4">
+			<div
+				v-if="option.description"
+				class="text-body-2 text-medium-emphasis mb-4"
+			>
 				{{ option.description }}
 			</div>
 
@@ -72,6 +78,12 @@ export interface OptionCard {
 defineProps<{
 	options: OptionCard[];
 	selected: string | null;
+	/**
+	 * Compact variant: shorter content-height cards and a tighter grid so more
+	 * fit per screen (used where tiles carry only an icon + title, e.g. the space
+	 * requirement categories). Leaves the default order/fault layout unchanged.
+	 */
+	dense?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -110,6 +122,51 @@ const emit = defineEmits<{
 		}
 		.select-wrap {
 			height: 1rem;
+		}
+	}
+
+	// Compact variant: on mobile only, lay each tile out as a short horizontal row
+	// (icon left, title right) so many fit without scrolling. Selection is shown by
+	// the card outline, so the check/select hint are hidden to keep rows tight.
+	// Normal screens keep the default stacked layout (icon on top, title below).
+	&.option-card-grid--dense {
+		@media only screen and (max-width: 600px) {
+			grid-template-columns: 1fr;
+			gap: 0.5rem;
+
+			.option-card {
+				flex-direction: row;
+				align-items: center;
+				gap: 12px;
+				min-height: 0;
+				padding: 12px !important;
+
+				// Icon row -> just the icon on the left; hide the selected check.
+				.d-flex.mb-4 {
+					margin-bottom: 0 !important;
+					flex: 0 0 auto;
+
+					> .v-icon {
+						display: none;
+					}
+				}
+				.icon-wrap {
+					width: 40px;
+					height: 40px;
+				}
+				// Title to the right of the icon.
+				.text-h6 {
+					flex: 1 1 auto;
+					margin-bottom: 0 !important;
+					font-size: 1rem !important;
+					line-height: 1.3;
+				}
+				// Drop the description and the bottom select hint in the compact row.
+				.text-body-2,
+				.select-wrap {
+					display: none;
+				}
+			}
 		}
 	}
 }

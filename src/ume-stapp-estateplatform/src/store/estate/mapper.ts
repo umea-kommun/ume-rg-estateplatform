@@ -1,11 +1,6 @@
-import {
-	IBuildingDocumentDto,
-} from '@/models/estate/Dto';
+import { IBuildingDocumentDto } from '@/models/estate/Dto';
 import Config from '@/Config';
-import {
-	EstateType,
-	ExternalOwnerStatus,
-} from '@/models/estate/Enums';
+import { EstateType, ExternalOwnerStatus } from '@/models/estate/Enums';
 import {
 	IBuildingContact,
 	IBuildingDetails,
@@ -436,7 +431,8 @@ export default {
 				: null,
 			contactPersons: rContactPersons
 				? {
-						propertyManager: rContactPersons.propertyManager ?? null,
+						propertyManager:
+							rContactPersons.propertyManager ?? null,
 						operationsManager:
 							rContactPersons.operationsManager ?? null,
 						operationCoordinator:

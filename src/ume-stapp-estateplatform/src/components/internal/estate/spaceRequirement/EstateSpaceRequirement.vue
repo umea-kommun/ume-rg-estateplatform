@@ -14,7 +14,13 @@
 					full-width
 				/>
 				<estate-space-requirement-completed v-if="hasSubmitted" />
-				<div v-else class="mt-2">
+				<vee-form
+					v-else
+					ref="formValidator"
+					class="mt-2"
+					v-slot="{ errors }"
+					@submit.prevent="submitReport"
+				>
 					<div class="pb-4">
 						<h1 class="ma-0 mb-2">
 							{{
@@ -30,21 +36,149 @@
 						</p>
 					</div>
 
-					<!-- BUILDING SELECTOR -->
+					<!-- CATEGORY (the primary choice — shown first, no building gate) -->
 					<estate-order-step
-						:step="1"
-						:step-count="stepCount"
+						id="space-requirement-category"
+						:title="
+							$t(
+								'component.internal.spaceRequirement.category.title'
+							)
+						"
+					>
+						<div
+							v-if="isLoadingCategories"
+							class="d-flex align-center ga-3 py-4 text-medium-emphasis"
+						>
+							<v-progress-circular
+								indeterminate
+								size="20"
+								width="2"
+							/>
+							{{
+								$t(
+									'component.internal.spaceRequirement.category.loading'
+								)
+							}}
+						</div>
+						<option-card-grid
+							v-else-if="categoryCards.length > 0"
+							:options="categoryCards"
+							:selected="selectedCategoryValue"
+							dense
+							@select="selectCategory"
+						/>
+						<v-alert
+							v-else
+							type="info"
+							variant="tonal"
+							rounded="lg"
+						>
+							{{
+								$t(
+									'component.internal.spaceRequirement.category.noneAvailable'
+								)
+							}}
+						</v-alert>
+						<v-alert
+							v-if="categoryMissing"
+							type="error"
+							variant="tonal"
+							rounded="lg"
+							class="mt-4"
+						>
+							{{
+								$t(
+									'component.internal.spaceRequirement.category.required'
+								)
+							}}
+						</v-alert>
+					</estate-order-step>
+
+					<!-- DESCRIPTION -->
+					<estate-order-step
+						:title="
+							$t(
+								'component.internal.spaceRequirement.general.descriptionTitle'
+							)
+						"
+						class="mt-6"
+					>
+						<base-text-box
+							id="problem-description"
+							:label="
+								$t(
+									'component.internal.spaceRequirement.general.descriptionLabel'
+								)
+							"
+							v-model="problemDescription"
+							rules="required"
+							variant="outlined"
+							rounded="lg"
+							aria-labelledby="problem-description-label"
+							text-area
+							auto-grow
+							:error-message="descriptionServerError"
+						/>
+						<p class="text-medium-emphasis">
+							{{
+								$t(
+									'component.internal.spaceRequirement.general.descriptionHelpText'
+								)
+							}}
+						</p>
+
+						<base-file-upload
+							id="file-upload"
+							:label="
+								$t(
+									'component.internal.spaceRequirement.general.fileUploadLabel'
+								)
+							"
+							v-model="attachments"
+							:accept="uploadAccept"
+							:max-files="uploadMaxFiles"
+							:max-size-mega-bytes="uploadMaxSizeMb"
+							:server-errors="fileServerErrors"
+							class="mt-6"
+						/>
+					</estate-order-step>
+
+					<!-- LOCATION: collapsed to a single button until the user opts in -->
+					<div
+						v-if="!showBuildingSelector && !selectedBuilding"
+						class="mt-6"
+					>
+						<v-btn
+							variant="tonal"
+							rounded="lg"
+							color="grey-darken-2"
+							prepend-icon="add"
+							@click="showBuildingSelector = true"
+						>
+							{{
+								$t(
+									'component.internal.spaceRequirement.building.add'
+								)
+							}}
+						</v-btn>
+					</div>
+					<estate-order-step
+						v-else
+						id="space-requirement-building"
 						:title="
 							selectedBuilding
 								? $t(
 										'component.internal.faultReport.building.selected'
 								  )
 								: $t(
-										'component.internal.faultReport.building.select'
+										'component.internal.spaceRequirement.building.select'
 								  )
 						"
 						:show-clear="!!selectedBuilding"
-						@clear="selectBuilding(null)"
+						:show-skip="!selectedBuilding"
+						@clear="changeBuilding"
+						@skip="showBuildingSelector = false"
+						class="mt-6"
 					>
 						<template #header-btn v-if="!selectedBuilding">
 							<building-map-selector @select="selectBuilding" />
@@ -54,65 +188,60 @@
 							@select="selectBuilding"
 							@select-room="selectBuildingAndRoom"
 						/>
+						<v-alert
+							v-if="
+								selectedBuilding &&
+								!selectedBuildingSupportsType
+							"
+							type="warning"
+							variant="tonal"
+							rounded="lg"
+							class="mt-4"
+						>
+							{{
+								$t(
+									'component.internal.spaceRequirement.building.notSupported'
+								)
+							}}
+						</v-alert>
 					</estate-order-step>
 
-					<!-- CATEGORY SELECTOR -->
-					<estate-order-step
-						v-if="selectedBuilding && categoryCards.length > 0"
-						:step="2"
-						:step-count="stepCount"
-						:title="
-							$t(
-								'component.internal.spaceRequirement.category.title'
-							)
+					<!-- ROOM (optional refinement of the chosen building) -->
+					<div
+						v-if="
+							selectedBuilding &&
+							!showRoomSelector &&
+							!selectedRoom
 						"
-						ref="categoryTitle"
 						class="mt-6"
 					>
-						<option-card-grid
-							:options="categoryCards"
-							:selected="selectedCategoryValue"
-							@select="selectCategory"
-						/>
-					</estate-order-step>
-					<v-alert
-						v-else-if="selectedBuilding && !isLoadingCategories"
-						type="info"
-						variant="tonal"
-						rounded="lg"
-						class="mt-6"
-					>
-						{{
-							$t(
-								'component.internal.spaceRequirement.category.noneAvailable'
-							)
-						}}
-					</v-alert>
-
-					<!-- ROOM SELECTOR -->
+						<v-btn
+							variant="tonal"
+							rounded="lg"
+							color="grey-darken-2"
+							prepend-icon="add"
+							@click="showRoomSelector = true"
+						>
+							{{
+								$t(
+									'component.internal.spaceRequirement.room.add'
+								)
+							}}
+						</v-btn>
+					</div>
 					<estate-order-step
-						v-if="selectedBuilding && selectedCategoryId"
-						:step="3"
-						:step-count="stepCount"
-						:show-clear="!!selectedRoom || skippedRoom"
-						@clear="selectRoom(null)"
-						:show-skip="!selectedRoom && !skippedRoom"
-						@skip="selectRoom(null, true)"
-						ref="roomTitle"
+						v-else-if="selectedBuilding"
+						:show-clear="!!selectedRoom"
+						:show-skip="!selectedRoom"
+						@clear="changeRoom"
+						@skip="showRoomSelector = false"
 						class="mt-6"
 					>
 						<template #title>
-							<span v-if="selectedRoom && !skippedRoom">
+							<span v-if="selectedRoom">
 								{{
 									$t(
 										'component.internal.faultReport.room.selected'
-									)
-								}}
-							</span>
-							<span v-else-if="!selectedRoom && skippedRoom">
-								{{
-									$t(
-										'component.internal.faultReport.room.none'
 									)
 								}}
 							</span>
@@ -128,8 +257,7 @@
 							#header-btn
 							v-if="
 								selectedBuilding.blueprintAvailable &&
-								!selectedRoom &&
-								!skippedRoom
+								!selectedRoom
 							"
 						>
 							<room-blueprint-selector
@@ -140,155 +268,96 @@
 						<room-selector
 							class="mt-2"
 							:building="selectedBuilding"
-							:skipped-room="skippedRoom"
+							:skipped-room="false"
 							:selected-room="selectedRoom"
 							@select="selectRoom"
 						/>
 					</estate-order-step>
 
-					<!-- PROBLEM DESCRIPTION -->
-					<vee-form
-						v-if="showLastSteps"
-						ref="formValidator"
-						v-slot="{ errors }"
-						@submit.prevent="submitReport"
+					<!-- CONTACT INFORMATION -->
+					<estate-order-step
+						:title="
+							$t(
+								'component.internal.spaceRequirement.general.contactLabel'
+							)
+						"
+						class="mt-6"
 					>
-						<estate-order-step
-							:step="4"
-							:step-count="stepCount"
-							:title="
+						<p class="text-medium-emphasis">
+							{{
 								$t(
-									'component.internal.spaceRequirement.general.descriptionTitle'
+									'component.internal.spaceRequirement.general.contactHelpText'
 								)
-							"
-							ref="problemTitle"
-							class="mt-6"
-						>
-							<base-text-box
-								id="problem-description"
-								:label="
-									$t(
-										'component.internal.spaceRequirement.general.descriptionLabel'
-									)
-								"
-								v-model="problemDescription"
-								rules="required"
-								variant="outlined"
-								rounded="lg"
-								aria-labelledby="problem-description-label"
-								text-area
-								auto-grow
-								:error-message="descriptionServerError"
-							/>
-							<p class="text-medium-emphasis">
-								{{
-									$t(
-										'component.internal.spaceRequirement.general.descriptionHelpText'
-									)
-								}}
-							</p>
+							}}
+						</p>
+						<fault-contact-info
+							v-model:contactName="contactName"
+							v-model:contactEmail="contactEmail"
+							v-model:contactPhone="contactPhone"
+							:field-error="fieldError"
+						/>
+					</estate-order-step>
 
-							<base-file-upload
-								id="file-upload"
-								:label="
-									$t(
-										'component.internal.spaceRequirement.general.fileUploadLabel'
-									)
-								"
-								v-model="attachments"
-								:accept="uploadAccept"
-								:max-files="uploadMaxFiles"
-								:max-size-mega-bytes="uploadMaxSizeMb"
-								:server-errors="fileServerErrors"
-								class="mt-6"
-							/>
-						</estate-order-step>
-
-						<!-- CONTACT INFORMATION -->
-						<estate-order-step
-							:title="
-								$t(
-									'component.internal.spaceRequirement.general.contactLabel'
-								)
-							"
-							:step="5"
-							:step-count="stepCount"
-							class="mt-6"
-						>
-							<p class="text-medium-emphasis">
-								{{
-									$t(
-										'component.internal.spaceRequirement.general.contactHelpText'
-									)
-								}}
-							</p>
-							<fault-contact-info
-								v-model:contactName="contactName"
-								v-model:contactEmail="contactEmail"
-								v-model:contactPhone="contactPhone"
-								:field-error="fieldError"
-							/>
-						</estate-order-step>
-						<v-alert
-							v-if="Object.keys(errors).length"
-							type="error"
-							variant="outlined"
-							rounded="lg"
-							class="mt-4"
-						>
-							<ul
+					<v-alert
+						v-if="Object.keys(errors).length || manualErrors.length"
+						type="error"
+						variant="outlined"
+						rounded="lg"
+						class="mt-4"
+					>
+						<ul>
+							<li v-for="err in manualErrors" :key="err.id">
+								<a :href="`#${err.id}`">{{ err.message }}</a>
+							</li>
+							<li
 								v-for="(error, fieldId) in errors"
 								:key="error + fieldId"
 							>
-								<li>
-									<a :href="`#${fieldId}`">{{ error }}</a>
-								</li>
-							</ul>
-						</v-alert>
-						<v-alert
-							v-if="serverErrors"
-							type="error"
-							variant="outlined"
-							rounded="lg"
-							class="mt-4"
-						>
-							<ul>
-								<li
-									v-for="(codes, field) in serverErrors"
-									:key="field"
-								>
-									<span v-for="code in codes" :key="code">
-										{{
-											t(
-												`app.error.estate.validation.${code}`,
-												code
-											)
-										}}
-									</span>
-								</li>
-							</ul>
-						</v-alert>
-
-						<div
-							class="d-flex align-center justify-center pa-4 mt-4"
-						>
-							<v-btn
-								color="primary"
-								size="large"
-								rounded="lg"
-								:disabled="isBusySubmitting"
-								:loading="isBusySubmitting"
-								@click="submitReport"
+								<a :href="`#${fieldId}`">{{ error }}</a>
+							</li>
+						</ul>
+					</v-alert>
+					<v-alert
+						v-if="serverErrors"
+						type="error"
+						variant="outlined"
+						rounded="lg"
+						class="mt-4"
+					>
+						<ul>
+							<li
+								v-for="(codes, field) in serverErrors"
+								:key="field"
 							>
-								{{
-									$t(
-										'component.internal.spaceRequirement.submitButton'
-									)
-								}}
-							</v-btn>
-						</div>
-					</vee-form>
-				</div>
+								<span v-for="code in codes" :key="code">
+									{{
+										t(
+											`app.error.estate.validation.${code}`,
+											code
+										)
+									}}
+								</span>
+							</li>
+						</ul>
+					</v-alert>
+
+					<div class="d-flex align-center justify-center pa-4 mt-4">
+						<v-btn
+							color="primary"
+							size="large"
+							rounded="lg"
+							:disabled="isBusySubmitting"
+							:loading="isBusySubmitting"
+							@click="submitReport"
+						>
+							{{
+								$t(
+									'component.internal.spaceRequirement.submitButton'
+								)
+							}}
+						</v-btn>
+					</div>
+				</vee-form>
 			</div>
 			<div class="info-wrap">
 				<v-alert rounded="lg">
@@ -297,15 +366,13 @@
 							$t('component.internal.spaceRequirement.info.title')
 						}}
 					</h2>
-					<p>
-						{{
-							$t('component.internal.spaceRequirement.info.text1')
-						}}
-					</p>
-					<p>
-						{{
-							$t('component.internal.spaceRequirement.info.text2')
-						}}
+					<p
+						v-for="(paragraph, index) in tm(
+							'component.internal.spaceRequirement.info.paragraphs'
+						)"
+						:key="index"
+					>
+						{{ paragraph }}
 					</p>
 				</v-alert>
 			</div>
@@ -322,15 +389,7 @@ import {
 	ISubmitEstateOrder,
 	IWorkOrderCategoryOption,
 } from '@/models/estate/Interfaces';
-import {
-	computed,
-	nextTick,
-	onMounted,
-	Ref,
-	ref,
-	useTemplateRef,
-	watch,
-} from 'vue';
+import { computed, onMounted, ref, useTemplateRef, watch } from 'vue';
 import { EstateRoutes, MyPagesRoutes } from '@/router/routes';
 import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
 import { useI18n } from 'vue-i18n';
@@ -357,7 +416,7 @@ import BuildingMapSelector from '../faultReport/buildingSelector/BuildingMapSele
 
 const route = useRoute();
 const router = useRouter();
-const { t } = useI18n();
+const { t, te, tm } = useI18n();
 const store = useStore<IRootState>();
 
 const breadcrumbs = [
@@ -371,14 +430,14 @@ const breadcrumbs = [
 	},
 ];
 
-const categoryTitleRef = useTemplateRef('categoryTitle');
-const roomTitleRef = useTemplateRef('roomTitle');
-const problemTitleRef = useTemplateRef('problemTitle');
-
 const selectedBuilding = ref<IBuildingDetails | null>(null);
 const selectedRoom = ref<IBuildingRoom | null>(null);
-const skippedRoom = ref(false);
 const selectedCategoryId = ref<number | null>(null);
+
+// Building and room are optional and most space requirements need neither, so their
+// selectors stay collapsed behind a button until the user actively chooses to add one.
+const showBuildingSelector = ref(false);
+const showRoomSelector = ref(false);
 
 const categoryOptions = ref<IWorkOrderCategoryOption[]>([]);
 const isLoadingCategories = ref(false);
@@ -386,6 +445,7 @@ const isLoadingCategories = ref(false);
 const isLoadingFromQuery = ref(false);
 const isBusySubmitting = ref(false);
 const hasSubmitted = ref(false);
+const submitAttempted = ref(false);
 
 const user = computed(() => store.state.user);
 
@@ -418,23 +478,36 @@ watch(
 	{ deep: true }
 );
 
-watch(
-	() => selectedBuilding.value,
-	(_, oldVal) => {
-		if (oldVal) {
-			selectedCategoryId.value = null;
-			selectedRoom.value = null;
-			skippedRoom.value = false;
-		}
-	}
-);
+// Material Icons (md set) per SpaceRequirement leaf category, keyed by the stable
+// Pythagoras leaf-category id. New/unknown categories fall back to a neutral icon.
+const CATEGORY_ICONS: Record<number, string> = {
+	88: 'accessible', // Tillgänglighetsanpassningar
+	89: 'manage_search', // Generella utredningar
+	90: 'handyman', // Mindre anpassningar i befintliga lokaler
+	91: 'architecture', // Större förändringar i lokalbehov
+	97: 'apartment', // Lägenhetsbehov
+};
+const DEFAULT_CATEGORY_ICON = 'space_dashboard';
+
+// Categories where a building is the usual case, so we expand the building selector up front
+// instead of hiding it behind the "Välj byggnad" button. Keyed by Pythagoras leaf-category id:
+// 88 = Tillgänglighetsanpassningar, 90 = Mindre anpassningar i befintliga lokaler.
+const BUILDING_PROMPTED_CATEGORIES = new Set<number>([88, 90]);
+
+// Short explanatory text per SpaceRequirement leaf category, keyed by the stable
+// Pythagoras leaf-category id (see locales -> category.descriptions). Categories without
+// a matching locale key simply show no description.
+const categoryDescription = (id: number) => {
+	const key = `component.internal.spaceRequirement.category.descriptions.${id}`;
+	return te(key) ? t(key) : '';
+};
 
 const categoryCards = computed<OptionCard[]>(() =>
 	categoryOptions.value.map((option) => ({
 		value: option.id.toString(),
-		icon: 'space_dashboard',
+		icon: CATEGORY_ICONS[option.id] ?? DEFAULT_CATEGORY_ICON,
 		title: option.name,
-		description: '',
+		description: categoryDescription(option.id),
 	}))
 );
 
@@ -444,12 +517,32 @@ const selectedCategoryValue = computed(() =>
 		: null
 );
 
-const showLastSteps = computed(() => {
-	return (
-		(selectedRoom.value || skippedRoom.value) &&
-		selectedCategoryId.value &&
-		selectedBuilding.value
-	);
+// Building is optional. If one IS selected it must support this work order type
+// (the backend rejects otherwise), so flag an unsupported pick before submit.
+const selectedBuildingSupportsType = computed(
+	() =>
+		!selectedBuilding.value ||
+		(selectedBuilding.value.workOrderTypes ?? []).includes(
+			EstateOrderCategory.SpaceRequirement
+		)
+);
+
+const categoryMissing = computed(
+	() => submitAttempted.value && selectedCategoryId.value === null
+);
+
+// Aggregated, anchor-linked summary of the non-form (card-based) requirements,
+// shown alongside the vee-validate field errors above the submit button. Building
+// is optional, so only the category can be "missing" here.
+const manualErrors = computed(() => {
+	const list: { id: string; message: string }[] = [];
+	if (categoryMissing.value) {
+		list.push({
+			id: 'space-requirement-category',
+			message: t('component.internal.spaceRequirement.category.required'),
+		});
+	}
+	return list;
 });
 
 const updateQueryParams = () => {
@@ -463,28 +556,9 @@ const updateQueryParams = () => {
 	}
 };
 
-const scrollToAfterUiUpdate = async (
-	elRef: Ref<InstanceType<typeof EstateOrderStep> | null>
-) => {
-	await nextTick();
-	setTimeout(() => {
-		elRef.value?.title?.scrollIntoView({
-			behavior: 'smooth',
-			block: 'center',
-		});
-	}, 50);
-};
-
+// SpaceRequirement categories are type-global (the endpoint is keyed by work-order type,
+// not by building), so we load them once up front — independent of any building selection.
 const loadCategories = async () => {
-	const supportsSpaceRequirement = (
-		selectedBuilding.value?.workOrderTypes ?? []
-	).includes(EstateOrderCategory.SpaceRequirement);
-
-	if (!supportsSpaceRequirement) {
-		categoryOptions.value = [];
-		return;
-	}
-
 	isLoadingCategories.value = true;
 	try {
 		categoryOptions.value = await store.dispatch(
@@ -505,32 +579,44 @@ const loadCategories = async () => {
 };
 
 const selectBuilding = async (building: IBuildingDetails | null) => {
+	// Room belongs to a building, so clear it (and re-collapse its selector) on change.
 	selectedRoom.value = null;
-	skippedRoom.value = false;
-	selectedCategoryId.value = null;
-	categoryOptions.value = [];
+	showRoomSelector.value = false;
 	selectedBuilding.value = building;
-
-	if (building) {
-		await loadCategories();
-	}
-
-	scrollToAfterUiUpdate(categoryTitleRef);
+	// Collapse back to the button when the building is cleared; keep it open otherwise.
+	showBuildingSelector.value = building !== null;
 	updateQueryParams();
 };
 
-const selectRoom = async (room: IBuildingRoom | null, skipped = false) => {
+const selectRoom = async (room: IBuildingRoom | null) => {
 	selectedRoom.value = room;
-	skippedRoom.value = skipped;
-
-	scrollToAfterUiUpdate(problemTitleRef);
+	// Collapse back to the button when the room is cleared.
+	showRoomSelector.value = room !== null;
 	updateQueryParams();
+};
+
+// "Ändra" resets the current pick but keeps the selector expanded (and empty), so the user
+// lands on the same state as the up-front prompt — ready to choose another building/room —
+// rather than folding all the way back to the button. Folding away is "Hoppa över" (skip).
+const changeBuilding = async () => {
+	await selectBuilding(null);
+	showBuildingSelector.value = true;
+};
+
+const changeRoom = async () => {
+	await selectRoom(null);
+	showRoomSelector.value = true;
 };
 
 const selectCategory = async (value: string) => {
-	selectedCategoryId.value = parseInt(value);
-
-	scrollToAfterUiUpdate(roomTitleRef);
+	const id = parseInt(value);
+	selectedCategoryId.value = id;
+	// Some categories almost always concern a specific building, so expand the selector up
+	// front. For the rest it stays collapsed behind the button — unless a building is already
+	// picked, in which case the full selector is shown regardless.
+	if (!selectedBuilding.value) {
+		showBuildingSelector.value = BUILDING_PROMPTED_CATEGORIES.has(id);
+	}
 };
 
 const selectBuildingAndRoom = async ({
@@ -543,8 +629,6 @@ const selectBuildingAndRoom = async ({
 	await selectBuilding(building);
 	selectRoom(room);
 };
-
-const stepCount = 5;
 
 const loadFromQueryParams = async () => {
 	const query = route.query;
@@ -589,11 +673,13 @@ const loadFromQueryParams = async () => {
 };
 
 const submitReport = async () => {
+	submitAttempted.value = true;
 	const validationResult = await formValidator.value?.validate();
+	// Building and room are both optional. A category and a valid form are always required;
+	// if a building IS selected it must support this work order type.
 	if (
-		!selectedBuilding.value ||
-		!selectedCategoryId.value ||
-		(!selectedRoom.value && !skippedRoom.value) ||
+		selectedCategoryId.value === null ||
+		!selectedBuildingSupportsType.value ||
 		!validationResult?.valid
 	) {
 		return;
@@ -633,6 +719,7 @@ const submitReport = async () => {
 };
 
 onMounted(() => {
+	loadCategories();
 	loadFromQueryParams();
 });
 </script>

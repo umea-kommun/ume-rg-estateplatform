@@ -213,7 +213,11 @@ export interface ISubmitEstateFaultReport {
 }
 
 export interface ISubmitEstateOrder {
-	buildingId: number;
+	/**
+	 * Optional: the space requirement flow may be submitted without a building. All other
+	 * flows always set it.
+	 */
+	buildingId?: number;
 	category: EstateOrderCategory;
 	/**
 	 * Optional Pythagoras leaf category chosen by the user (space requirement flow).

@@ -837,31 +837,52 @@
 			},
 			"spaceRequirement": {
 				"title": "Förändrade lokalbehov",
-				"description": "Anmäl behov av förändrade lokaler, till exempel mer eller mindre yta, anpassningar eller andra förändringar i din verksamhets lokaler.",
-				"submitButton": "Skicka in anmälan",
+				"description": "Skicka in en förfrågan om förändrade lokaler, till exempel mer eller mindre yta, anpassningar eller andra förändringar i din verksamhets lokaler.",
+				"submitButton": "Skicka in förfrågan",
 				"general": {
 					"descriptionTitle": "Beskrivning",
 					"descriptionLabel": "Beskriv ditt förändrade lokalbehov",
-					"descriptionHelpText": "Beskriv så tydligt som möjligt vilket behov du har, varför det uppstått och när förändringen behöver vara på plats. Ju mer information du kan ge, desto bättre kan anmälan hanteras.",
+					"descriptionHelpText": "Beskriv så tydligt som möjligt vilket behov du har, varför det uppstått och när förändringen behöver vara på plats. Ju mer information du kan ge, desto bättre kan förfrågan hanteras.",
 					"fileUploadLabel": "Bifoga filer (frivilligt)",
 					"contactLabel": "Kontaktuppgifter",
-					"contactHelpText": "Ange vem som ska kontaktas om mer information behövs för att hantera anmälan, eller om det finns frågor kring den."
+					"contactHelpText": "Ange vem som ska kontaktas om mer information behövs för att hantera förfrågan, eller om det finns frågor kring den."
 				},
 				"category": {
 					"title": "Typ av lokalbehov",
-					"noneAvailable": "Det går inte att anmäla förändrade lokalbehov för den här byggnaden."
+					"loading": "Hämtar typer...",
+					"required": "Välj typ av lokalbehov.",
+					"noneAvailable": "Det går för närvarande inte att hämta typer av lokalbehov. Försök igen senare.",
+					"descriptions": {
+						"88": "När lokaler behöver anpassas för att uppfylla krav på tillgänglighet och användbarhet.",
+						"89": "När verksamheten behöver utreda ett lokalbehov där lösning, omfattning eller framtida behov ännu inte är klarlagt.",
+						"90": "När verksamheten behöver mindre förändringar i befintliga lokaler.",
+						"91": "När verksamheten behöver mer eller mindre yta, nya lokaler eller större ombyggnationer.",
+						"97": "När verksamheten har behov av en eller flera lägenheter för sin verksamhet. (Endast GVN)"
+					}
 				},
-				"room": { "select": "Vilket rum gäller det?" },
+				"building": {
+					"select": "Byggnad (frivilligt)",
+					"add": "Välj byggnad (frivilligt)",
+					"notSupported": "Den valda byggnaden stödjer inte förfrågningar om förändrade lokalbehov. Välj en annan byggnad."
+				},
+				"room": {
+					"select": "Rum (frivilligt)",
+					"add": "Välj rum (frivilligt)"
+				},
 				"info": {
 					"title": "Information",
-					"text1": "Här ska det stå information som är viktig när man anmäler förändrade lokalbehov.",
-					"text2": "Efter att anmälan är inskickad hanteras den av ansvarig handläggare."
+					"paragraphs": [
+						"Beskriv verksamhetens lokalbehov så tydligt som möjligt och välj den kategori som bäst motsvarar ärendet.",
+						"Om behovet är kopplat till en specifik byggnad rekommenderas att byggnaden anges i ärendet. Om lämplig byggnad ännu inte är identifierad kan fältet lämnas tomt.",
+						"För att underlätta den fortsatta hanteringen är det värdefullt att bifoga relevant underlag, exempelvis utredningar, beslutsunderlag, ritningar, bilder eller annan dokumentation som tydliggör behovet.",
+						"Efter inskickad förfrågan hanteras ärendet enligt kommunens lokalförsörjningsprocess."
+					]
 				},
 				"completed": {
-					"title": "Tack för din anmälan!",
-					"description": "Vi har mottagit din anmälan om förändrade lokalbehov och kommer att hantera den så snart som möjligt.",
+					"title": "Tack för din förfrågan!",
+					"description": "Vi har mottagit din förfrågan om förändrade lokalbehov och kommer att hantera den så snart som möjligt.",
 					"goHome": "Gå till startsidan",
-					"feedbackTitle": "Hur fungerade det att anmäla förändrade lokalbehov?"
+					"feedbackTitle": "Hur fungerade det att skicka in en förfrågan om förändrade lokalbehov?"
 				}
 			},
 			"buildingSelector": {

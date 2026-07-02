@@ -176,65 +176,67 @@
 							)
 						}}
 					</p>
-					<v-btn
-						variant="outlined"
-						size="x-large"
-						prependIcon="domain"
-						:to="{
-							name: EstateRoutes.Search,
-						}"
-					>
-						{{
-							$t(
-								'component.internal.internalStart.estate.goToEstateSearch'
-							)
-						}}
-					</v-btn>
-					<v-btn
-						v-if="isErrorReportEnabled"
-						variant="outlined"
-						size="x-large"
-						prependIcon="warning"
-						:to="{
-							name: EstateRoutes.FaultReport,
-						}"
-					>
-						{{
-							$t(
-								'component.internal.internalStart.estate.goToEstateFaultReport'
-							)
-						}}
-					</v-btn>
-					<v-btn
-						v-if="isErrorReportEnabled"
-						variant="outlined"
-						size="x-large"
-						prependIcon="handyman"
-						:to="{
-							name: EstateRoutes.Order,
-						}"
-					>
-						{{
-							$t(
-								'component.internal.internalStart.estate.goToEstateOrder'
-							)
-						}}
-					</v-btn>
-					<v-btn
-						v-if="isErrorReportEnabled"
-						variant="outlined"
-						size="x-large"
-						prependIcon="space_dashboard"
-						:to="{
-							name: EstateRoutes.SpaceRequirement,
-						}"
-					>
-						{{
-							$t(
-								'component.internal.internalStart.estate.goToEstateSpaceRequirement'
-							)
-						}}
-					</v-btn>
+					<div class="estate-actions">
+						<v-btn
+							variant="outlined"
+							size="x-large"
+							prependIcon="domain"
+							:to="{
+								name: EstateRoutes.Search,
+							}"
+						>
+							{{
+								$t(
+									'component.internal.internalStart.estate.goToEstateSearch'
+								)
+							}}
+						</v-btn>
+						<v-btn
+							v-if="isErrorReportEnabled"
+							variant="outlined"
+							size="x-large"
+							prependIcon="warning"
+							:to="{
+								name: EstateRoutes.FaultReport,
+							}"
+						>
+							{{
+								$t(
+									'component.internal.internalStart.estate.goToEstateFaultReport'
+								)
+							}}
+						</v-btn>
+						<v-btn
+							v-if="isErrorReportEnabled"
+							variant="outlined"
+							size="x-large"
+							prependIcon="handyman"
+							:to="{
+								name: EstateRoutes.Order,
+							}"
+						>
+							{{
+								$t(
+									'component.internal.internalStart.estate.goToEstateOrder'
+								)
+							}}
+						</v-btn>
+						<v-btn
+							v-if="isErrorReportEnabled"
+							variant="outlined"
+							size="x-large"
+							prependIcon="space_dashboard"
+							:to="{
+								name: EstateRoutes.SpaceRequirement,
+							}"
+						>
+							{{
+								$t(
+									'component.internal.internalStart.estate.goToEstateSpaceRequirement'
+								)
+							}}
+						</v-btn>
+					</div>
 				</v-col>
 			</v-row>
 		</div>
@@ -338,6 +340,20 @@ const isErrorReportEnabled = computed(() => isEnabled('ErrorReport'));
 		margin: 0;
 		margin-bottom: 14px;
 		margin-right: 14px;
+	}
+
+	// Estate portal actions: equal-width buttons in a grid — several per row on
+	// wider screens, a single full-width column on mobile — so they line up
+	// instead of sizing to their (varying-length) labels.
+	.estate-actions {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+		gap: 14px;
+
+		.v-btn {
+			width: 100%;
+			margin: 0;
+		}
 	}
 }
 </style>

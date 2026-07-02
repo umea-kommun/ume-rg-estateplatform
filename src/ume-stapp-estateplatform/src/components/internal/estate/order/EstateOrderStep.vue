@@ -22,7 +22,7 @@
 					{{ $t('component.internal.faultReport.changeAnswer') }}
 				</v-btn>
 			</div>
-			<div class="estate-order-step__step">
+			<div v-if="showSkip || hasCounter" class="estate-order-step__step">
 				<v-btn
 					v-if="showSkip"
 					@click="emit('skip')"
@@ -33,7 +33,7 @@
 					{{ $t('component.internal.faultReport.room.skip') }}
 				</v-btn>
 				<v-spacer />
-				{{ step }}/{{ stepCount }}
+				<span v-if="hasCounter">{{ step }}/{{ stepCount }}</span>
 			</div>
 		</div>
 
@@ -43,17 +43,24 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 
-defineProps<{
+const props = defineProps<{
 	title?: string;
 	showClear?: boolean;
 	showSkip?: boolean;
-	step: number;
-	stepCount: number;
+	// Optional: when both are provided a "step/stepCount" counter is shown (the
+	// numbered fault-report / order flows). Omitted for flows where order carries
+	// no information (space requirement), which use plain section headers instead.
+	step?: number;
+	stepCount?: number;
 }>();
 
 const emit = defineEmits(['clear', 'skip']);
+
+const hasCounter = computed(
+	() => props.step != null && props.stepCount != null
+);
 
 const titleRef = useTemplateRef('title');
 

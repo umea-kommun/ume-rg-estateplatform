@@ -12,9 +12,7 @@ export type ValidationErrors = Record<string, string[]>;
  *
  * Returns null if the error is not a validation error.
  */
-export function getValidationErrors(
-	err: unknown
-): ValidationErrors | null {
+export function getValidationErrors(err: unknown): ValidationErrors | null {
 	if (!isAxiosError(err) || err.response?.status !== 400) {
 		return null;
 	}

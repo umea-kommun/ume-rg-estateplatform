@@ -322,12 +322,15 @@ export default {
 		reportData: ISubmitEstateOrder
 	) {
 		const formData = new FormData();
-		formData.append('buildingId', reportData.buildingId.toString());
 		formData.append('workOrderType', reportData.category);
 		formData.append('description', reportData.description);
 		formData.append('notifierName', reportData.notifierName);
 		formData.append('notifierEmail', reportData.notifierEmail);
 
+		// Building is optional for the space requirement flow; only send it when present.
+		if (reportData.buildingId) {
+			formData.append('buildingId', reportData.buildingId.toString());
+		}
 		if (reportData.categoryId) {
 			formData.append('categoryId', reportData.categoryId.toString());
 		}

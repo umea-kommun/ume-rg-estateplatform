@@ -836,31 +836,52 @@
 			},
 			"spaceRequirement": {
 				"title": "Changed space requirements",
-				"description": "Report a need for changed premises, for example more or less space, adaptations, or other changes to your operation's premises.",
-				"submitButton": "Submit report",
+				"description": "Submit a request for changed premises, for example more or less space, adaptations, or other changes to your operation's premises.",
+				"submitButton": "Submit request",
 				"general": {
 					"descriptionTitle": "Description",
 					"descriptionLabel": "Describe your changed space requirement",
-					"descriptionHelpText": "Describe as clearly as possible what you need, why it has arisen, and when the change needs to be in place. The more information you can provide, the better the report can be handled.",
+					"descriptionHelpText": "Describe as clearly as possible what you need, why it has arisen, and when the change needs to be in place. The more information you can provide, the better the request can be handled.",
 					"fileUploadLabel": "Attach files (optional)",
 					"contactLabel": "Contact information",
-					"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to handle the report, or if there are questions regarding it."
+					"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to handle the request, or if there are questions regarding it."
 				},
 				"category": {
 					"title": "Type of space requirement",
-					"noneAvailable": "Changed space requirements cannot be reported for this building."
+					"loading": "Loading types...",
+					"required": "Select a type of space requirement.",
+					"noneAvailable": "Space requirement types could not be loaded right now. Please try again later.",
+					"descriptions": {
+						"88": "When premises need to be adapted to meet accessibility and usability requirements.",
+						"89": "When the operation needs to investigate a space requirement where the solution, scope, or future needs are not yet established.",
+						"90": "When the operation needs minor changes to existing premises.",
+						"91": "When the operation needs more or less space, new premises, or major rebuilds.",
+						"97": "When the operation needs one or more apartments for its activities. (GVN only)"
+					}
 				},
-				"room": { "select": "Which room does it concern?" },
+				"building": {
+					"select": "Building (optional)",
+					"add": "Select a building (optional)",
+					"notSupported": "The selected building does not support requests for changed space requirements. Please choose another building."
+				},
+				"room": {
+					"select": "Room (optional)",
+					"add": "Select a room (optional)"
+				},
 				"info": {
 					"title": "Information",
-					"text1": "Here is some important information when reporting changed space requirements.",
-					"text2": "After the report is submitted, it is handled by the responsible administrator."
+					"paragraphs": [
+						"Describe the operation's space requirement as clearly as possible and choose the category that best matches the matter.",
+						"If the need is tied to a specific building, we recommend stating the building in the matter. If a suitable building has not yet been identified, the field can be left empty.",
+						"To ease the continued handling, it is valuable to attach relevant supporting material, for example investigations, decision documentation, drawings, images, or other documentation that clarifies the need.",
+						"Once the request is submitted, the matter is handled according to the municipality's space provision process."
+					]
 				},
 				"completed": {
-					"title": "Thank you for your report!",
-					"description": "We have received your report of changed space requirements and will handle it as soon as possible.",
+					"title": "Thank you for your request!",
+					"description": "We have received your request for changed space requirements and will handle it as soon as possible.",
 					"goHome": "Go to the homepage",
-					"feedbackTitle": "How did reporting changed space requirements work?"
+					"feedbackTitle": "How did submitting a request for changed space requirements work?"
 				}
 			},
 			"buildingSelector": {

@@ -1,9 +1,6 @@
 import { computed, ref, type ComputedRef } from 'vue';
 import { useI18n } from 'vue-i18n';
-import {
-	getValidationErrors,
-	type ValidationErrors,
-} from './validationErrors';
+import { getValidationErrors, type ValidationErrors } from './validationErrors';
 
 /**
  * Composable for handling server-side validation errors from ValidationProblemDetails responses.
