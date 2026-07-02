@@ -4,8 +4,10 @@ namespace Umea.se.EstateService.Shared.Data.Entities;
 
 public class WorkOrderEntity : BaseEntity
 {
-    public int BuildingId { get; set; }
-    public string BuildingName { get; set; } = string.Empty;
+    // Building is optional: SpaceRequirement work orders may be submitted without a building
+    // (Pythagoras does not require a bound object for type 3). All other types still set it.
+    public int? BuildingId { get; set; }
+    public string? BuildingName { get; set; }
 
     public int? RoomId { get; set; }
     public string? RoomName { get; set; }

@@ -205,6 +205,18 @@ public class WorkOrderProcessorTests : IDisposable
     }
 
     [Fact]
+    public async Task CreateWorkOrder_LeavesNotifierUsernameNullToPreserveReporter()
+    {
+        WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport);
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        CreatePythagorasWorkOrderRequest payload = _fakeClient.CreateWorkOrderPayloads.ShouldHaveSingleItem();
+        payload.NotifierUsername.ShouldBeNull();
+        payload.NotifierEmail.ShouldBe("test@example.com");
+    }
+
+    [Fact]
     public async Task SpaceRequirement_NoClassifierMatch_UsesConfiguredCategoryAndAssignmentSuggestion()
     {
         // Förändrade lokalbehov: category is MANDATORY_WHEN_CREATED (fall back to configured
@@ -221,6 +233,23 @@ public class WorkOrderProcessorTests : IDisposable
         payload.UseAssignmentSuggestion.ShouldBe(true);
         // No room on the seeded order -> bound to the building.
         payload.BoundObjectType.ShouldBe(WorkOrderBoundObjectType.BUILDING);
+    }
+
+    [Fact]
+    public async Task SpaceRequirement_WithoutBuildingOrRoom_SendsNoBoundObject()
+    {
+        // Förändrade lokalbehov can be submitted with no building/room. Pythagoras accepts a
+        // type-3 work order with no bound object, so the payload must omit both BoundObjectType
+        // and BoundObjectIds while still supplying category + description.
+        WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.SpaceRequirement, categoryId: 91, buildingId: null);
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        CreatePythagorasWorkOrderRequest payload = _fakeClient.CreateWorkOrderPayloads.ShouldHaveSingleItem();
+        payload.BoundObjectType.ShouldBeNull();
+        payload.BoundObjectIds.ShouldBeNull();
+        payload.CategoryId.ShouldBe(91);
+        payload.Description.ShouldBe("Test");
     }
 
     [Fact]
@@ -263,13 +292,13 @@ public class WorkOrderProcessorTests : IDisposable
         reloaded.ErrorMessage.ShouldContain("DefaultCategoryIdByType");
     }
 
-    private async Task<WorkOrderEntity> SeedPendingAsync(PythagorasWorkOrderType type, int? categoryId = null)
+    private async Task<WorkOrderEntity> SeedPendingAsync(PythagorasWorkOrderType type, int? categoryId = null, int? buildingId = 1933)
     {
         WorkOrderEntity workOrder = new()
         {
             Uid = Guid.NewGuid(),
-            BuildingId = 1933,
-            BuildingName = "Test Building",
+            BuildingId = buildingId,
+            BuildingName = buildingId.HasValue ? "Test Building" : null,
             Description = "Test",
             WorkOrderTypeId = (int)type,
             CategoryId = categoryId,

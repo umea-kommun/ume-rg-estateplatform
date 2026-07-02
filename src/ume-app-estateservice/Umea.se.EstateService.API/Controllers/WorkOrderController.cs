@@ -30,7 +30,7 @@ public class WorkOrderController(IWorkOrderHandler workOrderHandler, UserToken u
     {
         CreateWorkOrderRequest request = new()
         {
-            BuildingId = form.BuildingId,
+            BuildingId = form.BuildingId is > 0 ? form.BuildingId : null,
             WorkOrderType = form.WorkOrderType,
             Location = form.Location,
             RoomId = form.RoomId is > 0 ? form.RoomId : null,

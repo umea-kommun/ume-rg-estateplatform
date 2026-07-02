@@ -8,10 +8,9 @@ namespace Umea.se.EstateService.API.Requests;
 
 public class CreateWorkOrderFormRequest
 {
-    [Required(ErrorMessage = ValidationErrorCode.Required)]
     [JsonPropertyName("buildingId")]
-    [SwaggerSchema("Pythagoras building ID.")]
-    public int BuildingId { get; init; }
+    [SwaggerSchema("Pythagoras building ID. Required for all types except SpaceRequirement, which may be submitted without a building.", Nullable = true)]
+    public int? BuildingId { get; init; } = null;
 
     [Required(ErrorMessage = ValidationErrorCode.Required)]
     [JsonPropertyName("workOrderType")]

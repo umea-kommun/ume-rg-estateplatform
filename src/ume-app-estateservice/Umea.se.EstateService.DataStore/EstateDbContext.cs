@@ -406,9 +406,9 @@ public class EstateDbContext(DbContextOptions<EstateDbContext> options) : DbCont
             entity.Property(e => e.ErrorMessage)
                 .HasMaxLength(2000);
 
+            // Nullable: SpaceRequirement work orders may have no building (see WorkOrderEntity).
             entity.Property(e => e.BuildingName)
-                .HasMaxLength(500)
-                .IsRequired();
+                .HasMaxLength(500);
 
             entity.Property(e => e.RoomName)
                 .HasMaxLength(500);

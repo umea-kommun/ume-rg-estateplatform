@@ -4,7 +4,7 @@ public class WorkOrderDetailModel
 {
     public Guid Id { get; init; }
     public WorkOrderType? WorkOrderType { get; init; }
-    public string BuildingName { get; init; } = null!;
+    public string? BuildingName { get; init; }
     public string? RoomName { get; init; }
     public string? Location { get; init; }
     public string Description { get; init; } = null!;
@@ -22,7 +22,7 @@ public class WorkOrderListItemModel
 {
     public Guid Id { get; init; }
     public WorkOrderType? WorkOrderType { get; init; }
-    public string BuildingName { get; init; } = null!;
+    public string? BuildingName { get; init; }
     public string? RoomName { get; init; }
     public string? Location { get; init; }
     public string Description { get; init; } = null!;
@@ -56,7 +56,7 @@ public class FailedWorkOrderModel
 {
     public Guid Id { get; init; }
     public WorkOrderType? WorkOrderType { get; init; }
-    public string BuildingName { get; init; } = null!;
+    public string? BuildingName { get; init; }
     public string? RoomName { get; init; }
     public string Description { get; init; } = null!;
     public string SyncStatus { get; init; } = null!;

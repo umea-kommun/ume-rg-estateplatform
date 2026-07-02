@@ -205,17 +205,28 @@ public class WorkOrderProcessor(
             operatingGroupId = defaultGroup;
         }
 
+        // Bind to the room (WORKSPACE) if present, else the building (BUILDING). SpaceRequirement
+        // orders may have neither — Pythagoras accepts type-3 work orders with no bound object,
+        // so we leave both unset and let category + description satisfy the mandatory fields.
+        int? boundObjectId = workOrder.RoomId ?? workOrder.BuildingId;
+        WorkOrderBoundObjectType? boundObjectType = workOrder.RoomId.HasValue
+            ? WorkOrderBoundObjectType.WORKSPACE
+            : workOrder.BuildingId.HasValue
+                ? WorkOrderBoundObjectType.BUILDING
+                : null;
+
         CreatePythagorasWorkOrderRequest createRequest = new()
         {
             Description = workOrder.Description,
-            BoundObjectType = workOrder.RoomId.HasValue
-                ? WorkOrderBoundObjectType.WORKSPACE
-                : WorkOrderBoundObjectType.BUILDING,
-            BoundObjectIds = [workOrder.RoomId ?? workOrder.BuildingId],
+            BoundObjectType = boundObjectType,
+            BoundObjectIds = boundObjectId.HasValue ? [boundObjectId.Value] : null,
             NotifierEmail = workOrder.NotifierEmail ?? workOrder.CreatedByEmail,
             NotifierName = workOrder.NotifierName,
             NotifierTelephone = workOrder.NotifierPhone,
-            NotifierUsername = workOrder.NotifierEmail ?? workOrder.CreatedByEmail,
+            // When NotifierUsername resolves to a Pythagoras account, Pythagoras overwrites
+            // NotifierName/Email from that account and discards ours. So to keep the real reporter's
+            // email/name we leave it null, which stores them as a free-text notifier contact instead.
+            NotifierUsername = null,
             CategoryId = payloadCategoryId,
             OperatingGroupId = operatingGroupId,
             // When we don't supply an operating group (e.g. ErrorReport), let Pythagoras

@@ -73,13 +73,23 @@ public class WorkOrderHandler(
             }
         }
 
-        if (!dataStore.BuildingsById.TryGetValue(request.BuildingId, out BuildingEntity? building))
+        // Building is mandatory for every type except SpaceRequirement, which may be submitted
+        // without one (Pythagoras does not require a bound object for type 3 — see findings doc).
+        BuildingEntity? building = null;
+        if (request.BuildingId.HasValue)
         {
-            errors.AddError("buildingId", ValidationErrorCode.NotFound);
+            if (!dataStore.BuildingsById.TryGetValue(request.BuildingId.Value, out building))
+            {
+                errors.AddError("buildingId", ValidationErrorCode.NotFound);
+            }
+            else if (!building.WorkOrderTypes.Contains(request.WorkOrderType))
+            {
+                errors.AddError("workOrderType", ValidationErrorCode.NotSupported);
+            }
         }
-        else if (!building.WorkOrderTypes.Contains(request.WorkOrderType))
+        else if (request.WorkOrderType != WorkOrderType.SpaceRequirement)
         {
-            errors.AddError("workOrderType", ValidationErrorCode.NotSupported);
+            errors.AddError("buildingId", ValidationErrorCode.Required);
         }
 
         int? roomId = null;
@@ -88,7 +98,12 @@ public class WorkOrderHandler(
         // location is never set, so the Outdoor conflict check below is a no-op for them.
         if (request.RoomId.HasValue)
         {
-            if (location == WorkOrderLocation.Outdoor)
+            if (!request.BuildingId.HasValue)
+            {
+                // A room can't be bound without its building.
+                errors.AddError("roomId", ValidationErrorCode.InvalidValue);
+            }
+            else if (location == WorkOrderLocation.Outdoor)
             {
                 errors.AddError("roomId", ValidationErrorCode.Conflict);
             }
@@ -96,7 +111,7 @@ public class WorkOrderHandler(
             {
                 errors.AddError("roomId", ValidationErrorCode.NotFound);
             }
-            else if (room.BuildingId != request.BuildingId)
+            else if (room.BuildingId != request.BuildingId.Value)
             {
                 errors.AddError("roomId", ValidationErrorCode.InvalidValue);
             }
@@ -125,7 +140,7 @@ public class WorkOrderHandler(
         {
             Uid = Guid.NewGuid(),
             BuildingId = request.BuildingId,
-            BuildingName = building!.Name,
+            BuildingName = building?.Name,
             RoomId = roomId,
             RoomName = roomName,
             Location = location,

@@ -321,6 +321,60 @@ public class WorkOrderHandlerTests : IDisposable
     }
 
     [Fact]
+    public async Task SubmitWorkOrder_SpaceRequirement_WithoutBuilding_Succeeds()
+    {
+        CreateWorkOrderRequest request = new()
+        {
+            // No BuildingId: SpaceRequirement may be submitted without a building.
+            WorkOrderType = WorkOrderType.SpaceRequirement,
+            CategoryId = 89,
+            Description = "Behöver en helt ny lokal"
+        };
+
+        WorkOrderSubmissionModel result = await _handler.SubmitWorkOrderAsync(request, "test@example.com");
+
+        WorkOrderDetailModel detail = await _handler.GetWorkOrderAsync(result.Id, "test@example.com");
+        detail.WorkOrderType.ShouldBe(WorkOrderType.SpaceRequirement);
+        detail.BuildingName.ShouldBeNull();
+        detail.RoomName.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task SubmitWorkOrder_NonSpaceRequirement_WithoutBuilding_ThrowsRequired()
+    {
+        CreateWorkOrderRequest request = new()
+        {
+            // No BuildingId: building stays mandatory for every type except SpaceRequirement.
+            WorkOrderType = WorkOrderType.BuildingService,
+            Description = "Test"
+        };
+
+        BusinessValidationException exception = await Should.ThrowAsync<BusinessValidationException>(
+            () => _handler.SubmitWorkOrderAsync(request, "test@example.com"));
+
+        exception.Errors.ShouldContainKey("buildingId");
+        exception.Errors["buildingId"].ShouldContain("required");
+    }
+
+    [Fact]
+    public async Task SubmitWorkOrder_SpaceRequirement_RoomWithoutBuilding_ThrowsWithFieldError()
+    {
+        CreateWorkOrderRequest request = new()
+        {
+            // A room can't be bound without its building.
+            WorkOrderType = WorkOrderType.SpaceRequirement,
+            RoomId = 10,
+            Description = "Test"
+        };
+
+        BusinessValidationException exception = await Should.ThrowAsync<BusinessValidationException>(
+            () => _handler.SubmitWorkOrderAsync(request, "test@example.com"));
+
+        exception.Errors.ShouldContainKey("roomId");
+        exception.Errors["roomId"].ShouldContain("invalid_value");
+    }
+
+    [Fact]
     public async Task SubmitWorkOrder_SpaceRequirement_WithChosenCategory_PersistsCategoryId()
     {
         CreateWorkOrderRequest request = new()
