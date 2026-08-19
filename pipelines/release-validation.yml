@@ -37,6 +37,7 @@ stages:
           comparisonBranch: origin/$(System.PullRequest.TargetBranchName)
           paths:
             - src/ume-app-estateservice
+            - src/ume-stapp-estateplatform
 
   # EstateService
   - stage: BuildEstateServiceStage
@@ -54,5 +55,24 @@ stages:
         parameters:
           projectFolderName: ume-app-estateservice
           entrypointProjectName: Umea.se.EstateService.API
+          shouldPublish: false
+  # ------
+
+  # EstatePlatform
+  - stage: BuildEstatePlatformStage
+    displayName: Build EstatePlatform
+    dependsOn: CheckForChangesStage
+    variables:
+      changedPaths: $[ dependencies.CheckForChangesStage.outputs['Job.Task.CHANGED_PATHS'] ]
+    condition: >-
+      and(
+        not(or(failed(), canceled())),
+        contains(variables['changedPaths'], 'ume-stapp-estateplatform')
+      )
+    jobs:
+      - template: pipelines/azure/template-build-frontend.yml@templates
+        parameters:
+          environment: ${{ parameters.environment }}
+          projectFolderName: ume-stapp-estateplatform
           shouldPublish: false
   # ------

@@ -37,6 +37,11 @@ parameters:
     type: boolean
     default: false
 
+  - name: buildAndDeployEstatePlatformJobPicker
+    displayName: Deploy ume-stapp-estateplatform
+    type: boolean
+    default: false
+
 variables:
   - template: pipelines/general/template-default-pipeline-variables.yml@templates
     parameters:
@@ -71,6 +76,7 @@ stages:
           paths:
             - src/ume-app-estateservice/Umea.se.EstateService.DataStore/Migrations
             - src/ume-app-estateservice
+            - src/ume-stapp-estateplatform
 
   # ume-sqldb-estateservice
   - stage: UpdateEstateServiceDatabaseStage
@@ -146,4 +152,43 @@ stages:
           pingEndpoints:
             - /index.html
             - /api/v1.0/home/ping
+  # ------
+
+  # EstatePlatform
+  - stage: BuildEstatePlatformStage
+    displayName: Build EstatePlatform
+    dependsOn: CheckForChangesStage
+    variables:
+      changedPaths: $[ dependencies.CheckForChangesStage.outputs['Job.Task.CHANGED_PATHS'] ]
+    condition: >-
+      and(
+        not(or(failed(), canceled())),
+        or(
+          eq(${{ parameters.buildAndDeployEstatePlatformJobPicker }}, true),
+          and(
+            eq('${{ parameters.shouldAutoDeployJobPicker }}', 'true'),
+            contains(variables['changedPaths'], 'ume-stapp-estateplatform')
+          )
+        )
+      )
+    jobs:
+      - template: pipelines/azure/template-build-frontend.yml@templates
+        parameters:
+          environment: ${{ parameters.environment }}
+          projectFolderName: ume-stapp-estateplatform
+
+  - stage: DeployEstatePlatformStage
+    displayName: Deploy EstatePlatform
+    dependsOn: BuildEstatePlatformStage
+    condition: >-
+      and(
+        not(or(failed(), canceled())),
+        succeeded('BuildEstatePlatformStage')
+      )
+    jobs:
+      - template: pipelines/azure/template-deploy-frontend.yml@templates
+        parameters:
+          environment: ${{ parameters.environment }}
+          projectFolderName: ume-stapp-estateplatform
+          deploymentToken: $(estateplatform-deployment-token)
   # ------
