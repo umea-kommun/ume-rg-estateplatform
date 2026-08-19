@@ -12,7 +12,7 @@ resources:
     - repository: templates
       type: git
       name: Turkos/ume-pipeline-templates
-      ref: refs/tags/release/v260213T1327-15561
+      ref: refs/tags/release/v260629T1533-18638
 
 parameters:
   - name: environment
@@ -39,7 +39,7 @@ stages:
             - src/ume-app-estateservice
             - src/ume-stapp-estateplatform
 
-  # EstateService
+  # ume-app-estateservice
   - stage: BuildEstateServiceStage
     displayName: Build EstateService
     dependsOn: CheckForChangesStage
@@ -58,7 +58,7 @@ stages:
           shouldPublish: false
   # ------
 
-  # EstatePlatform
+  # ume-stapp-estateplatform
   - stage: BuildEstatePlatformStage
     displayName: Build EstatePlatform
     dependsOn: CheckForChangesStage
