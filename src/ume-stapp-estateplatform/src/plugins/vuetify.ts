@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/plugins/vuetify.ts @ 84b4a5dc
 // Styles
 import 'vuetify/styles';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';

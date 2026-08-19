@@ -83,7 +83,7 @@ import { ActiveMapType } from '@/models/Enums';
 import { computed, ref } from 'vue';
 import { useEstateIsMobile } from '../useEstateIsMobile';
 import { IBuildingDetails } from '@/models/Interfaces';
-import BaseIconButton from '@/components/base/BaseIconButton.vue';
+import BaseIconButton from '@/components/shared/BaseIconButton.vue';
 import BuildingContactModal from './BuildingContactModal.vue';
 import BuildingDocumentModal from './BuildingDocumentModal.vue';
 import { EstateRoutes } from '@/router/routes';

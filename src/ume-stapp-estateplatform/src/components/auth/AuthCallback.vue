@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/auth/AuthCallback.vue @ 84b4a5dc -->
 <template>
 	<div class="auth-callback">
 		<app-loading-spinner :isVisible="true"></app-loading-spinner>

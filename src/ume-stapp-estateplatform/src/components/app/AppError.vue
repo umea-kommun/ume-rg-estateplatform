@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/app/AppError.vue @ 84b4a5dc -->
 <template>
 	<app-content
 		:size="AppContentSize.Narrow"
@@ -42,7 +43,7 @@
 
 <script setup lang="ts">
 import AppContent from './AppContent.vue';
-import BaseBackButton from '../base/BaseBackButton.vue';
+import BaseBackButton from '@/components/shared/BaseBackButton.vue';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';

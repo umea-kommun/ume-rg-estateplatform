@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/helper.ts @ 84b4a5dc
 import { AppContentSize } from '../models/Enums';
 export class Helper {
 	/**

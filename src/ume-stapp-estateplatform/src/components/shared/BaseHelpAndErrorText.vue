@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/base/BaseHelpAndErrorText.vue @ 84b4a5dc -->
 <template>
 	<div class="help-and-error-wrap" aria-live="polite">
 		<!-- Help text -->

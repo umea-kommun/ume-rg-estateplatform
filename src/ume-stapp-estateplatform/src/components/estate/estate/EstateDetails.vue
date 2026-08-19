@@ -146,7 +146,7 @@ import EstateDetailsBuildings from './EstateDetailsBuildings.vue';
 import '@/themes/estate.scss';
 import { EstateType } from '@/models/Enums';
 import BuildingMap from '../map/BuildingMap.vue';
-import BaseIconButton from '@/components/base/BaseIconButton.vue';
+import BaseIconButton from '@/components/shared/BaseIconButton.vue';
 import ExternalOwnerInfo from './ExternalOwnerInfo.vue';
 import FavoriteButton from '../favorite/FavoriteButton.vue';
 import ErrorService from '@/utils/ErrorService';

@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/Config.ts @ 84b4a5dc
 class Config {
 	constructor() {
 		const transpiledEnvVars = import.meta.env; // This forces the transpiler to expose all env variables

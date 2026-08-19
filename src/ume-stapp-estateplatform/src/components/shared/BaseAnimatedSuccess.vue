@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/base/BaseAnimatedSuccess.vue @ 84b4a5dc -->
 <template>
 	<div class="sa">
 		<div class="sa-success">

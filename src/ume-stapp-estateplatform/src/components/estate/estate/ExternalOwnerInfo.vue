@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import { IExternalOwnerInfo } from '@/models/Interfaces';
-import BaseAutoLinkText from '@/components/base/BaseAutoLinkText.vue';
+import BaseAutoLinkText from '@/components/shared/BaseAutoLinkText.vue';
 
 defineProps<{
 	externalOwnerInfo: IExternalOwnerInfo;

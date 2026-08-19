@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/useServerValidation.ts @ 84b4a5dc
 import { computed, ref, type ComputedRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getValidationErrors, type ValidationErrors } from './validationErrors';

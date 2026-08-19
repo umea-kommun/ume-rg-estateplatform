@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/__tests__/utils.test.ts @ 84b4a5dc
 import { getFormattedDate, getReviewSignalColor } from '../utils';
 import { describe, expect, test } from 'vitest';
 

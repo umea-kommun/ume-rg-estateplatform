@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/utils.ts @ 84b4a5dc
 import { ConsentStatus, UserConsentStatus } from '@/models/Enums';
 import i18n from '@/plugins/i18next';
 

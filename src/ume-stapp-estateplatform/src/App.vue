@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/App.vue @ 84b4a5dc -->
 <template>
 	<v-app id="app" :class="'route-' + routeName">
 		<app-error-snackbar />

@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/app/AppLoadingSpinner.vue @ 84b4a5dc -->
 <template>
 	<div>
 		<v-progress-circular

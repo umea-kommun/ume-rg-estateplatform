@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/base/BaseAutoLinkText.vue @ 84b4a5dc -->
 <template>
 	<template v-for="(t, i) in tokens" :key="i">
 		<span v-if="t.type === 'text'">{{ t.value }}</span>

@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/plugins/auth/Oauth.ts @ 84b4a5dc
 import { IUser } from '@/models/Interfaces';
 import { b64DecodeUnicode } from './index';
 import { MutationType } from '@/models/Enums';

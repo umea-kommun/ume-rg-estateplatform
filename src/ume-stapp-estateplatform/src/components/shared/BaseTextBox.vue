@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/base/BaseTextBox.vue @ 84b4a5dc -->
 <template>
 	<div class="base-text-box">
 		<vee-field
@@ -68,8 +69,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { Field as VeeField } from 'vee-validate';
-import BaseHelpText from '@/components/base/BaseHelpAndErrorText.vue';
-import BaseFormField from '@/components/base/BaseFormField.vue';
+import BaseHelpText from '@/components/shared/BaseHelpAndErrorText.vue';
+import BaseFormField from '@/components/shared/BaseFormField.vue';
 
 const props = defineProps({
 	id: { type: String, required: true },

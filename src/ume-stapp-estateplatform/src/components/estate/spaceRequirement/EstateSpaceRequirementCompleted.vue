@@ -45,8 +45,8 @@
 
 <script setup lang="ts">
 import { MyPagesRoutes } from '@/router/routes';
-import BaseAnimatedSuccess from '@/components/base/BaseAnimatedSuccess.vue';
-import RateFeedback from '@/components/feedback/RateFeedback.vue';
+import BaseAnimatedSuccess from '@/components/shared/BaseAnimatedSuccess.vue';
+import RateFeedback from '@/components/shared/RateFeedback.vue';
 </script>
 
 <style scoped lang="scss">

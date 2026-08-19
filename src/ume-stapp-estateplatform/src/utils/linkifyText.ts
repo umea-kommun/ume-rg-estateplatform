@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/linkifyText.ts @ 84b4a5dc
 export type LinkToken = {
 	type: 'link';
 	value: string;

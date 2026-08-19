@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/auth/AuthLogin.vue @ 84b4a5dc -->
 <template>
 	<app-content
 		:size="contentSize"

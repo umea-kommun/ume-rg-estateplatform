@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/OauthConfig.ts @ 84b4a5dc
 export default class OauthConfig {
 	public static Scope = 'admin:bot';
 	public clientId: string;

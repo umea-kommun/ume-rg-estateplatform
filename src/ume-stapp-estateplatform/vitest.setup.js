@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/vitest.setup.js @ 84b4a5dc
 import { config } from '@vue/test-utils';
 import { vi } from 'vitest';
 

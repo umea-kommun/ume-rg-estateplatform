@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/app/AppErrorSnackbar.vue @ 84b4a5dc -->
 <template>
 	<v-snackbar
 		v-if="isError"

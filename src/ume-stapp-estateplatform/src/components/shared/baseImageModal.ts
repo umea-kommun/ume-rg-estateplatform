@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/base/baseImageModal/baseImageModal.ts @ 84b4a5dc
 import { computed, ref } from 'vue';
 
 interface IBaseImage {

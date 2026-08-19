@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/base/BaseFormField.vue @ 84b4a5dc -->
 <template>
 	<div class="component-base-form-field">
 		<div v-if="!isRadioGroup">

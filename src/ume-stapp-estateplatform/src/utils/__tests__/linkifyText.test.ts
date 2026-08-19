@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/__tests__/linkifyText.test.ts @ 84b4a5dc
 import { describe, it, expect } from 'vitest';
 import { linkify, LinkifyToken, LinkToken } from '../linkifyText';
 

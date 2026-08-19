@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/useWorkOrderConfig.ts @ 84b4a5dc
 import { computed, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';

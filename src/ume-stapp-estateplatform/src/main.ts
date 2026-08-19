@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/main.ts @ 84b4a5dc
 import './polyfills';
 import { createApp } from 'vue';
 import App from './App.vue';

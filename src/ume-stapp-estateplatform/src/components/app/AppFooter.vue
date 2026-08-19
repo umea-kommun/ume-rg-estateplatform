@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/app/AppFooter.vue @ 84b4a5dc -->
 <template>
 	<footer
 		class="app-footer"

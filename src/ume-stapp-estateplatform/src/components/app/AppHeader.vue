@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/app/AppHeader.vue @ 84b4a5dc -->
 <template>
 	<header class="app-header" :class="size">
 		<div id="skip">

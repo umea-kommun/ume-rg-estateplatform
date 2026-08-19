@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/__tests__/Config.test.ts @ 84b4a5dc
 import Config from '../Config';
 import { describe, expect, test } from 'vitest';
 

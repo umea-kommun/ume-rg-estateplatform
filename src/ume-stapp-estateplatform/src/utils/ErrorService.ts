@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/ErrorService.ts @ 84b4a5dc
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentPublicInstance } from 'vue';
 import store from '../store/store';

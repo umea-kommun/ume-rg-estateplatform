@@ -58,8 +58,8 @@
 </template>
 
 <script setup lang="ts">
-import { useBaseImageModal } from '@/components/base/baseImageModal/baseImageModal';
-import BaseImageModal from '@/components/base/baseImageModal/BaseImageModal.vue';
+import { useBaseImageModal } from '@/components/shared/baseImageModal';
+import BaseImageModal from '@/components/shared/BaseImageModal.vue';
 import { IBuildingDetails } from '@/models/Interfaces';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';

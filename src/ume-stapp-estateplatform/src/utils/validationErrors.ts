@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/validationErrors.ts @ 84b4a5dc
 import { isAxiosError } from 'axios';
 
 /**

@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/base/BaseBackButton.vue @ 84b4a5dc -->
 <template>
 	<v-btn
 		prepend-icon="arrow_back"

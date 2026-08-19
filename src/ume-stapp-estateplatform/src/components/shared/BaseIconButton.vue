@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/base/BaseIconButton.vue @ 84b4a5dc -->
 <template>
 	<v-tooltip
 		class="base-icon-button-wrap"

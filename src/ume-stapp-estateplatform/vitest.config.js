@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/vitest.config.js @ 84b4a5dc
 // Plugins
 import vue from '@vitejs/plugin-vue';
 

@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/plugins/auth/index.ts @ 84b4a5dc
 import Config from '@/Config';
 import store from '@/store/store';
 import ErrorService from '@/utils/ErrorService';

@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/feedback/RatingStars.vue @ 84b4a5dc -->
 <template>
 	<div class="rating-stars" role="radiogroup" :aria-label="ratingLabel">
 		<div

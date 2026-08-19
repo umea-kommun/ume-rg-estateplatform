@@ -1,3 +1,4 @@
+<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/base/baseImageModal/BaseImageModal.vue @ 84b4a5dc -->
 <template>
 	<div v-if="activeImage">
 		<v-dialog
@@ -32,7 +33,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { useBaseImageModal } from './baseImageModal';
+import { useBaseImageModal } from '@/components/shared/baseImageModal';
 
 const { activeImage, modalIsVisible } = useBaseImageModal();
 

@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/__tests__/OauthConfig.test.ts @ 84b4a5dc
 import OauthConfig from '../OauthConfig';
 import { describe, expect, test, beforeEach } from 'vitest';
 

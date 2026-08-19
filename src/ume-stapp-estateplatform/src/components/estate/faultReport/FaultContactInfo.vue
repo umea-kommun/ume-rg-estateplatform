@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseTextBox from '@/components/base/BaseTextBox.vue';
+import BaseTextBox from '@/components/shared/BaseTextBox.vue';
 import { computed, type ComputedRef } from 'vue';
 import { useWorkOrderDefaults } from '@/utils/useWorkOrderDefaults';
 

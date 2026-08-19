@@ -72,7 +72,7 @@
 import { computed } from 'vue';
 import { IBuildingDetails } from '@/models/Interfaces';
 import { useI18n } from 'vue-i18n';
-import BaseAutoLinkText from '@/components/base/BaseAutoLinkText.vue';
+import BaseAutoLinkText from '@/components/shared/BaseAutoLinkText.vue';
 
 const props = defineProps<{
 	modelValue: boolean;

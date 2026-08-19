@@ -1,3 +1,4 @@
+// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/plugins/auth/FakeDemoAuth.ts @ 84b4a5dc
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { IUser, IUserContactInfo } from '@/models/Interfaces';
