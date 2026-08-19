@@ -43,9 +43,7 @@ export function useAuthMiddleware(router: Router): void {
 		}
 
 		if (
-			(to.meta.requiresExternalLogin ||
-				to.meta.requiresInternalLogin ||
-				to.meta.requiresGroup) &&
+			(to.meta.requiresInternalLogin || to.meta.requiresGroup) &&
 			!store.state.user.isAuthenticated
 		) {
 			// User needs to log in to access this page
@@ -65,19 +63,6 @@ export function useAuthMiddleware(router: Router): void {
 			});
 		}
 		if (
-			to.meta.requiresExternalLogin &&
-			store.state.user.authClientName !==
-				Config.VUE_APP_AUTH_PUBLIC_FREJA_CLIENT_NAME &&
-			store.state.user.authClientName !==
-				Config.VUE_APP_AUTH_PUBLIC_CLIENT_NAME &&
-			store.state.user.authClientName !==
-				Config.VUE_APP_AUTH_PUBLIC_ELEVAD_CLIENT_NAME
-		) {
-			// User is not logged in with the any of the external methods, deny access
-			return next({
-				name: EstateRoutes.Search,
-			});
-		} else if (
 			to.meta.requiresInternalLogin &&
 			store.state.user.authClientName !==
 				Config.VUE_APP_AUTH_PUBLIC_AD_CLIENT_NAME

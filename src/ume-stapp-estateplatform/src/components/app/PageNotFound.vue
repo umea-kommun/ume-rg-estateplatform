@@ -39,16 +39,7 @@ const contentSize = ref<AppContentSize>(
 );
 
 const user = computed(() => store.state.user);
-const startPageRoute = computed(() => {
-	switch (user.value.authClientName) {
-		case Config.VUE_APP_AUTH_PUBLIC_AD_CLIENT_NAME:
-			// Redirect to internal start page
-			return EstateRoutes.Search;
-		default:
-			// Redirect to external start page
-			return EstateRoutes.Search;
-	}
-});
+const startPageRoute = EstateRoutes.Search;
 </script>
 
 <style scoped lang="scss">

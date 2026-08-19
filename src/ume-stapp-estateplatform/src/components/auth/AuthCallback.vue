@@ -34,18 +34,7 @@ onMounted(async () => {
 
 			// If no specific route specified, redirect to fitting page
 			if (afterLoginPath === '/') {
-				switch (store.state.user.authClientName) {
-					case Config.VUE_APP_AUTH_PUBLIC_AD_CLIENT_NAME:
-						// Redirect to internal start page
-						router.push({ name: EstateRoutes.Search });
-						break;
-					case Config.VUE_APP_AUTH_PUBLIC_FREJA_CLIENT_NAME:
-					case Config.VUE_APP_AUTH_PUBLIC_CLIENT_NAME:
-					case Config.VUE_APP_AUTH_PUBLIC_ELEVAD_CLIENT_NAME:
-						// Redirect to external start page
-						router.push({ name: EstateRoutes.Search });
-						break;
-				}
+				router.push({ name: EstateRoutes.Search });
 			} else {
 				router.push({ path: afterLoginPath });
 			}
