@@ -116,6 +116,18 @@ module keyVault 'br/ume:microsoft.keyvault.vaults:v2.1' = {
   }
 }
 
+// Static Web App - EstatePlatform
+module staticWebApp_estateplatform 'br/ume:microsoft.web.staticsites:v2.3' = {
+  scope: resourceGroup
+  name: 'staticWebApp_estateplatform'
+  params: {
+    environment: environment
+    companyPrefix: companyPrefix
+    purpose: purpose
+    dateNowUtc: dateNowUtc
+  }
+}
+
 // App Service Plan
 module appServicePlan 'br/ume:microsoft.web.serverfarms:v2.3' = {
   scope: resourceGroup
@@ -236,6 +248,7 @@ module libraryVariables 'library-variable-group.bicep' = {
 
     openaiEndpoint: openai.outputs.resourceUri
     applicationInsightsConnectionString: dependency_applicationInsights_general.properties.ConnectionString
+    estateplatformName: staticWebApp_estateplatform.outputs.name
 
     personalAccessToken: personalAccessToken
     organization: organization
