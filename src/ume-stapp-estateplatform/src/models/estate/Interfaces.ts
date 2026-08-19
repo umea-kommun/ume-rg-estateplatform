@@ -98,6 +98,8 @@ export interface IBuildingContactPersons {
 	operationsManager: IBuildingContact | null;
 	operationCoordinator: IBuildingContact | null;
 	rentalAdministrator: IBuildingContact | null;
+	caretaker: IBuildingContact | null;
+	operationsTechnician: IBuildingContact | null;
 }
 
 export interface IBuildingGeoLocation {

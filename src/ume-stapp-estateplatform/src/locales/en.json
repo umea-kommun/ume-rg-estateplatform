@@ -712,6 +712,8 @@
 				"operationsManager": "Operations manager",
 				"operationCoordinator": "Operations coordinator",
 				"rentalAdministrator": "Rental administrator",
+				"caretaker": "Caretaker",
+				"operationsTechnician": "Operations technician",
 				"valueMissing": "Not specified",
 				"callAriaLabel": "Call {name}",
 				"emailAriaLabel": "Send email to {name}"

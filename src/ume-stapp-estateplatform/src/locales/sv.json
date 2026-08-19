@@ -713,6 +713,8 @@
 				"operationsManager": "Driftområdeschef",
 				"operationCoordinator": "Driftsamordnare",
 				"rentalAdministrator": "Hyresadministratör",
+				"caretaker": "Fastighetsskötare",
+				"operationsTechnician": "Drifttekniker",
 				"valueMissing": "Ej angivet",
 				"callAriaLabel": "Ring {name}",
 				"emailAriaLabel": "Skicka e-post till {name}"

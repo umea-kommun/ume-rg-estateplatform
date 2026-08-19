@@ -2,7 +2,7 @@ import { IBuildingDocumentDto } from '@/models/estate/Dto';
 import Config from '@/Config';
 import { EstateType, ExternalOwnerStatus } from '@/models/estate/Enums';
 import {
-	IBuildingContact,
+	IBuildingContactPersons,
 	IBuildingDetails,
 	IBuildingDocument,
 	IBuildingFloor,
@@ -362,12 +362,7 @@ export default {
 				name: string;
 				note: string;
 			};
-			contactPersons: {
-				propertyManager: IBuildingContact | null;
-				operationsManager: IBuildingContact | null;
-				operationCoordinator: IBuildingContact | null;
-				rentalAdministrator: IBuildingContact | null;
-			} | null;
+			contactPersons: IBuildingContactPersons | null;
 		};
 		workOrderTypes?: string[];
 		geoLocation: {
@@ -439,6 +434,9 @@ export default {
 							rContactPersons.operationCoordinator ?? null,
 						rentalAdministrator:
 							rContactPersons.rentalAdministrator ?? null,
+						caretaker: rContactPersons.caretaker ?? null,
+						operationsTechnician:
+							rContactPersons.operationsTechnician ?? null,
 				  }
 				: null,
 		};

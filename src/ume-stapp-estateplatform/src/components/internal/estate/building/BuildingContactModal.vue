@@ -106,6 +106,14 @@ const persons = computed(() => {
 			label: t('component.internal.buildingContact.rentalAdministrator'),
 			value: props.building.contactPersons?.rentalAdministrator,
 		},
+		{
+			label: t('component.internal.buildingContact.caretaker'),
+			value: props.building.contactPersons?.caretaker,
+		},
+		{
+			label: t('component.internal.buildingContact.operationsTechnician'),
+			value: props.building.contactPersons?.operationsTechnician,
+		},
 	];
 });
 </script>
