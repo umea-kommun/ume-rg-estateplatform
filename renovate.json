@@ -1,0 +1,20 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "packageRules": [
+    {
+      "description": "Ignore @turkos packages — updated manually",
+      "matchPackagePatterns": ["^@turkos/"],
+      "enabled": false
+    },
+    {
+      "description": "Group all NuGet updates into one PR",
+      "matchManagers": ["nuget"],
+      "groupName": "All NuGet updates"
+    },
+    {
+      "description": "Group all npm updates into one PR",
+      "matchManagers": ["npm"],
+      "groupName": "All npm updates"
+    }
+  ]
+}

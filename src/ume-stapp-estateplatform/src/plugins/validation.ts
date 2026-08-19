@@ -3,7 +3,6 @@
 import { configure, defineRule } from 'vee-validate';
 import AllRules from '@vee-validate/rules';
 import moment from 'moment';
-import Organisationsnummer from 'organisationsnummer';
 import i18nInstance from './i18next';
 
 /**
@@ -86,29 +85,6 @@ function initialize(i18n: typeof i18nInstance): void {
 		);
 		valid = !!regexp.exec(value);
 		return valid;
-	});
-
-	/**
-	 * Valid SSN
-	 */
-	defineRule('validPersNumber', (value: string) => {
-		if (!value) {
-			return true;
-		}
-		if (
-			Organisationsnummer.valid(value) &&
-			Organisationsnummer.parse(value).isPersonnummer()
-		) {
-			return true;
-		}
-
-		// Also allow temporary ssn
-		if (
-			/\d{8}-?TF\d{2}/.test(value) // 12345678-TF12 or 12345678TF12 etc.
-		) {
-			return true;
-		}
-		return false;
 	});
 }
 

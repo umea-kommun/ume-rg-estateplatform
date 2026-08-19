@@ -1,182 +1,67 @@
-# minasidor frontend (ume-stapp-minasidor)
+# Fastighetsportalen (ume-stapp-estateplatform)
 
 ## Purpose
 
-This repository contains the frontend application for Mina sidor (my pages) at Umea kommun.
+Frontend for Umeå kommun's fastighetsportal — an internal-only Vue 3 + TypeScript
+SPA for searching estates and buildings, viewing blueprints and maps, and
+submitting fault reports, orders and changed space requirements.
 
-It is one part of a larger multi-repo platform and is responsible for:
+It was extracted from `ume-rg-myplatform/src/ume-stapp-minasidor` (Mina sidor)
+so that UI and API ship in one PR — see `migrate_plan/` in the repo root. Files
+carrying a `Duplicated from ume-rg-myplatform` header are shared with Mina sidor
+and were copied at commit `84b4a5dc`; that header is the diff base if the two
+copies ever need reconciling.
 
-- user-facing navigation and UI flows
-- authentication and route access control
-- integration with backend APIs for consent, kvittens, grade, estate, and password workflows
-- presentation logic, state handling, localization, and telemetry/error reporting
+## What it talks to
 
-This repo does not include backend service implementations.
+- **EstateService** (`VUE_APP_ESTATE_SERVICE`) — this repo, `src/ume-app-estateservice`.
+  The only backend for estate data, work orders, favorites and the runtime
+  `GET /features` flags.
+- **ConsentBridge** (`VUE_APP_CONSENT_BRIDGE_SERVICE_FEEDBACK`) — lives in
+  `ume-rg-myplatform`. Used only by the feedback widget on the three completion
+  screens, so ratings stay pooled across Umeå services.
+- **IDProxy** (`authtoken.umea.se`) — one login client, internal AD only.
 
-## What the application does
-
-The application serves both external users and internal staff:
-
-- external users: start page, consent handling, kvittens, grades
-- internal staff: internal dashboard and admin/consumer views for consent, kvittens, assigned/default passwords
-- estate functionality: internal estate search/details/fault report/order routes, controlled by runtime feature flags
-
-Authentication mode and available login methods are runtime-configured via environment variables.
-
-## Solution role in the multi-repo
-
-This frontend acts as:
-
-- web client and orchestration layer for multiple backend domains
-- access-control enforcement at UI route level
-- translation and UX layer for domain workflows
-- telemetry entry point (Application Insights)
-
-Typical dependencies in other repos (not here) are API services for:
-
-- Consent Bridge
-- Archive/Grade
-- Estate Service
-- authentication/token services
-
-## Tech stack
-
-- Vue 3 + TypeScript
-- Vite 6
-- Vue Router 4
-- Vuex 4 (+ persisted state in session storage)
-- Vuetify 3
-- Vitest + Vue Test Utils
-- i18n localization (`src/locales`)
-- Axios for HTTP
-- Application Insights for telemetry
-
-## High-level architecture
-
-- entrypoint: `src/main.ts`
-- root app shell: `src/App.vue` and `src/components/app/*`
-- route definitions and guards: `src/router/index.ts`, `src/router/routes.ts`
-- global and module state: `src/store/*`
-- auth abstraction and middleware: `src/plugins/auth/*`
-- integration utilities/config: `src/utils/*`, `src/Config.ts`
-
-### Main feature areas
-
-- external features: `src/components/external/*`
-- internal features: `src/components/internal/*`
-- shared/base components: `src/components/base/*`
-
-### Routing and access model
-
-Routes use `meta` flags for access checks:
-
-- `requiresExternalLogin`
-- `requiresInternalLogin`
-- `requiresGroup`
-- `requiresUnauthenticated`
-- `requiresFeature` (runtime feature flags, currently used by estate routes)
-
-Authentication middleware is initialized from `src/plugins/auth/index.ts` and enforces login type and group access.
-
-## Runtime configuration
-
-Environment variables use the `VUE_APP_` prefix and are loaded from:
-
-- Vite env files (`.env*`)
-- optional server-provided config at runtime (`window.vueAppServerConfig`)
-
-Core configuration domains include:
-
-- auth scopes and auth clients
-- group IDs for role-based route access
-- backend API base URLs
-- telemetry configuration
-- UI behavior values (timeouts, locale, etc.)
-
-Do not commit sensitive values or production secrets.
-
-## Local development
-
-### Prerequisites
-
-- Node.js (LTS recommended)
-- npm
-
-### Install dependencies
+## Running it
 
 ```bash
-npm install
+npm ci
+npm run serve       # vite dev server on :8080, uses .env
 ```
 
-### Start development server
+`.env` points at the dev EstateService by default. To run against a local API,
+change `VUE_APP_ESTATE_SERVICE` in `.env` — do not commit that; use `.env.local`.
 
 ```bash
-npm run serve
+npm run build       # vue-tsc --noEmit && vite build  -> wwwroot/
+npm test            # vitest
+npm run lint        # eslint --fix
 ```
 
-The app runs on port `8080` by default (see `vite.config.ts`).
+## Layout
 
-### Build for production
+- `src/main.ts` — entry point
+- `src/components/app/*` — shell (header, footer, content, error, 404)
+- `src/components/estate/*` — the application itself
+- `src/components/shared/*` — components duplicated from Mina sidor
+- `src/router/index.ts` — routes, auth gates and the feature-flag guard
+- `src/store/*` — root Vuex store (estate) plus the `feedback` module
+- `src/plugins/auth/*` — auth manager, middleware and client config
+- `src/utils/Config.ts` — runtime config, `VUE_APP_*` from `.env*`
 
-```bash
-npm run build
-```
+## Environment
 
-Build output is written to `wwwroot/`.
+Every `VUE_APP_*` in `.env` is read by the app. All four env files
+(`.env`, `.env.dev`, `.env.test`, `.env.prod`) carry an identical key set —
+keep it that way.
 
-## Quality and validation
+The auth client is configured through the `VUE_APP_AUTH_INTERNAL_*` prefix, and
+`AuthConfig.ts` keys off that literal string to decide a client is internal.
+Renaming the prefix without changing `AuthConfig.ts` silently produces an app
+that cannot log anyone in.
 
-### Run unit tests
+## Feature flags
 
-```bash
-npm run test
-```
-
-### Run lint (auto-fix)
-
-```bash
-npm run lint
-```
-
-## Deployment notes
-
-- static web assets are generated via Vite
-- output folder: `wwwroot`
-- Azure static web app settings are in `public/staticwebapp.config.json`
-
-## Directory overview
-
-```text
-src/
-	components/
-		app/        # app shell, layout, startup/error states
-		auth/       # login/callback/notifications
-		base/       # reusable base UI components
-		external/   # citizen-facing features
-		internal/   # staff/internal features
-	locales/      # translation resources
-	models/       # enums/interfaces/dto contracts
-	plugins/      # auth, i18n, telemetry, validation, vuetify
-	router/       # route names and route config
-	store/        # vuex root/modules/actions/mutations
-	themes/       # SCSS theme and mixins
-	utils/        # shared helper and config utilities
-```
-
-## Troubleshooting pointers
-
-- login redirect loops: verify auth client config and route meta requirements
-- missing internal routes: verify user auth client and group membership variables
-- estate routes unavailable: verify feature endpoint and `requiresFeature` flags
-- API failures: verify `VUE_APP_*` backend URLs for current environment
-
-## Maintainer notes
-
-When adding a new feature domain:
-
-1. add route names and route records with correct access meta
-2. implement feature UI in `components/external` or `components/internal`
-3. add/update Vuex module if shared state is needed
-4. add typed interfaces in `models`
-5. add tests in nearest `__tests__` folder
-6. update this README and AI instruction files (`AGENTS.md`, `CLAUDE.md`) when architecture or workflows change
+Routes are gated by `GET /features` on EstateService (`EstateService`,
+`ErrorReport`), fetched at navigation time and fail-open. A gated route falls
+back to `/`; if `/` itself is gated the 404 page is shown.

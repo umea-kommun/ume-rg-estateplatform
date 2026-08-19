@@ -406,3 +406,8 @@ src/ume-app-estateservice/Umea.se.EstateService.API/DataStoreCache
 *.db
 *.db-shm
 *.db-wal
+
+# Frontend (src/ume-stapp-estateplatform)
+wwwroot/
+.env.local
+.env.*.local
