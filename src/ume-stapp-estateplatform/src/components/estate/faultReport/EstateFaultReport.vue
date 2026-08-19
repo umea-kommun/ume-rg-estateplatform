@@ -1,7 +1,7 @@
 <template>
 	<app-content
 		class="estate-default estate-fault-report"
-		:pageTitle="$t('component.appHeader.title.internalEstateFaultReport')"
+		:pageTitle="$t('component.appHeader.title.faultReport')"
 		:is-loading="isLoadingFromQuery"
 	>
 		<div class="content-wrap">
@@ -15,11 +15,11 @@
 				<div v-else class="mt-2">
 					<div class="pb-4">
 						<h1 class="ma-0 mb-2">
-							{{ $t('component.internal.faultReport.title') }}
+							{{ $t('component.faultReport.title') }}
 						</h1>
 						<p class="ma-0">
 							{{
-								$t('component.internal.faultReport.description')
+								$t('component.faultReport.description')
 							}}
 						</p>
 					</div>
@@ -29,10 +29,10 @@
 						:title="
 							selectedBuilding
 								? $t(
-										'component.internal.faultReport.building.selected'
+										'component.faultReport.building.selected'
 								  )
 								: $t(
-										'component.internal.faultReport.building.select'
+										'component.faultReport.building.select'
 								  )
 						"
 						:step="1"
@@ -60,7 +60,7 @@
 						>
 							{{
 								$t(
-									'component.internal.faultReport.rentedBuildingNotice'
+									'component.faultReport.rentedBuildingNotice'
 								)
 							}}
 
@@ -82,7 +82,7 @@
 								>
 									{{
 										$t(
-											'component.internal.faultReport.rentedBuildingNoticeConfirmButton'
+											'component.faultReport.rentedBuildingNoticeConfirmButton'
 										)
 									}}
 								</v-btn>
@@ -113,7 +113,7 @@
 							>
 								{{
 									$t(
-										'component.internal.faultReport.location.indoor.title'
+										'component.faultReport.location.indoor.title'
 									)
 								}}
 							</span>
@@ -125,14 +125,14 @@
 							>
 								{{
 									$t(
-										'component.internal.faultReport.location.outdoor.title'
+										'component.faultReport.location.outdoor.title'
 									)
 								}}
 							</span>
 							<span v-else>
 								{{
 									$t(
-										'component.internal.faultReport.location.select'
+										'component.faultReport.location.select'
 									)
 								}}
 							</span>
@@ -163,21 +163,21 @@
 							<span v-if="selectedRoom && !skippedRoom">
 								{{
 									$t(
-										'component.internal.faultReport.room.selected'
+										'component.faultReport.room.selected'
 									)
 								}}
 							</span>
 							<span v-else-if="!selectedRoom && skippedRoom">
 								{{
 									$t(
-										'component.internal.faultReport.room.none'
+										'component.faultReport.room.none'
 									)
 								}}
 							</span>
 							<span v-else>
 								{{
 									$t(
-										'component.internal.faultReport.room.select'
+										'component.faultReport.room.select'
 									)
 								}}
 							</span>
@@ -214,7 +214,7 @@
 						<estate-order-step
 							:title="
 								$t(
-									'component.internal.faultReport.general.problemTitle'
+									'component.faultReport.general.problemTitle'
 								)
 							"
 							:step="stepCount - 1"
@@ -226,7 +226,7 @@
 								id="problem-description"
 								:label="
 									$t(
-										'component.internal.faultReport.general.problemLabel'
+										'component.faultReport.general.problemLabel'
 									)
 								"
 								v-model="problemDescription"
@@ -241,7 +241,7 @@
 							<p class="text-medium-emphasis">
 								{{
 									$t(
-										'component.internal.faultReport.general.problemHelpText'
+										'component.faultReport.general.problemHelpText'
 									)
 								}}
 							</p>
@@ -250,7 +250,7 @@
 								id="file-upload"
 								:label="
 									$t(
-										'component.internal.faultReport.general.fileUploadLabel'
+										'component.faultReport.general.fileUploadLabel'
 									)
 								"
 								v-model="attachments"
@@ -266,7 +266,7 @@
 						<estate-order-step
 							:title="
 								$t(
-									'component.internal.faultReport.general.contactLabel'
+									'component.faultReport.general.contactLabel'
 								)
 							"
 							:step="stepCount"
@@ -276,7 +276,7 @@
 							<p class="text-medium-emphasis">
 								{{
 									$t(
-										'component.internal.faultReport.general.contactHelpText'
+										'component.faultReport.general.contactHelpText'
 									)
 								}}
 							</p>
@@ -340,7 +340,7 @@
 							>
 								{{
 									$t(
-										'component.internal.faultReport.submitButton'
+										'component.faultReport.submitButton'
 									)
 								}}
 							</v-btn>
@@ -351,16 +351,16 @@
 			<div class="info-wrap">
 				<v-alert rounded="lg">
 					<h2 class="ma-0">
-						{{ $t('component.internal.faultReport.info.title') }}
+						{{ $t('component.faultReport.info.title') }}
 					</h2>
 					<p>
-						{{ $t('component.internal.faultReport.info.text1') }}
+						{{ $t('component.faultReport.info.text1') }}
 					</p>
 					<p>
-						{{ $t('component.internal.faultReport.info.text2') }}
+						{{ $t('component.faultReport.info.text2') }}
 					</p>
 					<p
-						v-html="$t('component.internal.faultReport.info.text3')"
+						v-html="$t('component.faultReport.info.text3')"
 					></p>
 				</v-alert>
 			</div>
@@ -419,7 +419,7 @@ const store = useStore<IRootState>();
 
 const breadcrumbs = [
 	{
-		title: t('component.internal.faultReport.title'),
+		title: t('component.faultReport.title'),
 		to: { name: EstateRoutes.FaultReport },
 	},
 ];

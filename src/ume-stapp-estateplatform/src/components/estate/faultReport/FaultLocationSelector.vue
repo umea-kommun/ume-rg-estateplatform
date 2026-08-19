@@ -5,14 +5,14 @@
 				<span v-if="problemLocation === EstateFaultLocation.Indoor">
 					{{
 						$t(
-							'component.internal.faultReport.location.indoor.selected'
+							'component.faultReport.location.indoor.selected'
 						)
 					}}
 				</span>
 				<span v-else>
 					{{
 						$t(
-							'component.internal.faultReport.location.outdoor.selected'
+							'component.faultReport.location.outdoor.selected'
 						)
 					}}
 				</span>
@@ -64,23 +64,23 @@ const locations = [
 	{
 		type: EstateFaultLocation.Indoor,
 		icon: 'meeting_room',
-		title: t('component.internal.faultReport.location.indoor.select'),
+		title: t('component.faultReport.location.indoor.select'),
 		description: t(
-			'component.internal.faultReport.location.indoor.description'
+			'component.faultReport.location.indoor.description'
 		),
 		buttonText: t(
-			'component.internal.faultReport.location.indoor.selectButton'
+			'component.faultReport.location.indoor.selectButton'
 		),
 	},
 	{
 		type: EstateFaultLocation.Outdoor,
 		icon: 'park',
-		title: t('component.internal.faultReport.location.outdoor.select'),
+		title: t('component.faultReport.location.outdoor.select'),
 		description: t(
-			'component.internal.faultReport.location.outdoor.description'
+			'component.faultReport.location.outdoor.description'
 		),
 		buttonText: t(
-			'component.internal.faultReport.location.outdoor.selectButton'
+			'component.faultReport.location.outdoor.selectButton'
 		),
 	},
 ];

@@ -18,7 +18,7 @@
 			prepend-icon="location_pin"
 			@click="open"
 		>
-			{{ $t('component.internal.buildingSelector.selectOnMap') }}
+			{{ $t('component.buildingSelector.selectOnMap') }}
 		</v-btn>
 	</div>
 </template>

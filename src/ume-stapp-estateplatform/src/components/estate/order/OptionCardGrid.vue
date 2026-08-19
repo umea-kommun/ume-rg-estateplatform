@@ -48,14 +48,14 @@
 					color="success"
 					v-if="selected === option.value"
 				>
-					{{ $t('component.internal.order.category.selected') }}
+					{{ $t('component.order.category.selected') }}
 				</v-chip>
 
 				<span
 					v-else
 					class="text-body-2 text-primary font-weight-medium"
 				>
-					{{ $t('component.internal.order.category.select') }}
+					{{ $t('component.order.category.select') }}
 				</span>
 			</div>
 		</v-card>

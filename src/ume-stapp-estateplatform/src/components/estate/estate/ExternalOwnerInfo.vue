@@ -16,7 +16,7 @@
 					<span class="font-italic font-weight-light" v-else>
 						{{
 							$t(
-								'component.internal.estateDetails.informationMissing'
+								'component.estateDetails.informationMissing'
 							)
 						}}
 					</span>
@@ -33,7 +33,7 @@
 					<span class="font-italic font-weight-light" v-else>
 						{{
 							$t(
-								'component.internal.estateDetails.informationMissing'
+								'component.estateDetails.informationMissing'
 							)
 						}}
 					</span>

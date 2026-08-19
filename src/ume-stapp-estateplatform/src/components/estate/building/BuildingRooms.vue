@@ -10,7 +10,7 @@
 		{{ t('app.error.estate.unableToFetchRooms') }}
 	</v-alert>
 	<v-alert v-else-if="rooms?.length === 0" icon="info" class="mt-2 mx-6">
-		{{ t('component.internal.buildingDetails.noRooms') }}
+		{{ t('component.buildingDetails.noRooms') }}
 	</v-alert>
 	<div v-else-if="rooms">
 		<div
@@ -18,10 +18,10 @@
 			:class="{ 'px-6': !noPadding }"
 		>
 			<v-text-field
-				:label="t('component.internal.buildingDetails.room.search')"
+				:label="t('component.buildingDetails.room.search')"
 				:placeholder="
 					t(
-						'component.internal.buildingDetails.room.searchPlaceholder'
+						'component.buildingDetails.room.searchPlaceholder'
 					)
 				"
 				prepend-inner-icon="search"
@@ -34,7 +34,7 @@
 			/>
 			<v-autocomplete
 				v-if="roomTypes.length"
-				:label="t('component.internal.buildingDetails.room.type')"
+				:label="t('component.buildingDetails.room.type')"
 				:items="roomTypes"
 				v-model="selectedRoomType"
 				color="primary"
@@ -45,7 +45,7 @@
 				clearable
 			/>
 			<v-select
-				:label="t('component.internal.buildingDetails.room.floor')"
+				:label="t('component.buildingDetails.room.floor')"
 				v-model="selectedFloorId"
 				:items="floors ?? []"
 				item-title="name"
@@ -64,7 +64,7 @@
 				icon="info"
 				:class="{ 'mx-6': !noPadding }"
 			>
-				{{ t('component.internal.buildingDetails.room.noMatches') }}
+				{{ t('component.buildingDetails.room.noMatches') }}
 			</v-alert>
 			<v-alert
 				v-else-if="!filteredRoomsForFloor?.length"
@@ -72,7 +72,7 @@
 				:class="{ 'mx-6': !noPadding }"
 				>{{
 					t(
-						'component.internal.buildingDetails.room.noMatchesSelectedFloor',
+						'component.buildingDetails.room.noMatchesSelectedFloor',
 						{
 							floor: floors?.find((f) => f.id === selectedFloorId)
 								?.name,
@@ -90,7 +90,7 @@
 				<h3 class="mt-6 mb-2" :class="{ 'mx-6': !noPadding }">
 					{{
 						t(
-							'component.internal.buildingDetails.room.matchesOnOtherFloors'
+							'component.buildingDetails.room.matchesOnOtherFloors'
 						)
 					}}
 				</h3>

@@ -2,7 +2,7 @@
 	<app-content
 		class="estate-default estate-space-requirement"
 		:pageTitle="
-			$t('component.appHeader.title.internalEstateSpaceRequirement')
+			$t('component.appHeader.title.spaceRequirement')
 		"
 		:is-loading="isLoadingFromQuery"
 	>
@@ -24,13 +24,13 @@
 					<div class="pb-4">
 						<h1 class="ma-0 mb-2">
 							{{
-								$t('component.internal.spaceRequirement.title')
+								$t('component.spaceRequirement.title')
 							}}
 						</h1>
 						<p class="ma-0">
 							{{
 								$t(
-									'component.internal.spaceRequirement.description'
+									'component.spaceRequirement.description'
 								)
 							}}
 						</p>
@@ -41,7 +41,7 @@
 						id="space-requirement-category"
 						:title="
 							$t(
-								'component.internal.spaceRequirement.category.title'
+								'component.spaceRequirement.category.title'
 							)
 						"
 					>
@@ -56,7 +56,7 @@
 							/>
 							{{
 								$t(
-									'component.internal.spaceRequirement.category.loading'
+									'component.spaceRequirement.category.loading'
 								)
 							}}
 						</div>
@@ -75,7 +75,7 @@
 						>
 							{{
 								$t(
-									'component.internal.spaceRequirement.category.noneAvailable'
+									'component.spaceRequirement.category.noneAvailable'
 								)
 							}}
 						</v-alert>
@@ -88,7 +88,7 @@
 						>
 							{{
 								$t(
-									'component.internal.spaceRequirement.category.required'
+									'component.spaceRequirement.category.required'
 								)
 							}}
 						</v-alert>
@@ -98,7 +98,7 @@
 					<estate-order-step
 						:title="
 							$t(
-								'component.internal.spaceRequirement.general.descriptionTitle'
+								'component.spaceRequirement.general.descriptionTitle'
 							)
 						"
 						class="mt-6"
@@ -107,7 +107,7 @@
 							id="problem-description"
 							:label="
 								$t(
-									'component.internal.spaceRequirement.general.descriptionLabel'
+									'component.spaceRequirement.general.descriptionLabel'
 								)
 							"
 							v-model="problemDescription"
@@ -122,7 +122,7 @@
 						<p class="text-medium-emphasis">
 							{{
 								$t(
-									'component.internal.spaceRequirement.general.descriptionHelpText'
+									'component.spaceRequirement.general.descriptionHelpText'
 								)
 							}}
 						</p>
@@ -131,7 +131,7 @@
 							id="file-upload"
 							:label="
 								$t(
-									'component.internal.spaceRequirement.general.fileUploadLabel'
+									'component.spaceRequirement.general.fileUploadLabel'
 								)
 							"
 							v-model="attachments"
@@ -157,7 +157,7 @@
 						>
 							{{
 								$t(
-									'component.internal.spaceRequirement.building.add'
+									'component.spaceRequirement.building.add'
 								)
 							}}
 						</v-btn>
@@ -168,10 +168,10 @@
 						:title="
 							selectedBuilding
 								? $t(
-										'component.internal.faultReport.building.selected'
+										'component.faultReport.building.selected'
 								  )
 								: $t(
-										'component.internal.spaceRequirement.building.select'
+										'component.spaceRequirement.building.select'
 								  )
 						"
 						:show-clear="!!selectedBuilding"
@@ -200,7 +200,7 @@
 						>
 							{{
 								$t(
-									'component.internal.spaceRequirement.building.notSupported'
+									'component.spaceRequirement.building.notSupported'
 								)
 							}}
 						</v-alert>
@@ -224,7 +224,7 @@
 						>
 							{{
 								$t(
-									'component.internal.spaceRequirement.room.add'
+									'component.spaceRequirement.room.add'
 								)
 							}}
 						</v-btn>
@@ -241,14 +241,14 @@
 							<span v-if="selectedRoom">
 								{{
 									$t(
-										'component.internal.faultReport.room.selected'
+										'component.faultReport.room.selected'
 									)
 								}}
 							</span>
 							<span v-else>
 								{{
 									$t(
-										'component.internal.spaceRequirement.room.select'
+										'component.spaceRequirement.room.select'
 									)
 								}}
 							</span>
@@ -278,7 +278,7 @@
 					<estate-order-step
 						:title="
 							$t(
-								'component.internal.spaceRequirement.general.contactLabel'
+								'component.spaceRequirement.general.contactLabel'
 							)
 						"
 						class="mt-6"
@@ -286,7 +286,7 @@
 						<p class="text-medium-emphasis">
 							{{
 								$t(
-									'component.internal.spaceRequirement.general.contactHelpText'
+									'component.spaceRequirement.general.contactHelpText'
 								)
 							}}
 						</p>
@@ -352,7 +352,7 @@
 						>
 							{{
 								$t(
-									'component.internal.spaceRequirement.submitButton'
+									'component.spaceRequirement.submitButton'
 								)
 							}}
 						</v-btn>
@@ -363,12 +363,12 @@
 				<v-alert rounded="lg">
 					<h2 class="ma-0">
 						{{
-							$t('component.internal.spaceRequirement.info.title')
+							$t('component.spaceRequirement.info.title')
 						}}
 					</h2>
 					<p
 						v-for="(paragraph, index) in tm(
-							'component.internal.spaceRequirement.info.paragraphs'
+							'component.spaceRequirement.info.paragraphs'
 						)"
 						:key="index"
 					>
@@ -421,7 +421,7 @@ const store = useStore<IRootState>();
 
 const breadcrumbs = [
 	{
-		title: t('component.internal.spaceRequirement.title'),
+		title: t('component.spaceRequirement.title'),
 		to: { name: EstateRoutes.SpaceRequirement },
 	},
 ];
@@ -494,7 +494,7 @@ const BUILDING_PROMPTED_CATEGORIES = new Set<number>([88, 90]);
 // Pythagoras leaf-category id (see locales -> category.descriptions). Categories without
 // a matching locale key simply show no description.
 const categoryDescription = (id: number) => {
-	const key = `component.internal.spaceRequirement.category.descriptions.${id}`;
+	const key = `component.spaceRequirement.category.descriptions.${id}`;
 	return te(key) ? t(key) : '';
 };
 
@@ -535,7 +535,7 @@ const manualErrors = computed(() => {
 	if (categoryMissing.value) {
 		list.push({
 			id: 'space-requirement-category',
-			message: t('component.internal.spaceRequirement.category.required'),
+			message: t('component.spaceRequirement.category.required'),
 		});
 	}
 	return list;

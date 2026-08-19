@@ -3,7 +3,7 @@
 	<app-content
 		:size="AppContentSize.Narrow"
 		class="app-error"
-		:pageTitle="$t('component.external.kvittensStart.title')"
+		:pageTitle="$t('component.appError.pageTitle')"
 	>
 		<base-back-button />
 		<div v-if="error">

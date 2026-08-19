@@ -2,16 +2,11 @@
 
 import { AxiosError } from 'axios';
 import {
-	ConsentTemplateStatus,
-	ConsentStatus,
-	UserConsentStatus,
-	TemplateConnectionType,
 	EstateFaultLocation,
 	EstateOrderCategory,
 	EstateType,
 	ExternalOwnerStatus,
 } from './Enums';
-import { IKvittensState } from './kvittens/Interfaces';
 import { IFeedbackState } from './feedback/Interfaces';
 
 /**
@@ -19,20 +14,9 @@ import { IFeedbackState } from './feedback/Interfaces';
  */
 export interface IRootState {
 	user: IUser;
-	childConsentList?: IChildConsent[];
-	guardianConsent?: IGuardianConsent;
-	guardianUser: null | IGuardianUser;
-	consentAgentConsentList?: IChildConsent[];
-	consentTemplates?: null | IConsentTemplate[];
-	consentTemplate?: null | IConsentTemplate;
-	consentTemplateGroups?: null | IConsentTemplateGroup[];
-	consentTemplateUnitTypes?: string[];
-	consumer: IConsentConsumerState;
-	tester: ITesterState;
 	error?: IError | null;
 	hideWarningMessage?: null | boolean;
 
-	kvittens?: IKvittensState;
 	feedback?: IFeedbackState;
 }
 
@@ -104,210 +88,6 @@ export interface IUser {
 	 * Which ad groups the user is a member of (ids)
 	 */
 	groups?: string[];
-}
-
-export interface IChild {
-	name: string;
-	socialSecurityNumber: string;
-	guardianIsNotFolkbokford: boolean;
-}
-
-export interface IGuardianUser {
-	children: IChild[];
-}
-
-/**
- * Interface for a guardians consent
- */
-export interface IGuardianConsent {
-	guid: string;
-	title: string;
-	data: string;
-	childName: string;
-	childSSNo: string;
-	templateGuid: string;
-	expireDate: string;
-	isActive: boolean;
-	consentStatus: ConsentStatus;
-	linkedPersons: IGuardian[];
-	consentHistory: IGuardianConsentHistory[];
-}
-
-export interface IGuardianConsentHistory {
-	status: UserConsentStatus;
-	created: string;
-	guardianName: string;
-	agentName?: string;
-	imageIdToken?: string;
-}
-
-export interface IAgentConsent extends IGuardianConsent {
-	currentlyResponsiblePersons: IGuardian[] | null;
-}
-
-export interface IGuardian {
-	consentGuid: string;
-	name: string;
-	socialSecurityNumber: string;
-	userStatus: UserConsentStatus;
-}
-
-export interface IConsentTemplateUnitType {
-	name: string;
-	refId: string;
-	type: TemplateConnectionType;
-	key: string;
-}
-
-export interface IConsentTemplateGroup {
-	refId: string;
-	title: string;
-	type: TemplateConnectionType;
-	schoolTypes?: string[];
-	parentRefId?: string;
-	startDate?: string;
-	endDate?: string;
-}
-
-export interface IConsentTemplate {
-	guid?: string;
-	title: string;
-	content: string;
-	publishedDate: string | null;
-	expireDate: string | null;
-	status: ConsentTemplateStatus;
-	templateConnections: ITemplateConnection[];
-}
-
-export interface ITemplateConnection {
-	refId: string;
-	name: string;
-	type: TemplateConnectionType;
-}
-
-export interface IChildConsent {
-	title: string;
-	childName: string;
-	childSSNo: string;
-	templateGuid: string;
-	consentStatus: ConsentStatus;
-	userStatus: UserConsentStatus;
-	isActive: boolean;
-}
-
-export interface IConsentTemplateWithConsents {
-	title: string;
-	text: string;
-	group: IConsentTemplateGroup;
-	publishedDate: string;
-	expireDate: string;
-	consents: {
-		consentGuid?: string;
-		name: string;
-		status: ConsentStatus;
-	}[];
-}
-export interface IConsumerGroup {
-	refId: string;
-	name: string;
-	type: TemplateConnectionType;
-	parents:
-		| {
-				id: string;
-				name: string;
-		  }[]
-		| null;
-	startDate: null | string;
-	endDate: null | string;
-}
-
-export interface IConsentConsumerTemplateGroup {
-	refId: string;
-	title: string;
-	type: TemplateConnectionType;
-	schoolTypes?: string[];
-	parentIds?: string[];
-	startDate?: string;
-	endDate?: string;
-}
-
-export interface IFilteredConsumerTemplate {
-	guid?: string;
-	title: string;
-	groups: IConsentConsumerTemplateGroup[];
-	period: {
-		start: string;
-		end: string | null;
-	};
-}
-
-export interface IConsentConsumerTemplate
-	extends Omit<IConsentTemplate, 'groups'> {
-	publishedDate: string;
-	expireDate: string | null;
-	groups: IConsumerGroup[];
-}
-export interface IConsentConsumerState {
-	groups?: IConsumerGroup[];
-	templates?: IConsentConsumerTemplate[];
-	templateWithConsents?: IConsentTemplateWithConsents;
-}
-export interface IConsentAgentEditData {
-	childSSNo: string;
-	templateGuid: string;
-}
-export interface IChildConsentRequest {
-	childSSNo: string;
-	templateGuid: string;
-}
-export interface IConsentTemplateRequest {
-	refId: string;
-	groupName: string;
-}
-export interface IResponseConsent {
-	guid: string;
-	title: string;
-	data: string;
-	childName: string;
-	childSSNo: string;
-	templateGuid: string;
-	expireDate: string;
-	isActive: boolean;
-	status: ConsentStatus;
-	linkedPersons: IGuardian[];
-	currentlyResponsiblePersons: IGuardian[];
-	signLogs: IResponseConsentHistory[];
-}
-export interface IResponseConsentHistory {
-	guardianName: string;
-	agentName?: string;
-	imageIdToken?: string;
-	status: UserConsentStatus;
-	created: string;
-}
-
-export interface ITesterTestAsPerson {
-	name: string;
-	socialSecurityNumber: string;
-	unitRefId: string;
-	unitTitle: string;
-}
-interface ITesterState {
-	schoolUnits?: IConsentTemplateGroup[];
-	testAsPerson?: ITesterTestAsPerson;
-}
-
-export interface ISortBy {
-	key: string;
-	order: boolean | 'asc' | 'desc';
-}
-
-export interface ITableHeader {
-	title: string;
-	description?: string;
-	key: string;
-	align?: 'start' | 'end' | 'center';
-	sortable?: boolean;
 }
 
 export interface IEstateSearchResultEntry {

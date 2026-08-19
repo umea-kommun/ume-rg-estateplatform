@@ -48,7 +48,7 @@
 				v-if="building.imageUrl"
 				:src="building.imageUrl"
 				:image-width="300"
-				:alt="$t('component.internal.buildingDetails.buildingImageAlt')"
+				:alt="$t('component.buildingDetails.buildingImageAlt')"
 				class="cursor-pointer building-image"
 				@click="showImageInModal(building.imageUrl)"
 			/>

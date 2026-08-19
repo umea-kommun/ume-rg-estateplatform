@@ -8,7 +8,7 @@
 		<v-card>
 			<div class="content">
 				<v-card-title id="modal-title" class="px-6">
-					{{ $t('component.internal.buildingContact.title') }}
+					{{ $t('component.buildingContact.title') }}
 				</v-card-title>
 				<v-card-text class="px-6 pt-2">
 					<div class="persons-wrap">
@@ -28,7 +28,7 @@
 											:text="person.value.email"
 											:link-aria-label="
 												$t(
-													'component.internal.buildingContact.emailAriaLabel',
+													'component.buildingContact.emailAriaLabel',
 													{ name: person.value.name }
 												)
 											"
@@ -39,7 +39,7 @@
 											:text="person.value.phone"
 											:link-aria-label="
 												$t(
-													'component.internal.buildingContact.callAriaLabel',
+													'component.buildingContact.callAriaLabel',
 													{ name: person.value.name }
 												)
 											"
@@ -49,7 +49,7 @@
 								<template v-else>
 									{{
 										$t(
-											'component.internal.buildingContact.valueMissing'
+											'component.buildingContact.valueMissing'
 										)
 									}}
 								</template>
@@ -91,27 +91,27 @@ const showModal = computed({
 const persons = computed(() => {
 	return [
 		{
-			label: t('component.internal.buildingContact.propertyManager'),
+			label: t('component.buildingContact.propertyManager'),
 			value: props.building.contactPersons?.propertyManager,
 		},
 		{
-			label: t('component.internal.buildingContact.operationsManager'),
+			label: t('component.buildingContact.operationsManager'),
 			value: props.building.contactPersons?.operationsManager,
 		},
 		{
-			label: t('component.internal.buildingContact.operationCoordinator'),
+			label: t('component.buildingContact.operationCoordinator'),
 			value: props.building.contactPersons?.operationCoordinator,
 		},
 		{
-			label: t('component.internal.buildingContact.rentalAdministrator'),
+			label: t('component.buildingContact.rentalAdministrator'),
 			value: props.building.contactPersons?.rentalAdministrator,
 		},
 		{
-			label: t('component.internal.buildingContact.caretaker'),
+			label: t('component.buildingContact.caretaker'),
 			value: props.building.contactPersons?.caretaker,
 		},
 		{
-			label: t('component.internal.buildingContact.operationsTechnician'),
+			label: t('component.buildingContact.operationsTechnician'),
 			value: props.building.contactPersons?.operationsTechnician,
 		},
 	];

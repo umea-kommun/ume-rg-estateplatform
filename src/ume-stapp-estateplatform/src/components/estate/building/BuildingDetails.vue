@@ -2,7 +2,7 @@
 	<app-content
 		class="building-details estate-default"
 		:pageTitle="`${buildingName} - ${estateName} - ${$t(
-			'component.appHeader.title.internalEstate'
+			'component.appHeader.title.default'
 		)}`"
 	>
 		<div class="container">
@@ -66,7 +66,7 @@
 
 					<h2 class="mt-4 px-6">
 						{{
-							$t('component.internal.buildingDetails.room.title')
+							$t('component.buildingDetails.room.title')
 						}}
 					</h2>
 					<building-rooms
@@ -164,7 +164,7 @@ const buildingName = computed(() => {
 const breadcrumbs = computed(() => {
 	return [
 		{
-			title: t('component.internal.estateSearch.breadcrumb'),
+			title: t('component.estateSearch.breadcrumb'),
 			to: { name: EstateRoutes.Search },
 		},
 		{

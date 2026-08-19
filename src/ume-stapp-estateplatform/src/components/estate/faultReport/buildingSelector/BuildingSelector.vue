@@ -22,7 +22,7 @@
 				<v-text-field
 					v-model="search"
 					:label="
-						$t('component.internal.buildingSelector.searchLabel')
+						$t('component.buildingSelector.searchLabel')
 					"
 					color="primary"
 					item-title="popularName"
@@ -43,14 +43,14 @@
 				class="mt-4"
 				icon="info"
 			>
-				{{ $t('component.internal.buildingSelector.noResults') }}
+				{{ $t('component.buildingSelector.noResults') }}
 			</v-alert>
 			<v-alert
 				v-if="!search && !searchResults?.length"
 				class="mt-4"
 				icon="info"
 			>
-				{{ $t('component.internal.buildingSelector.searchHelp') }}
+				{{ $t('component.buildingSelector.searchHelp') }}
 			</v-alert>
 			<v-list class="mt-2" v-if="searchResults?.length">
 				<estate-search-result-item
@@ -77,7 +77,7 @@
 						<h3 class="mt-4">
 							{{
 								$t(
-									'component.internal.buildingSelector.favoritesTitle',
+									'component.buildingSelector.favoritesTitle',
 									{ count }
 								)
 							}}
@@ -85,7 +85,7 @@
 						<p class="text-medium-emphasis mb-4" v-if="count">
 							{{
 								$t(
-									'component.internal.buildingSelector.favoritesDescription'
+									'component.buildingSelector.favoritesDescription'
 								)
 							}}
 						</p>

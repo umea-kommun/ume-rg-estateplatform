@@ -2,7 +2,7 @@
 	<app-content
 		class="estate-details estate-default"
 		:pageTitle="`${estateName} - ${$t(
-			'component.appHeader.title.internalEstate'
+			'component.appHeader.title.default'
 		)}`"
 	>
 		<div class="container">
@@ -85,7 +85,7 @@
 							icon="location_pin"
 							:label="
 								$t(
-									'component.internal.buildingDetails.mapButton'
+									'component.buildingDetails.mapButton'
 								)
 							"
 							@click="buildingMapRef?.openFullscreen()"
@@ -94,7 +94,7 @@
 					<hr class="circle-button-toggles mobile mt-4 mx-6" />
 
 					<h2 class="px-6">
-						{{ $t('component.internal.estateDetails.buildings') }}
+						{{ $t('component.estateDetails.buildings') }}
 					</h2>
 					<v-alert
 						v-if="failedToFetchBuildings"
@@ -167,7 +167,7 @@ const estateName = computed(() => {
 const breadcrumbs = computed(() => {
 	return [
 		{
-			title: t('component.internal.estateSearch.breadcrumb'),
+			title: t('component.estateSearch.breadcrumb'),
 			to: { name: EstateRoutes.Search },
 		},
 		{

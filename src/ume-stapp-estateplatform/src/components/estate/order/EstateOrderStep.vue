@@ -19,7 +19,7 @@
 					size="small"
 					color="grey-darken-2"
 				>
-					{{ $t('component.internal.faultReport.changeAnswer') }}
+					{{ $t('component.faultReport.changeAnswer') }}
 				</v-btn>
 			</div>
 			<div v-if="showSkip || hasCounter" class="estate-order-step__step">
@@ -30,7 +30,7 @@
 					variant="tonal"
 					color="grey-darken-2"
 				>
-					{{ $t('component.internal.faultReport.room.skip') }}
+					{{ $t('component.faultReport.room.skip') }}
 				</v-btn>
 				<v-spacer />
 				<span v-if="hasCounter">{{ step }}/{{ stepCount }}</span>

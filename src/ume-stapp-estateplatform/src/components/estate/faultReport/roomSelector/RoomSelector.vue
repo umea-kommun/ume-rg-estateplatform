@@ -3,7 +3,7 @@
 		<div v-if="selectedRoom || skippedRoom">
 			<div v-if="skippedRoom">
 				<p class="text-medium-emphasis">
-					{{ $t('component.internal.roomSelector.none') }}
+					{{ $t('component.roomSelector.none') }}
 				</p>
 			</div>
 			<div
@@ -24,7 +24,7 @@
 		</div>
 		<div v-else>
 			<p class="text-medium-emphasis">
-				{{ $t('component.internal.roomSelector.description') }}
+				{{ $t('component.roomSelector.description') }}
 			</p>
 			<building-rooms
 				:building-id="building.id"

@@ -1,7 +1,7 @@
 <template>
 	<app-content
 		class="estate-default estate-order"
-		:pageTitle="$t('component.appHeader.title.internalEstateOrder')"
+		:pageTitle="$t('component.appHeader.title.order')"
 		:is-loading="isLoadingFromQuery"
 	>
 		<div class="content-wrap">
@@ -15,10 +15,10 @@
 				<div v-else class="mt-2">
 					<div class="pb-4">
 						<h1 class="ma-0 mb-2">
-							{{ $t('component.internal.order.title') }}
+							{{ $t('component.order.title') }}
 						</h1>
 						<p class="ma-0">
-							{{ $t('component.internal.order.description') }}
+							{{ $t('component.order.description') }}
 						</p>
 					</div>
 
@@ -29,10 +29,10 @@
 						:title="
 							selectedBuilding
 								? $t(
-										'component.internal.faultReport.building.selected'
+										'component.faultReport.building.selected'
 								  )
 								: $t(
-										'component.internal.faultReport.building.select'
+										'component.faultReport.building.select'
 								  )
 						"
 						:show-clear="!!selectedBuilding"
@@ -55,7 +55,7 @@
 						"
 						:step="2"
 						:step-count="stepCount"
-						:title="$t('component.internal.order.category.title')"
+						:title="$t('component.order.category.title')"
 						ref="categoryTitle"
 						class="mt-6"
 					>
@@ -74,7 +74,7 @@
 					>
 						{{
 							$t(
-								'component.internal.order.category.noneAvailable'
+								'component.order.category.noneAvailable'
 							)
 						}}
 					</v-alert>
@@ -95,19 +95,19 @@
 							<span v-if="selectedRoom && !skippedRoom">
 								{{
 									$t(
-										'component.internal.faultReport.room.selected'
+										'component.faultReport.room.selected'
 									)
 								}}
 							</span>
 							<span v-else-if="!selectedRoom && skippedRoom">
 								{{
 									$t(
-										'component.internal.faultReport.room.none'
+										'component.faultReport.room.none'
 									)
 								}}
 							</span>
 							<span v-else>
-								{{ $t('component.internal.order.room.select') }}
+								{{ $t('component.order.room.select') }}
 							</span>
 						</template>
 						<template
@@ -144,7 +144,7 @@
 							:step-count="stepCount"
 							:title="
 								$t(
-									'component.internal.order.general.descriptionTitle'
+									'component.order.general.descriptionTitle'
 								)
 							"
 							ref="problemTitle"
@@ -154,7 +154,7 @@
 								id="problem-description"
 								:label="
 									$t(
-										'component.internal.order.general.descriptionLabel'
+										'component.order.general.descriptionLabel'
 									)
 								"
 								v-model="problemDescription"
@@ -169,7 +169,7 @@
 							<p class="text-medium-emphasis">
 								{{
 									$t(
-										'component.internal.order.general.descriptionHelpText'
+										'component.order.general.descriptionHelpText'
 									)
 								}}
 							</p>
@@ -178,7 +178,7 @@
 								id="file-upload"
 								:label="
 									$t(
-										'component.internal.order.general.fileUploadLabel'
+										'component.order.general.fileUploadLabel'
 									)
 								"
 								v-model="attachments"
@@ -194,7 +194,7 @@
 						<estate-order-step
 							:title="
 								$t(
-									'component.internal.order.general.contactLabel'
+									'component.order.general.contactLabel'
 								)
 							"
 							:step="5"
@@ -204,7 +204,7 @@
 							<p class="text-medium-emphasis">
 								{{
 									$t(
-										'component.internal.order.general.contactHelpText'
+										'component.order.general.contactHelpText'
 									)
 								}}
 							</p>
@@ -267,7 +267,7 @@
 								@click="submitReport"
 							>
 								{{
-									$t('component.internal.order.submitButton')
+									$t('component.order.submitButton')
 								}}
 							</v-btn>
 						</div>
@@ -277,19 +277,19 @@
 			<div class="info-wrap">
 				<v-alert rounded="lg">
 					<h2 class="ma-0">
-						{{ $t('component.internal.order.info.title') }}
+						{{ $t('component.order.info.title') }}
 					</h2>
 					<p>
-						{{ $t('component.internal.order.info.text1') }}
+						{{ $t('component.order.info.text1') }}
 					</p>
 					<p>
-						{{ $t('component.internal.order.info.text2') }}
+						{{ $t('component.order.info.text2') }}
 					</p>
 					<p>
-						{{ $t('component.internal.order.info.text3') }}
+						{{ $t('component.order.info.text3') }}
 					</p>
 					<p>
-						{{ $t('component.internal.order.info.text4') }}
+						{{ $t('component.order.info.text4') }}
 					</p>
 				</v-alert>
 			</div>
@@ -344,7 +344,7 @@ const store = useStore<IRootState>();
 
 const breadcrumbs = [
 	{
-		title: t('component.internal.order.title'),
+		title: t('component.order.title'),
 		to: { name: EstateRoutes.Order },
 	},
 ];

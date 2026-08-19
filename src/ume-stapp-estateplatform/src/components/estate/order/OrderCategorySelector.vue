@@ -44,14 +44,14 @@
 					color="success"
 					v-if="props.category === cate.type"
 				>
-					{{ $t('component.internal.order.category.selected') }}
+					{{ $t('component.order.category.selected') }}
 				</v-chip>
 
 				<span
 					v-else
 					class="text-body-2 text-primary font-weight-medium"
 				>
-					{{ $t('component.internal.order.category.select') }}
+					{{ $t('component.order.category.select') }}
 				</span>
 			</div>
 		</v-card>
@@ -76,25 +76,25 @@ const allCategories = [
 	{
 		type: EstateOrderCategory.BuildingService,
 		icon: 'handyman',
-		title: t('component.internal.order.category.buildingServices.title'),
+		title: t('component.order.category.buildingServices.title'),
 		description: t(
-			'component.internal.order.category.buildingServices.description'
+			'component.order.category.buildingServices.description'
 		),
 	},
 	{
 		type: EstateOrderCategory.TownHallService,
 		icon: 'account_balance',
-		title: t('component.internal.order.category.townHallServices.title'),
+		title: t('component.order.category.townHallServices.title'),
 		description: t(
-			'component.internal.order.category.townHallServices.description'
+			'component.order.category.townHallServices.description'
 		),
 	},
 	{
 		type: EstateOrderCategory.FacilityService,
 		icon: 'engineering',
-		title: t('component.internal.order.category.facilitiesManager.title'),
+		title: t('component.order.category.facilitiesManager.title'),
 		description: t(
-			'component.internal.order.category.facilitiesManager.description'
+			'component.order.category.facilitiesManager.description'
 		),
 	},
 	// SpaceRequirement (Förändrade lokalbehov) is now its own top-level flow

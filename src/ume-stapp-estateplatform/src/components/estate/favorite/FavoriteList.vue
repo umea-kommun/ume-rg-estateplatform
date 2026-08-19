@@ -9,7 +9,7 @@
 			<slot name="header" :count="filteredFavorites?.length ?? 0">
 				<h2 class="mb-4">
 					{{
-						$t('component.internal.estateFavorite.title', {
+						$t('component.estateFavorite.title', {
 							count: filteredFavorites?.length ?? 0,
 						})
 					}}
@@ -19,7 +19,7 @@
 				v-if="!isFetchingFavorites && !filteredFavorites?.length"
 				class="text-medium-emphasis"
 			>
-				{{ $t('component.internal.estateFavorite.noFavorites') }}
+				{{ $t('component.estateFavorite.noFavorites') }}
 			</p>
 
 			<v-alert

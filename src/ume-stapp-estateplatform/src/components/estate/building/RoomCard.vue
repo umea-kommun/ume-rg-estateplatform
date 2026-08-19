@@ -21,7 +21,7 @@
 		</div>
 		<ul class="pa-0 ma-0">
 			<li>
-				{{ $t('component.internal.buildingDetails.floorLabel') }}
+				{{ $t('component.buildingDetails.floorLabel') }}
 				{{ room.floorName }}
 			</li>
 			<li>{{ room.grossArea?.toLocaleString() }} m²</li>

@@ -5,10 +5,10 @@
 		>
 			<base-animated-success class="my-8" />
 			<h1 class="">
-				{{ $t('component.internal.faultReport.completed.title') }}
+				{{ $t('component.faultReport.completed.title') }}
 			</h1>
 			<p class="my-2">
-				{{ $t('component.internal.faultReport.completed.description') }}
+				{{ $t('component.faultReport.completed.description') }}
 			</p>
 			<v-btn
 				class="mt-4"
@@ -17,7 +17,7 @@
 					name: EstateRoutes.Search,
 				}"
 			>
-				{{ $t('component.internal.faultReport.completed.goHome') }}
+				{{ $t('component.faultReport.completed.goHome') }}
 			</v-btn>
 		</div>
 		<hr class="mt-6" />
@@ -25,7 +25,7 @@
 		<rate-feedback
 			category="estateFaultReport"
 			:feedback-title="
-				$t('component.internal.faultReport.completed.feedbackTitle')
+				$t('component.faultReport.completed.feedbackTitle')
 			"
 			class="mt-6"
 		/>

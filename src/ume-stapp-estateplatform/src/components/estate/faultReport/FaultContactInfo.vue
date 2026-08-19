@@ -3,7 +3,7 @@
 		<base-text-box
 			id="contact-name"
 			:label="
-				$t('component.internal.faultReport.general.contactNameLabel')
+				$t('component.faultReport.general.contactNameLabel')
 			"
 			v-model="contactName"
 			rules="required"
@@ -16,7 +16,7 @@
 				id="contact-email"
 				:label="
 					$t(
-						'component.internal.faultReport.general.contactEmailLabel'
+						'component.faultReport.general.contactEmailLabel'
 					)
 				"
 				v-model="contactEmail"
@@ -29,7 +29,7 @@
 				id="contact-phone"
 				:label="
 					$t(
-						'component.internal.faultReport.general.contactPhoneLabel'
+						'component.faultReport.general.contactPhoneLabel'
 					)
 				"
 				v-model="contactPhone"

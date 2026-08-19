@@ -1,7 +1,7 @@
 <template>
 	<app-loading-spinner v-if="loading" :is-visible="true" />
 	<v-alert v-else-if="buildings?.length === 0" icon="info" class="mt-2 mx-6">
-		{{ t('component.internal.estateDetails.noBuildings') }}
+		{{ t('component.estateDetails.noBuildings') }}
 	</v-alert>
 	<div v-else-if="buildings" class="mt-2">
 		<v-card

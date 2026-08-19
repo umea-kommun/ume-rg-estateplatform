@@ -5,7 +5,7 @@
 			v-model="selectedBusinessTypes"
 			:items="businessTypes"
 			:label="
-				$t('component.internal.estateSearchFilter.businessTypeLabel')
+				$t('component.estateSearchFilter.businessTypeLabel')
 			"
 			color="primary"
 			item-title="name"
@@ -24,7 +24,7 @@
 				prepend-icon="filter_list_off"
 				@click="clearFilters"
 			>
-				{{ $t('component.internal.estateSearchFilter.clearFilter') }}
+				{{ $t('component.estateSearchFilter.clearFilter') }}
 			</v-btn>
 		</div>
 	</div>

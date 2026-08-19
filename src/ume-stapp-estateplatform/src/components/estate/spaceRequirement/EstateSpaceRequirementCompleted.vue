@@ -5,12 +5,12 @@
 		>
 			<base-animated-success class="my-8" />
 			<h1 class="">
-				{{ $t('component.internal.spaceRequirement.completed.title') }}
+				{{ $t('component.spaceRequirement.completed.title') }}
 			</h1>
 			<p class="my-2">
 				{{
 					$t(
-						'component.internal.spaceRequirement.completed.description'
+						'component.spaceRequirement.completed.description'
 					)
 				}}
 			</p>
@@ -21,7 +21,7 @@
 					name: EstateRoutes.Search,
 				}"
 			>
-				{{ $t('component.internal.spaceRequirement.completed.goHome') }}
+				{{ $t('component.spaceRequirement.completed.goHome') }}
 			</v-btn>
 		</div>
 		<hr class="mt-6" />
@@ -35,7 +35,7 @@
 			category="estateOrder"
 			:feedback-title="
 				$t(
-					'component.internal.spaceRequirement.completed.feedbackTitle'
+					'component.spaceRequirement.completed.feedbackTitle'
 				)
 			"
 			class="mt-6"

@@ -17,7 +17,7 @@
 			prepend-icon="map"
 			@click="open"
 		>
-			{{ $t('component.internal.roomSelector.selectOnBlueprint') }}
+			{{ $t('component.roomSelector.selectOnBlueprint') }}
 		</v-btn>
 	</div>
 </template>

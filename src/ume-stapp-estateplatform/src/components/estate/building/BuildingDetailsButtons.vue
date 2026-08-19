@@ -2,17 +2,17 @@
 	<div class="circle-button-toggles">
 		<base-icon-button
 			icon="location_pin"
-			:label="$t('component.internal.buildingDetails.mapButton')"
+			:label="$t('component.buildingDetails.mapButton')"
 			:active="activeMap === ActiveMapType.Map && !isMobile"
 			@click="onMapClick"
 		/>
 		<base-icon-button
 			icon="map"
-			:label="$t('component.internal.buildingDetails.blueprintButton')"
+			:label="$t('component.buildingDetails.blueprintButton')"
 			:tooltip="
 				!building.blueprintAvailable
 					? $t(
-							'component.internal.buildingDetails.blueprintMissingTooltip'
+							'component.buildingDetails.blueprintMissingTooltip'
 					  )
 					: undefined
 			"
@@ -24,12 +24,12 @@
 			v-if="isEnabled('ContactPersons')"
 			icon="contacts"
 			:label="
-				$t('component.internal.buildingDetails.contactPersonsButton')
+				$t('component.buildingDetails.contactPersonsButton')
 			"
 			:tooltip="
 				!contactPersonsCount
 					? $t(
-							'component.internal.buildingDetails.contactPersonsMissingTooltip'
+							'component.buildingDetails.contactPersonsMissingTooltip'
 					  )
 					: undefined
 			"
@@ -40,11 +40,11 @@
 		<base-icon-button
 			v-if="isEnabled('Documents')"
 			icon="insert_drive_file"
-			:label="$t('component.internal.buildingDetails.documentsButton')"
+			:label="$t('component.buildingDetails.documentsButton')"
 			:tooltip="
 				building.numDocuments === 0
 					? $t(
-							'component.internal.buildingDetails.documentsMissingTooltip'
+							'component.buildingDetails.documentsMissingTooltip'
 					  )
 					: undefined
 			"
@@ -56,7 +56,7 @@
 			v-if="isEnabled('ErrorReport')"
 			icon="warning"
 			icon-color="error"
-			:label="$t('component.internal.buildingDetails.reportButton')"
+			:label="$t('component.buildingDetails.reportButton')"
 			:to="{
 				name: EstateRoutes.FaultReport,
 				query: {

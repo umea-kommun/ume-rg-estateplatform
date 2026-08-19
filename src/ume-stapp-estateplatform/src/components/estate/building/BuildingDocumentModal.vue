@@ -8,7 +8,7 @@
 	>
 		<v-card>
 			<v-card-title id="modal-title" class="px-6">
-				{{ $t('component.internal.buildingDocument.title') }}
+				{{ $t('component.buildingDocument.title') }}
 			</v-card-title>
 
 			<div class="content">
@@ -18,7 +18,7 @@
 							v-model="search"
 							:placeholder="
 								$t(
-									'component.internal.buildingDocument.searchPlaceholder'
+									'component.buildingDocument.searchPlaceholder'
 								)
 							"
 							color="primary"
@@ -36,7 +36,7 @@
 							:items="categories"
 							:label="
 								$t(
-									'component.internal.buildingDocument.category'
+									'component.buildingDocument.category'
 								)
 							"
 							rounded="lg"

@@ -4,7 +4,7 @@
 		class="building-image"
 		:src="src"
 		:alt="
-			props.alt ?? $t('component.internal.buildingDetails.buildingImage')
+			props.alt ?? $t('component.buildingDetails.buildingImage')
 		"
 		@load="loaded = true"
 		v-show="loaded"

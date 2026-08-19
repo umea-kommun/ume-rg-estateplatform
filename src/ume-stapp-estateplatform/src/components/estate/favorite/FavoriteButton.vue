@@ -10,8 +10,8 @@
 		rounded="xl"
 		:title="
 			isFavorite
-				? $t('component.internal.estateFavorite.removeFavorite')
-				: $t('component.internal.estateFavorite.addFavorite')
+				? $t('component.estateFavorite.removeFavorite')
+				: $t('component.estateFavorite.addFavorite')
 		"
 	/>
 </template>

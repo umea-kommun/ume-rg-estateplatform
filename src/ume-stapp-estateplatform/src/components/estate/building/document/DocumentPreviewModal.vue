@@ -42,12 +42,12 @@
 						<p>
 							{{
 								$t(
-									'component.internal.buildingDocument.noPreview'
+									'component.buildingDocument.noPreview'
 								)
 							}}
 							<a :href="blobUrl" target="_blank" rel="noopener">{{
 								$t(
-									'component.internal.buildingDocument.openPdf'
+									'component.buildingDocument.openPdf'
 								)
 							}}</a>
 						</p>
@@ -63,7 +63,7 @@
 						<v-alert rounded="lg">
 							{{
 								$t(
-									'component.internal.buildingDocument.noPreview'
+									'component.buildingDocument.noPreview'
 								)
 							}}
 						</v-alert>
@@ -78,7 +78,7 @@
 						>
 							{{
 								$t(
-									'component.internal.buildingDocument.downloadFile',
+									'component.buildingDocument.downloadFile',
 									{ filename: document?.name }
 								)
 							}}
@@ -94,7 +94,7 @@
 					prepend-icon="download"
 					:disabled="!blobUrl"
 				>
-					{{ $t('component.internal.buildingDocument.downloadFile') }}
+					{{ $t('component.buildingDocument.downloadFile') }}
 				</v-btn>
 				<v-spacer />
 				<v-btn @click="showModal = false">

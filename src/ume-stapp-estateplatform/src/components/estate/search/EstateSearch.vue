@@ -1,7 +1,7 @@
 <template>
 	<app-content
 		class="estate-search estate-details estate-default"
-		:pageTitle="$t('component.appHeader.title.internalEstate')"
+		:pageTitle="$t('component.appHeader.title.default')"
 	>
 		<div class="container">
 			<div class="content px-6 pb-4">
@@ -12,7 +12,7 @@
 						v-model="search"
 						:placeholder="
 							$t(
-								'component.internal.estateSearch.searchPlaceholder'
+								'component.estateSearch.searchPlaceholder'
 							)
 						"
 						color="primary"
@@ -31,7 +31,7 @@
 							>
 								{{
 									$t(
-										'component.internal.estateSearch.searchButton'
+										'component.estateSearch.searchButton'
 									)
 								}}
 							</v-btn>
@@ -57,7 +57,7 @@
 									<v-icon icon="filter_list" :size="20" />
 								</div>
 							</template>
-							{{ $t('component.internal.estateSearch.filter') }}
+							{{ $t('component.estateSearch.filter') }}
 						</v-btn>
 						<v-btn
 							variant="tonal"
@@ -68,7 +68,7 @@
 						>
 							{{
 								$t(
-									'component.internal.estateSearch.selectOnMap'
+									'component.estateSearch.selectOnMap'
 								)
 							}}
 						</v-btn>
@@ -84,7 +84,7 @@
 					<div class="mt-4 pb-4 search-help" v-if="!userHasSearched">
 						<v-alert color="primary" variant="tonal">
 							{{
-								$t('component.internal.estateSearch.searchHelp')
+								$t('component.estateSearch.searchHelp')
 							}}
 						</v-alert>
 					</div>
@@ -97,7 +97,7 @@
 						class="mt-4"
 						icon="info"
 					>
-						{{ $t('component.internal.estateSearch.noResults') }}
+						{{ $t('component.estateSearch.noResults') }}
 					</v-alert>
 					<div class="mt-4" v-if="searchResults?.length">
 						<estate-search-result-item
@@ -166,7 +166,7 @@ const searchFilter = ref<SearchFilter>(
 
 const breadcrumbs = [
 	{
-		title: t('component.internal.estateSearch.breadcrumb'),
+		title: t('component.estateSearch.breadcrumb'),
 		to: { name: EstateRoutes.Search },
 	},
 ];
