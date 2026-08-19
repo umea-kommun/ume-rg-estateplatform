@@ -123,6 +123,7 @@ module staticWebApp_estateplatform 'br/ume:microsoft.web.staticsites:v2.3' = {
   params: {
     environment: environment
     companyPrefix: companyPrefix
+    location: 'westeurope' // Remove when available in swedencentral. Static Web Apps in Sweden at https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/table
     purpose: purpose
     dateNowUtc: dateNowUtc
   }
