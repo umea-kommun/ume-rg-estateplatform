@@ -46,18 +46,75 @@
 			:disabled="building.numDocuments === 0"
 			@click="showDocumentModal = true"
 		/>
-		<base-icon-button
-			v-if="isEnabled('ErrorReport')"
-			icon="warning"
-			icon-color="error"
-			:label="$t('component.buildingDetails.reportButton')"
-			:to="{
-				name: EstateRoutes.FaultReport,
-				query: {
-					buildingId: building.id,
-				},
-			}"
-		/>
+		<!--
+			One "create case" entry instead of three separate circles: the
+			view buttons stay one group and the work order actions live in a
+			menu, each deep-linking with the building prefilled.
+		-->
+		<v-menu attach v-if="isEnabled('ErrorReport')">
+			<template v-slot:activator="{ props }">
+				<base-icon-button
+					v-bind="props"
+					icon="add"
+					active
+					:label="$t('component.buildingDetails.createCase')"
+					@click="trackMenuOpened"
+				/>
+			</template>
+			<v-list class="create-case-list">
+				<v-list-item
+					prepend-icon="warning"
+					:to="{
+						name: EstateRoutes.FaultReport,
+						query: { buildingId: building.id },
+					}"
+					@click="trackAction('faultReport')"
+				>
+					<v-list-item-title>{{
+						$t('component.estatePortal.actions.faultReport.title')
+					}}</v-list-item-title>
+					<v-list-item-subtitle>{{
+						$t(
+							'component.estatePortal.actions.faultReport.description'
+						)
+					}}</v-list-item-subtitle>
+				</v-list-item>
+				<v-list-item
+					prepend-icon="handyman"
+					:to="{
+						name: EstateRoutes.Order,
+						query: { buildingId: building.id },
+					}"
+					@click="trackAction('order')"
+				>
+					<v-list-item-title>{{
+						$t('component.estatePortal.actions.order.title')
+					}}</v-list-item-title>
+					<v-list-item-subtitle>{{
+						$t('component.estatePortal.actions.order.description')
+					}}</v-list-item-subtitle>
+				</v-list-item>
+				<v-list-item
+					prepend-icon="space_dashboard"
+					:to="{
+						name: EstateRoutes.SpaceRequirement,
+						query: { buildingId: building.id },
+					}"
+					@click="trackAction('spaceRequirement')"
+				>
+					<v-list-item-title>{{
+						$t(
+							'component.estatePortal.actions.spaceRequirement.title'
+						)
+					}}</v-list-item-title>
+					<v-list-item-subtitle>{{
+						$t(
+							'component.estatePortal.actions.spaceRequirement.description'
+						)
+					}}</v-list-item-subtitle>
+				</v-list-item>
+			</v-list>
+		</v-menu>
 
 		<building-contact-modal
 			v-if="building && isEnabled('ContactPersons')"
@@ -139,6 +196,27 @@ const onBlueprintClick = () => {
 	});
 };
 
+const trackMenuOpened = () => {
+	appInsights?.trackEvent({
+		name: 'EstateCreateCaseMenuOpened',
+		properties: {
+			buildingId: props.building.id,
+			buildingName: props.building.name,
+		},
+	});
+};
+
+const trackAction = (type: string) => {
+	appInsights?.trackEvent({
+		name: 'EstateBuildingActionClicked',
+		properties: {
+			type,
+			buildingId: props.building.id,
+			buildingName: props.building.name,
+		},
+	});
+};
+
 const contactPersonsCount = computed(() => {
 	return Object.values(props.building?.contactPersons || {}).reduce(
 		(count, contact) => {
@@ -151,3 +229,17 @@ const contactPersonsCount = computed(() => {
 	);
 });
 </script>
+
+<style scoped lang="scss">
+.create-case-list {
+	max-width: 360px;
+
+	:deep(.v-list-item-subtitle) {
+		white-space: normal;
+	}
+	:deep(.v-list-item) {
+		padding-top: 8px;
+		padding-bottom: 8px;
+	}
+}
+</style>

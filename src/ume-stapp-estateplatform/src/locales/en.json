@@ -160,6 +160,10 @@
 				"order": "Order - Real Estate",
 				"spaceRequirement": "Changed space requirements - Real Estate"
 			},
+			"nav": {
+				"label": "Primary navigation",
+				"search": "Search"
+			},
 			"locale": {
 				"change": "Other languages"
 			},
@@ -287,7 +291,7 @@
 			"contactPersonsMissingTooltip": "No contact persons specified",
 			"documentsButton": "Documents",
 			"documentsMissingTooltip": "There are no documents associated with this building",
-			"reportButton": "Report fault",
+			"createCase": "Create case",
 			"buildingImage": "Image of building",
 			"room": {
 				"title": "Rooms",

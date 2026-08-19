@@ -87,6 +87,45 @@
 		}
 	}
 
+	// Shared two-pane skeleton for the work order pages (fault report,
+	// order, space requirement). The form column matches the search/details
+	// content column (max 650px) and the info panel takes the map pane's
+	// rail position, so every estate page shares the same page skeleton and
+	// the same mobile breakpoint.
+	.content-wrap {
+		display: flex;
+		gap: 2rem;
+
+		.report-wrap,
+		.order-wrap {
+			flex: 3;
+			max-width: 650px;
+		}
+
+		.info-wrap {
+			flex: 2;
+			align-self: flex-start;
+			position: sticky;
+			top: calc($site-header-height + 24px);
+			margin-top: 46px;
+		}
+
+		@media only screen and (max-width: $estate-mobile-threshold) {
+			flex-direction: column;
+
+			.report-wrap,
+			.order-wrap {
+				max-width: none;
+			}
+
+			.info-wrap {
+				position: static;
+				margin-top: 0;
+				align-self: stretch;
+			}
+		}
+	}
+
 	.circle-button-toggles {
 		display: flex;
 		flex-wrap: wrap;

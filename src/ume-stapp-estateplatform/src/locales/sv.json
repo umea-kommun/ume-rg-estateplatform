@@ -160,6 +160,10 @@
 				"order": "Beställning - Fastigheter",
 				"spaceRequirement": "Förändrade lokalbehov - Fastigheter"
 			},
+			"nav": {
+				"label": "Huvudnavigation",
+				"search": "Sök"
+			},
 			"locale": {
 				"change": "Other languages"
 			},
@@ -287,7 +291,7 @@
 			"contactPersonsMissingTooltip": "Det finns inga kontaktpersoner angivna",
 			"documentsButton": "Handlingar",
 			"documentsMissingTooltip": "Det finns inga handlingar kopplade till denna byggnad",
-			"reportButton": "Felanmäl",
+			"createCase": "Skapa ärende",
 			"buildingImage": "Bild på byggnaden",
 			"room": {
 				"title": "Rum",

@@ -692,37 +692,13 @@ onMounted(() => {
 		padding-top: 1rem;
 	}
 
-	.content-wrap {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 2rem;
-		justify-content: space-between;
-
-		.order-wrap {
-			flex: 1;
-			max-width: 650px;
-			min-width: 500px;
-
-			a {
-				color: inherit !important; /** Override global link color */
-			}
-			:deep(.help-and-error-wrap) {
-				margin-bottom: 8px;
-			}
+	// Layout comes from the shared .content-wrap skeleton in estate.scss.
+	.content-wrap .order-wrap {
+		a {
+			color: inherit !important; /** Override global link color */
 		}
-		.info-wrap {
-			margin-top: 46px;
-			width: 300px;
-		}
-		@media only screen and (max-width: 920px) {
-			.order-wrap {
-				min-width: auto;
-				max-width: none;
-			}
-			.info-wrap {
-				margin-top: 0;
-				width: 100%;
-			}
+		:deep(.help-and-error-wrap) {
+			margin-bottom: 8px;
 		}
 	}
 }
