@@ -78,49 +78,6 @@
 						@close="showSearchFilter = false"
 					/>
 
-					<!--
-						Portal actions. Navigation cards into the three work
-						order flows - same visual language as OptionCardGrid
-						but with link semantics (arrow hint, no selection
-						chrome). Gated on ErrorReport, the same flag as the
-						routes, and they yield to search results.
-					-->
-					<section
-						class="mt-6 portal-actions"
-						v-if="!userHasSearched && isErrorReportEnabled"
-						aria-labelledby="portal-actions-title"
-					>
-						<h2 id="portal-actions-title">
-							{{ $t('component.estatePortal.actionsTitle') }}
-						</h2>
-						<div class="action-grid mt-3">
-							<v-card
-								v-for="action in portalActions"
-								:key="action.key"
-								class="action-card pa-4"
-								rounded="lg"
-								:to="{ name: action.route }"
-								@click="trackPortalAction(action.key)"
-							>
-								<div class="icon-wrap mb-3">
-									<v-icon :icon="action.icon" :size="26" />
-								</div>
-								<div class="text-h6 font-weight-bold mb-1">
-									{{ action.title }}
-								</div>
-								<div
-									class="text-body-2 text-medium-emphasis mb-3"
-								>
-									{{ action.description }}
-								</div>
-								<div class="action-hint mt-auto">
-									{{ action.hint }}
-									<v-icon icon="arrow_forward" :size="18" />
-								</div>
-							</v-card>
-						</div>
-					</section>
-
 					<!-- Search results -->
 					<v-alert
 						v-if="
@@ -195,13 +152,9 @@ import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
 import { useEstateSearch } from './useEstateSearch';
 import FavoriteList from '../favorite/FavoriteList.vue';
 import { appInsights } from '@/plugins/appInsights';
-import { useFeatureFlags } from '@/utils/useFeatureFlags';
 
 const route = useRoute();
 const { t } = useI18n();
-const { isEnabled } = useFeatureFlags();
-
-const isErrorReportEnabled = computed(() => isEnabled('ErrorReport'));
 
 const buildingMapRef = useTemplateRef('building-map');
 const hoveredSearchResultId = ref<number | null>(null);
@@ -222,39 +175,6 @@ const breadcrumbs = [
 const userHasSearched = computed(() => {
 	return !!search.value || Object.keys(searchFilter.value).length > 0;
 });
-
-const portalActions = computed(() =>
-	[
-		{
-			key: 'faultReport',
-			icon: 'warning',
-			route: EstateRoutes.FaultReport,
-		},
-		{ key: 'order', icon: 'handyman', route: EstateRoutes.Order },
-		{
-			key: 'spaceRequirement',
-			icon: 'space_dashboard',
-			route: EstateRoutes.SpaceRequirement,
-		},
-	].map((action) => ({
-		...action,
-		title: t(`component.estatePortal.actions.${action.key}.title`),
-		description: t(
-			`component.estatePortal.actions.${action.key}.description`
-		),
-		hint: t(`component.estatePortal.actions.${action.key}.hint`),
-	}))
-);
-
-const trackPortalAction = (type: string) => {
-	appInsights?.trackEvent({
-		name: 'EstatePortalActionClicked',
-		properties: {
-			type,
-			url: window.location.href,
-		},
-	});
-};
 
 const selectBuildingOnMap = () => {
 	buildingMapRef.value?.openFullscreen();
@@ -299,81 +219,6 @@ onMounted(() => {
 		font-size: size(17);
 		color: $grey-darken-3;
 		max-width: 46ch;
-	}
-}
-
-.portal-actions {
-	// auto-fit tolerates the three cards becoming one (the planned
-	// ärendeguide) without a layout change.
-	.action-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-		gap: 14px;
-	}
-
-	.action-card {
-		display: flex;
-		flex-direction: column;
-		border: 1px solid rgba(0, 0, 0, 0.08);
-		transition: border-color 0.15s;
-
-		&:hover,
-		&:focus-visible {
-			border-color: $primary;
-		}
-
-		.icon-wrap {
-			width: 48px;
-			height: 48px;
-			border-radius: 50%;
-			display: grid;
-			place-items: center;
-			background: rgba($primary, 0.08);
-			color: $primary;
-		}
-
-		.action-hint {
-			display: flex;
-			align-items: center;
-			gap: 4px;
-			font-size: size(15);
-			font-weight: 600;
-			color: $primary;
-		}
-	}
-
-	// Same compact rows as OptionCardGrid's dense mobile variant.
-	@media only screen and (max-width: 600px) {
-		.action-grid {
-			grid-template-columns: 1fr;
-			gap: 8px;
-		}
-
-		.action-card {
-			flex-direction: row;
-			align-items: center;
-			gap: 12px;
-			padding: 12px !important;
-
-			.icon-wrap {
-				width: 40px;
-				height: 40px;
-				margin-bottom: 0 !important;
-				flex: 0 0 auto;
-			}
-
-			.text-h6 {
-				flex: 1 1 auto;
-				margin-bottom: 0 !important;
-				font-size: 1rem !important;
-				line-height: 1.3;
-			}
-
-			.text-body-2,
-			.action-hint {
-				display: none;
-			}
-		}
 	}
 }
 

@@ -249,22 +249,18 @@
 		"estatePortal": {
 			"title": "Fastighetsportalen",
 			"description": "Sök fram information om kommunens fastigheter, byggnader och lokaler.",
-			"actionsTitle": "Vad vill du göra?",
 			"actions": {
 				"faultReport": {
 					"title": "Felanmälan",
-					"description": "Något är trasigt eller fungerar inte som det ska i era lokaler.",
-					"hint": "Gör en felanmälan"
+					"description": "Något är trasigt eller fungerar inte som det ska i era lokaler."
 				},
 				"order": {
 					"title": "Beställning",
-					"description": "Beställ arbete eller tjänster från Byggservice, Stadshusservice eller Verksamhetsservice.",
-					"hint": "Gör en beställning"
+					"description": "Beställ arbete eller tjänster från Byggservice, Stadshusservice eller Verksamhetsservice."
 				},
 				"spaceRequirement": {
 					"title": "Förändrade lokalbehov",
-					"description": "Er verksamhet behöver mer, mindre eller en annan typ av lokal.",
-					"hint": "Skicka in förfrågan"
+					"description": "Er verksamhet behöver mer, mindre eller en annan typ av lokal."
 				}
 			},
 			"selectOnMap": "Välj byggnad på kartan"

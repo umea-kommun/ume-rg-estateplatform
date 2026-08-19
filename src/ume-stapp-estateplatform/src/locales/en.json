@@ -249,22 +249,18 @@
 		"estatePortal": {
 			"title": "Estate portal",
 			"description": "Find information about the municipality's properties, buildings and premises.",
-			"actionsTitle": "What do you want to do?",
 			"actions": {
 				"faultReport": {
 					"title": "Fault report",
-					"description": "Something is broken or not working as it should in your premises.",
-					"hint": "Report a fault"
+					"description": "Something is broken or not working as it should in your premises."
 				},
 				"order": {
 					"title": "Order",
-					"description": "Order work or services from Byggservice, Stadshusservice or Verksamhetsservice.",
-					"hint": "Place an order"
+					"description": "Order work or services from Byggservice, Stadshusservice or Verksamhetsservice."
 				},
 				"spaceRequirement": {
 					"title": "Changed space requirements",
-					"description": "Your organization needs more, less or a different type of premises.",
-					"hint": "Submit a request"
+					"description": "Your organization needs more, less or a different type of premises."
 				}
 			},
 			"selectOnMap": "Select a building on the map"
