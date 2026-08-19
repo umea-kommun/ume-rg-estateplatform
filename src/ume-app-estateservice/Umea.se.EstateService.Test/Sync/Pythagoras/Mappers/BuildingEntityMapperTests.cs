@@ -1,4 +1,4 @@
-using Umea.se.EstateService.Logic.Sync.Pythagoras.Mappers;
+﻿using Umea.se.EstateService.Logic.Sync.Pythagoras.Mappers;
 using Umea.se.EstateService.ServiceAccess.Pythagoras.Dto;
 using Umea.se.EstateService.ServiceAccess.Pythagoras.Enums;
 using Umea.se.EstateService.Shared.Data.Entities;
@@ -297,7 +297,7 @@ public class BuildingEntityMapperTests
     }
 
     [Fact]
-    public void ToEntity_ExternalStatusNotEgen_WorkOrderTypesEmpty()
+    public void ToEntity_ExternalStatusNotEgen_WorkOrderTypesOnlySpaceRequirement()
     {
         BuildingEntity entity = BuildingEntityMapper.ToEntity(new BuildingInfo
         {
@@ -305,7 +305,22 @@ public class BuildingEntityMapperTests
             PropertyValues = Props((PropertyCategoryId.BuildingExternalStatus, "Extern"))
         });
 
-        entity.WorkOrderTypes.ShouldBeEmpty();
+        entity.WorkOrderTypes.ShouldBe([WorkOrderType.SpaceRequirement]);
+    }
+
+    [Fact]
+    public void ToEntity_ExternalStatusNotEgenWithServiceOrderOptIn_StillOnlySpaceRequirement()
+    {
+        BuildingEntity entity = BuildingEntityMapper.ToEntity(new BuildingInfo
+        {
+            Id = 1,
+            PropertyValues = Props(
+                (PropertyCategoryId.BuildingExternalStatus, "Extern"),
+                (PropertyCategoryId.TownHallServiceOrder, "Ja"),
+                (PropertyCategoryId.FacilityServiceOrder, "Ja"))
+        });
+
+        entity.WorkOrderTypes.ShouldBe([WorkOrderType.SpaceRequirement]);
     }
 
     [Theory]
