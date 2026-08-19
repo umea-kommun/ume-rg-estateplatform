@@ -65,7 +65,7 @@ export function useAuthMiddleware(router: Router): void {
 		if (
 			to.meta.requiresInternalLogin &&
 			store.state.user.authClientName !==
-				Config.VUE_APP_AUTH_PUBLIC_AD_CLIENT_NAME
+				Config.VUE_APP_AUTH_INTERNAL_CLIENT_NAME
 		) {
 			// User is not logged in with AD, deny access
 			return next({

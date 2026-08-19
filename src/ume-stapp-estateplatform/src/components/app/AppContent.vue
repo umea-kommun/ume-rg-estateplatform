@@ -78,7 +78,7 @@ useTitle(fullPageTitle);
 const warningMessage = computed(() => {
 	if (
 		store.state.user.authClientName ===
-			Config.VUE_APP_AUTH_PUBLIC_AD_CLIENT_NAME &&
+			Config.VUE_APP_AUTH_INTERNAL_CLIENT_NAME &&
 		!store.state.user.socialSecurityNumber
 	) {
 		return t('component.appContent.warning.adUserMissingSSN');
