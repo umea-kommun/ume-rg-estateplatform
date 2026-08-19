@@ -10,7 +10,6 @@ export enum EstateRoutes {
 	SpaceRequirement = 'Estate.SpaceRequirement',
 
 	EstateDetails = 'Estate.EstateDetails',
-	EstateDetailsBuildings = 'Estate.EstateDetails.Buildings',
 
 	BuildingDetails = 'Estate.BuildingDetails',
 }
