@@ -14,7 +14,6 @@
 			"goBack": "Gå tillbaka",
 			"more": "Mer",
 			"services": {
-				"title": "Tjänster",
 				"faultReport": "Felanmälan",
 				"order": "Beställning",
 				"spaceRequirement": "Förändrade lokalbehov"
@@ -232,17 +231,39 @@
 			"button": "OK, jag förstår"
 		},
 		"estateSearch": {
-			"breadcrumb": "Fastighetssök",
+			"breadcrumb": "Fastighetsportalen",
 			"searchPlaceholder": "Sök efter fastighet, adress eller byggnad...",
 			"searchButton": "Sök",
 			"filter": "Filtrera",
 			"selectOnMap": "Välj på karta",
-			"noResults": "Vi kunde inte hitta några fastigheter eller byggnader som matchade din sökning.",
-			"searchHelp": "Använd sökrutan eller filtrera för att hitta den byggnad eller fastighet du söker."
+			"noResults": "Vi kunde inte hitta några fastigheter eller byggnader som matchade din sökning."
 		},
 		"estateSearchFilter": {
 			"businessTypeLabel": "Huvudsaklig verksamhetstyp",
 			"clearFilter": "Rensa filter"
+		},
+		"estatePortal": {
+			"title": "Fastighetsportalen",
+			"description": "Sök fram information om kommunens fastigheter, byggnader och lokaler.",
+			"actionsTitle": "Vad vill du göra?",
+			"actions": {
+				"faultReport": {
+					"title": "Felanmälan",
+					"description": "Något är trasigt eller fungerar inte som det ska i era lokaler.",
+					"hint": "Gör en felanmälan"
+				},
+				"order": {
+					"title": "Beställning",
+					"description": "Beställ arbete eller tjänster från Byggservice, Stadshusservice eller Verksamhetsservice.",
+					"hint": "Gör en beställning"
+				},
+				"spaceRequirement": {
+					"title": "Förändrade lokalbehov",
+					"description": "Er verksamhet behöver mer, mindre eller en annan typ av lokal.",
+					"hint": "Skicka in förfrågan"
+				}
+			},
+			"selectOnMap": "Välj byggnad på kartan"
 		},
 		"estateFavorite": {
 			"title": "Mina favoriter ({count})",

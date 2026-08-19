@@ -14,7 +14,6 @@
 			"goBack": "Go back",
 			"more": "More",
 			"services": {
-				"title": "Services",
 				"faultReport": "Report a fault",
 				"order": "Place an order",
 				"spaceRequirement": "Changed space requirements"
@@ -232,17 +231,39 @@
 			"button": "OK, I understand"
 		},
 		"estateSearch": {
-			"breadcrumb": "Property Search",
+			"breadcrumb": "Estate portal",
 			"searchPlaceholder": "Search by property, address or building...",
 			"searchButton": "Search",
 			"filter": "Filter",
 			"selectOnMap": "Select on map",
-			"noResults": "We could not find any properties or buildings that matched your search.",
-			"searchHelp": "Use the search box or apply filters to find the building or property you are looking for."
+			"noResults": "We could not find any properties or buildings that matched your search."
 		},
 		"estateSearchFilter": {
 			"businessTypeLabel": "Main business type",
 			"clearFilter": "Clear filter"
+		},
+		"estatePortal": {
+			"title": "Estate portal",
+			"description": "Find information about the municipality's properties, buildings and premises.",
+			"actionsTitle": "What do you want to do?",
+			"actions": {
+				"faultReport": {
+					"title": "Fault report",
+					"description": "Something is broken or not working as it should in your premises.",
+					"hint": "Report a fault"
+				},
+				"order": {
+					"title": "Order",
+					"description": "Order work or services from Byggservice, Stadshusservice or Verksamhetsservice.",
+					"hint": "Place an order"
+				},
+				"spaceRequirement": {
+					"title": "Changed space requirements",
+					"description": "Your organization needs more, less or a different type of premises.",
+					"hint": "Submit a request"
+				}
+			},
+			"selectOnMap": "Select a building on the map"
 		},
 		"estateFavorite": {
 			"title": "My favorites ({count})",
