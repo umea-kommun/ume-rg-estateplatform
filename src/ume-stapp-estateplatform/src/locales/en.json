@@ -12,7 +12,13 @@
 			"skipToContent": "Skip to content",
 			"startPage": "Go to start page",
 			"goBack": "Go back",
-			"more": "More"
+			"more": "More",
+			"services": {
+				"title": "Services",
+				"faultReport": "Report a fault",
+				"order": "Place an order",
+				"spaceRequirement": "Changed space requirements"
+			}
 		},
 		"time": {
 			"minute": "minute | minutes",

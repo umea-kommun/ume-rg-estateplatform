@@ -70,6 +70,47 @@
 						@close="showSearchFilter = false"
 					/>
 
+					<!--
+						Portal services. These were the estate card's buttons on
+						Mina sidor's InternalStart, which is the only place they
+						ever linked from - see migrate_plan/handover.md.
+						Gated on ErrorReport, the same flag as the routes.
+					-->
+					<div
+						class="mt-6 portal-services"
+						v-if="!userHasSearched && isErrorReportEnabled"
+					>
+						<h2 class="services-title">
+							{{ $t('app.nav.services.title') }}
+						</h2>
+						<div class="services-actions mt-2">
+							<v-btn
+								variant="outlined"
+								size="x-large"
+								prependIcon="warning"
+								:to="{ name: EstateRoutes.FaultReport }"
+							>
+								{{ $t('app.nav.services.faultReport') }}
+							</v-btn>
+							<v-btn
+								variant="outlined"
+								size="x-large"
+								prependIcon="handyman"
+								:to="{ name: EstateRoutes.Order }"
+							>
+								{{ $t('app.nav.services.order') }}
+							</v-btn>
+							<v-btn
+								variant="outlined"
+								size="x-large"
+								prependIcon="space_dashboard"
+								:to="{ name: EstateRoutes.SpaceRequirement }"
+							>
+								{{ $t('app.nav.services.spaceRequirement') }}
+							</v-btn>
+						</div>
+					</div>
+
 					<!-- Search results -->
 					<div class="mt-4 pb-4 search-help" v-if="!userHasSearched">
 						<v-alert color="primary" variant="tonal">
@@ -139,9 +180,13 @@ import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
 import { useEstateSearch } from './useEstateSearch';
 import FavoriteList from '../favorite/FavoriteList.vue';
 import { appInsights } from '@/plugins/appInsights';
+import { useFeatureFlags } from '@/utils/useFeatureFlags';
 
 const route = useRoute();
 const { t } = useI18n();
+const { isEnabled } = useFeatureFlags();
+
+const isErrorReportEnabled = computed(() => isEnabled('ErrorReport'));
 
 const buildingMapRef = useTemplateRef('building-map');
 const hoveredSearchResultId = ref<number | null>(null);
@@ -194,6 +239,24 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.portal-services {
+	.services-title {
+		font-size: 1.1rem;
+		margin: 0;
+	}
+
+	.services-actions {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+		gap: 14px;
+
+		.v-btn {
+			width: 100%;
+			margin: 0;
+		}
+	}
+}
+
 .estate-search {
 	.search-help {
 		border-bottom: solid 1px $grey-lighten-4;

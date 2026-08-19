@@ -12,7 +12,13 @@
 			"skipToContent": "Hoppa till innehåll",
 			"startPage": "Gå till startsidan",
 			"goBack": "Gå tillbaka",
-			"more": "Mer"
+			"more": "Mer",
+			"services": {
+				"title": "Tjänster",
+				"faultReport": "Felanmälan",
+				"order": "Beställning",
+				"spaceRequirement": "Förändrade lokalbehov"
+			}
 		},
 		"time": {
 			"minute": "minut | minuter",

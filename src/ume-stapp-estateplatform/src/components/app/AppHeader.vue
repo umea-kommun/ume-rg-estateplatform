@@ -94,6 +94,32 @@
 								$t('component.appHeader.menu.appStart')
 							}}</v-list-item-title>
 						</v-list-item>
+						<hr v-if="isErrorReportEnabled" />
+						<v-list-item
+							v-if="isErrorReportEnabled"
+							:to="{ name: EstateRoutes.FaultReport }"
+						>
+							<v-list-item-title>{{
+								$t('app.nav.services.faultReport')
+							}}</v-list-item-title>
+						</v-list-item>
+						<v-list-item
+							v-if="isErrorReportEnabled"
+							:to="{ name: EstateRoutes.Order }"
+						>
+							<v-list-item-title>{{
+								$t('app.nav.services.order')
+							}}</v-list-item-title>
+						</v-list-item>
+						<v-list-item
+							v-if="isErrorReportEnabled"
+							:to="{ name: EstateRoutes.SpaceRequirement }"
+						>
+							<v-list-item-title>{{
+								$t('app.nav.services.spaceRequirement')
+							}}</v-list-item-title>
+						</v-list-item>
+						<hr v-if="isErrorReportEnabled" />
 						<v-list-item :href="aboutPageUrl" target="_blank">
 							<v-list-item-title>{{
 								$t('component.appHeader.menu.about')
@@ -150,6 +176,7 @@ import { setLocale } from '@/plugins/i18next';
 import IAuthManager from '@/plugins/auth/IAuthManager';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { AppRoutes, EstateRoutes } from '@/router/routes';
+import { useFeatureFlags } from '@/utils/useFeatureFlags';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import Config from '@/Config';
@@ -170,6 +197,9 @@ const $auth = inject('$auth') as IAuthManager;
 const { t, locale } = useI18n();
 
 const user = computed(() => store.state.user);
+
+const { isEnabled } = useFeatureFlags();
+const isErrorReportEnabled = computed(() => isEnabled('ErrorReport'));
 
 const headerTitle = computed(() => {
 	if (route.meta.title) {
