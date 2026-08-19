@@ -28,7 +28,6 @@ interface OnError {
 	errorPage?: IErrorPage | null;
 }
 
-const isMocked = (Config.VUE_APP_MOCK_DATA || '').trim() === 'yes';
 export default class ErrorService {
 	/**
 	 * Benign browser errors that should be silently ignored (substring match)
@@ -84,7 +83,7 @@ export default class ErrorService {
 			});
 		}
 
-		if (!isMocked && log) {
+		if (log) {
 			// Compose and send error to Insights
 			const error = this.composeError({ err, instance, info });
 			this.sendError(error);

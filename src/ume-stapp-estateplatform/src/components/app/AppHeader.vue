@@ -1,22 +1,5 @@
 <template>
 	<header class="app-header" :class="size">
-		<div class="mock-alert-wrap" v-if="usingMockedData">
-			<div class="mock-alert">
-				<div>
-					<strong>OBS!</strong> Denna applikation är inställd att ge
-					en demonstration av den funktionalitet som erbjuds. All
-					information lagras lokalt. Vissa funktioner i gränssnittet
-					är delvis inaktiverade.
-				</div>
-				<v-btn
-					size="small"
-					variant="outlined"
-					class="ma-0 mt-1 mb-1"
-					@click="resetMockedData"
-					>Återställ data</v-btn
-				>
-			</div>
-		</div>
 		<div id="skip">
 			<a href="#main-content" class="subheading text-center">{{
 				$t('app.nav.skipToContent')
@@ -170,7 +153,6 @@ import { IRootState } from '@/models/Interfaces';
 import Config from '@/Config';
 import { AppContentSize, AppHeaderTitle } from '@/models/Enums';
 import logoGreen from '@/assets/logo_green.png';
-import { resetSavedMockData } from '@/mock/mockStorageHandler';
 
 defineProps({
 	size: {
@@ -234,16 +216,6 @@ const selectedLocale = computed({
 		locale.value = newLocale;
 	},
 });
-
-// Mock data
-const usingMockedData = computed(() => {
-	return (Config.VUE_APP_MOCK_DATA || '').toLowerCase() === 'yes';
-});
-
-function resetMockedData(): void {
-	resetSavedMockData();
-	location.reload();
-}
 </script>
 
 <style scoped lang="scss">
@@ -253,22 +225,6 @@ function resetMockedData(): void {
 	flex-direction: column;
 	align-items: center;
 	display: flex;
-
-	.mock-alert-wrap {
-		background-color: #f9b7b7;
-		width: 100%;
-		.mock-alert {
-			font-size: size(14);
-			margin: 0 auto;
-			padding: 8px $site-horizontal-padding;
-			max-width: $site-max-width;
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			justify-content: space-between;
-			flex-wrap: wrap;
-		}
-	}
 
 	.header-content {
 		padding: 14px $site-horizontal-padding;
