@@ -6,7 +6,7 @@ import { Router } from 'vue-router';
 import AuthConfig from './AuthConfig';
 import IAuthManager from './IAuthManager';
 import authLoader from './Oauth';
-import { MyPagesRoutes } from '@/router/routes';
+import { EstateRoutes } from '@/router/routes';
 import { MutationType } from '@/models/Enums';
 
 let auth: IAuthManager;
@@ -61,7 +61,7 @@ export function useAuthMiddleware(router: Router): void {
 		) {
 			// User can't be logged in when accessing this page
 			return next({
-				name: MyPagesRoutes.AppStart,
+				name: EstateRoutes.Search,
 			});
 		}
 		if (
@@ -75,7 +75,7 @@ export function useAuthMiddleware(router: Router): void {
 		) {
 			// User is not logged in with the any of the external methods, deny access
 			return next({
-				name: MyPagesRoutes.InternalStart,
+				name: EstateRoutes.Search,
 			});
 		} else if (
 			to.meta.requiresInternalLogin &&
@@ -84,7 +84,7 @@ export function useAuthMiddleware(router: Router): void {
 		) {
 			// User is not logged in with AD, deny access
 			return next({
-				name: MyPagesRoutes.AppStart,
+				name: EstateRoutes.Search,
 			});
 		}
 

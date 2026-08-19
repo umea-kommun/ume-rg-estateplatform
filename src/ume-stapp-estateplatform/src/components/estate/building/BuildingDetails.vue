@@ -117,7 +117,7 @@ import AppContent from '@/components/app/AppContent.vue';
 import { DispatchType } from '@/models/Enums';
 import { IBuildingDetails } from '@/models/Interfaces';
 import { IRootState } from '@/models/Interfaces';
-import { EstateRoutes, MyPagesRoutes } from '@/router/routes';
+import { EstateRoutes } from '@/router/routes';
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -163,10 +163,6 @@ const buildingName = computed(() => {
 
 const breadcrumbs = computed(() => {
 	return [
-		{
-			title: t('app.nav.home'),
-			to: { name: MyPagesRoutes.InternalStart },
-		},
 		{
 			title: t('component.internal.estateSearch.breadcrumb'),
 			to: { name: EstateRoutes.Search },

@@ -27,7 +27,7 @@ import { AppContentSize } from '@/models/Enums';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import Config from '@/Config';
-import { MyPagesRoutes } from '@/router/routes';
+import { EstateRoutes } from '@/router/routes';
 
 const route = useRoute();
 const store = useStore<IRootState>();
@@ -43,10 +43,10 @@ const startPageRoute = computed(() => {
 	switch (user.value.authClientName) {
 		case Config.VUE_APP_AUTH_PUBLIC_AD_CLIENT_NAME:
 			// Redirect to internal start page
-			return MyPagesRoutes.InternalStart;
+			return EstateRoutes.Search;
 		default:
 			// Redirect to external start page
-			return MyPagesRoutes.AppStart;
+			return EstateRoutes.Search;
 	}
 });
 </script>

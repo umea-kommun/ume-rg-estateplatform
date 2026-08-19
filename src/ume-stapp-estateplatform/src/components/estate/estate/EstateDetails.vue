@@ -136,7 +136,7 @@ import {
 	IMapPoint,
 } from '@/models/Interfaces';
 import { IRootState } from '@/models/Interfaces';
-import { EstateRoutes, MyPagesRoutes } from '@/router/routes';
+import { EstateRoutes } from '@/router/routes';
 import { computed, ref, watch, useTemplateRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -166,10 +166,6 @@ const estateName = computed(() => {
 
 const breadcrumbs = computed(() => {
 	return [
-		{
-			title: t('app.nav.home'),
-			to: { name: MyPagesRoutes.InternalStart },
-		},
 		{
 			title: t('component.internal.estateSearch.breadcrumb'),
 			to: { name: EstateRoutes.Search },

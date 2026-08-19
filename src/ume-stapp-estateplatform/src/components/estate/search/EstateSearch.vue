@@ -143,7 +143,7 @@ import { watchDebounced } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 import AppContent from '@/components/app/AppContent.vue';
 import '@/themes/estate.scss';
-import { EstateRoutes, MyPagesRoutes } from '@/router/routes';
+import { EstateRoutes } from '@/router/routes';
 import { useI18n } from 'vue-i18n';
 import BuildingMap from '@/components/estate/map/BuildingMap.vue';
 import EstateSearchFilter from './EstateSearchFilter.vue';
@@ -165,10 +165,6 @@ const searchFilter = ref<SearchFilter>(
 );
 
 const breadcrumbs = [
-	{
-		title: t('app.nav.home'),
-		to: { name: MyPagesRoutes.InternalStart },
-	},
 	{
 		title: t('component.internal.estateSearch.breadcrumb'),
 		to: { name: EstateRoutes.Search },

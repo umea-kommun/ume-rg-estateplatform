@@ -60,7 +60,7 @@
 				v-if="
 					user.isAuthenticated ||
 					(!user.isAuthenticated &&
-						route.name !== MyPagesRoutes.AuthLogin)
+						route.name !== AppRoutes.AuthLogin)
 				"
 			>
 				<div v-if="user.isAuthenticated" class="user-wrap">
@@ -148,7 +148,7 @@ import { useI18n } from 'vue-i18n';
 import { setLocale } from '@/plugins/i18next';
 import IAuthManager from '@/plugins/auth/IAuthManager';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
-import { MyPagesRoutes } from '@/router/routes';
+import { AppRoutes, EstateRoutes } from '@/router/routes';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import Config from '@/Config';
@@ -179,7 +179,7 @@ const headerTitle = computed(() => {
 
 function navigateLogin(): void {
 	router.push({
-		name: MyPagesRoutes.AuthLogin,
+		name: AppRoutes.AuthLogin,
 	});
 }
 function logout(): void {
@@ -193,10 +193,10 @@ const startPageRoute = computed(() => {
 	switch (user.value.authClientName) {
 		case Config.VUE_APP_AUTH_PUBLIC_AD_CLIENT_NAME:
 			// Redirect to internal start page
-			return MyPagesRoutes.InternalStart;
+			return EstateRoutes.Search;
 		default:
 			// Redirect to external start page
-			return MyPagesRoutes.AppStart;
+			return EstateRoutes.Search;
 	}
 });
 const aboutPageUrl = computed(() => {

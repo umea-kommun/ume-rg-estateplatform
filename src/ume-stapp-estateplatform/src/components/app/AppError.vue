@@ -24,7 +24,7 @@
 				</v-btn>
 				<v-btn
 					:to="{
-						name: MyPagesRoutes.AppStart,
+						name: EstateRoutes.Search,
 					}"
 				>
 					{{ t('app.nav.startPage') }}
@@ -49,7 +49,7 @@ import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import { useI18n } from 'vue-i18n';
 import { AppContentSize } from '@/models/Enums';
-import { MyPagesRoutes } from '@/router/routes';
+import { EstateRoutes } from '@/router/routes';
 import Config from '@/Config';
 import moment from 'moment';
 

@@ -14,7 +14,7 @@
 				class="mt-4"
 				color="primary"
 				:to="{
-					name: MyPagesRoutes.InternalStart,
+					name: EstateRoutes.Search,
 				}"
 			>
 				{{ $t('component.internal.order.completed.goHome') }}
@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { MyPagesRoutes } from '@/router/routes';
+import { EstateRoutes } from '@/router/routes';
 import BaseAnimatedSuccess from '@/components/shared/BaseAnimatedSuccess.vue';
 import RateFeedback from '@/components/shared/RateFeedback.vue';
 </script>

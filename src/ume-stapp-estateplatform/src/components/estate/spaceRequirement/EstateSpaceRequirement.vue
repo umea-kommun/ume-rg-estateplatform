@@ -390,7 +390,7 @@ import {
 	IWorkOrderCategoryOption,
 } from '@/models/Interfaces';
 import { computed, onMounted, ref, useTemplateRef, watch } from 'vue';
-import { EstateRoutes, MyPagesRoutes } from '@/router/routes';
+import { EstateRoutes } from '@/router/routes';
 import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
 import { useI18n } from 'vue-i18n';
 import { EstateOrderCategory } from '@/models/Enums';
@@ -420,10 +420,6 @@ const { t, te, tm } = useI18n();
 const store = useStore<IRootState>();
 
 const breadcrumbs = [
-	{
-		title: t('app.nav.home'),
-		to: { name: MyPagesRoutes.InternalStart },
-	},
 	{
 		title: t('component.internal.spaceRequirement.title'),
 		to: { name: EstateRoutes.SpaceRequirement },

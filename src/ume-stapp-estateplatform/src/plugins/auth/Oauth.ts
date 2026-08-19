@@ -8,7 +8,7 @@ import IAuthManager from './IAuthManager';
 import AuthConfig from './AuthConfig';
 import IAuthClientConfig from './IAuthClientConfig';
 import router from '@/router';
-import { MyPagesRoutes } from '@/router/routes';
+import { AppRoutes } from '@/router/routes';
 
 const buildUrl = (host: string, pathWithLeadingSlash: string): string => {
 	return (
@@ -82,7 +82,7 @@ class Oauth implements IAuthManager {
 		extraQueryParams: string = ''
 	): void {
 		const loginRoute = router.resolve({
-			name: MyPagesRoutes.AuthLogin,
+			name: AppRoutes.AuthLogin,
 		});
 		let urlAfterLogout = window.location.origin + loginRoute.path;
 		urlAfterLogout += extraQueryParams === '' ? '' : '?' + extraQueryParams;
