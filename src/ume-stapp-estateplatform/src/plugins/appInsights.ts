@@ -1,4 +1,5 @@
-// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/plugins/appInsights.ts @ 84b4a5dc
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/plugins/appInsights.ts
 import { ApplicationInsights, Util } from '@microsoft/applicationinsights-web';
 import { RouteLocationNormalizedLoadedGeneric, Router } from 'vue-router';
 

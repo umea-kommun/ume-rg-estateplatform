@@ -1,4 +1,5 @@
-<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/base/BaseFileUpload.vue @ 84b4a5dc -->
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/base/BaseFileUpload.vue -->
 <template>
 	<div>
 		<label v-if="label" :for="id" class="pb-1 d-block">{{ label }}</label>

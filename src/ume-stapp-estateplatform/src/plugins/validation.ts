@@ -1,4 +1,5 @@
-// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/plugins/validation.ts @ 84b4a5dc
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/plugins/validation.ts
 import { configure, defineRule } from 'vee-validate';
 import AllRules from '@vee-validate/rules';
 import moment from 'moment';

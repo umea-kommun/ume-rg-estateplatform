@@ -1,4 +1,5 @@
-<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/app/PageNotFound.vue @ 84b4a5dc -->
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/app/PageNotFound.vue -->
 <template>
 	<app-content
 		:size="contentSize"
@@ -20,17 +21,13 @@
 	</app-content>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import AppContent from '@/components/app/AppContent.vue';
 import { useRoute } from 'vue-router';
 import { AppContentSize } from '@/models/Enums';
-import { useStore } from 'vuex';
-import { IRootState } from '@/models/Interfaces';
-import Config from '@/Config';
 import { EstateRoutes } from '@/router/routes';
 
 const route = useRoute();
-const store = useStore<IRootState>();
 
 const contentSize = ref<AppContentSize>(
 	route.meta
@@ -38,7 +35,6 @@ const contentSize = ref<AppContentSize>(
 		: AppContentSize.Default
 );
 
-const user = computed(() => store.state.user);
 const startPageRoute = EstateRoutes.Search;
 </script>
 

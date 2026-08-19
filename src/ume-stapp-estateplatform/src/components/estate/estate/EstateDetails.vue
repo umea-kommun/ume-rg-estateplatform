@@ -83,11 +83,7 @@
 					<div class="circle-button-toggles mobile px-6">
 						<base-icon-button
 							icon="location_pin"
-							:label="
-								$t(
-									'component.buildingDetails.mapButton'
-								)
-							"
+							:label="$t('component.buildingDetails.mapButton')"
 							@click="buildingMapRef?.openFullscreen()"
 						/>
 					</div>

@@ -1,4 +1,5 @@
-// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/main.ts @ 84b4a5dc
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/main.ts
 import './polyfills';
 import { createApp } from 'vue';
 import App from './App.vue';
@@ -61,8 +62,4 @@ app.use(appInsights, {
 });
 
 Validation(i18n);
-app.use(store)
-	.use(router)
-	.use(i18n)
-	.use(vuetify)
-	.mount('#app');
+app.use(store).use(router).use(i18n).use(vuetify).mount('#app');

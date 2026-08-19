@@ -77,17 +77,13 @@ const allCategories = [
 		type: EstateOrderCategory.BuildingService,
 		icon: 'handyman',
 		title: t('component.order.category.buildingServices.title'),
-		description: t(
-			'component.order.category.buildingServices.description'
-		),
+		description: t('component.order.category.buildingServices.description'),
 	},
 	{
 		type: EstateOrderCategory.TownHallService,
 		icon: 'account_balance',
 		title: t('component.order.category.townHallServices.title'),
-		description: t(
-			'component.order.category.townHallServices.description'
-		),
+		description: t('component.order.category.townHallServices.description'),
 	},
 	{
 		type: EstateOrderCategory.FacilityService,

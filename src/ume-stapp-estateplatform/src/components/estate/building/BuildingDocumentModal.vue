@@ -34,11 +34,7 @@
 							v-if="categories.length > 0"
 							v-model="selectedCategory"
 							:items="categories"
-							:label="
-								$t(
-									'component.buildingDocument.category'
-								)
-							"
+							:label="$t('component.buildingDocument.category')"
 							rounded="lg"
 							density="comfortable"
 							variant="outlined"
@@ -83,10 +79,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import {
-	IBuildingDetails,
-	IBuildingDocument,
-} from '@/models/Interfaces';
+import { IBuildingDetails, IBuildingDocument } from '@/models/Interfaces';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import { DispatchType } from '@/models/Enums';

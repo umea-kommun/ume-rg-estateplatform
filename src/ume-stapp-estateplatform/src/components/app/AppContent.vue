@@ -1,4 +1,5 @@
-<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/app/AppContent.vue @ 84b4a5dc -->
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/app/AppContent.vue -->
 <template>
 	<div class="app-content" :class="props.size">
 		<div class="alert-wrap" v-if="showWarningMessage">

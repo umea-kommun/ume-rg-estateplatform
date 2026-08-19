@@ -1,4 +1,5 @@
-<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/internal/shared/NavBreadcrumbs.vue @ 84b4a5dc -->
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/internal/shared/NavBreadcrumbs.vue -->
 <template>
 	<div class="nav-breadcrumbs" :class="{ 'full-width': fullWidth }">
 		<v-breadcrumbs class="ma-0 pa-0" divider="/" :items="breadcrumbs">

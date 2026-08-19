@@ -2,9 +2,7 @@
 	<div class="fault-contact-info">
 		<base-text-box
 			id="contact-name"
-			:label="
-				$t('component.faultReport.general.contactNameLabel')
-			"
+			:label="$t('component.faultReport.general.contactNameLabel')"
 			v-model="contactName"
 			rules="required"
 			variant="outlined"
@@ -14,11 +12,7 @@
 		<div class="contact-fields">
 			<base-text-box
 				id="contact-email"
-				:label="
-					$t(
-						'component.faultReport.general.contactEmailLabel'
-					)
-				"
+				:label="$t('component.faultReport.general.contactEmailLabel')"
 				v-model="contactEmail"
 				rules="required|email"
 				variant="outlined"
@@ -27,11 +21,7 @@
 			/>
 			<base-text-box
 				id="contact-phone"
-				:label="
-					$t(
-						'component.faultReport.general.contactPhoneLabel'
-					)
-				"
+				:label="$t('component.faultReport.general.contactPhoneLabel')"
 				v-model="contactPhone"
 				rules="required|phone"
 				variant="outlined"

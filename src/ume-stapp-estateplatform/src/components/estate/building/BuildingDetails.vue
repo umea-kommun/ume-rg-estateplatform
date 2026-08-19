@@ -65,9 +65,7 @@
 					<hr class="mt-4 mx-6" />
 
 					<h2 class="mt-4 px-6">
-						{{
-							$t('component.buildingDetails.room.title')
-						}}
+						{{ $t('component.buildingDetails.room.title') }}
 					</h2>
 					<building-rooms
 						ref="room-list"

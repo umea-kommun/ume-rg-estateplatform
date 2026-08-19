@@ -11,9 +11,7 @@
 			:label="$t('component.buildingDetails.blueprintButton')"
 			:tooltip="
 				!building.blueprintAvailable
-					? $t(
-							'component.buildingDetails.blueprintMissingTooltip'
-					  )
+					? $t('component.buildingDetails.blueprintMissingTooltip')
 					: undefined
 			"
 			:active="activeMap === ActiveMapType.Blueprint && !isMobile"
@@ -23,9 +21,7 @@
 		<base-icon-button
 			v-if="isEnabled('ContactPersons')"
 			icon="contacts"
-			:label="
-				$t('component.buildingDetails.contactPersonsButton')
-			"
+			:label="$t('component.buildingDetails.contactPersonsButton')"
 			:tooltip="
 				!contactPersonsCount
 					? $t(
@@ -43,9 +39,7 @@
 			:label="$t('component.buildingDetails.documentsButton')"
 			:tooltip="
 				building.numDocuments === 0
-					? $t(
-							'component.buildingDetails.documentsMissingTooltip'
-					  )
+					? $t('component.buildingDetails.documentsMissingTooltip')
 					: undefined
 			"
 			:count="building.numDocuments ?? undefined"

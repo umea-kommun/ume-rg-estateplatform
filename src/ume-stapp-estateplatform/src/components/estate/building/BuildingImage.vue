@@ -3,9 +3,7 @@
 		v-bind="$attrs"
 		class="building-image"
 		:src="src"
-		:alt="
-			props.alt ?? $t('component.buildingDetails.buildingImage')
-		"
+		:alt="props.alt ?? $t('component.buildingDetails.buildingImage')"
 		@load="loaded = true"
 		v-show="loaded"
 	/>

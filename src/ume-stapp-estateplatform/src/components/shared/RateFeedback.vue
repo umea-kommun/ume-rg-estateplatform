@@ -1,4 +1,5 @@
-<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/feedback/RateFeedback.vue @ 84b4a5dc -->
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/feedback/RateFeedback.vue -->
 <template>
 	<div class="mt-14 d-flex justify-center">
 		<v-card class="rate-feedback text-center">

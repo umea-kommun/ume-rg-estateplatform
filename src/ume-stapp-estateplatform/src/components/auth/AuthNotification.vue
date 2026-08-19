@@ -1,4 +1,5 @@
-<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/auth/AuthNotification.vue @ 84b4a5dc -->
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/auth/AuthNotification.vue -->
 <template>
 	<div class="auth-notification">
 		<!-- Show snackbar if user have been idle for too long -->

@@ -2,9 +2,7 @@
 	<div class="room-list">
 		<div v-if="!showingAllRooms" class="show-more-wrap">
 			<v-btn @click="showMoreRooms" prepend-icon="add">
-				{{
-					$t('component.buildingDetails.room.showMoreRooms')
-				}}
+				{{ $t('component.buildingDetails.room.showMoreRooms') }}
 			</v-btn>
 		</div>
 		<v-list class="pa-0">

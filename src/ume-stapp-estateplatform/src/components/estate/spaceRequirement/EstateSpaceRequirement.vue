@@ -1,9 +1,7 @@
 <template>
 	<app-content
 		class="estate-default estate-space-requirement"
-		:pageTitle="
-			$t('component.appHeader.title.spaceRequirement')
-		"
+		:pageTitle="$t('component.appHeader.title.spaceRequirement')"
 		:is-loading="isLoadingFromQuery"
 	>
 		<div class="content-wrap">
@@ -23,27 +21,17 @@
 				>
 					<div class="pb-4">
 						<h1 class="ma-0 mb-2">
-							{{
-								$t('component.spaceRequirement.title')
-							}}
+							{{ $t('component.spaceRequirement.title') }}
 						</h1>
 						<p class="ma-0">
-							{{
-								$t(
-									'component.spaceRequirement.description'
-								)
-							}}
+							{{ $t('component.spaceRequirement.description') }}
 						</p>
 					</div>
 
 					<!-- CATEGORY (the primary choice - shown first, no building gate) -->
 					<estate-order-step
 						id="space-requirement-category"
-						:title="
-							$t(
-								'component.spaceRequirement.category.title'
-							)
-						"
+						:title="$t('component.spaceRequirement.category.title')"
 					>
 						<div
 							v-if="isLoadingCategories"
@@ -155,11 +143,7 @@
 							prepend-icon="add"
 							@click="showBuildingSelector = true"
 						>
-							{{
-								$t(
-									'component.spaceRequirement.building.add'
-								)
-							}}
+							{{ $t('component.spaceRequirement.building.add') }}
 						</v-btn>
 					</div>
 					<estate-order-step
@@ -167,9 +151,7 @@
 						id="space-requirement-building"
 						:title="
 							selectedBuilding
-								? $t(
-										'component.faultReport.building.selected'
-								  )
+								? $t('component.faultReport.building.selected')
 								: $t(
 										'component.spaceRequirement.building.select'
 								  )
@@ -222,11 +204,7 @@
 							prepend-icon="add"
 							@click="showRoomSelector = true"
 						>
-							{{
-								$t(
-									'component.spaceRequirement.room.add'
-								)
-							}}
+							{{ $t('component.spaceRequirement.room.add') }}
 						</v-btn>
 					</div>
 					<estate-order-step
@@ -239,17 +217,11 @@
 					>
 						<template #title>
 							<span v-if="selectedRoom">
-								{{
-									$t(
-										'component.faultReport.room.selected'
-									)
-								}}
+								{{ $t('component.faultReport.room.selected') }}
 							</span>
 							<span v-else>
 								{{
-									$t(
-										'component.spaceRequirement.room.select'
-									)
+									$t('component.spaceRequirement.room.select')
 								}}
 							</span>
 						</template>
@@ -350,11 +322,7 @@
 							:loading="isBusySubmitting"
 							@click="submitReport"
 						>
-							{{
-								$t(
-									'component.spaceRequirement.submitButton'
-								)
-							}}
+							{{ $t('component.spaceRequirement.submitButton') }}
 						</v-btn>
 					</div>
 				</vee-form>
@@ -362,9 +330,7 @@
 			<div class="info-wrap">
 				<v-alert rounded="lg">
 					<h2 class="ma-0">
-						{{
-							$t('component.spaceRequirement.info.title')
-						}}
+						{{ $t('component.spaceRequirement.info.title') }}
 					</h2>
 					<p
 						v-for="(paragraph, index) in tm(

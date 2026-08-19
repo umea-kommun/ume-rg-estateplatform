@@ -1,4 +1,5 @@
-<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/auth/AuthCallback.vue @ 84b4a5dc -->
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/auth/AuthCallback.vue -->
 <template>
 	<div class="auth-callback">
 		<app-loading-spinner :isVisible="true"></app-loading-spinner>
@@ -11,7 +12,6 @@ import { useStore } from 'vuex';
 import IAuthManager from '@/plugins/auth/IAuthManager';
 import AppLoadingSpinner from '@/components/app/AppLoadingSpinner.vue';
 import { IRootState } from '@/models/Interfaces';
-import Config from '@/Config';
 import { EstateRoutes } from '@/router/routes';
 
 const store = useStore<IRootState>();

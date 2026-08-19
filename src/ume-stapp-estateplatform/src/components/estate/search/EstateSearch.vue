@@ -11,9 +11,7 @@
 					<v-text-field
 						v-model="search"
 						:placeholder="
-							$t(
-								'component.estateSearch.searchPlaceholder'
-							)
+							$t('component.estateSearch.searchPlaceholder')
 						"
 						color="primary"
 						prepend-inner-icon="search"
@@ -29,11 +27,7 @@
 								class="ma-2"
 								@click="fetchSearchResults"
 							>
-								{{
-									$t(
-										'component.estateSearch.searchButton'
-									)
-								}}
+								{{ $t('component.estateSearch.searchButton') }}
 							</v-btn>
 						</template>
 					</v-text-field>
@@ -66,11 +60,7 @@
 							prepend-icon="location_pin"
 							@click="selectBuildingOnMap"
 						>
-							{{
-								$t(
-									'component.estateSearch.selectOnMap'
-								)
-							}}
+							{{ $t('component.estateSearch.selectOnMap') }}
 						</v-btn>
 					</div>
 
@@ -83,9 +73,7 @@
 					<!-- Search results -->
 					<div class="mt-4 pb-4 search-help" v-if="!userHasSearched">
 						<v-alert color="primary" variant="tonal">
-							{{
-								$t('component.estateSearch.searchHelp')
-							}}
+							{{ $t('component.estateSearch.searchHelp') }}
 						</v-alert>
 					</div>
 					<v-alert

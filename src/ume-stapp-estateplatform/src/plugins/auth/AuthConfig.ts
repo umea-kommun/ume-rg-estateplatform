@@ -1,4 +1,5 @@
-// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/plugins/auth/AuthConfig.ts @ 84b4a5dc
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/plugins/auth/AuthConfig.ts
 import IAuthClientConfig from './IAuthClientConfig';
 
 export default class AuthConfig {

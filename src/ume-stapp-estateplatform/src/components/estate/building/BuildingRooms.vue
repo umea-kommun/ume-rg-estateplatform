@@ -20,9 +20,7 @@
 			<v-text-field
 				:label="t('component.buildingDetails.room.search')"
 				:placeholder="
-					t(
-						'component.buildingDetails.room.searchPlaceholder'
-					)
+					t('component.buildingDetails.room.searchPlaceholder')
 				"
 				prepend-inner-icon="search"
 				v-model="searchTerm"
@@ -71,13 +69,10 @@
 				icon="info"
 				:class="{ 'mx-6': !noPadding }"
 				>{{
-					t(
-						'component.buildingDetails.room.noMatchesSelectedFloor',
-						{
-							floor: floors?.find((f) => f.id === selectedFloorId)
-								?.name,
-						}
-					)
+					t('component.buildingDetails.room.noMatchesSelectedFloor', {
+						floor: floors?.find((f) => f.id === selectedFloorId)
+							?.name,
+					})
 				}}
 			</v-alert>
 
@@ -89,9 +84,7 @@
 			<div v-if="selectedFloorId && filteredRoomsForOtherFloors.length">
 				<h3 class="mt-6 mb-2" :class="{ 'mx-6': !noPadding }">
 					{{
-						t(
-							'component.buildingDetails.room.matchesOnOtherFloors'
-						)
+						t('component.buildingDetails.room.matchesOnOtherFloors')
 					}}
 				</h3>
 				<room-list

@@ -1,4 +1,5 @@
-// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/__tests__/linkifyText.test.ts @ 84b4a5dc
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/utils/__tests__/linkifyText.test.ts
 import { describe, it, expect } from 'vitest';
 import { linkify, LinkifyToken, LinkToken } from '../linkifyText';
 

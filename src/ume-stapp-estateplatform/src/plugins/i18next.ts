@@ -1,4 +1,5 @@
-// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/plugins/i18next.ts @ 84b4a5dc
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/plugins/i18next.ts
 import Config from '@/Config';
 import { createI18n } from 'vue-i18n';
 import sv from '@/locales/sv.json';

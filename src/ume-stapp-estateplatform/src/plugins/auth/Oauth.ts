@@ -1,4 +1,5 @@
-// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/plugins/auth/Oauth.ts @ 84b4a5dc
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/plugins/auth/Oauth.ts
 import { IUser } from '@/models/Interfaces';
 import { b64DecodeUnicode } from './index';
 import { MutationType } from '@/models/Enums';

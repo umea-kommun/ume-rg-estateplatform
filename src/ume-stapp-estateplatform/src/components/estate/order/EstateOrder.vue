@@ -28,12 +28,8 @@
 						:step-count="stepCount"
 						:title="
 							selectedBuilding
-								? $t(
-										'component.faultReport.building.selected'
-								  )
-								: $t(
-										'component.faultReport.building.select'
-								  )
+								? $t('component.faultReport.building.selected')
+								: $t('component.faultReport.building.select')
 						"
 						:show-clear="!!selectedBuilding"
 						@clear="selectBuilding(null)"
@@ -72,11 +68,7 @@
 						rounded="lg"
 						class="mt-6"
 					>
-						{{
-							$t(
-								'component.order.category.noneAvailable'
-							)
-						}}
+						{{ $t('component.order.category.noneAvailable') }}
 					</v-alert>
 
 					<!-- ROOM SELECTOR -->
@@ -93,18 +85,10 @@
 					>
 						<template #title>
 							<span v-if="selectedRoom && !skippedRoom">
-								{{
-									$t(
-										'component.faultReport.room.selected'
-									)
-								}}
+								{{ $t('component.faultReport.room.selected') }}
 							</span>
 							<span v-else-if="!selectedRoom && skippedRoom">
-								{{
-									$t(
-										'component.faultReport.room.none'
-									)
-								}}
+								{{ $t('component.faultReport.room.none') }}
 							</span>
 							<span v-else>
 								{{ $t('component.order.room.select') }}
@@ -143,9 +127,7 @@
 							:step="4"
 							:step-count="stepCount"
 							:title="
-								$t(
-									'component.order.general.descriptionTitle'
-								)
+								$t('component.order.general.descriptionTitle')
 							"
 							ref="problemTitle"
 							class="mt-6"
@@ -192,11 +174,7 @@
 
 						<!-- CONTACT INFORMATION -->
 						<estate-order-step
-							:title="
-								$t(
-									'component.order.general.contactLabel'
-								)
-							"
+							:title="$t('component.order.general.contactLabel')"
 							:step="5"
 							:step-count="stepCount"
 							class="mt-6"
@@ -266,9 +244,7 @@
 								:loading="isBusySubmitting"
 								@click="submitReport"
 							>
-								{{
-									$t('component.order.submitButton')
-								}}
+								{{ $t('component.order.submitButton') }}
 							</v-btn>
 						</div>
 					</vee-form>

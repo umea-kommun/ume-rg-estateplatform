@@ -1,4 +1,5 @@
-// Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/utils/useServerValidation.ts @ 84b4a5dc
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/utils/useServerValidation.ts
 import { computed, ref, type ComputedRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getValidationErrors, type ValidationErrors } from './validationErrors';

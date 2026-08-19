@@ -8,11 +8,7 @@
 				{{ $t('component.spaceRequirement.completed.title') }}
 			</h1>
 			<p class="my-2">
-				{{
-					$t(
-						'component.spaceRequirement.completed.description'
-					)
-				}}
+				{{ $t('component.spaceRequirement.completed.description') }}
 			</p>
 			<v-btn
 				class="mt-4"
@@ -34,9 +30,7 @@
 		<rate-feedback
 			category="estateOrder"
 			:feedback-title="
-				$t(
-					'component.spaceRequirement.completed.feedbackTitle'
-				)
+				$t('component.spaceRequirement.completed.feedbackTitle')
 			"
 			class="mt-6"
 		/>

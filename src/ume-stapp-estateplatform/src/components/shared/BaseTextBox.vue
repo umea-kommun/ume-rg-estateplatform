@@ -1,4 +1,5 @@
-<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/base/BaseTextBox.vue @ 84b4a5dc -->
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/base/BaseTextBox.vue -->
 <template>
 	<div class="base-text-box">
 		<vee-field
@@ -28,7 +29,9 @@
 					:aria-labelledby="ariaLabelledby"
 					:variant="variant"
 					:rounded="rounded"
-					:aria-describedby="!!errors.length || !!errorMessage ? 'error-' + id : null"
+					:aria-describedby="
+						!!errors.length || !!errorMessage ? 'error-' + id : null
+					"
 					:disabled="disabled"
 					single-line
 					:placeholder="placeholder"
@@ -49,7 +52,9 @@
 					:variant="variant"
 					:rounded="rounded"
 					:auto-grow="autoGrow"
-					:aria-describedby="!!errors.length || !!errorMessage ? 'error-' + id : null"
+					:aria-describedby="
+						!!errors.length || !!errorMessage ? 'error-' + id : null
+					"
 					:disabled="disabled"
 					:placeholder="placeholder"
 					:error="!!errors.length || !!errorMessage"

@@ -3,18 +3,10 @@
 		<div v-if="problemLocation">
 			<p class="text-medium-emphasis">
 				<span v-if="problemLocation === EstateFaultLocation.Indoor">
-					{{
-						$t(
-							'component.faultReport.location.indoor.selected'
-						)
-					}}
+					{{ $t('component.faultReport.location.indoor.selected') }}
 				</span>
 				<span v-else>
-					{{
-						$t(
-							'component.faultReport.location.outdoor.selected'
-						)
-					}}
+					{{ $t('component.faultReport.location.outdoor.selected') }}
 				</span>
 			</p>
 		</div>
@@ -65,23 +57,15 @@ const locations = [
 		type: EstateFaultLocation.Indoor,
 		icon: 'meeting_room',
 		title: t('component.faultReport.location.indoor.select'),
-		description: t(
-			'component.faultReport.location.indoor.description'
-		),
-		buttonText: t(
-			'component.faultReport.location.indoor.selectButton'
-		),
+		description: t('component.faultReport.location.indoor.description'),
+		buttonText: t('component.faultReport.location.indoor.selectButton'),
 	},
 	{
 		type: EstateFaultLocation.Outdoor,
 		icon: 'park',
 		title: t('component.faultReport.location.outdoor.select'),
-		description: t(
-			'component.faultReport.location.outdoor.description'
-		),
-		buttonText: t(
-			'component.faultReport.location.outdoor.selectButton'
-		),
+		description: t('component.faultReport.location.outdoor.description'),
+		buttonText: t('component.faultReport.location.outdoor.selectButton'),
 	},
 ];
 </script>

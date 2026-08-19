@@ -1,4 +1,5 @@
-<!-- Duplicated from ume-rg-myplatform/src/ume-stapp-minasidor/src/components/base/baseImageModal/BaseImageModal.vue @ 84b4a5dc -->
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/base/baseImageModal/BaseImageModal.vue -->
 <template>
 	<div v-if="activeImage">
 		<v-dialog

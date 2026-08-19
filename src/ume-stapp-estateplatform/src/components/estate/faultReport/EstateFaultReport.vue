@@ -18,9 +18,7 @@
 							{{ $t('component.faultReport.title') }}
 						</h1>
 						<p class="ma-0">
-							{{
-								$t('component.faultReport.description')
-							}}
+							{{ $t('component.faultReport.description') }}
 						</p>
 					</div>
 
@@ -28,12 +26,8 @@
 					<estate-order-step
 						:title="
 							selectedBuilding
-								? $t(
-										'component.faultReport.building.selected'
-								  )
-								: $t(
-										'component.faultReport.building.select'
-								  )
+								? $t('component.faultReport.building.selected')
+								: $t('component.faultReport.building.select')
 						"
 						:step="1"
 						:step-count="stepCount"
@@ -59,9 +53,7 @@
 							class="mt-4"
 						>
 							{{
-								$t(
-									'component.faultReport.rentedBuildingNotice'
-								)
+								$t('component.faultReport.rentedBuildingNotice')
 							}}
 
 							<external-owner-info
@@ -131,9 +123,7 @@
 							</span>
 							<span v-else>
 								{{
-									$t(
-										'component.faultReport.location.select'
-									)
+									$t('component.faultReport.location.select')
 								}}
 							</span>
 						</template>
@@ -161,25 +151,13 @@
 					>
 						<template #title>
 							<span v-if="selectedRoom && !skippedRoom">
-								{{
-									$t(
-										'component.faultReport.room.selected'
-									)
-								}}
+								{{ $t('component.faultReport.room.selected') }}
 							</span>
 							<span v-else-if="!selectedRoom && skippedRoom">
-								{{
-									$t(
-										'component.faultReport.room.none'
-									)
-								}}
+								{{ $t('component.faultReport.room.none') }}
 							</span>
 							<span v-else>
-								{{
-									$t(
-										'component.faultReport.room.select'
-									)
-								}}
+								{{ $t('component.faultReport.room.select') }}
 							</span>
 						</template>
 						<template
@@ -213,9 +191,7 @@
 					>
 						<estate-order-step
 							:title="
-								$t(
-									'component.faultReport.general.problemTitle'
-								)
+								$t('component.faultReport.general.problemTitle')
 							"
 							:step="stepCount - 1"
 							:step-count="stepCount"
@@ -265,9 +241,7 @@
 						<!-- CONTACT INFORMATION -->
 						<estate-order-step
 							:title="
-								$t(
-									'component.faultReport.general.contactLabel'
-								)
+								$t('component.faultReport.general.contactLabel')
 							"
 							:step="stepCount"
 							:step-count="stepCount"
@@ -338,11 +312,7 @@
 								:loading="isBusySubmitting"
 								@click="submitReport"
 							>
-								{{
-									$t(
-										'component.faultReport.submitButton'
-									)
-								}}
+								{{ $t('component.faultReport.submitButton') }}
 							</v-btn>
 						</div>
 					</vee-form>
@@ -359,9 +329,7 @@
 					<p>
 						{{ $t('component.faultReport.info.text2') }}
 					</p>
-					<p
-						v-html="$t('component.faultReport.info.text3')"
-					></p>
+					<p v-html="$t('component.faultReport.info.text3')"></p>
 				</v-alert>
 			</div>
 		</div>
@@ -388,10 +356,7 @@ import {
 import { EstateRoutes } from '@/router/routes';
 import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
 import { useI18n } from 'vue-i18n';
-import {
-	EstateFaultLocation,
-	ExternalOwnerStatus,
-} from '@/models/Enums';
+import { EstateFaultLocation, ExternalOwnerStatus } from '@/models/Enums';
 import BuildingSelector from './buildingSelector/BuildingSelector.vue';
 import RoomSelector from './roomSelector/RoomSelector.vue';
 import { useRoute, useRouter } from 'vue-router';

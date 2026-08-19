@@ -21,9 +21,7 @@
 			<div>
 				<v-text-field
 					v-model="search"
-					:label="
-						$t('component.buildingSelector.searchLabel')
-					"
+					:label="$t('component.buildingSelector.searchLabel')"
 					color="primary"
 					item-title="popularName"
 					item-value="id"

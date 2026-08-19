@@ -40,15 +40,9 @@
 						type="application/pdf"
 					>
 						<p>
-							{{
-								$t(
-									'component.buildingDocument.noPreview'
-								)
-							}}
+							{{ $t('component.buildingDocument.noPreview') }}
 							<a :href="blobUrl" target="_blank" rel="noopener">{{
-								$t(
-									'component.buildingDocument.openPdf'
-								)
+								$t('component.buildingDocument.openPdf')
 							}}</a>
 						</p>
 					</object>
@@ -61,11 +55,7 @@
 						class="d-flex flex-column ga-4 justify-center align-center"
 					>
 						<v-alert rounded="lg">
-							{{
-								$t(
-									'component.buildingDocument.noPreview'
-								)
-							}}
+							{{ $t('component.buildingDocument.noPreview') }}
 						</v-alert>
 						<v-btn
 							:href="blobUrl"
@@ -77,10 +67,9 @@
 							:disabled="!blobUrl"
 						>
 							{{
-								$t(
-									'component.buildingDocument.downloadFile',
-									{ filename: document?.name }
-								)
+								$t('component.buildingDocument.downloadFile', {
+									filename: document?.name,
+								})
 							}}
 						</v-btn>
 					</div>
@@ -107,10 +96,7 @@
 
 <script setup lang="ts">
 import { DispatchType } from '@/models/Enums';
-import {
-	IBuildingDetails,
-	IBuildingDocument,
-} from '@/models/Interfaces';
+import { IBuildingDetails, IBuildingDocument } from '@/models/Interfaces';
 import { IRootState } from '@/models/Interfaces';
 import ErrorService from '@/utils/ErrorService';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';

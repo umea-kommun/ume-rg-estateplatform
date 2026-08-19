@@ -22,9 +22,14 @@
 							</h3>
 							<div class="value">
 								<template v-if="person.value">
-									<div class="name">{{ person.value.name }}</div>
-									<div v-if="person.value.email" class="contact-link">
-										<BaseAutoLinkText
+									<div class="name">
+										{{ person.value.name }}
+									</div>
+									<div
+										v-if="person.value.email"
+										class="contact-link"
+									>
+										<base-auto-link-text
 											:text="person.value.email"
 											:link-aria-label="
 												$t(
@@ -34,8 +39,11 @@
 											"
 										/>
 									</div>
-									<div v-if="person.value.phone" class="contact-link">
-										<BaseAutoLinkText
+									<div
+										v-if="person.value.phone"
+										class="contact-link"
+									>
+										<base-auto-link-text
 											:text="person.value.phone"
 											:link-aria-label="
 												$t(

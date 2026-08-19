@@ -4,9 +4,7 @@
 			variant="outlined"
 			v-model="selectedBusinessTypes"
 			:items="businessTypes"
-			:label="
-				$t('component.estateSearchFilter.businessTypeLabel')
-			"
+			:label="$t('component.estateSearchFilter.businessTypeLabel')"
 			color="primary"
 			item-title="name"
 			item-value="id"

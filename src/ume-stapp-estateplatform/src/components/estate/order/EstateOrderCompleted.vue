@@ -24,9 +24,7 @@
 
 		<rate-feedback
 			category="estateOrder"
-			:feedback-title="
-				$t('component.order.completed.feedbackTitle')
-			"
+			:feedback-title="$t('component.order.completed.feedbackTitle')"
 			class="mt-6"
 		/>
 	</div>

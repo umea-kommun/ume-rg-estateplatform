@@ -14,11 +14,7 @@
 						{{ externalOwnerInfo?.name }}
 					</span>
 					<span class="font-italic font-weight-light" v-else>
-						{{
-							$t(
-								'component.estateDetails.informationMissing'
-							)
-						}}
+						{{ $t('component.estateDetails.informationMissing') }}
 					</span>
 				</div>
 			</div>
@@ -28,14 +24,10 @@
 				</div>
 				<div class="value">
 					<span v-if="externalOwnerInfo?.note">
-						<BaseAutoLinkText :text="externalOwnerInfo.note" />
+						<base-auto-link-text :text="externalOwnerInfo.note" />
 					</span>
 					<span class="font-italic font-weight-light" v-else>
-						{{
-							$t(
-								'component.estateDetails.informationMissing'
-							)
-						}}
+						{{ $t('component.estateDetails.informationMissing') }}
 					</span>
 				</div>
 			</div>
