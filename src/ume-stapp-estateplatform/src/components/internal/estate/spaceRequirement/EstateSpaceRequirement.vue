@@ -36,7 +36,7 @@
 						</p>
 					</div>
 
-					<!-- CATEGORY (the primary choice — shown first, no building gate) -->
+					<!-- CATEGORY (the primary choice - shown first, no building gate) -->
 					<estate-order-step
 						id="space-requirement-category"
 						:title="
@@ -557,7 +557,7 @@ const updateQueryParams = () => {
 };
 
 // SpaceRequirement categories are type-global (the endpoint is keyed by work-order type,
-// not by building), so we load them once up front — independent of any building selection.
+// not by building), so we load them once up front - independent of any building selection.
 const loadCategories = async () => {
 	isLoadingCategories.value = true;
 	try {
@@ -596,7 +596,7 @@ const selectRoom = async (room: IBuildingRoom | null) => {
 };
 
 // "Ändra" resets the current pick but keeps the selector expanded (and empty), so the user
-// lands on the same state as the up-front prompt — ready to choose another building/room —
+// lands on the same state as the up-front prompt - ready to choose another building/room -
 // rather than folding all the way back to the button. Folding away is "Hoppa över" (skip).
 const changeBuilding = async () => {
 	await selectBuilding(null);
@@ -612,7 +612,7 @@ const selectCategory = async (value: string) => {
 	const id = parseInt(value);
 	selectedCategoryId.value = id;
 	// Some categories almost always concern a specific building, so expand the selector up
-	// front. For the rest it stays collapsed behind the button — unless a building is already
+	// front. For the rest it stays collapsed behind the button - unless a building is already
 	// picked, in which case the full selector is shown regardless.
 	if (!selectedBuilding.value) {
 		showBuildingSelector.value = BUILDING_PROMPTED_CATEGORIES.has(id);

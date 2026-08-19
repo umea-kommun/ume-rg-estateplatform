@@ -342,8 +342,8 @@ const isErrorReportEnabled = computed(() => isEnabled('ErrorReport'));
 		margin-right: 14px;
 	}
 
-	// Estate portal actions: equal-width buttons in a grid — several per row on
-	// wider screens, a single full-width column on mobile — so they line up
+	// Estate portal actions: equal-width buttons in a grid - several per row on
+	// wider screens, a single full-width column on mobile - so they line up
 	// instead of sizing to their (varying-length) labels.
 	.estate-actions {
 		display: grid;

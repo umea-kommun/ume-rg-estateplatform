@@ -67,10 +67,23 @@ const humanFileSize = computed(() => {
 		: '';
 });
 
-const previewExtensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg', 'pdf'];
+const previewExtensions = [
+	'png',
+	'jpg',
+	'jpeg',
+	'gif',
+	'webp',
+	'bmp',
+	'svg',
+	'pdf',
+];
+// Alla filer i Pythagoras har inte en ändelse i namnet. En känd ändelse är ett tillförlitligt
+// svar åt båda håll, men avsaknad av ändelse säger ingenting - då visar vi ögat och låter
+// modalen avgöra på filens faktiska innehåll.
 const canPreview = computed(() => {
-	const ext = props.document.name.toLowerCase().match(/\.([a-z0-9]+)$/)?.[1] ?? '';
-	return previewExtensions.includes(ext);
+	const ext =
+		props.document.name.toLowerCase().match(/\.([a-z0-9]+)$/)?.[1] ?? '';
+	return ext ? previewExtensions.includes(ext) : true;
 });
 </script>
 

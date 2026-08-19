@@ -139,20 +139,46 @@ function extFromName(name?: string) {
 	return m?.[1] ?? '';
 }
 
+// Pythagoras returnerar application/octet-stream för samtliga dokument, så svarets
+// Content-Type säger ingenting om filtypen. Vi läser inledande bytes i stället, vilket
+// även täcker filer som laddats upp utan ändelse i namnet.
+const magicNumbers: { mime: string; signature: number[] }[] = [
+	{ mime: 'application/pdf', signature: [0x25, 0x50, 0x44, 0x46, 0x2d] }, // %PDF-
+	{
+		mime: 'image/png',
+		signature: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a],
+	},
+	{ mime: 'image/jpeg', signature: [0xff, 0xd8, 0xff] },
+	{ mime: 'image/gif', signature: [0x47, 0x49, 0x46, 0x38] }, // GIF8
+	{ mime: 'image/bmp', signature: [0x42, 0x4d] }, // BM
+];
+
+async function sniffMimeType(blob: Blob): Promise<string> {
+	const head = new Uint8Array(await blob.slice(0, 16).arrayBuffer());
+
+	const match = magicNumbers.find(({ signature }) =>
+		signature.every((byte, i) => head[i] === byte)
+	);
+	if (match) return match.mime;
+
+	// WEBP är "RIFF", fyra bytes filstorlek, sedan "WEBP"
+	const ascii = (from: number, to: number) =>
+		String.fromCharCode(...head.slice(from, to));
+	if (ascii(0, 4) === 'RIFF' && ascii(8, 12) === 'WEBP') return 'image/webp';
+
+	return '';
+}
+
 const fileBlob = ref<Blob | null>(null);
 const blobUrl = ref('');
+const mimeType = ref('');
 
 const ext = computed(() => extFromName(props.document?.name));
 
-const isImage = computed(() => {
-	return ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg'].includes(
-		ext.value
-	);
-});
+// SVG är text och saknar magic bytes, så den typen kan bara avgöras på namnet.
+const isImage = computed(() => mimeType.value.startsWith('image/'));
 
-const isPdf = computed(() => {
-	return ext.value === 'pdf';
-});
+const isPdf = computed(() => mimeType.value === 'application/pdf');
 
 const canPreview = computed(
 	() => !!blobUrl.value && (isImage.value || isPdf.value)
@@ -166,6 +192,7 @@ const fetchFile = async (document: IBuildingDocument) => {
 		URL.revokeObjectURL(blobUrl.value);
 		blobUrl.value = '';
 	}
+	mimeType.value = '';
 	try {
 		const blobData = await store.dispatch(
 			DispatchType.DownloadBuildingDocument,
@@ -175,9 +202,13 @@ const fetchFile = async (document: IBuildingDocument) => {
 			}
 		);
 
-		const blob = new Blob([blobData], {
-			type: isPdf.value ? 'application/pdf' : blobData.type,
-		});
+		// Blobens typ måste sättas innan den används: <object> kräver application/pdf för
+		// att rendera inbäddat, och <img> kräver image/svg+xml för SVG.
+		mimeType.value =
+			(await sniffMimeType(blobData)) ||
+			(ext.value === 'svg' ? 'image/svg+xml' : blobData.type);
+
+		const blob = new Blob([blobData], { type: mimeType.value });
 
 		const href = URL.createObjectURL(blob);
 		blobUrl.value = href;
@@ -198,6 +229,7 @@ const revokeBlob = () => {
 		blobUrl.value = '';
 		fileBlob.value = null;
 	}
+	mimeType.value = '';
 };
 
 watch(
