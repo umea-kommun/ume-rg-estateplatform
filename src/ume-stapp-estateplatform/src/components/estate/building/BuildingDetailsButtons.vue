@@ -232,7 +232,11 @@ const contactPersonsCount = computed(() => {
 
 <style scoped lang="scss">
 .create-case-list {
-	max-width: 360px;
+	// The menu sizes itself from the circle activator, which is far too
+	// narrow for items with descriptions - give it a firm width instead,
+	// capped to the viewport on small screens.
+	width: 380px;
+	max-width: calc(100vw - 32px);
 
 	:deep(.v-list-item-subtitle) {
 		white-space: normal;

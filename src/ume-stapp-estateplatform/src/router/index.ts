@@ -34,6 +34,7 @@ const routes: Array<RouteRecordRaw> = [
 		meta: {
 			requiresInternalLogin: true,
 			requiresFeature: 'ErrorReport',
+			contentSize: AppContentSize.FullWidth,
 		},
 	},
 	{
@@ -43,6 +44,7 @@ const routes: Array<RouteRecordRaw> = [
 		meta: {
 			requiresInternalLogin: true,
 			requiresFeature: 'ErrorReport',
+			contentSize: AppContentSize.FullWidth,
 		},
 	},
 	{
@@ -55,6 +57,7 @@ const routes: Array<RouteRecordRaw> = [
 		meta: {
 			requiresInternalLogin: true,
 			requiresFeature: 'ErrorReport',
+			contentSize: AppContentSize.FullWidth,
 		},
 	},
 	{

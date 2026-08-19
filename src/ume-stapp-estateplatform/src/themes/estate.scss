@@ -88,13 +88,16 @@
 	}
 
 	// Shared two-pane skeleton for the work order pages (fault report,
-	// order, space requirement). The form column matches the search/details
-	// content column (max 650px) and the info panel takes the map pane's
-	// rail position, so every estate page shares the same page skeleton and
-	// the same mobile breakpoint.
+	// order, space requirement). The pages are FullWidth like search and
+	// details, so the skeleton supplies the padding the centered container
+	// used to provide. The form column matches the search/details content
+	// column (max 650px) and the info panel takes the map pane's rail
+	// position, so every estate page shares the same page skeleton and the
+	// same mobile breakpoint.
 	.content-wrap {
 		display: flex;
 		gap: 2rem;
+		padding: 16px 24px 32px;
 
 		.report-wrap,
 		.order-wrap {
@@ -104,6 +107,7 @@
 
 		.info-wrap {
 			flex: 2;
+			max-width: 420px;
 			align-self: flex-start;
 			position: sticky;
 			top: calc($site-header-height + 24px);
@@ -121,6 +125,7 @@
 			.info-wrap {
 				position: static;
 				margin-top: 0;
+				max-width: none;
 				align-self: stretch;
 			}
 		}
