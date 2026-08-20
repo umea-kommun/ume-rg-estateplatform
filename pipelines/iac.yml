@@ -10,7 +10,7 @@ resources:
     - repository: templates
       type: git
       name: Turkos/ume-pipeline-templates
-      ref: refs/tags/release/v260213T1327-15561
+      ref: refs/tags/release/v260629T1533-18638
 
 parameters:
   - name: environment
@@ -43,12 +43,12 @@ variables:
 stages:
   - stage: DeployInfrastructureStage
     displayName: Deploy Infrastructure
-    condition: eq(${{ parameters.iacJobPicker }}, true)
+    condition: ${{ parameters.iacJobPicker }}
     jobs:
       - template: pipelines/azure/template-deploy-infrastructure.yml@templates
         parameters:
-          templateRepoAlias: templates
           environment: ${{ parameters.environment }}
+          templateRepoAlias: templates
           serviceConnection: $(serviceConnection)
           resourceGroup: ${{ variables.resourceGroup }}
           entrypointScriptPath: iac/entrypoint.ps1
@@ -58,16 +58,16 @@ stages:
   - stage: UpdateKeyVaultStage
     displayName: Update Key Vault
     dependsOn: DeployInfrastructureStage
-    condition: |
+    condition: >-
       and(
         not(or(failed(), canceled())),
-        eq(${{ parameters.updateKeyVaultJobPicker }}, true)
+        ${{ parameters.updateKeyVaultJobPicker }}
       )
     jobs:
       - template: pipelines/azure/template-update-keyvault.yml@templates
         parameters:
-          templateRepoAlias: templates
           environment: ${{ parameters.environment }}
+          templateRepoAlias: templates
           serviceConnection: $(serviceConnection)
           variableGroupName: $(resourceGroup)
           keyVaultName: umekvestateplatform${{ parameters.environment }}

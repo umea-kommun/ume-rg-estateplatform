@@ -10,7 +10,7 @@ resources:
     - repository: templates
       type: git
       name: Turkos/ume-pipeline-templates
-      ref: refs/tags/release/v260213T1327-15561
+      ref: refs/tags/release/v260629T1533-18638
 
 parameters:
   - name: environment
@@ -34,6 +34,11 @@ parameters:
 
   - name: buildAndDeployEstateServiceJobPicker
     displayName: Deploy ume-app-estateservice
+    type: boolean
+    default: false
+
+  - name: buildAndDeployEstatePlatformJobPicker
+    displayName: Deploy ume-stapp-estateplatform
     type: boolean
     default: false
 
@@ -63,14 +68,17 @@ stages:
     condition: >-
       and(
         not(or(failed(), canceled())),
-        eq('${{ parameters.shouldAutoDeployJobPicker }}', 'true')
+        ${{ parameters.shouldAutoDeployJobPicker }}
       )
     jobs:
       - template: pipelines/general/template-check-for-changes.yml@templates
         parameters:
+          ${{ if and(ne(parameters.environment, 'prod'), ne(variables['Build.SourceBranchName'], 'main')) }}:
+            comparisonBranch: origin/main
           paths:
             - src/ume-app-estateservice/Umea.se.EstateService.DataStore/Migrations
             - src/ume-app-estateservice
+            - src/ume-stapp-estateplatform
 
   # ume-sqldb-estateservice
   - stage: UpdateEstateServiceDatabaseStage
@@ -82,9 +90,9 @@ stages:
       and(
         not(or(failed(), canceled())),
         or(
-          eq(${{ parameters.updateEstateServiceDatabaseJobPicker }}, true),
+          ${{ parameters.updateEstateServiceDatabaseJobPicker }},
           and(
-            eq('${{ parameters.shouldAutoDeployJobPicker }}', 'true'),
+            ${{ parameters.shouldAutoDeployJobPicker }},
             contains(variables['changedPaths'], 'Umea.se.EstateService.DataStore/Migrations')
           )
         )
@@ -99,7 +107,7 @@ stages:
           databaseProjectName: Umea.se.EstateService.DataStore
   # ------
 
-  # EstateService
+  # ume-app-estateservice
   - stage: BuildEstateServiceStage
     displayName: Build EstateService
     dependsOn:
@@ -107,13 +115,13 @@ stages:
       - UpdateEstateServiceDatabaseStage
     variables:
       changedPaths: $[ dependencies.CheckForChangesStage.outputs['Job.Task.CHANGED_PATHS'] ]
-    condition: |
+    condition: >-
       and(
         not(or(failed(), canceled())),
         or(
-          eq(${{ parameters.buildAndDeployEstateServiceJobPicker }}, true),
+          ${{ parameters.buildAndDeployEstateServiceJobPicker }},
           and(
-            eq('${{ parameters.shouldAutoDeployJobPicker }}', 'true'),
+            ${{ parameters.shouldAutoDeployJobPicker }},
             contains(variables['changedPaths'], 'ume-app-estateservice')
           )
         )
@@ -129,6 +137,7 @@ stages:
     dependsOn: BuildEstateServiceStage
     condition: >-
       and(
+        not(or(failed(), canceled())),
         succeeded('BuildEstateServiceStage'),
         or(
           eq(dependencies.UpdateEstateServiceDatabaseStage.result, 'Succeeded'),
@@ -146,4 +155,43 @@ stages:
           pingEndpoints:
             - /index.html
             - /api/v1.0/home/ping
+  # ------
+
+  # ume-stapp-estateplatform
+  - stage: BuildEstatePlatformStage
+    displayName: Build EstatePlatform
+    dependsOn: CheckForChangesStage
+    variables:
+      changedPaths: $[ dependencies.CheckForChangesStage.outputs['Job.Task.CHANGED_PATHS'] ]
+    condition: >-
+      and(
+        not(or(failed(), canceled())),
+        or(
+          ${{ parameters.buildAndDeployEstatePlatformJobPicker }},
+          and(
+            ${{ parameters.shouldAutoDeployJobPicker }},
+            contains(variables['changedPaths'], 'ume-stapp-estateplatform')
+          )
+        )
+      )
+    jobs:
+      - template: pipelines/azure/template-build-frontend.yml@templates
+        parameters:
+          environment: ${{ parameters.environment }}
+          projectFolderName: ume-stapp-estateplatform
+
+  - stage: DeployEstatePlatformStage
+    displayName: Deploy EstatePlatform
+    dependsOn: BuildEstatePlatformStage
+    condition: >-
+      and(
+        not(or(failed(), canceled())),
+        succeeded('BuildEstatePlatformStage')
+      )
+    jobs:
+      - template: pipelines/azure/template-deploy-frontend.yml@templates
+        parameters:
+          environment: ${{ parameters.environment }}
+          projectFolderName: ume-stapp-estateplatform
+          deploymentToken: $(estateplatform-deployment-token)
   # ------
