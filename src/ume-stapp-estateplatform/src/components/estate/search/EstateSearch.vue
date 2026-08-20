@@ -165,12 +165,12 @@ const searchFilter = ref<SearchFilter>(
 	route.query.filter ? JSON.parse(route.query.filter.toString()) : {}
 );
 
-const breadcrumbs = [
+const breadcrumbs = computed(() => [
 	{
 		title: t('component.estateSearch.breadcrumb'),
 		to: { name: EstateRoutes.Search },
 	},
-];
+]);
 
 const userHasSearched = computed(() => {
 	return !!search.value || Object.keys(searchFilter.value).length > 0;

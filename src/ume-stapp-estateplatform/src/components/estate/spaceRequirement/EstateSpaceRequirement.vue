@@ -385,12 +385,12 @@ const router = useRouter();
 const { t, te, tm } = useI18n();
 const store = useStore<IRootState>();
 
-const breadcrumbs = [
+const breadcrumbs = computed(() => [
 	{
 		title: t('component.spaceRequirement.title'),
 		to: { name: EstateRoutes.SpaceRequirement },
 	},
-];
+]);
 
 const selectedBuilding = ref<IBuildingDetails | null>(null);
 const selectedRoom = ref<IBuildingRoom | null>(null);

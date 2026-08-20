@@ -318,12 +318,12 @@ const router = useRouter();
 const { t } = useI18n();
 const store = useStore<IRootState>();
 
-const breadcrumbs = [
+const breadcrumbs = computed(() => [
 	{
 		title: t('component.order.title'),
 		to: { name: EstateRoutes.Order },
 	},
-];
+]);
 
 const categoryTitleRef = useTemplateRef('categoryTitle');
 const roomTitleRef = useTemplateRef('roomTitle');
