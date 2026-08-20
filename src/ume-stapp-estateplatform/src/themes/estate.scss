@@ -93,11 +93,15 @@
 	// used to provide. The form column matches the search/details content
 	// column (max 650px) and the info panel takes the map pane's rail
 	// position, so every estate page shares the same page skeleton and the
-	// same mobile breakpoint.
+	// same mobile breakpoint. Unlike search/details (whose map pane is
+	// full-bleed), the composition is centered on wide screens.
 	.content-wrap {
 		display: flex;
 		gap: 2rem;
 		padding: 16px 24px 32px;
+		// 650px form + 2rem gap + 420px info panel + side paddings (border-box)
+		max-width: 1150px;
+		margin-inline: auto;
 
 		.report-wrap,
 		.order-wrap {
