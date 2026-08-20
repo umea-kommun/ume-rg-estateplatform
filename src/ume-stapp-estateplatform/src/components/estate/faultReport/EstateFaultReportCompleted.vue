@@ -1,0 +1,53 @@
+<template>
+	<div class="estate-fault-report-completed">
+		<div
+			class="success-wrap d-flex justify-center align-center flex-column pa-4 text-center"
+		>
+			<base-animated-success class="my-8" />
+			<h1 class="">
+				{{ $t('component.faultReport.completed.title') }}
+			</h1>
+			<p class="my-2">
+				{{ $t('component.faultReport.completed.description') }}
+			</p>
+			<v-btn
+				class="mt-4"
+				color="primary"
+				:to="{
+					name: EstateRoutes.Search,
+				}"
+			>
+				{{ $t('component.faultReport.completed.goHome') }}
+			</v-btn>
+		</div>
+		<hr class="mt-6" />
+
+		<rate-feedback
+			category="estateFaultReport"
+			:feedback-title="
+				$t('component.faultReport.completed.feedbackTitle')
+			"
+			class="mt-6"
+		/>
+	</div>
+</template>
+
+<script setup lang="ts">
+import { EstateRoutes } from '@/router/routes';
+import BaseAnimatedSuccess from '@/components/shared/BaseAnimatedSuccess.vue';
+import RateFeedback from '@/components/shared/RateFeedback.vue';
+</script>
+
+<style scoped lang="scss">
+.estate-fault-report-completed {
+	hr {
+		border: none;
+		border-top: solid 1px #f2f2f2;
+	}
+	.success-wrap {
+		a {
+			color: #fff !important; // Override global link color
+		}
+	}
+}
+</style>

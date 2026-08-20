@@ -5,36 +5,19 @@ import Config from '@/utils/Config';
 import actions from './actions';
 import mutations from './mutations';
 import VuexPersist from 'vuex-persist';
-import kvittensStore from './kvittens/store';
-import passwordStore from './password/store';
-import gradeStore from './grade/store';
-import estateStore from './estate/store';
 import feedbackStore from './feedback/store';
-
-// export default createStore({
-//   state: {},
-//   getters: {},
-//   mutations: {},
-//   actions: {},
-//   modules: {},
-// });
 
 const state: IRootState = {
 	user: {
 		isAuthenticated: false,
 		authClientName: '',
 	} as IUser,
-	consumer: {},
-	tester: {},
-
-	guardianUser: null,
 };
 
 const vuexPersistToSessionStorage = new VuexPersist({
-	key: 'MyPagesVueApp',
+	key: 'EstatePlatformVueApp',
 	reducer: (state: IRootState) => ({
 		user: state.user,
-		tester: { testAsPerson: state.tester?.testAsPerson },
 		feedback: state.feedback,
 	}),
 	storage: window.sessionStorage,
@@ -47,10 +30,6 @@ const store: StoreOptions<IRootState> = {
 	actions,
 	plugins: [vuexPersistToSessionStorage.plugin],
 	modules: {
-		kvittens: kvittensStore,
-		password: passwordStore,
-		grade: gradeStore,
-		estate: estateStore,
 		feedback: feedbackStore,
 	},
 };

@@ -1,3 +1,5 @@
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/components/app/__tests__/AppContent.tests.ts
 import { mount } from '@vue/test-utils';
 import { describe, expect, test, beforeAll } from 'vitest';
 import AppContent from '../AppContent.vue';

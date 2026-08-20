@@ -1,301 +1,85 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import AppStart from '@/components/app/AppStart.vue';
 import PageNotFound from '@/components/app/PageNotFound.vue';
-import ConsentStart from '@/components/external/consent/ConsentStart.vue';
-import KvittensStart from '@/components/external/kvittens/KvittensStart.vue';
-import KvittensDetails from '@/components/external/kvittens/KvittensDetails.vue';
 import { useAuthMiddleware } from '@/plugins/auth';
 import AuthCallback from '@/components/auth/AuthCallback.vue';
 import AuthLogin from '@/components/auth/AuthLogin.vue';
-import { EstateRoutes, MyPagesRoutes } from './routes';
-import { AppContentSize, AppHeaderTitle } from '@/models/Enums';
-import Config from '@/Config';
+import { AppRoutes, EstateRoutes } from './routes';
+import { AppContentSize } from '@/models/Enums';
 import { useFeatureFlags } from '@/utils/useFeatureFlags';
 
+/**
+ * Path rendered when a route's feature flag is off and there is no enabled
+ * page to fall back to. It has no route record of its own, so the catch-all
+ * picks it up and renders PageNotFound.
+ */
+const FEATURE_UNAVAILABLE_PATH = '/funktion-otillganglig';
+
 const routes: Array<RouteRecordRaw> = [
-	/** External routes */
-	{
-		path: '/',
-		name: MyPagesRoutes.AppStart,
-		component: AppStart,
-		meta: {
-			requiresExternalLogin: true,
-			contentSize: AppContentSize.Wide,
-			breadcrumb: () => [{ name: 'AppStart', to: '/' }],
-		},
-	},
-	{
-		path: '/samtycken',
-		name: MyPagesRoutes.ConsentStart,
-		component: ConsentStart,
-		meta: {
-			requiresExternalLogin: true,
-			contentSize: AppContentSize.Wide,
-			breadcrumb: () => [{ name: 'AppStart', to: '/' }],
-		},
-	},
-	{
-		path: '/kvittens',
-		name: MyPagesRoutes.KvittensStart,
-		component: KvittensStart,
-		meta: {
-			requiresExternalLogin: true,
-			contentSize: AppContentSize.Wide,
-			breadcrumb: () => [{ name: 'AppStart', to: '/' }],
-		},
-	},
-	{
-		path: '/kvittens/:localId',
-		name: MyPagesRoutes.KvittensDetails,
-		component: KvittensDetails,
-		props: true,
-		meta: {
-			requiresExternalLogin: true,
-			contentSize: AppContentSize.Narrow,
-		},
-	},
-	{
-		path: '/betyg',
-		name: MyPagesRoutes.GradeStart,
-		component: () => import('@/components/external/grade/GradeStart.vue'),
-		meta: {
-			requiresExternalLogin: true,
-			contentSize: AppContentSize.Wide,
-			breadcrumb: () => [{ name: 'AppStart', to: '/' }],
-		},
-	},
-
-	/** Internal routes */
-	{
-		path: '/internt',
-		name: MyPagesRoutes.InternalStart,
-		component: () => import('@/components/internal/InternalStart.vue'),
-		meta: {
-			requiresInternalLogin: true,
-			contentSize: AppContentSize.Wide,
-			title: AppHeaderTitle.Internal,
-			breadcrumb: () => [],
-		},
-	},
-	{
-		path: '/internt/samtycken/mallar',
-		name: MyPagesRoutes.InternalConsentTemplateList,
-		component: () =>
-			import(
-				'@/components/internal/consent/templateAdmin/ConsentTemplateList.vue'
-			),
-		meta: {
-			requiresInternalLogin: true,
-			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_TEMPLATE_ID,
-			contentSize: AppContentSize.Wide,
-			title: AppHeaderTitle.AdminConsent,
-			breadcrumb: () => [],
-		},
-	},
-	{
-		path: '/internt/samtycken/mallar/:templateGuid',
-		name: MyPagesRoutes.InternalConsentTemplateEdit,
-		props: true,
-		component: () =>
-			import(
-				'@/components/internal/consent/templateAdmin/ConsentTemplateEdit.vue'
-			),
-		meta: {
-			requiresInternalLogin: true,
-			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_TEMPLATE_ID,
-			contentSize: AppContentSize.Narrow,
-			title: AppHeaderTitle.AdminConsent,
-			breadcrumb: () => [],
-		},
-	},
-	{
-		path: '/internt/samtycken/svar',
-		name: MyPagesRoutes.InternalConsentConsumerList,
-		component: () =>
-			import(
-				'@/components/internal/consent/consumer/ConsentConsumerOverview.vue'
-			),
-		meta: {
-			requiresInternalLogin: true,
-			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_CONSUMER_ID,
-			contentSize: AppContentSize.Wide,
-			title: AppHeaderTitle.InternalConsent,
-			breadcrumb: () => [],
-		},
-	},
-	{
-		path: '/internt/samtycken/svar/:templateGuid,:groupId',
-		name: MyPagesRoutes.InternalConsentConsumerDetails,
-		component: () =>
-			import(
-				'@/components/internal/consent/consumer/ConsentConsumerDetails.vue'
-			),
-		props: true,
-		meta: {
-			requiresInternalLogin: true,
-			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_CONSUMER_ID,
-			contentSize: AppContentSize.Narrow,
-			title: AppHeaderTitle.InternalConsent,
-			breadcrumb: () => [],
-		},
-	},
-	{
-		path: '/internt/samtycken/ombud',
-		name: MyPagesRoutes.InternalConsentAgentStart,
-		component: () =>
-			import('@/components/internal/consent/agent/ConsentAgentStart.vue'),
-		meta: {
-			requiresInternalLogin: true,
-			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_CONSUMER_ID,
-			contentSize: AppContentSize.Wide,
-			title: AppHeaderTitle.AgentConsent,
-			breadcrumb: () => [],
-		},
-	},
-	{
-		path: '/internt/kvittens',
-		name: MyPagesRoutes.InternalKvittensSummary,
-		component: () =>
-			import('@/components/internal/kvittens/KvittensSummary.vue'),
-		meta: {
-			requiresInternalLogin: true,
-			requiresGroup: Config.VUE_APP_AUTH_GROUP_KVITTENS_CONSUMER_ID,
-			contentSize: AppContentSize.Wide,
-			title: AppHeaderTitle.InternalKvittens,
-			breadcrumb: () => [],
-		},
-	},
-	{
-		path: '/internt/kvittens/ombud',
-		name: MyPagesRoutes.InternalKvittensAgent,
-		component: () =>
-			import('@/components/internal/kvittens/KvittensAgent.vue'),
-		meta: {
-			requiresInternalLogin: true,
-			requiresGroup: Config.VUE_APP_AUTH_GROUP_KVITTENS_CONSUMER_ID,
-			contentSize: AppContentSize.Wide,
-			title: AppHeaderTitle.AgentKvittens,
-			breadcrumb: () => [],
-		},
-	},
-
-	{
-		path: '/internt/kvittens/mallar',
-		name: MyPagesRoutes.InternalKvittensTemplateList,
-		component: () =>
-			import(
-				'@/components/internal/kvittens/template/KvittensTemplateList.vue'
-			),
-		meta: {
-			requiresInternalLogin: true,
-			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_TEMPLATE_ID,
-			contentSize: AppContentSize.Wide,
-			title: AppHeaderTitle.InternalKvittens,
-			breadcrumb: () => [],
-		},
-	},
-	{
-		path: '/internt/kvittens/mallar/:id',
-		name: MyPagesRoutes.InternalKvittensTemplateEdit,
-		component: () =>
-			import(
-				'@/components/internal/kvittens/template/KvittensTemplateEdit.vue'
-			),
-		meta: {
-			requiresInternalLogin: true,
-			requiresGroup: Config.VUE_APP_AUTH_GROUP_CONSENT_TEMPLATE_ID,
-			contentSize: AppContentSize.Wide,
-			title: AppHeaderTitle.InternalKvittens,
-			breadcrumb: () => [],
-		},
-	},
-	{
-		path: '/internt/tilldelade-losenord',
-		name: MyPagesRoutes.InternalDefaultPassword,
-		component: () =>
-			import('@/components/internal/password/DefaultPasswords.vue'),
-		meta: {
-			requiresInternalLogin: true,
-			requiresGroup: Config.VUE_APP_AUTH_GROUP_PASSWORD_CONSUMER_ID,
-			contentSize: AppContentSize.Wide,
-			title: AppHeaderTitle.InternalDefaultPasswords,
-			breadcrumb: () => [],
-		},
-	},
-
 	// Estate routes - gated by runtime feature flags
 	{
-		path: '/internt/fastigheter',
+		path: '/',
 		name: EstateRoutes.Search,
-		component: () =>
-			import('@/components/internal/estate/search/EstateSearch.vue'),
+		component: () => import('@/components/estate/search/EstateSearch.vue'),
 		meta: {
 			requiresInternalLogin: true,
 			requiresFeature: 'EstateService',
-			title: AppHeaderTitle.InternalEstate,
 			contentSize: AppContentSize.FullWidth,
 		},
 	},
 	{
-		path: '/internt/fastigheter/felanmalan',
+		path: '/felanmalan',
 		name: EstateRoutes.FaultReport,
 		component: () =>
-			import(
-				'@/components/internal/estate/faultReport/EstateFaultReport.vue'
-			),
+			import('@/components/estate/faultReport/EstateFaultReport.vue'),
 		meta: {
 			requiresInternalLogin: true,
 			requiresFeature: 'ErrorReport',
-			title: AppHeaderTitle.InternalEstate,
+			contentSize: AppContentSize.FullWidth,
 		},
 	},
 	{
-		path: '/internt/fastigheter/bestallning',
+		path: '/bestallning',
 		name: EstateRoutes.Order,
-		component: () =>
-			import('@/components/internal/estate/order/EstateOrder.vue'),
+		component: () => import('@/components/estate/order/EstateOrder.vue'),
 		meta: {
 			requiresInternalLogin: true,
 			requiresFeature: 'ErrorReport',
-			title: AppHeaderTitle.InternalEstate,
+			contentSize: AppContentSize.FullWidth,
 		},
 	},
 	{
-		path: '/internt/fastigheter/lokalbehov',
+		path: '/lokalbehov',
 		name: EstateRoutes.SpaceRequirement,
 		component: () =>
 			import(
-				'@/components/internal/estate/spaceRequirement/EstateSpaceRequirement.vue'
+				'@/components/estate/spaceRequirement/EstateSpaceRequirement.vue'
 			),
 		meta: {
 			requiresInternalLogin: true,
 			requiresFeature: 'ErrorReport',
-			title: AppHeaderTitle.InternalEstate,
-		},
-	},
-	{
-		path: '/internt/fastighet/:estateId/:slug?',
-		name: EstateRoutes.EstateDetails,
-		component: () =>
-			import('@/components/internal/estate/estate/EstateDetails.vue'),
-		props: true,
-		meta: {
-			requiresInternalLogin: true,
-			requiresFeature: 'EstateService',
-			title: AppHeaderTitle.InternalEstate,
 			contentSize: AppContentSize.FullWidth,
 		},
 	},
 	{
-		path: '/internt/fastigheter/byggnad/:buildingId/:slug?',
-		name: EstateRoutes.BuildingDetails,
-		component: () =>
-			import('@/components/internal/estate/building/BuildingDetails.vue'),
+		path: '/fastighet/:estateId/:slug?',
+		name: EstateRoutes.EstateDetails,
+		component: () => import('@/components/estate/estate/EstateDetails.vue'),
 		props: true,
 		meta: {
 			requiresInternalLogin: true,
 			requiresFeature: 'EstateService',
-			title: AppHeaderTitle.InternalEstate,
+			contentSize: AppContentSize.FullWidth,
+		},
+	},
+	{
+		path: '/byggnad/:buildingId/:slug?',
+		name: EstateRoutes.BuildingDetails,
+		component: () =>
+			import('@/components/estate/building/BuildingDetails.vue'),
+		props: true,
+		meta: {
+			requiresInternalLogin: true,
+			requiresFeature: 'EstateService',
 			contentSize: AppContentSize.FullWidth,
 		},
 	},
@@ -303,7 +87,7 @@ const routes: Array<RouteRecordRaw> = [
 	/** Authentication */
 	{
 		component: AuthLogin,
-		name: MyPagesRoutes.AuthLogin,
+		name: AppRoutes.AuthLogin,
 		path: '/logga-in',
 		props: true,
 		meta: {
@@ -312,7 +96,7 @@ const routes: Array<RouteRecordRaw> = [
 	},
 	{
 		component: AuthCallback,
-		name: MyPagesRoutes.AuthCallback,
+		name: AppRoutes.AuthCallback,
 		path: '/oauthCallback',
 		props: true,
 		meta: {
@@ -361,7 +145,12 @@ router.beforeEach(async (to) => {
 	await loadFeatures();
 	const requiredFeature = to.meta.requiresFeature as string | undefined;
 	if (requiredFeature && !isEnabled(requiredFeature)) {
-		return { path: '/internt' };
+		// Mina sidor sent gated routes back to /internt. Here the start page is
+		// the search view, so fall back to it - unless that is what was gated,
+		// in which case there is no enabled page and 404 is the honest answer.
+		return to.path === '/'
+			? { path: FEATURE_UNAVAILABLE_PATH }
+			: { path: '/' };
 	}
 });
 

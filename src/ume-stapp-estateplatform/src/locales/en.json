@@ -12,7 +12,12 @@
 			"skipToContent": "Skip to content",
 			"startPage": "Go to start page",
 			"goBack": "Go back",
-			"more": "More"
+			"more": "More",
+			"services": {
+				"faultReport": "Report a fault",
+				"order": "Place an order",
+				"spaceRequirement": "Changed space requirements"
+			}
 		},
 		"time": {
 			"minute": "minute | minutes",
@@ -98,25 +103,66 @@
 			}
 		}
 	},
+	"estateCommon": {
+		"addressLabel": "Address",
+		"areaLabel": "Area (m²)",
+		"buildingLabel": "Building",
+		"floorLabel": "Floor",
+		"municipalityAreaLabel": "Municipality Area",
+		"nameLabel": "Name",
+		"operationalAreaLabel": "Operational Area",
+		"administrativeAreaLabel": "Administrative Area",
+		"propertyDesignationLabel": "Property Designation",
+		"propertyLabel": "Property",
+		"type": {
+			"estate": "Property",
+			"building": "Building",
+			"room": "Room"
+		},
+		"buildingCount": "{count} building | {count} buildings",
+		"floorCount": "{count} floor | {count} floors",
+		"roomCount": "{count} room | {count} rooms",
+		"yearOfConstructionLabel": "Year of construction",
+		"externalOwner": {
+			"status": "Ownership",
+			"name": "Property owner",
+			"note": "Contact information"
+		}
+	},
 	"component": {
+		"map": {
+			"fullScreenClose": "Close full screen",
+			"fullScreenOpen": "Open full screen",
+			"zoomIn": "Zoom in",
+			"zoomOut": "Zoom out",
+			"buildingXofY": "Building {buildingNumber} of {totalBuildings}",
+			"selectBuilding": "Select building",
+			"layer": {
+				"regular": "Map",
+				"photo": "Photo"
+			}
+		},
+		"blueprintMap": {
+			"floor": "Floor",
+			"reportRoom": "Report a fault",
+			"selectRoom": "Select room"
+		},
 		"appError": {
 			"reportError": "Report error",
 			"defaultMessage": "If the problem persists, please report it to us.",
-			"time": "The error occurred at {time}"
+			"time": "The error occurred at {time}",
+			"pageTitle": "An error occurred"
 		},
 		"appHeader": {
 			"title": {
-				"default": "My pages",
-				"internal": "Internal pages",
-				"internalConsent": "Consent management",
-				"adminConsent": "Admin consent management",
-				"agentConsent": "Consent agent",
-				"internalKvittens": "Receipts",
-				"agentKvittens": "Receipt agent",
-				"internalDefaultPasswords": "Password",
-				"internalEstate": "Real Estate (beta)",
-				"internalEstateFaultReport": "Fault Report - Real Estate",
-				"internalEstateSpaceRequirement": "Changed space requirements - Real Estate"
+				"default": "Estate portal",
+				"faultReport": "Fault Report - Real Estate",
+				"order": "Order - Real Estate",
+				"spaceRequirement": "Changed space requirements - Real Estate"
+			},
+			"nav": {
+				"label": "Primary navigation",
+				"search": "Search"
 			},
 			"locale": {
 				"change": "Other languages"
@@ -144,66 +190,10 @@
 		"appFooter": {
 			"linksTitle": "Find quickly"
 		},
-		"appStart": {
-			"title": "Overview",
-			"welcomeMessage": "Hello {name}, welcome to my pages.",
-			"description": "Umeå municipality's my pages is a new platform for managing your errands digitally. We are actively working on expanding my pages and plan to launch more functionality in the future.",
-			"consent": {
-				"title": "Manage consents",
-				"unreadConsents1": "You have",
-				"unreadConsents2": "unanswered consent requests. | unanswered consent request. | unanswered consent requests.",
-				"unreadConsentsNotLoaded": "Answer consents for yourself or your children."
-			},
-			"kvittens": {
-				"title": "Manage receipts",
-				"unansweredKvittens1": "You have",
-				"unansweredKvittens2": "unanswered receipts. | unanswered receipt. | unanswered receipts.",
-				"unansweredKvittensNotLoaded": "Answer receipts for yourself or your children."
-			},
-			"grade": {
-				"title": "My grades",
-				"description": "Get your upper secondary school grades."
-			}
-		},
-		"map": {
-			"fullScreenClose": "Close full screen",
-			"fullScreenOpen": "Open full screen",
-			"zoomIn": "Zoom in",
-			"zoomOut": "Zoom out",
-			"buildingXofY": "Building {buildingNumber} of {totalBuildings}",
-			"selectBuilding": "Select building",
-			"layer": {
-				"regular": "Map",
-				"photo": "Photo"
-			}
-		},
-		"blueprintMap": {
-			"floor": "Floor",
-			"reportRoom": "Report a fault",
-			"selectRoom": "Select room"
-		},
 		"pageNotFound": {
 			"pageTitle": "Page could not be found",
 			"title": "Sorry, we can't find the page you were looking for!",
 			"text": "This may be because the page has been removed or moved. The page may also have a different web address because we have updated our website."
-		},
-		"BaseConfirmDialog": {
-			"default": {
-				"title": "Title",
-				"text": "Text"
-			}
-		},
-		"tConfirmDialog": {
-			"cancelDefault": "Cancel",
-			"confirmDefault": "Yes"
-		},
-		"baseTable": {
-			"pagination": {
-				"All": "All",
-				"labelof": " of ",
-				"show": "Show",
-				"rowsperpage": "rows per page"
-			}
 		},
 		"baseValidationSummary": {
 			"error": "There are {count} errors.",
@@ -223,48 +213,9 @@
 				"tooManyFiles": "You cannot upload more than {maxFiles} files."
 			}
 		},
-		"tCookieBanner": {
-			"title": "We use cookies",
-			"text": "This site uses cookies for analytics and personalized content. By clicking OK, you agree to this use. ",
-			"urlText": "For more information",
-			"button": "OK, I understand"
-		},
-		"consentStart": {
-			"table": {
-				"titel": "Title",
-				"status": "Status",
-				"approved": "Approved",
-				"denied": "Denied",
-				"pending": "Pending",
-				"new": "Not answered"
-			},
-			"title": "Consent",
-			"selectListTitle": "Select child",
-			"showAll": "Show all",
-			"noResults": "We could not find any consents.",
-			"noFilterResults": "We could not find any consents that matched the search.",
-			"reloadingText": "Fetching consents...",
-			"feedbackTitle": "How did it go to respond to consents?",
-			"titleUnanswered": "Unanswered ({count})",
-			"titleAnswered": "Answered ({count})",
-			"titleInactive": "Inactive ({count})",
-			"consentForName": "Consent for {name}",
-			"actionAnswer": "Answer",
-			"actionOpen": "Open",
-			"status": {
-				"approvedAdult": "Approved",
-				"approved": "All guardians approve",
-				"rejectedAdult": "Not approved",
-				"rejected": "At least one guardian does not approve",
-				"pendingYourAnswer": "Awaiting your answer",
-				"pendingOther": "Awaiting answer from the other guardian",
-				"unanswered": "Unanswered"
-			},
-			"userStatus": {
-				"approved": "You approve",
-				"rejected": "You do not approve",
-				"unanswered": "You have not answered"
-			}
+		"baseAutocomplete": {
+			"loading": "Loading...",
+			"noDataAvailable": "No matching results."
 		},
 		"feedback": {
 			"subtitle": "Help us improve.",
@@ -277,691 +228,272 @@
 				"starLabel": "{n} star | {n} stars"
 			}
 		},
-		"external": {
-			"common": {
-				"nonFolkbokfordAlert": {
-					"title": "Response via representative required",
-					"text": "One of your child's guardians is not registered in Sweden. Therefore, the guardian cannot log in to My Pages. Contact your child's teacher for help in submitting answers via a representative."
+		"tCookieBanner": {
+			"title": "We use cookies",
+			"text": "This site uses cookies for analytics and personalized content. By clicking OK, you agree to this use. ",
+			"urlText": "For more information",
+			"button": "OK, I understand"
+		},
+		"estateSearch": {
+			"breadcrumb": "Estate portal",
+			"searchPlaceholder": "Search by property, address or building...",
+			"searchButton": "Search",
+			"filter": "Filter",
+			"selectOnMap": "Select on map",
+			"noResults": "We could not find any properties or buildings that matched your search."
+		},
+		"estateSearchFilter": {
+			"businessTypeLabel": "Main business type",
+			"clearFilter": "Clear filter"
+		},
+		"estatePortal": {
+			"title": "Estate portal",
+			"description": "Find information about the municipality's properties, buildings and premises.",
+			"actions": {
+				"faultReport": {
+					"title": "Fault report",
+					"description": "Something is broken or not working as it should in your premises."
+				},
+				"order": {
+					"title": "Order",
+					"description": "Order work or services from Byggservice, Stadshusservice or Verksamhetsservice."
+				},
+				"spaceRequirement": {
+					"title": "Changed space requirements",
+					"description": "Your organization needs more, less or a different type of premises."
 				}
 			},
-			"consent": {
-				"loading": "Loading consent...",
-				"goBack": "Go back",
-				"consentTitle": "Consent",
-				"handleConsentFor": "You manage consent for",
-				"period": "The consent refers to the period",
-				"giveConsent": "I consent",
-				"rejectConsent": "I do not consent",
-				"youCanChangeLater": "You can change your answer later.",
-				"youCanChangeYourAnswerLater": "You can always come back here and change your answer.",
-				"youCanNoLongerChangeAnswer": "You can no longer change your answer.",
-				"youConsentTo": "You consent to",
-				"youDoNotConsentTo": "You do not consent to",
-				"guardianGiveConsent": "{guardianName} gives consent for {childName}.",
-				"guardianRejectConsent": "{guardianName} do <b>not</b> give consent for {childName}.",
-				"usingConsentAgent": "Via consent agent {agentName}",
-				"openConsentAgentImage": "Show image",
-				"openConsentAgentImageHelpText": "Show image of guardian's signature",
-				"imageOfGuardianSignature": "Signed document",
-				"historyTitle": "History"
-			},
-			"kvittensStart": {
-				"title": "Receipts",
-				"description": "Here you can read the rules for student computers, networks and logging in to IT services, as well as student lockers, teaching materials and books, and acknowledge that you have read them.",
-				"filterOnChild": "Filter on child",
-				"noResults": "You have no unanswered or answered receipts.",
-				"noResultsUsingFilter": "We did not find any receipts that matched the filtering.",
-				"titleUnanswered": "Unanswered ({count})",
-				"titleAnswered": "Answered ({count})",
-				"feedbackTitle": "How did it go to respond to receipts?"
-			},
-			"kvittensDetails": {
-				"you": "(you)",
-				"requiresMultipleAnswers": "The receipt requires answers from several people",
-				"everyoneHasAnswered": "The receipt has been answered",
-				"gdprButton": "Read more about how your personal data is processed",
-				"cancel": "Cancel",
-				"sendIn": "Send in",
-				"userAgreedError": "This field is required.",
-				"thankYouForAnswer": "Thank you for your answer.",
-				"answerNextKvittens": "Answer the next receipt",
-				"history": {
-					"title": "History",
-					"answeredYes": "{name} answered yes",
-					"throughAgent": "through agent, {agentName}",
-					"openImage": "Open attached receipt"
-				}
-			},
-			"kvittensListItem": {
-				"actionAnswer": "Answer",
-				"actionOpen": "Open",
-				"kvittensFor": "Receipt for {name}",
-				"XofYHasAnswered": "{answered}/{total} has answered",
-				"allHaveAnswered": "All have answered"
-			},
-			"gradeStart": {
-				"title": "My grades",
-				"description": "Here you can download your upper secondary school grades.",
-				"explanationPart1": "Is a grade missing? There could be various reasons for this. You can submit a request via our web form, which you will find on our website: ",
-				"explanationPart2": "If you are still studying or have dropped out of upper secondary school, you should contact your upper secondary school to obtain your grades.",
-				"explanationLink": "Order a copy of grades",
-				"noResults": "We could not find any of your grades in the archive.",
-				"feedbackTitle": "How did it work to retrieve your grades?"
-			},
-			"gradeListItem": {
-				"download": "Open grades"
+			"selectOnMap": "Select a building on the map"
+		},
+		"estateFavorite": {
+			"title": "My favorites ({count})",
+			"noFavorites": "Here you can see your favorites. To add a favorite, click on the star next to the name of a property, building, or room.",
+			"addFavorite": "Add to my favorites",
+			"removeFavorite": "Remove from my favorites"
+		},
+		"estateDetails": {
+			"noBuildings": "This property has no buildings associated with it.",
+			"buildings": "Buildings",
+			"informationMissing": "Information missing"
+		},
+		"buildingDetails": {
+			"floorLabel": "Floor",
+			"noRooms": "This building has no rooms associated with it.",
+			"mapButton": "Map",
+			"buildingImageAlt": "Image of building",
+			"blueprintButton": "Blueprint",
+			"blueprintMissingTooltip": "Blueprint missing",
+			"contactPersonsButton": "Contact persons",
+			"contactPersonsMissingTooltip": "No contact persons specified",
+			"documentsButton": "Documents",
+			"documentsMissingTooltip": "There are no documents associated with this building",
+			"createCase": "Create case",
+			"buildingImage": "Image of building",
+			"room": {
+				"title": "Rooms",
+				"search": "Search",
+				"searchPlaceholder": "Search rooms...",
+				"floor": "Floor",
+				"type": "Room type",
+				"noMatches": "There are no rooms that match your search.",
+				"noMatchesSelectedFloor": "There are no rooms on floor {floor} that match your search.",
+				"matchesOnOtherFloors": "Rooms on other floors",
+				"showMoreRooms": "Show more rooms"
 			}
 		},
-		"internal": {
-			"internalStart": {
-				"title": "Hello {name}, welcome to your internal pages.",
-				"description": "Internal pages allow you as an employee of Umeå municipality to handle cases and use e-services in your professional role.",
-				"consent": {
-					"title": "Consent management",
-					"goToConsumer": "Show my students' consent",
-					"goToAgent": "Enter consent for a student",
-					"goToTemplateAdmin": "Manage consent templates"
-				},
-				"kvittens": {
-					"title": "Receipts",
-					"goToKvittens": "See students' responses to receipts",
-					"goToKvittensAgent": "Register receipt for student",
-					"goToKvittensAdmin": "Manage receipt templates"
-				},
-				"passwords": {
-					"title": "Passwords",
-					"goToPassword": "See students' assigned passwords"
-				},
-				"estate": {
-					"title": "Properties and buildings (beta)",
-					"description": "In the Property Portal, you can report faults, place orders with Property Services, City Hall Services and Business Services, and access information about premises and properties.",
-					"goToEstateSearch": "Search properties and buildings",
-					"goToEstateFaultReport": "Report a fault",
-					"goToEstateOrder": "Place an order",
-					"goToEstateSpaceRequirement": "Changed space requirements"
-				},
-				"feedbackTitle": "Would you like to help us improve?",
-				"feedbackSubtitle": "Leave feedback"
+		"buildingContact": {
+			"title": "Contact persons",
+			"propertyManager": "Property manager",
+			"operationsManager": "Operations manager",
+			"operationCoordinator": "Operations coordinator",
+			"rentalAdministrator": "Rental administrator",
+			"caretaker": "Caretaker",
+			"operationsTechnician": "Operations technician",
+			"valueMissing": "Not specified",
+			"callAriaLabel": "Call {name}",
+			"emailAriaLabel": "Send email to {name}"
+		},
+		"buildingDocument": {
+			"title": "Documents",
+			"searchPlaceholder": "Search documents...",
+			"category": "Category",
+			"searchNoResults": "No documents matched your search.",
+			"noContent": "No content",
+			"downloadFile": "Download {filename}",
+			"noPreview": "No preview available for this file type.",
+			"openPdf": "Open PDF"
+		},
+		"faultReport": {
+			"title": "Fault Report",
+			"description": "If something isn’t working properly on the premises, you can report the fault here.",
+			"changeAnswer": "Change",
+			"submitButton": "Submit Fault Report",
+			"rentedBuildingNotice": "This building is rented, which means that the property owner is responsible for maintenance and repairs.",
+			"rentedBuildingNoticeConfirmButton": "I understand, continue anyway",
+			"building": {
+				"select": "Select building",
+				"selected": "Building"
 			},
-			"templateGroupSelect": {
-				"modal": {
-					"title": "Add school type/school/class",
-					"unitTypeTitle": "School type",
-					"unitTitle": "School",
-					"classTitle": "Class",
-					"allSchools": "All schools",
-					"allClasses": "All classes",
-					"add": "Add",
-					"cancel": "cancel"
+			"location": {
+				"select": "Is the problem indoor or outdoor?",
+				"indoor": {
+					"title": "The problem is indoor",
+					"description": "Select indoor if the fault is located inside the building, for example in rooms, corridors or communal areas.",
+					"select": "Indoor",
+					"selectButton": "Select indoor",
+					"selected": "You have chosen to report a fault inside the building."
+				},
+				"outdoor": {
+					"title": "The problem is outdoor",
+					"description": "Select outdoor if the fault is located outside the building, for example on the façade, roof or surrounding areas.",
+					"select": "Outdoor",
+					"selectButton": "Select outdoor",
+					"selected": "You have selected that the fault report concerns the exterior of the building."
 				}
 			},
-			"consentTemplateAdmin": {
-				"title": "Templates",
-				"search": "Search for templates",
-				"filterButton": "Filter",
-				"filterGroup": "Filter",
-				"filterGroupEmpty": "Add a school type, school or class to filter on.",
-				"addFilterGroup": "Add school type/school/class",
-				"addFilterBtn": "Add filter",
-				"create": "Create new template",
-				"open": "Open",
-				"edit": "Edit",
-				"noResults": "We could not find any results matching your search.",
-				"headers": {
-					"title": "Title",
-					"groups": "Groups",
-					"period": "Period",
-					"status": "Status"
-				},
-				"period": {
-					"indefinitely": "{date} - indefinitely",
-					"until": "up until {date}",
-					"none": "not specified"
-				},
-				"status": {
-					"0": "Draft",
-					"1": "Published"
-				}
+			"room": {
+				"select": "Which room does it concern?",
+				"selected": "Room",
+				"none": "No room",
+				"skip": "Skip"
 			},
-			"consentTemplateEdit": {
-				"titleCreate": "Create new template",
-				"titleEdit": "Edit template",
-				"titleView": "Published template",
-				"saveDraft": "Save draft",
-				"publish": "Publish template",
-				"field": {
-					"title": {
-						"label": "Title",
-						"requiredToSave": "You must enter a title to save the draft."
-					},
-					"text": { "label": "Text" },
-					"groups": {
-						"label": "Groups",
-						"empty": "You have not selected any school or class yet."
-					},
-					"startDate": { "label": "Start date" },
-					"endDate": { "label": "End date" },
-					"isOngoing": { "label": "Until further notice" }
-				},
-				"publishConfirm": {
-					"title": "Publish template?",
-					"text": "Are you sure you want to publish the template, you cannot edit the template after it has been published.",
-					"yes": "Yes, publish template"
-				}
+			"general": {
+				"problemTitle": "Problem description",
+				"problemLabel": "Describe the problem",
+				"problemHelpText": "Please describe the problem as clearly as possible – what it involves and when it occurred. The more information you provide, the better we can resolve the issue.",
+				"fileUploadLabel": "Please feel free to attach a photo showing the fault (optional)",
+				"contactLabel": "Contact information",
+				"contactHelpText": "Please let us know who we can contact if we need further information or have any questions regarding the fault report.",
+				"contactNameLabel": "Name",
+				"contactEmailLabel": "Email",
+				"contactPhoneLabel": "Phone number"
 			},
-			"consentConsumerList": {
-				"title": "Consents",
-				"open": "Open",
-				"noResults": "We could not find any consents that you have access to see.",
-				"noFilterResults": "We could not find any consents that matched the search.",
-				"plusXOtherGroups": "+{count} more",
-				"noEndDate": "until further notice",
-				"headers": {
-					"title": "Title",
-					"groups": "Groups",
-					"period": "Period"
-				},
-				"filter": {
-					"school": "School",
-					"caretaker": "Caretaker",
-					"classOrGroup": "Class/department/group",
-					"search": "Search for consents",
-					"noData": "No results found."
-				},
-				"groupType": {
-					"department": "Departments",
-					"educationGroup": "Groups",
-					"class": "Classes"
-				},
-				"openDialog": {
-					"title": "Select class/group to view consents for",
-					"description": "Once you have selected the class/department/group, the consent will open immediately."
-				}
+			"info": {
+				"title": "Information",
+				"text1": "Important to bear in mind. Please describe the fault as clearly as possible and state where it is located (building, floor, room). The more information you provide, the quicker we can help you. Please feel free to attach a photo if this helps.",
+				"text2": "Once your fault report has been registered, it will be handled by the property management team. Issues are assessed and prioritised based on their urgency and the impact the fault has on operations. We may contact you if we need further information or to arrange a time for the work to be carried out.",
+				"text3": "<b>In the event of an emergency</b> (e.g. a water leak, power cut or danger to life or property), please contact the switchboard by telephone (090-16 10 00) rather than reporting the fault via the portal. They will ensure that the right person is contacted immediately and that action is taken straight away."
 			},
-			"consentConsumerDetails": {
-				"title": "Consents",
-				"persons": "Persons",
-				"searchForPersons": "Search for person",
-				"noResults": "We could not find any people in {0}.",
-				"noSearchResults": "We could not find any people matching your search.",
-				"headers": {
-					"name": "Name",
-					"consent": "Consent"
-				},
-				"status": {
-					"approved": "Consent",
-					"denied": "Do not consent",
-					"pending": "Awaiting responses from both guardians",
-					"new": "Not answered"
-				},
-				"accessDeniedError": {
-					"title": "You lack the necessary permissions.",
-					"message": "To see responses to students' consents, you need to be the teacher of their class."
-				}
-			},
-			"consumerTester": {
-				"testingAs": "Testing as {name}",
-				"yourself": "yourself",
-				"testingAsPersonAtSchool": "Testing as {name} at {school}",
-				"modal": {
-					"title": "Test as a teacher",
-					"description": "Select a school and then a person at this school that you want to take the role of. You will be able to see and open the consents that the selected person can. This option is only available for testers.",
-					"school": "School",
-					"person": "Teacher",
-					"cancelTest": "Stop test",
-					"hideButton": "Hide button",
-					"confirm": "Start test"
-				}
-			},
-			"consentAgentStart": {
-				"title": "Consent Agent",
-				"description": "As a consent agent, you can update a student's consent at a guardian's request. You need to attach a picture of a written consent from the guardian to update the student's consent.",
-				"noResult": "We could not find any consents for the specified student that you have access to see.",
-				"consentsTitle": "Consents for {childName}",
-				"selectSchoolAndClass": "Select school, class/department/group and student to view consents."
-			},
-			"consentAgentList": {
-				"answer": "Update answer"
-			},
-			"consentAgentEdit": {
-				"handleConsentFor": "You are acting as a consent agent for ",
-				"guardianTitle": "Guardians consent",
-				"responsiblesHaveChangedTitle": "Last state of signing",
-				"responsiblesHaveChangedInfo": "The people responsible for signing this consent have changed. These are the last answers before the change. They are considered valid until a new answer is registered."
-			},
-			"consentAgentGuardianEditModal": {
-				"title": "Update the guardian's answerClick to apply",
-				"guardianNewAnswer": "The guardian's new answer",
-				"fileUploadLabel": "Picture of the guardian's consent",
-				"fileUploadHelpText": "Upload an existing image or take a new image with your camera. The image will be visible to the student's guardians and to other authorized consent agents.",
-				"fileUploadSelectImage": "Select image",
-				"alertPart1": "You will change ",
-				"alertPart2": " answer to ",
-				"alertPart3": " for ",
-				"updateButton": "Update answer"
-			},
-			"kvittensSummary": {
-				"title": "Summary of receipts",
-				"schoolLabel": "School",
-				"classLabel": "Class",
-				"searchStudent": "Search for student",
-				"filterOnAnswer": "Filter on answer",
-				"filter": {
-					"allAnswered": "Have acknowledged all",
-					"hasUnanswered": "Have at least one unanswered"
-				},
-				"noAccess": "You need to be a mentor of a class to see receipts.",
-				"selectSchoolAndClass": "Select school and class to view the summary.",
-				"headers": {
-					"name": "Name",
-					"dateOfBirth": "Date of birth"
-				},
-				"noResults": "We found no students in this class.",
-				"noResultsMatchingFilter": "We found no students in this class that matched your search.",
-				"tooltip": {
-					"noAnswers": "No one has answered",
-					"nameHasAnswered": "{name} has answered",
-					"nameHasNotAnswered": "{name} has not answered"
-				}
-			},
-			"kvittensAgent": {
-				"title": "Receipt Agent",
-				"stateLabel": "State",
-				"noAccess": "You need to be a mentor of a class to see receipts.",
-				"selectSchoolAndClass": "Select school, class/department/group and pupil to view receipts.",
-				"noResults": "We could not find any receipts for the specified student that you have access to view.",
-				"headers": {
-					"receiptTitle": "Receipt",
-					"receiptStatus": "State",
-					"registerSingleReceiptButton": ""
-				},
-				"groupType": {
-					"department": "Departments",
-					"educationGroup": "Groups",
-					"class": "Classes"
-				},
-				"bulkRegisterDialogSubtitle": "Register receipt for blabla",
-				"closeDialogButton": "Close",
-				"description": "As a recepit agent, you can register a receipt for a student at a guardian's request. You need to attach a picture of a written receipt from the guardian to register the student's receipt.",
-				"dialogDetailsTitle": "Receipt details",
-				"dialogTitle": "Receipt agent for {name}",
-				"everyRespondentHasAnswered": "All respondents have acknowledged this receipt.",
-				"fileUploadHelpText": "Upload an existing image or take a new image with your camera. The image will be visible to the student's guardians and to other authorized agents.",
-				"fileUploadLabel": "Picture of the guardian's consent",
-				"fileUploadSelectImage": "Select image",
-				"historyTitle": "History",
-				"kvittensTitle": "Recepits for {childName}",
-				"noResult": "We could not find any receipts for the specified student that you have access to see.",
-				"registerButton": "Register receipt",
-				"registerRespondentsLabel": "Who are you answering for?",
-				"registerTitle": "Register receipt"
-			},
-			"kvittensTemplateList": {
-				"title": "Receipt templates",
-				"noTemplates": "No templates found",
-				"open": "Open"
-			},
-			"kvittensTemplateEdit": {
-				"title": "Edit receipt template",
-				"saveButton": "Save and publish template",
-				"publishedAndLocked": "This template is published and cannot be edited.",
-				"field": {
-					"titleLabel": "Title",
-					"titleHelpText": "The title is displayed to students and guardians",
-					"shortTitleLabel": "Short title",
-					"shortTitleHelpText": "The short title is displayed in the teachers' overview of receipts",
-					"confirmTextLabel": "Confirmation text",
-					"confirmTextHelpText": "This text is displayed next to the checkbox when you answer a receipt, to confirm that you understand what you are acknowledging.",
-					"textLabel": "Text",
-					"gdprTextLabel": "GDPR text",
-					"schoolFormAndYearLabel": "School form and year",
-					"addSchoolFormAndYear": "Add school form and year"
-				},
-				"targetDialog": {
-					"title": "Add school form and year",
-					"schoolForm": "School form",
-					"schoolYear": "School year",
-					"cancel": "Cancel",
-					"add": "Add"
-				},
-				"publishConfirm": {
-					"title": "Publish template?",
-					"text": "Are you sure you want to publish the template? You cannot edit the template after it has been published. Users will be able to see and respond to this receipt as soon as it has been published.",
-					"yes": "Yes, publish template"
-				}
-			},
-			"defaultPasswords": {
-				"title": "Assigned passwords",
-				"schoolLabel": "School",
-				"classLabel": "Class/department/group",
-				"noAccess": "You are not authorized to view student passwords.",
-				"selectSchoolAndClass": "Select school and class/department/group to view passwords.",
-				"headers": {
-					"name": "Name",
-					"dateOfBirth": "Date of birth",
-					"password": "Password",
-					"email": "Email"
-				},
-				"noResults": "We found no passwords for students in this class/department/group.",
-				"groupType": {
-					"department": "Departments",
-					"educationGroup": "Groups",
-					"class": "Classes"
-				},
-				"print": "Print",
-				"noPassword": "No password has been set"
-			},
-			"studentFilter": {
-				"schoolLabel": "School",
-				"classLabel": "Class/department/group",
-				"studentLabel": "Student",
-				"noAccess": "No schools or groups associated to your account were found."
-			},
-			"estateSearch": {
-				"breadcrumb": "Property Search",
-				"searchPlaceholder": "Search by property, address or building...",
-				"searchButton": "Search",
-				"filter": "Filter",
-				"selectOnMap": "Select on map",
-				"noResults": "We could not find any properties or buildings that matched your search.",
-				"searchHelp": "Use the search box or apply filters to find the building or property you are looking for."
-			},
-			"estateSearchFilter": {
-				"businessTypeLabel": "Main business type",
-				"clearFilter": "Clear filter"
-			},
-			"estateFavorite": {
-				"title": "My favorites ({count})",
-				"noFavorites": "Here you can see your favorites. To add a favorite, click on the star next to the name of a property, building, or room.",
-				"addFavorite": "Add to my favorites",
-				"removeFavorite": "Remove from my favorites"
-			},
-			"estateDetails": {
-				"noBuildings": "This property has no buildings associated with it.",
-				"buildings": "Buildings",
-				"informationMissing": "Information missing"
-			},
-			"buildingDetails": {
-				"floorLabel": "Floor",
-				"noRooms": "This building has no rooms associated with it.",
-				"mapButton": "Map",
-				"buildingImageAlt": "Image of building",
-				"blueprintButton": "Blueprint",
-				"blueprintMissingTooltip": "Blueprint missing",
-				"contactPersonsButton": "Contact persons",
-				"contactPersonsMissingTooltip": "No contact persons specified",
-				"documentsButton": "Documents",
-				"documentsMissingTooltip": "There are no documents associated with this building",
-				"reportButton": "Report fault",
-				"buildingImage": "Image of building",
-				"room": {
-					"title": "Rooms",
-					"search": "Search",
-					"searchPlaceholder": "Search rooms...",
-					"floor": "Floor",
-					"type": "Room type",
-					"noMatches": "There are no rooms that match your search.",
-					"noMatchesSelectedFloor": "There are no rooms on floor {floor} that match your search.",
-					"matchesOnOtherFloors": "Rooms on other floors",
-					"showMoreRooms": "Show more rooms"
-				}
-			},
-			"buildingContact": {
-				"title": "Contact persons",
-				"propertyManager": "Property manager",
-				"operationsManager": "Operations manager",
-				"operationCoordinator": "Operations coordinator",
-				"rentalAdministrator": "Rental administrator",
-				"caretaker": "Caretaker",
-				"operationsTechnician": "Operations technician",
-				"valueMissing": "Not specified",
-				"callAriaLabel": "Call {name}",
-				"emailAriaLabel": "Send email to {name}"
-			},
-			"buildingDocument": {
-				"title": "Documents",
-				"searchPlaceholder": "Search documents...",
-				"category": "Category",
-				"searchNoResults": "No documents matched your search.",
-				"noContent": "No content",
-				"downloadFile": "Download {filename}",
-				"noPreview": "No preview available for this file type.",
-				"openPdf": "Open PDF"
-			},
-			"faultReport": {
-				"title": "Fault Report",
-				"description": "If something isn’t working properly on the premises, you can report the fault here.",
-				"changeAnswer": "Change",
-				"submitButton": "Submit Fault Report",
-				"rentedBuildingNotice": "This building is rented, which means that the property owner is responsible for maintenance and repairs.",
-				"rentedBuildingNoticeConfirmButton": "I understand, continue anyway",
-				"building": {
-					"select": "Select building",
-					"selected": "Building"
-				},
-				"location": {
-					"select": "Is the problem indoor or outdoor?",
-					"indoor": {
-						"title": "The problem is indoor",
-						"description": "Select indoor if the fault is located inside the building, for example in rooms, corridors or communal areas.",
-						"select": "Indoor",
-						"selectButton": "Select indoor",
-						"selected": "You have chosen to report a fault inside the building."
-					},
-					"outdoor": {
-						"title": "The problem is outdoor",
-						"description": "Select outdoor if the fault is located outside the building, for example on the façade, roof or surrounding areas.",
-						"select": "Outdoor",
-						"selectButton": "Select outdoor",
-						"selected": "You have selected that the fault report concerns the exterior of the building."
-					}
-				},
-				"room": {
-					"select": "Which room does it concern?",
-					"selected": "Room",
-					"none": "No room",
-					"skip": "Skip"
-				},
-				"general": {
-					"problemTitle": "Problem description",
-					"problemLabel": "Describe the problem",
-					"problemHelpText": "Please describe the problem as clearly as possible – what it involves and when it occurred. The more information you provide, the better we can resolve the issue.",
-					"fileUploadLabel": "Please feel free to attach a photo showing the fault (optional)",
-					"contactLabel": "Contact information",
-					"contactHelpText": "Please let us know who we can contact if we need further information or have any questions regarding the fault report.",
-					"contactNameLabel": "Name",
-					"contactEmailLabel": "Email",
-					"contactPhoneLabel": "Phone number"
-				},
-				"info": {
-					"title": "Information",
-					"text1": "Important to bear in mind. Please describe the fault as clearly as possible and state where it is located (building, floor, room). The more information you provide, the quicker we can help you. Please feel free to attach a photo if this helps.",
-					"text2": "Once your fault report has been registered, it will be handled by the property management team. Issues are assessed and prioritised based on their urgency and the impact the fault has on operations. We may contact you if we need further information or to arrange a time for the work to be carried out.",
-					"text3": "<b>In the event of an emergency</b> (e.g. a water leak, power cut or danger to life or property), please contact the switchboard by telephone (090-16 10 00) rather than reporting the fault via the portal. They will ensure that the right person is contacted immediately and that action is taken straight away."
-				},
-				"completed": {
-					"title": "Thank you for your fault report!",
-					"description": "We have received your fault report and will handle it as soon as possible.",
-					"goHome": "Go to the homepage",
-					"feedbackTitle": "How did reporting a fault work?"
-				}
-			},
-			"order": {
-				"title": "Order",
-				"description": "Here you can order minor building and fitting work from Byggservice, as well as practical assistance and property-related services from Stadshusservice and Verksamhetsservice.",
-				"submitButton": "Submit your order",
-				"general": {
-					"descriptionTitle": "Description",
-					"descriptionLabel": "Describe what you want to order",
-					"descriptionHelpText": "Describe as clearly as possible what you want to order, why you want to order it, and when you want it to be in place. The more information you can provide, the better the order can be handled.",
-					"fileUploadLabel": "Please feel free to attach a photo showing where the work is to be carried out (optional)",
-					"contactLabel": "Contact information",
-					"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to handle the order, or if there are questions regarding the order."
-				},
-				"category": {
-					"title": "Type of order",
-					"select": "Select",
-					"selected": "Selected",
-
-					"townHallServices": {
-						"title": "Town Hall Services",
-						"description": "Practical assistance and local services in the City Hall area, Majorsbostället and Leoparden."
-					},
-					"buildingServices": {
-						"title": "Building Services",
-						"description": "Repairs and minor building work, such as putting up shelves, hooks and noticeboards, as well as minor painting jobs."
-					},
-					"facilitiesManager": {
-						"title": "Facilities Manager",
-						"description": "Practical assistance and on-site services for businesses, such as signage, recycling and simple transport services."
-					},
-					"spaceRequirement": {
-						"title": "Changed Space Requirements",
-						"description": "Report a need for changed premises, for example more or less space."
-					},
-					"noneAvailable": "There are no order services available for this building."
-				},
-				"room": { "select": "Which room does the order concern?" },
-				"info": {
-					"title": "Information",
-					"text1": "Byggservice carries out minor construction and fitting work, such as installing shelves, hooks, mouldings and noticeboards, as well as simple painting jobs.",
-					"text2": "Please note! Purely electrical work is not carried out by Byggservice (such as the installation of additional sockets or lighting) but must be ordered via Proceedo. The client (usually the unit manager) is responsible for the working environment, even when work is carried out by an external contractor.",
-					"text3": "Once your order has been submitted, Byggservice will make an initial assessment of the feasibility of your request; if necessary, the responsible property manager will also be consulted. A site visit is then often booked to assess the scope of the work, for example, before a decision is made on whether or not to proceed with the order.",
-					"text4": "Ensure that your description is as clear as possible to avoid the need for further information, and that your contact details are correct."
-				},
-				"completed": {
-					"title": "Thank you for your order!",
-					"description": "We have received your order and will handle it as soon as possible.",
-					"goHome": "Go to the homepage",
-					"feedbackTitle": "How did placing an order work?"
-				}
-			},
-			"spaceRequirement": {
-				"title": "Changed space requirements",
-				"description": "Submit a request for changed premises, for example more or less space, adaptations, or other changes to your operation's premises.",
-				"submitButton": "Submit request",
-				"general": {
-					"descriptionTitle": "Description",
-					"descriptionLabel": "Describe your changed space requirement",
-					"descriptionHelpText": "Describe as clearly as possible what you need, why it has arisen, and when the change needs to be in place. The more information you can provide, the better the request can be handled.",
-					"fileUploadLabel": "Attach files (optional)",
-					"contactLabel": "Contact information",
-					"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to handle the request, or if there are questions regarding it."
-				},
-				"category": {
-					"title": "Type of space requirement",
-					"loading": "Loading types...",
-					"required": "Select a type of space requirement.",
-					"noneAvailable": "Space requirement types could not be loaded right now. Please try again later.",
-					"descriptions": {
-						"88": "When premises need to be adapted to meet accessibility and usability requirements.",
-						"89": "When the operation needs to investigate a space requirement where the solution, scope, or future needs are not yet established.",
-						"90": "When the operation needs minor changes to existing premises.",
-						"91": "When the operation needs more or less space, new premises, or major rebuilds.",
-						"97": "When the operation needs one or more apartments for its activities. (GVN only)"
-					}
-				},
-				"building": {
-					"select": "Building (optional)",
-					"add": "Select a building (optional)",
-					"notSupported": "The selected building does not support requests for changed space requirements. Please choose another building."
-				},
-				"room": {
-					"select": "Room (optional)",
-					"add": "Select a room (optional)"
-				},
-				"info": {
-					"title": "Information",
-					"paragraphs": [
-						"Describe the operation's space requirement as clearly as possible and choose the category that best matches the matter.",
-						"If the need is tied to a specific building, we recommend stating the building in the matter. If a suitable building has not yet been identified, the field can be left empty.",
-						"To ease the continued handling, it is valuable to attach relevant supporting material, for example investigations, decision documentation, drawings, images, or other documentation that clarifies the need.",
-						"Once the request is submitted, the matter is handled according to the municipality's space provision process."
-					]
-				},
-				"completed": {
-					"title": "Thank you for your request!",
-					"description": "We have received your request for changed space requirements and will handle it as soon as possible.",
-					"goHome": "Go to the homepage",
-					"feedbackTitle": "How did submitting a request for changed space requirements work?"
-				}
-			},
-			"buildingSelector": {
-				"searchLabel": "Search for a building or enter an address",
-				"noResults": "No buildings matched your search.",
-				"selectOnMap": "Select on map",
-				"searchHelp": "Use the search box or select a location on the map to find the building you are looking for.",
-				"favoritesTitle": "My favorites ({count})",
-				"favoritesDescription": "You can also select a building or room directly from your favorites."
-			},
-			"roomSelector": {
-				"none": "You have not selected a room.",
-				"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula cursus vestibulum. Duis et nisl ut ipsum fermentum",
-				"selectOnBlueprint": "Select on blueprint"
+			"completed": {
+				"title": "Thank you for your fault report!",
+				"description": "We have received your fault report and will handle it as soon as possible.",
+				"goHome": "Go to the homepage",
+				"feedbackTitle": "How did reporting a fault work?"
 			}
 		},
-		"kvittensUserAnswer": {
-			"approved": "Acknowledged",
-			"unanswered": "Not answered",
-			"iApproved": "You acknowledged",
-			"iHaveNotAnswered": "You have not answered",
-			"notAnsweredByAll": "Not answered by all"
+		"order": {
+			"title": "Order",
+			"description": "Here you can order minor building and fitting work from Byggservice, as well as practical assistance and property-related services from Stadshusservice and Verksamhetsservice.",
+			"submitButton": "Submit your order",
+			"general": {
+				"descriptionTitle": "Description",
+				"descriptionLabel": "Describe what you want to order",
+				"descriptionHelpText": "Describe as clearly as possible what you want to order, why you want to order it, and when you want it to be in place. The more information you can provide, the better the order can be handled.",
+				"fileUploadLabel": "Please feel free to attach a photo showing where the work is to be carried out (optional)",
+				"contactLabel": "Contact information",
+				"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to handle the order, or if there are questions regarding the order."
+			},
+			"category": {
+				"title": "Type of order",
+				"select": "Select",
+				"selected": "Selected",
+				"townHallServices": {
+					"title": "Town Hall Services",
+					"description": "Practical assistance and local services in the City Hall area, Majorsbostället and Leoparden."
+				},
+				"buildingServices": {
+					"title": "Building Services",
+					"description": "Repairs and minor building work, such as putting up shelves, hooks and noticeboards, as well as minor painting jobs."
+				},
+				"facilitiesManager": {
+					"title": "Facilities Manager",
+					"description": "Practical assistance and on-site services for businesses, such as signage, recycling and simple transport services."
+				},
+				"spaceRequirement": {
+					"title": "Changed Space Requirements",
+					"description": "Report a need for changed premises, for example more or less space."
+				},
+				"noneAvailable": "There are no order services available for this building."
+			},
+			"room": {
+				"select": "Which room does the order concern?"
+			},
+			"info": {
+				"title": "Information",
+				"text1": "Byggservice carries out minor construction and fitting work, such as installing shelves, hooks, mouldings and noticeboards, as well as simple painting jobs.",
+				"text2": "Please note! Purely electrical work is not carried out by Byggservice (such as the installation of additional sockets or lighting) but must be ordered via Proceedo. The client (usually the unit manager) is responsible for the working environment, even when work is carried out by an external contractor.",
+				"text3": "Once your order has been submitted, Byggservice will make an initial assessment of the feasibility of your request; if necessary, the responsible property manager will also be consulted. A site visit is then often booked to assess the scope of the work, for example, before a decision is made on whether or not to proceed with the order.",
+				"text4": "Ensure that your description is as clear as possible to avoid the need for further information, and that your contact details are correct."
+			},
+			"completed": {
+				"title": "Thank you for your order!",
+				"description": "We have received your order and will handle it as soon as possible.",
+				"goHome": "Go to the homepage",
+				"feedbackTitle": "How did placing an order work?"
+			}
 		},
-		"BaseLoginMethods": {
-			"title": "Log in",
-			"externalTitle": "Log in as a private individual",
-			"internalTitle": "Log in as an employee",
-			"helpTitle": "Help",
-			"loginMethodHelpTitle": "Which login method should I choose?",
-			"loginMethodHelpPart1": "Log in with your BankID or Freja eID+ to manage and track your private matters.",
-			"loginMethodHelpPart2": "Log in with your employee account to handle cases and use e-services in your professional role at Umeå Municipality.",
-			"aboutEId": "Want to know more about or get an e-ID?"
+		"spaceRequirement": {
+			"title": "Changed space requirements",
+			"description": "Submit a request for changed premises, for example more or less space, adaptations, or other changes to your operation's premises.",
+			"submitButton": "Submit request",
+			"general": {
+				"descriptionTitle": "Description",
+				"descriptionLabel": "Describe your changed space requirement",
+				"descriptionHelpText": "Describe as clearly as possible what you need, why it has arisen, and when the change needs to be in place. The more information you can provide, the better the request can be handled.",
+				"fileUploadLabel": "Attach files (optional)",
+				"contactLabel": "Contact information",
+				"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to handle the request, or if there are questions regarding it."
+			},
+			"category": {
+				"title": "Type of space requirement",
+				"loading": "Loading types...",
+				"required": "Select a type of space requirement.",
+				"noneAvailable": "Space requirement types could not be loaded right now. Please try again later.",
+				"descriptions": {
+					"88": "When premises need to be adapted to meet accessibility and usability requirements.",
+					"89": "When the operation needs to investigate a space requirement where the solution, scope, or future needs are not yet established.",
+					"90": "When the operation needs minor changes to existing premises.",
+					"91": "When the operation needs more or less space, new premises, or major rebuilds.",
+					"97": "When the operation needs one or more apartments for its activities. (GVN only)"
+				}
+			},
+			"building": {
+				"select": "Building (optional)",
+				"add": "Select a building (optional)",
+				"notSupported": "The selected building does not support requests for changed space requirements. Please choose another building."
+			},
+			"room": {
+				"select": "Room (optional)",
+				"add": "Select a room (optional)"
+			},
+			"info": {
+				"title": "Information",
+				"paragraphs": [
+					"Describe the operation's space requirement as clearly as possible and choose the category that best matches the matter.",
+					"If the need is tied to a specific building, we recommend stating the building in the matter. If a suitable building has not yet been identified, the field can be left empty.",
+					"To ease the continued handling, it is valuable to attach relevant supporting material, for example investigations, decision documentation, drawings, images, or other documentation that clarifies the need.",
+					"Once the request is submitted, the matter is handled according to the municipality's space provision process."
+				]
+			},
+			"completed": {
+				"title": "Thank you for your request!",
+				"description": "We have received your request for changed space requirements and will handle it as soon as possible.",
+				"goHome": "Go to the homepage",
+				"feedbackTitle": "How did submitting a request for changed space requirements work?"
+			}
 		},
-		"baseAutocomplete": {
-			"loading": "Loading...",
-			"noDataAvailable": "No matching results."
-		}
-	},
-	"consent": {
-		"userStatus": {
-			"notAnswered": "Not answered",
-			"approved": "Consents",
-			"rejected": "Does not consent"
-		}
-	},
-	"schoolForm": {
-		"FS": "Preschool",
-		"FK": "Preschool Class",
-		"GR": "Compulsory School",
-		"S": "Compulsory School For Learning Disabilities",
-		"GY": "Upper Secondary School ",
-		"GS": "Upper Secondary School For Learning Disabilities",
-		"PC": "Pedagogical Care"
-	},
-	"estateCommon": {
-		"addressLabel": "Address",
-		"areaLabel": "Area (m²)",
-		"buildingLabel": "Building",
-		"floorLabel": "Floor",
-		"municipalityAreaLabel": "Municipality Area",
-		"nameLabel": "Name",
-		"operationalAreaLabel": "Operational Area",
-		"administrativeAreaLabel": "Administrative Area",
-		"propertyDesignationLabel": "Property Designation",
-		"propertyLabel": "Property",
-		"type": {
-			"estate": "Property",
-			"building": "Building",
-			"room": "Room"
+		"buildingSelector": {
+			"searchLabel": "Search for a building or enter an address",
+			"noResults": "No buildings matched your search.",
+			"selectOnMap": "Select on map",
+			"searchHelp": "Use the search box or select a location on the map to find the building you are looking for.",
+			"favoritesTitle": "My favorites ({count})",
+			"favoritesDescription": "You can also select a building or room directly from your favorites."
 		},
-		"buildingCount": "{count} building | {count} buildings",
-		"floorCount": "{count} floor | {count} floors",
-		"roomCount": "{count} room | {count} rooms",
-		"yearOfConstructionLabel": "Year of construction",
-		"externalOwner": {
-			"status": "Ownership",
-			"name": "Property owner",
-			"note": "Contact information"
+		"roomSelector": {
+			"none": "You have not selected a room.",
+			"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula cursus vestibulum. Duis et nisl ut ipsum fermentum",
+			"selectOnBlueprint": "Select on blueprint"
 		}
 	}
 }

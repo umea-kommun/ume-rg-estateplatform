@@ -1,3 +1,5 @@
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/main.ts
 import './polyfills';
 import { createApp } from 'vue';
 import App from './App.vue';
@@ -9,8 +11,6 @@ import Config from '@/utils/Config';
 import IAuthManager from './plugins/auth/IAuthManager';
 import Validation from './plugins/validation';
 import Auth from '@/plugins/auth/index';
-import BaseLoginMethods from '@turkos/base-login-methods';
-import '@turkos/base-login-methods/style.css';
 import '@turkos/components/styles';
 import moment from 'moment';
 import 'moment/dist/locale/sv';
@@ -62,9 +62,4 @@ app.use(appInsights, {
 });
 
 Validation(i18n);
-app.use(BaseLoginMethods)
-	.use(store)
-	.use(router)
-	.use(i18n)
-	.use(vuetify)
-	.mount('#app');
+app.use(store).use(router).use(i18n).use(vuetify).mount('#app');

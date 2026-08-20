@@ -1,3 +1,5 @@
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/plugins/auth/AuthConfig.ts
 import IAuthClientConfig from './IAuthClientConfig';
 
 export default class AuthConfig {
@@ -50,11 +52,11 @@ export default class AuthConfig {
 					if (!authClientMap.has(authClientKey)) {
 						authClientMap.set(authClientKey, {
 							scope:
-								key.indexOf('VUE_APP_AUTH_PUBLIC_AD_') === 0
+								key.indexOf('VUE_APP_AUTH_INTERNAL_') === 0
 									? this.internalScope
 									: this.publicScope,
 							internal:
-								key.indexOf('VUE_APP_AUTH_PUBLIC_AD_') === 0,
+								key.indexOf('VUE_APP_AUTH_INTERNAL_') === 0,
 							// eslint-disable-next-line @typescript-eslint/no-explicit-any
 						} as any);
 					}

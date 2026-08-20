@@ -1,3 +1,5 @@
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/utils/__tests__/helper.test.ts
 import { Helper } from '../helper';
 import { describe, expect, test } from 'vitest';
 import { AppContentSize } from '../../models/Enums';

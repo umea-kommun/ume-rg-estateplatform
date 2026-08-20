@@ -1,3 +1,5 @@
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/app/PageNotFound.vue -->
 <template>
 	<app-content
 		:size="contentSize"
@@ -19,17 +21,13 @@
 	</app-content>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import AppContent from '@/components/app/AppContent.vue';
 import { useRoute } from 'vue-router';
 import { AppContentSize } from '@/models/Enums';
-import { useStore } from 'vuex';
-import { IRootState } from '@/models/Interfaces';
-import Config from '@/Config';
-import { MyPagesRoutes } from '@/router/routes';
+import { EstateRoutes } from '@/router/routes';
 
 const route = useRoute();
-const store = useStore<IRootState>();
 
 const contentSize = ref<AppContentSize>(
 	route.meta
@@ -37,17 +35,7 @@ const contentSize = ref<AppContentSize>(
 		: AppContentSize.Default
 );
 
-const user = computed(() => store.state.user);
-const startPageRoute = computed(() => {
-	switch (user.value.authClientName) {
-		case Config.VUE_APP_AUTH_PUBLIC_AD_CLIENT_NAME:
-			// Redirect to internal start page
-			return MyPagesRoutes.InternalStart;
-		default:
-			// Redirect to external start page
-			return MyPagesRoutes.AppStart;
-	}
-});
+const startPageRoute = EstateRoutes.Search;
 </script>
 
 <style scoped lang="scss">

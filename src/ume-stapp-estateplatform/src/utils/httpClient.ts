@@ -1,3 +1,5 @@
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/utils/httpClient.ts
 import Axios, { type CreateAxiosDefaults } from 'axios';
 import { getAppInsightsContext } from '@/utils/appInsightsContext';
 

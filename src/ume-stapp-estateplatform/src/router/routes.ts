@@ -1,26 +1,4 @@
-export enum MyPagesRoutes {
-	AppStart = 'AppStart',
-
-	ConsentStart = 'ConsentStart',
-	ConsentEdit = 'ConsentEdit',
-
-	KvittensStart = 'KvittensStart',
-	KvittensDetails = 'KvittensDetails',
-
-	GradeStart = 'GradeStart',
-
-	InternalStart = 'InternalStart',
-	InternalConsentTemplateList = 'Internal.ConsentTemplateList',
-	InternalConsentTemplateEdit = 'Internal.ConsentTemplateEdit',
-	InternalConsentConsumerList = 'Internal.ConsentConsumerList',
-	InternalConsentConsumerDetails = 'Internal.ConsentConsumerDetails',
-	InternalConsentAgentStart = 'Internal.ConsentAgentStart',
-	InternalKvittensSummary = 'Internal.KvittensSummary',
-	InternalKvittensAgent = 'Internal.KvittensAgent',
-	InternalKvittensTemplateList = 'Internal.KvittensTemplateList',
-	InternalKvittensTemplateEdit = 'Internal.KvittensTemplateEdit',
-	InternalDefaultPassword = 'Internal.DefaultPassword',
-
+export enum AppRoutes {
 	AuthLogin = 'AuthLogin',
 	AuthCallback = 'AuthCallback',
 }
@@ -32,7 +10,6 @@ export enum EstateRoutes {
 	SpaceRequirement = 'Estate.SpaceRequirement',
 
 	EstateDetails = 'Estate.EstateDetails',
-	EstateDetailsBuildings = 'Estate.EstateDetails.Buildings',
 
 	BuildingDetails = 'Estate.BuildingDetails',
 }

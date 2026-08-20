@@ -12,7 +12,12 @@
 			"skipToContent": "Hoppa till innehåll",
 			"startPage": "Gå till startsidan",
 			"goBack": "Gå tillbaka",
-			"more": "Mer"
+			"more": "Mer",
+			"services": {
+				"faultReport": "Felanmälan",
+				"order": "Beställning",
+				"spaceRequirement": "Förändrade lokalbehov"
+			}
 		},
 		"time": {
 			"minute": "minut | minuter",
@@ -98,26 +103,66 @@
 			}
 		}
 	},
+	"estateCommon": {
+		"addressLabel": "Adress",
+		"areaLabel": "Yta (m²)",
+		"buildingLabel": "Byggnad",
+		"floorLabel": "Våning",
+		"municipalityAreaLabel": "Kommundel",
+		"nameLabel": "Namn",
+		"operationalAreaLabel": "Driftområde",
+		"administrativeAreaLabel": "Förvaltningsområde",
+		"propertyDesignationLabel": "Fastighetsbeteckning",
+		"propertyLabel": "Fastighet",
+		"type": {
+			"estate": "Fastighet",
+			"building": "Byggnad",
+			"room": "Rum"
+		},
+		"buildingCount": "{count} byggnad | {count} byggnader",
+		"floorCount": "{count} våning | {count} våningar",
+		"roomCount": "{count} rum",
+		"yearOfConstructionLabel": "Byggnadsår",
+		"externalOwner": {
+			"status": "Ägandeförhållande",
+			"name": "Fastighetsägare",
+			"note": "Kontaktuppgifter"
+		}
+	},
 	"component": {
+		"map": {
+			"fullScreenClose": "Stäng helskärm",
+			"fullScreenOpen": "Öppna helskärm",
+			"zoomIn": "Zooma in",
+			"zoomOut": "Zooma ut",
+			"buildingXofY": "Byggnad {buildingNumber} av {totalBuildings}",
+			"selectBuilding": "Välj byggnad",
+			"layer": {
+				"regular": "Karta",
+				"photo": "Foto"
+			}
+		},
+		"blueprintMap": {
+			"floor": "Våning",
+			"reportRoom": "Felanmäl rum",
+			"selectRoom": "Välj rum"
+		},
 		"appError": {
 			"reportError": "Felanmäl",
 			"defaultMessage": "Om problemet kvarstår, vänligen felanmäl detta till oss.",
-			"time": "Felet uppstod {time}"
+			"time": "Felet uppstod {time}",
+			"pageTitle": "Ett fel uppstod"
 		},
 		"appHeader": {
 			"title": {
-				"default": "Mina sidor",
-				"internal": "Interna sidor",
-				"internalConsent": "Samtyckeshantering",
-				"adminConsent": "Admin Samtyckeshantering",
-				"agentConsent": "Samtyckesombud",
-				"internalKvittens": "Kvittenser",
-				"agentKvittens": "Kvittensombud",
-				"internalDefaultPasswords": "Lösenord",
-				"internalEstate": "Fastigheter (beta)",
-				"internalEstateFaultReport": "Felanmälan - Fastigheter",
-				"internalEstateOrder": "Beställning - Fastigheter",
-				"internalEstateSpaceRequirement": "Förändrade lokalbehov - Fastigheter"
+				"default": "Fastighetsportalen",
+				"faultReport": "Felanmälan - Fastigheter",
+				"order": "Beställning - Fastigheter",
+				"spaceRequirement": "Förändrade lokalbehov - Fastigheter"
+			},
+			"nav": {
+				"label": "Huvudnavigation",
+				"search": "Sök"
 			},
 			"locale": {
 				"change": "Other languages"
@@ -145,66 +190,10 @@
 		"appFooter": {
 			"linksTitle": "Hitta snabbt"
 		},
-		"appStart": {
-			"title": "Översikt",
-			"welcomeMessage": "Hej {name}, välkommen till mina sidor.",
-			"description": "Umeå kommuns mina sidor är en ny plattform för att hantera dina ärenden digitalt. Vi arbetar aktivt med att bygga ut mina sidor och planerar att lansera mer funktionalitet i framtiden.",
-			"consent": {
-				"title": "Hantera samtycken",
-				"unreadConsents1": "Du har",
-				"unreadConsents2": "obesvarade samtyckesförfrågningar. | obesvarad samtyckesförfrågning. | obesvarade samtyckesförfrågningar.",
-				"unreadConsentsNotLoaded": "Besvara samtycken för dig själv eller dina barn."
-			},
-			"kvittens": {
-				"title": "Hantera kvittenser",
-				"unansweredKvittens1": "Du har",
-				"unansweredKvittens2": "obesvarade kvittenser. | obesvarad kvittens. | obesvarade kvittenser.",
-				"unansweredKvittensNotLoaded": "Besvara kvittenser för dig själv eller dina barn."
-			},
-			"grade": {
-				"title": "Mina betyg",
-				"description": "Hämta dina betyg från gymnasiet."
-			}
-		},
-		"map": {
-			"fullScreenClose": "Stäng helskärm",
-			"fullScreenOpen": "Öppna helskärm",
-			"zoomIn": "Zooma in",
-			"zoomOut": "Zooma ut",
-			"buildingXofY": "Byggnad {buildingNumber} av {totalBuildings}",
-			"selectBuilding": "Välj byggnad",
-			"layer": {
-				"regular": "Karta",
-				"photo": "Foto"
-			}
-		},
-		"blueprintMap": {
-			"floor": "Våning",
-			"reportRoom": "Felanmäl rum",
-			"selectRoom": "Välj rum"
-		},
 		"pageNotFound": {
 			"pageTitle": "Sidan kunde inte hittas",
 			"title": "Oj, vi kan tyvärr inte hitta sidan du sökte!",
 			"text": "Det kan bero på att sidan har tagits bort eller flyttats. Sidan kan också ha en annan webbadress eftersom vi har uppdaterat vår webbplats."
-		},
-		"BaseConfirmDialog": {
-			"default": {
-				"title": "Titel",
-				"text": "Text"
-			}
-		},
-		"tConfirmDialog": {
-			"cancelDefault": "Avbryt",
-			"confirmDefault": "Ja"
-		},
-		"baseTable": {
-			"pagination": {
-				"All": "Alla",
-				"labelof": " av ",
-				"show": "Visa",
-				"rowsperpage": "rader per sida"
-			}
 		},
 		"baseValidationSummary": {
 			"error": "Det finns {count} fel.",
@@ -224,48 +213,9 @@
 				"tooManyFiles": "Du kan inte ladda upp fler än {maxFiles} filer."
 			}
 		},
-		"tCookieBanner": {
-			"title": "Vi använder kakor (cookies)",
-			"text": "Denna webbplats använder cookies för statistik och anpassat innehåll. Genom att klicka OK godkänner du denna användning.",
-			"urlText": "För mer information",
-			"button": "OK, jag förstår"
-		},
-		"consentStart": {
-			"table": {
-				"titel": "Titel",
-				"status": "Status",
-				"approved": "Samtycker",
-				"denied": "Samtycker inte",
-				"pending": "Väntar på svar från båda vårdnadshavarna",
-				"new": "Ej besvarad"
-			},
-			"title": "Samtycken",
-			"selectListTitle": "Välj barn",
-			"showAll": "Visa alla",
-			"noResults": "Vi kunde inte hitta några samtycken.",
-			"noFilterResults": "Vi kunde inte hitta några samtycken som matchade sökningen.",
-			"reloadingText": "Hämtar samtycken...",
-			"feedbackTitle": "Hur fungerade det att svara på samtycken?",
-			"titleUnanswered": "Obesvarade ({count})",
-			"titleAnswered": "Besvarade ({count})",
-			"titleInactive": "Inaktiva ({count})",
-			"consentForName": "Samtycket gäller {name}",
-			"actionAnswer": "Besvara",
-			"actionOpen": "Öppna",
-			"status": {
-				"approvedAdult": "Samtycker",
-				"approved": "Samtliga vårdnadshavare samtycker",
-				"rejectedAdult": "Samtycker inte",
-				"rejected": "Åtminstone en vårdnadshavare samtycker inte",
-				"pendingYourAnswer": "Inväntar ditt svar",
-				"pendingOther": "Inväntar svar från den andra vårdnadshavaren",
-				"unanswered": "Ej besvarad"
-			},
-			"userStatus": {
-				"approved": "Du samtycker",
-				"rejected": "Du samtycker inte",
-				"unanswered": "Du har ej besvarat"
-			}
+		"baseAutocomplete": {
+			"loading": "Laddar innehåll...",
+			"noDataAvailable": "Inga matchande resultat."
 		},
 		"feedback": {
 			"subtitle": "Hjälp oss bli bättre.",
@@ -278,691 +228,272 @@
 				"starLabel": "{n} stjärna | {n} stjärnor"
 			}
 		},
-		"external": {
-			"common": {
-				"nonFolkbokfordAlert": {
-					"title": "Svar via ombud krävs",
-					"text": "En av ditt barns vårdnadshavare är inte folkbokförd i Sverige. Därför kan vårdnadshavaren inte logga in på Mina sidor. Kontakta ditt barns lärare för att få hjälp med att lämna svar via ombud."
+		"tCookieBanner": {
+			"title": "Vi använder kakor (cookies)",
+			"text": "Denna webbplats använder cookies för statistik och anpassat innehåll. Genom att klicka OK godkänner du denna användning.",
+			"urlText": "För mer information",
+			"button": "OK, jag förstår"
+		},
+		"estateSearch": {
+			"breadcrumb": "Fastighetsportalen",
+			"searchPlaceholder": "Sök efter fastighet, adress eller byggnad...",
+			"searchButton": "Sök",
+			"filter": "Filtrera",
+			"selectOnMap": "Välj på karta",
+			"noResults": "Vi kunde inte hitta några fastigheter eller byggnader som matchade din sökning."
+		},
+		"estateSearchFilter": {
+			"businessTypeLabel": "Huvudsaklig verksamhetstyp",
+			"clearFilter": "Rensa filter"
+		},
+		"estatePortal": {
+			"title": "Fastighetsportalen",
+			"description": "Sök fram information om kommunens fastigheter, byggnader och lokaler.",
+			"actions": {
+				"faultReport": {
+					"title": "Felanmälan",
+					"description": "Något är trasigt eller fungerar inte som det ska i era lokaler."
+				},
+				"order": {
+					"title": "Beställning",
+					"description": "Beställ arbete eller tjänster från Byggservice, Stadshusservice eller Verksamhetsservice."
+				},
+				"spaceRequirement": {
+					"title": "Förändrade lokalbehov",
+					"description": "Er verksamhet behöver mer, mindre eller en annan typ av lokal."
 				}
 			},
-			"consent": {
-				"loading": "Läser in samtycke...",
-				"goBack": "Gå tillbaka",
-				"consentTitle": "Samtycke",
-				"handleConsentFor": "Du hanterar samtycke för",
-				"period": "Samtycket avser perioden",
-				"giveConsent": "Jag samtycker",
-				"rejectConsent": "Jag samtycker inte",
-				"youCanChangeLater": "Du kan när som helst ändra ditt svar.",
-				"youCanChangeYourAnswerLater": "Du kan när som helst komma tillbaka hit och ändra ditt svar.",
-				"youCanNoLongerChangeAnswer": "Du kan inte längre ändra ditt svar.",
-				"youConsentTo": "Du samtycker till",
-				"youDoNotConsentTo": "Du samtycker inte till",
-				"guardianGiveConsent": "{guardianName} ger samtycke för {childName}.",
-				"guardianRejectConsent": "{guardianName} ger <b>inte</b> samtycke för {childName}.",
-				"usingConsentAgent": "Via samtyckesombud {agentName}.",
-				"openConsentAgentImage": "Öppna bild",
-				"openConsentAgentImageHelpText": "Visa bild på vårdnadshavarens underskrift",
-				"imageOfGuardianSignature": "Signerat dokument",
-				"historyTitle": "Historik"
-			},
-			"kvittensStart": {
-				"title": "Kvittenser",
-				"description": "Här får du ta del av regler för elevdator, nätverk och inloggning till IT-tjänster samt elevskåp, läromedel och böcker samt kvittera att du läst dessa.",
-				"filterOnChild": "Filtrera på barn",
-				"noResults": "Du har inga obesvarade eller besvarade kvittenser.",
-				"noResultsUsingFilter": "Vi hittade inga kvittenser som matchade filtreringen.",
-				"titleUnanswered": "Obesvarade ({count})",
-				"titleAnswered": "Besvarade ({count})",
-				"feedbackTitle": "Hur fungerade det att svara på kvittenser?"
-			},
-			"kvittensDetails": {
-				"you": "(du)",
-				"requiresMultipleAnswers": "Kvittensen kräver svar från flera personer",
-				"everyoneHasAnswered": "Kvittensen har besvarats",
-				"gdprButton": "Läs mer om hur dina personuppgifter behandlas",
-				"cancel": "Avbryt",
-				"sendIn": "Kvittera",
-				"userAgreedError": "Detta fält är obligatoriskt.",
-				"thankYouForAnswer": "Tack för ditt svar.",
-				"answerNextKvittens": "Besvara nästa kvittens",
-				"history": {
-					"title": "Historik",
-					"answeredYes": "{name} kvitterade",
-					"throughAgent": "via ombud, {agentName}",
-					"openImage": "Öppna bifogad kvittens"
-				}
-			},
-			"kvittensListItem": {
-				"actionAnswer": "Besvara",
-				"actionOpen": "Öppna",
-				"kvittensFor": "Kvittens för {name}",
-				"XofYHasAnswered": "{answered}/{total} har kvitterat",
-				"allHaveAnswered": "Alla har kvitterat"
-			},
-			"gradeStart": {
-				"title": "Mina betyg",
-				"description": "Här kan du hämta hem dina gymnasiebetyg från stadsarkivet.",
-				"explanationPart1": "Saknas något betyg? Det kan bero på olika orsaker. Du kan skicka in en förfrågan via vårt webbformulär som du hittar på vår hemsida: ",
-				"explanationPart2": "Om du fortfarande studerar eller har hoppat av gymnasiet ska du kontakta din gymnasieskola för att få betygen.",
-				"explanationLink": "Beställ kopia på betyg",
-				"noResults": "Kunde inte hitta några av dina betyg i arkivet.",
-				"feedbackTitle": "Hur fungerade det att hämta dina betyg?"
-			},
-			"gradeListItem": {
-				"download": "Öppna betyg"
+			"selectOnMap": "Välj byggnad på kartan"
+		},
+		"estateFavorite": {
+			"title": "Mina favoriter ({count})",
+			"noFavorites": "Här syns dina favoriter. För att lägga till en favorit, klicka på stjärnan vid namnet på en fastighet, byggnad eller ett rum.",
+			"addFavorite": "Lägg till i mina favoriter",
+			"removeFavorite": "Ta bort från mina favoriter"
+		},
+		"estateDetails": {
+			"noBuildings": "Denna fastighet har inga byggnader kopplade till sig.",
+			"buildings": "Byggnader",
+			"informationMissing": "Information saknas"
+		},
+		"buildingDetails": {
+			"floorLabel": "Våning",
+			"noRooms": "Denna byggnad har inga rum kopplade till sig.",
+			"mapButton": "Karta",
+			"buildingImageAlt": "Bild på byggnaden",
+			"blueprintButton": "Planritning",
+			"blueprintMissingTooltip": "Planritning saknas",
+			"contactPersonsButton": "Kontaktpersoner",
+			"contactPersonsMissingTooltip": "Det finns inga kontaktpersoner angivna",
+			"documentsButton": "Handlingar",
+			"documentsMissingTooltip": "Det finns inga handlingar kopplade till denna byggnad",
+			"createCase": "Skapa ärende",
+			"buildingImage": "Bild på byggnaden",
+			"room": {
+				"title": "Rum",
+				"search": "Sök",
+				"searchPlaceholder": "Sök på rum...",
+				"floor": "Våning",
+				"type": "Rumstyp",
+				"noMatches": "Det finns inga rum som matchar din sökning.",
+				"noMatchesSelectedFloor": "Det finns inga rum på våning {floor} som matchar din sökning.",
+				"matchesOnOtherFloors": "Rum på andra våningar",
+				"showMoreRooms": "Visa fler rum"
 			}
 		},
-		"internal": {
-			"internalStart": {
-				"title": "Hej {name}, välkommen till dina interna sidor.",
-				"description": "Interna sidor tillåter dig som anställd på Umeå kommun att handlägga ärenden och använda e-tjänster i din yrkesroll.",
-				"consent": {
-					"title": "Samtyckeshantering",
-					"goToConsumer": "Visa samtycken för mina elever",
-					"goToAgent": "Ange samtycke för en elev",
-					"goToTemplateAdmin": "Hantera samtyckesmallar"
-				},
-				"kvittens": {
-					"title": "Kvittenser",
-					"goToKvittens": "Se elevers svar på kvittenser",
-					"goToKvittensAgent": "Registrera kvittens för elev",
-					"goToKvittensAdmin": "Hantera kvittensmallar"
-				},
-				"passwords": {
-					"title": "Lösenord",
-					"goToPassword": "Se elevers tilldelade lösenord"
-				},
-				"estate": {
-					"title": "Fastigheter (beta)",
-					"description": "I Fastighetsportalen kan du göra felanmälningar, lägga beställningar till Fastighet, Stadshusservice och Verksamhetsservice samt ta del av lokal- och fastighetsinformation.",
-					"goToEstateSearch": "Sök efter fastigheter",
-					"goToEstateFaultReport": "Felanmälan",
-					"goToEstateOrder": "Beställning",
-					"goToEstateSpaceRequirement": "Förändrade lokalbehov"
-				},
-				"feedbackTitle": "Vill du hjälpa oss att bli bättre?",
-				"feedbackSubtitle": "Lämna ett omdöme"
+		"buildingContact": {
+			"title": "Kontaktpersoner",
+			"propertyManager": "Fastighetsförvaltare",
+			"operationsManager": "Driftområdeschef",
+			"operationCoordinator": "Driftsamordnare",
+			"rentalAdministrator": "Hyresadministratör",
+			"caretaker": "Fastighetsskötare",
+			"operationsTechnician": "Drifttekniker",
+			"valueMissing": "Ej angivet",
+			"callAriaLabel": "Ring {name}",
+			"emailAriaLabel": "Skicka e-post till {name}"
+		},
+		"buildingDocument": {
+			"title": "Handlingar",
+			"searchPlaceholder": "Sök efter handlingar...",
+			"category": "Kategori",
+			"searchNoResults": "Inga handlingar matchade din sökning.",
+			"noContent": "Inget innehåll",
+			"downloadFile": "Ladda ner {filename}",
+			"noPreview": "Förhandsgranskning saknas för denna filtyp.",
+			"openPdf": "Öppna PDF"
+		},
+		"faultReport": {
+			"title": "Felanmälan",
+			"description": "Här kan du göra en felanmälan om något inte fungerar som det ska i verksamhetens lokaler.",
+			"changeAnswer": "Ändra",
+			"submitButton": "Skicka in felanmälan",
+			"rentedBuildingNotice": "Denna byggnad är inhyrd, vilket innebär att fastighetsägaren ansvarar för underhåll och reparationer.",
+			"rentedBuildingNoticeConfirmButton": "Jag förstår, fortsätt ändå",
+			"building": {
+				"select": "Välj byggnad",
+				"selected": "Byggnad"
 			},
-			"templateGroupSelect": {
-				"modal": {
-					"title": "Lägg till skolform/skola/klass",
-					"unitTypeTitle": "Skolform",
-					"unitTitle": "Skola",
-					"classTitle": "Klass",
-					"allSchools": "Alla skolor",
-					"allClasses": "Alla klasser",
-					"add": "Lägg till",
-					"cancel": "Avbryt"
+			"location": {
+				"select": "Är problemet utvändigt eller invändigt?",
+				"indoor": {
+					"title": "Problemet är invändigt",
+					"description": "Välj invändigt om felet finns inne i byggnaden, till exempel i rum, korridorer eller gemensamma utrymmen.",
+					"select": "Invändigt",
+					"selectButton": "Välj invändigt",
+					"selected": "Du har valt att anmäla ett fel på byggnadens insida."
+				},
+				"outdoor": {
+					"title": "Problemet är utvändigt",
+					"description": "Välj utvändigt om felet finns utanför byggnaden, till exempel på fasad, tak, eller omkringliggande ytor.",
+					"select": "Utvändigt",
+					"selectButton": "Välj utvändigt",
+					"selected": "Du har valt att anmäla ett fel på byggnadens utsida."
 				}
 			},
-			"consentTemplateAdmin": {
-				"title": "Mallar",
-				"search": "Sök efter mall",
-				"filterButton": "Filtrera",
-				"filterGroup": "Filter",
-				"filterGroupEmpty": "Lägg till en skolform, en skola eller klass att filtrera på.",
-				"addFilterGroup": "Lägg till skolform/skola/klass",
-				"addFilterBtn": "Lägg till filter",
-				"create": "Skapa ny mall",
-				"open": "Öppna",
-				"edit": "Redigera",
-				"noResults": "Vi kunde inte hitta några mallar som matchade sökningen.",
-				"headers": {
-					"title": "Titel",
-					"groups": "Grupper",
-					"period": "Period",
-					"status": "Status"
-				},
-				"period": {
-					"indefinitely": "{date} - tillsvidare",
-					"until": "fram tills {date}",
-					"none": "ej angett"
-				},
-				"status": {
-					"0": "Utkast",
-					"1": "Publicerad"
-				}
+			"room": {
+				"select": "Vilket rum gäller felanmälan?",
+				"selected": "Rum",
+				"none": "Inget rum",
+				"skip": "Hoppa över"
 			},
-			"consentTemplateEdit": {
-				"titleCreate": "Skapa ny mall",
-				"titleEdit": "Redigera mall",
-				"titleView": "Publicerad mall",
-				"saveDraft": "Spara utkast",
-				"publish": "Publicera mall",
-				"field": {
-					"title": {
-						"label": "Titel",
-						"requiredToSave": "Du måste ange en titel för att spara utkastet."
-					},
-					"text": { "label": "Text" },
-					"groups": {
-						"label": "Grupper",
-						"empty": "Du har inte valt någon skola eller klass än."
-					},
-					"startDate": { "label": "Startdatum" },
-					"endDate": { "label": "Slutdatum" },
-					"isOngoing": { "label": "Tillsvidare" }
-				},
-				"publishConfirm": {
-					"title": "Publicera mall?",
-					"text": "Är du säker på att du vill publicera mallen, du kan inte redigera mallen efter att den har publicerats.",
-					"yes": "Ja, publicera mall"
-				}
+			"general": {
+				"problemTitle": "Problembeskrivning",
+				"problemLabel": "Beskriv problemet",
+				"problemHelpText": "Beskriv problemet så tydligt som möjligt – vad det gäller och när det uppstod. Ju mer information du lämnar, desto bättre kan vi åtgärda problemet.",
+				"fileUploadLabel": "Bifoga gärna en bild som visar felet (frivilligt)",
+				"contactLabel": "Kontaktuppgifter",
+				"contactHelpText": "Ange vem vi kan kontakta om vi behöver mer information eller har frågor om felanmälan.",
+				"contactNameLabel": "Namn",
+				"contactEmailLabel": "E-post",
+				"contactPhoneLabel": "Telefonnummer"
 			},
-			"consentConsumerList": {
-				"title": "Samtycken",
-				"open": "Öppna",
-				"noResults": "Vi kunde inte hitta några samtycken som du har åtkomst att se.",
-				"noFilterResults": "Vi kunde inte hitta några samtycken som matchade sökningen.",
-				"plusXOtherGroups": "+{count} till",
-				"noEndDate": "tillsvidare",
-				"headers": {
-					"title": "Titel",
-					"groups": "Klass/avdelning/grupp",
-					"period": "Period"
-				},
-				"filter": {
-					"school": "Skola",
-					"caretaker": "Dagbarnvårdare",
-					"classOrGroup": "Klass/avdelning/grupp",
-					"search": "Sök efter samtycken",
-					"noData": "Inga resultat hittades."
-				},
-				"groupType": {
-					"department": "Avdelningar",
-					"educationGroup": "Grupper",
-					"class": "Klasser"
-				},
-				"openDialog": {
-					"title": "Välj klass/grupp att visa samtycken för",
-					"description": "När du valt klass/avdelning/grupp öppnas samtycket direkt."
-				}
+			"info": {
+				"title": "Information",
+				"text1": "Viktigt att tänka på: Beskriv felet så tydligt som möjligt och ange var det finns (byggnad, våning, rum). Ju mer information du lämnar, desto snabbare kan vi hjälpa dig. Bifoga gärna en bild om det underlättar.",
+				"text2": "När din felanmälan är registrerad tas den om hand av fastighetsdriften. Ärenden bedöms och prioriteras utifrån hur brådskande de är och vilken påverkan felet har på verksamheten. Du kan bli kontaktad om vi behöver kompletterande information eller för att boka tid för åtgärd.",
+				"text3": "<b>Vid akuta fel</b> (t.ex. vattenläcka, strömavbrott eller fara för person eller egendom) ska du kontakta växeln via telefon (090-16 10 00) istället för att göra en felanmälan i portalen. De säkerställer att rätt person kontaktas omedelbart och åtgärd påbörjas direkt."
 			},
-			"consentConsumerDetails": {
-				"title": "Samtycken",
-				"persons": "Personer",
-				"searchForPersons": "Sök efter personer",
-				"noResults": "Vi kunde inte hitta några personer i {0}.",
-				"noSearchResults": "Vi kunde inte hitta några personer som matchade din sökning.",
-				"headers": {
-					"name": "Namn",
-					"consent": "Samtycke"
-				},
-				"status": {
-					"approved": "Samtycker",
-					"denied": "Samtycker inte",
-					"pending": "Inväntar svar från båda vårdnadshavare",
-					"new": "Ej besvarad"
-				},
-				"accessDeniedError": {
-					"title": "Du saknar behörighet.",
-					"message": "För att se svar på elevers samtycken behöver du vara lärare för klassen."
-				}
-			},
-			"consumerTester": {
-				"testingAs": "Testar som {name}",
-				"yourself": "dig själv",
-				"testingAsPersonAtSchool": "Testar som {name} på {school}",
-				"modal": {
-					"title": "Testa som en lärare",
-					"description": "Välj en skola och sedan en person på denna skola som du vill ta rollen som. Du kommer kunna se och öppna de samtycken som vald person kan. Detta alternativ är endast tillgängligt för dig som är testare.",
-					"school": "Skola",
-					"person": "Person",
-					"cancelTest": "Avsluta test",
-					"hideButton": "Dölj knapp",
-					"confirm": "Starta"
-				}
-			},
-			"consentAgentStart": {
-				"title": "Samtyckesombud",
-				"description": "Som samtyckesombud kan du på en vårdnadshavares begäran uppdatera en elevs samtycke. Du behöver bifoga en bild på ett skriftligt intyg från vårdnadshavaren för att få uppdatera elevens samtycke.",
-				"noResult": "Vi kunde inte hitta några samtycken för den angivna eleven som du har åtkomst att se.",
-				"consentsTitle": "Samtycken för {childName}",
-				"selectSchoolAndClass": "Välj skola, klass/avdelning/grupp och elev för att visa samtycken."
-			},
-			"consentAgentList": {
-				"answer": "Ändra svar"
-			},
-			"consentAgentEdit": {
-				"handleConsentFor": "Du agerar som samtyckesombud åt ",
-				"guardianTitle": "Vårdnadshavares samtycke",
-				"responsiblesHaveChangedTitle": "Svar från tidigare ansvariga",
-				"responsiblesHaveChangedInfo": "De personer som är ansvariga för att underteckna detta samtycke har ändrats. Detta är de sista svaren före ändringen. De betraktas som giltiga tills ett nytt svar registreras."
-			},
-			"consentAgentGuardianEditModal": {
-				"title": "Uppdatera vårdnadshavarens svar",
-				"guardianNewAnswer": "Vårdnadshavarens nya svar",
-				"fileUploadLabel": "Bild på vårdnadshavarens godkännande",
-				"fileUploadHelpText": "Ladda upp en existerande bild eller ta en ny bild med din kamera. Bilden kommer vara synlig för elevens vårdnadshavare och för andra samtyckesombud med behörighet.",
-				"fileUploadSelectImage": "Välj bild",
-				"alertPart1": "Du kommer ändra ",
-				"alertPart2": " svar till ",
-				"alertPart3": " för ",
-				"updateButton": "Uppdatera svar"
-			},
-			"kvittensSummary": {
-				"title": "Sammanfattning över kvittenser",
-				"schoolLabel": "Skola",
-				"classLabel": "Klass",
-				"searchStudent": "Sök efter elev",
-				"filterOnAnswer": "Filtrera på svar",
-				"filter": {
-					"allAnswered": "Har kvitterat samtliga",
-					"hasUnanswered": "Har obesvarade kvittenser"
-				},
-				"noAccess": "Du måste vara mentor för en klass för att se kvittenser.",
-				"selectSchoolAndClass": "Välj skola och klass för att visa sammanställning.",
-				"headers": {
-					"name": "Namn",
-					"dateOfBirth": "Födelsedatum"
-				},
-				"noResults": "Vi hittade inga elever i denna klass.",
-				"noResultsMatchingFilter": "Vi hittade inga elever i denna klass som matchade din sökning.",
-				"tooltip": {
-					"noAnswers": "Ingen har svarat",
-					"nameHasAnswered": "{name} har svarat",
-					"nameHasNotAnswered": "{name} har inte svarat"
-				}
-			},
-			"kvittensAgent": {
-				"title": "Kvittensombud",
-				"stateLabel": "Status",
-				"noAccess": "Du måste vara mentor för en klass för att se kvittenser.",
-				"selectSchoolAndClass": "Välj skola, klass/avdelning/grupp och elev för att visa kvittenser.",
-				"noResults": "Vi kunde inte hitta några kvittenser för den angivna eleven som du har åtkomst att se.",
-				"headers": {
-					"receiptTitle": "Kvittens",
-					"receiptStatus": "Status",
-					"registerSingleReceiptButton": ""
-				},
-				"groupType": {
-					"department": "Avdelningar",
-					"educationGroup": "Grupper",
-					"class": "Klasser"
-				},
-				"bulkRegisterDialogSubtitle": "Register receipt for blabla",
-				"closeDialogButton": "Stäng",
-				"description": "Som kvittensombud kan du på en vårdnadshavares begäran registrera en elevs kvittens. För att registrera en kvittens behöver du som lärare bifoga en bild på ett skriftligt intyg från vårdnadshavaren.",
-				"dialogDetailsTitle": "Kvittensdetaljer",
-				"dialogTitle": "Kvittensombud för {name}",
-				"everyRespondentHasAnswered": "Denna kvittens är besvarad av samtliga.",
-				"fileUploadHelpText": "Ladda upp en existerande bild eller ta en ny bild med din kamera. Bilden kommer vara synlig för elevens vårdnadshavare och för andra ombud med behörighet.",
-				"fileUploadLabel": "Bild på vårdnadshavarens godkännande",
-				"fileUploadSelectImage": "Välj bild",
-				"historyTitle": "Historik",
-				"kvittensTitle": "Kvittenser för {childName}",
-				"noResult": "Vi kunde inte hitta några kvittenser för den angivna eleven som du har åtkomst att se.",
-				"registerButton": "Registrera kvittens",
-				"registerRespondentsLabel": "Vem/vilka svarar du för?",
-				"registerTitle": "Registrera kvittens"
-			},
-			"kvittensTemplateList": {
-				"title": "Kvittensmallar",
-				"noTemplates": "Inga mallar hittades",
-				"open": "Öppna"
-			},
-			"kvittensTemplateEdit": {
-				"title": "Redigera kvittensmall",
-				"saveButton": "Spara och publicera mall",
-				"publishedAndLocked": "Denna mall är publicerad och kan inte redigeras.",
-				"field": {
-					"titleLabel": "Rubrik",
-					"titleHelpText": "Rubriken visas för elever och vårdnadshavare",
-					"shortTitleLabel": "Kort rubrik",
-					"shortTitleHelpText": "Den korta rubriken visas i lärares översikt över kvittenser",
-					"confirmTextLabel": "Bekräftelsetext",
-					"confirmTextHelpText": "Denna text visas bredvid bekräftelsekryssrutan när elev/vårdnadshavare besvarar en kvittens",
-					"textLabel": "Text",
-					"gdprTextLabel": "GDPR-text",
-					"schoolFormAndYearLabel": "Skolform och år",
-					"addSchoolFormAndYear": "Lägg till skolform och år"
-				},
-				"targetDialog": {
-					"title": "Lägg till skolform och år",
-					"schoolForm": "Skolform",
-					"schoolYear": "Årskurs",
-					"cancel": "Avbryt",
-					"add": "Lägg till"
-				},
-				"publishConfirm": {
-					"title": "Publicera mall?",
-					"text": "Är du säker på att du vill publicera mallen, du kan inte redigera mallen efter att den har publicerats. Användare kommer att se och kunna besvara denna kvittens så fort den har publicerats.",
-					"yes": "Ja, publicera mall"
-				}
-			},
-			"defaultPasswords": {
-				"title": "Tilldelade lösenord",
-				"schoolLabel": "Skola",
-				"classLabel": "Klass/avdelning/grupp",
-				"noAccess": "Du har inte de rättigheter som krävs för att se elevers lösenord.",
-				"selectSchoolAndClass": "Välj skola och klass/avdelning/grupp för att visa lösenord.",
-				"headers": {
-					"name": "Namn",
-					"dateOfBirth": "Födelsedatum",
-					"password": "Lösenord",
-					"email": "Email"
-				},
-				"noResults": "Vi hittade inga lösenord för elever i denna klass/avdelning/grupp.",
-				"groupType": {
-					"department": "Avdelningar",
-					"educationGroup": "Grupper",
-					"class": "Klasser"
-				},
-				"print": "Skriv ut",
-				"noPassword": "Lösenord saknas"
-			},
-			"studentFilter": {
-				"schoolLabel": "Skola",
-				"classLabel": "Klass/avdelning/grupp",
-				"studentLabel": "Elev",
-				"noAccess": "Inga skolor eller grupper med koppling till ditt konto hittades."
-			},
-			"estateSearch": {
-				"breadcrumb": "Fastighetssök",
-				"searchPlaceholder": "Sök efter fastighet, adress eller byggnad...",
-				"searchButton": "Sök",
-				"filter": "Filtrera",
-				"selectOnMap": "Välj på karta",
-				"noResults": "Vi kunde inte hitta några fastigheter eller byggnader som matchade din sökning.",
-				"searchHelp": "Använd sökrutan eller filtrera för att hitta den byggnad eller fastighet du söker."
-			},
-			"estateSearchFilter": {
-				"businessTypeLabel": "Huvudsaklig verksamhetstyp",
-				"clearFilter": "Rensa filter"
-			},
-			"estateFavorite": {
-				"title": "Mina favoriter ({count})",
-				"noFavorites": "Här syns dina favoriter. För att lägga till en favorit, klicka på stjärnan vid namnet på en fastighet, byggnad eller ett rum.",
-				"addFavorite": "Lägg till i mina favoriter",
-				"removeFavorite": "Ta bort från mina favoriter"
-			},
-			"estateDetails": {
-				"noBuildings": "Denna fastighet har inga byggnader kopplade till sig.",
-				"buildings": "Byggnader",
-				"informationMissing": "Information saknas"
-			},
-			"buildingDetails": {
-				"floorLabel": "Våning",
-				"noRooms": "Denna byggnad har inga rum kopplade till sig.",
-				"mapButton": "Karta",
-				"buildingImageAlt": "Bild på byggnaden",
-				"blueprintButton": "Planritning",
-				"blueprintMissingTooltip": "Planritning saknas",
-				"contactPersonsButton": "Kontaktpersoner",
-				"contactPersonsMissingTooltip": "Det finns inga kontaktpersoner angivna",
-				"documentsButton": "Handlingar",
-				"documentsMissingTooltip": "Det finns inga handlingar kopplade till denna byggnad",
-				"reportButton": "Felanmäl",
-				"buildingImage": "Bild på byggnaden",
-				"room": {
-					"title": "Rum",
-					"search": "Sök",
-					"searchPlaceholder": "Sök på rum...",
-					"floor": "Våning",
-					"type": "Rumstyp",
-					"noMatches": "Det finns inga rum som matchar din sökning.",
-					"noMatchesSelectedFloor": "Det finns inga rum på våning {floor} som matchar din sökning.",
-					"matchesOnOtherFloors": "Rum på andra våningar",
-					"showMoreRooms": "Visa fler rum"
-				}
-			},
-			"buildingContact": {
-				"title": "Kontaktpersoner",
-				"propertyManager": "Fastighetsförvaltare",
-				"operationsManager": "Driftområdeschef",
-				"operationCoordinator": "Driftsamordnare",
-				"rentalAdministrator": "Hyresadministratör",
-				"caretaker": "Fastighetsskötare",
-				"operationsTechnician": "Drifttekniker",
-				"valueMissing": "Ej angivet",
-				"callAriaLabel": "Ring {name}",
-				"emailAriaLabel": "Skicka e-post till {name}"
-			},
-			"buildingDocument": {
-				"title": "Handlingar",
-				"searchPlaceholder": "Sök efter handlingar...",
-				"category": "Kategori",
-				"searchNoResults": "Inga handlingar matchade din sökning.",
-				"noContent": "Inget innehåll",
-				"downloadFile": "Ladda ner {filename}",
-				"noPreview": "Förhandsgranskning saknas för denna filtyp.",
-				"openPdf": "Öppna PDF"
-			},
-			"faultReport": {
-				"title": "Felanmälan",
-				"description": "Här kan du göra en felanmälan om något inte fungerar som det ska i verksamhetens lokaler.",
-				"changeAnswer": "Ändra",
-				"submitButton": "Skicka in felanmälan",
-				"rentedBuildingNotice": "Denna byggnad är inhyrd, vilket innebär att fastighetsägaren ansvarar för underhåll och reparationer.",
-				"rentedBuildingNoticeConfirmButton": "Jag förstår, fortsätt ändå",
-				"building": {
-					"select": "Välj byggnad",
-					"selected": "Byggnad"
-				},
-				"location": {
-					"select": "Är problemet utvändigt eller invändigt?",
-					"indoor": {
-						"title": "Problemet är invändigt",
-						"description": "Välj invändigt om felet finns inne i byggnaden, till exempel i rum, korridorer eller gemensamma utrymmen.",
-						"select": "Invändigt",
-						"selectButton": "Välj invändigt",
-						"selected": "Du har valt att anmäla ett fel på byggnadens insida."
-					},
-					"outdoor": {
-						"title": "Problemet är utvändigt",
-						"description": "Välj utvändigt om felet finns utanför byggnaden, till exempel på fasad, tak, eller omkringliggande ytor.",
-						"select": "Utvändigt",
-						"selectButton": "Välj utvändigt",
-						"selected": "Du har valt att anmäla ett fel på byggnadens utsida."
-					}
-				},
-				"room": {
-					"select": "Vilket rum gäller felanmälan?",
-					"selected": "Rum",
-					"none": "Inget rum",
-					"skip": "Hoppa över"
-				},
-				"general": {
-					"problemTitle": "Problembeskrivning",
-					"problemLabel": "Beskriv problemet",
-					"problemHelpText": "Beskriv problemet så tydligt som möjligt – vad det gäller och när det uppstod. Ju mer information du lämnar, desto bättre kan vi åtgärda problemet.",
-					"fileUploadLabel": "Bifoga gärna en bild som visar felet (frivilligt)",
-					"contactLabel": "Kontaktuppgifter",
-					"contactHelpText": "Ange vem vi kan kontakta om vi behöver mer information eller har frågor om felanmälan.",
-					"contactNameLabel": "Namn",
-					"contactEmailLabel": "E-post",
-					"contactPhoneLabel": "Telefonnummer"
-				},
-				"info": {
-					"title": "Information",
-					"text1": "Viktigt att tänka på: Beskriv felet så tydligt som möjligt och ange var det finns (byggnad, våning, rum). Ju mer information du lämnar, desto snabbare kan vi hjälpa dig. Bifoga gärna en bild om det underlättar.",
-					"text2": "När din felanmälan är registrerad tas den om hand av fastighetsdriften. Ärenden bedöms och prioriteras utifrån hur brådskande de är och vilken påverkan felet har på verksamheten. Du kan bli kontaktad om vi behöver kompletterande information eller för att boka tid för åtgärd.",
-					"text3": "<b>Vid akuta fel</b> (t.ex. vattenläcka, strömavbrott eller fara för person eller egendom) ska du kontakta växeln via telefon (090-16 10 00) istället för att göra en felanmälan i portalen. De säkerställer att rätt person kontaktas omedelbart och åtgärd påbörjas direkt."
-				},
-				"completed": {
-					"title": "Tack för din felanmälan!",
-					"description": "Vi har mottagit din felanmälan och kommer att hantera den så snart som möjligt.",
-					"goHome": "Gå till startsidan",
-					"feedbackTitle": "Hur fungerade det att göra en felanmälan?"
-				}
-			},
-			"order": {
-				"title": "Beställning",
-				"description": "Här kan du beställa mindre bygg- och monteringsarbeten från Byggservice samt praktisk hjälp och fastighetsnära service från Stadshusservice och Verksamhetsservice.",
-				"submitButton": "Skicka in beställning",
-				"general": {
-					"descriptionTitle": "Beskrivning",
-					"descriptionLabel": "Beskriv vad du vill beställa",
-					"descriptionHelpText": "Beskriv beställningen så tydligt som möjligt – vad du vill beställa, varför och när du önskar att det ska vara på plats. Ju mer information du lämnar, desto bättre kan vi hantera din beställning.",
-					"fileUploadLabel": "Bifoga gärna en bild som visar var arbetet ska utföras (frivilligt)",
-					"contactLabel": "Kontaktuppgifter",
-					"contactHelpText": "Ange vem vi kan kontakta om vi behöver mer information eller har frågor om beställningen."
-				},
-				"category": {
-					"title": "Typ av beställning",
-					"select": "Välj",
-					"selected": "Vald",
-
-					"townHallServices": {
-						"title": "Stadshusservice",
-						"description": "Praktisk hjälp och fastighetsnära service inom Stadshusområdet, Majorsbostället och Leoparden."
-					},
-					"buildingServices": {
-						"title": "Byggservice",
-						"description": "Reparationer och enklare byggarbeten, till exempel uppsättning av hyllor, krokar och anslagstavlor samt mindre målningsarbeten."
-					},
-					"facilitiesManager": {
-						"title": "Verksamhetsvaktmästare",
-						"description": "Praktisk hjälp och fastighetsnära service i verksamheter, till exempel skyltning, återvinning och enklare transporter."
-					},
-					"spaceRequirement": {
-						"title": "Förändrade lokalbehov",
-						"description": "Anmäl behov av förändrade lokaler, till exempel mer eller mindre yta."
-					},
-					"noneAvailable": "Det finns inga beställningstjänster tillgängliga för den här byggnaden."
-				},
-				"room": { "select": "Vilket rum gäller beställningen?" },
-				"info": {
-					"title": "Information",
-					"text1": "Byggservice utför mindre bygg- och monteringsarbeten, till exempel uppsättning av hyllor, krokar, lister och anslagstavlor samt enklare målningsarbeten.",
-					"text2": "Observera! Rena elarbeten utförs ej av Byggservice (till exempel komplettering av eluttag eller belysning) utan beställs via Proceedo. Beställaren (oftast enhetschef) ansvarar för arbetsmiljön, även vid arbete som utförs av extern entreprenör.",
-					"text3": "Efter att din beställning är inskickad kommer Byggservice att göra en första bedömning av ditt behovs genomförbarhet, vid behov konsulteras även ansvarig fastighetsförvaltare. Ofta bokas därefter ett platsbesök för bedömning på plats avseende exempelvis arbetets omfattning innan beslut fattas om beställningen ska genomföras eller ej.",
-					"text4": "Säkerställ att din beskrivning är så tydlig som möjligt för att undvika behov av komplettering av ärendet, samt att kontaktuppgifterna är korrekta."
-				},
-				"completed": {
-					"title": "Tack för din beställning!",
-					"description": "Vi har mottagit din beställning och kommer att hantera den så snart som möjligt.",
-					"goHome": "Gå till startsidan",
-					"feedbackTitle": "Hur fungerade det att göra en beställning?"
-				}
-			},
-			"spaceRequirement": {
-				"title": "Förändrade lokalbehov",
-				"description": "Skicka in en förfrågan om förändrade lokaler, till exempel mer eller mindre yta, anpassningar eller andra förändringar i din verksamhets lokaler.",
-				"submitButton": "Skicka in förfrågan",
-				"general": {
-					"descriptionTitle": "Beskrivning",
-					"descriptionLabel": "Beskriv ditt förändrade lokalbehov",
-					"descriptionHelpText": "Beskriv så tydligt som möjligt vilket behov du har, varför det uppstått och när förändringen behöver vara på plats. Ju mer information du kan ge, desto bättre kan förfrågan hanteras.",
-					"fileUploadLabel": "Bifoga filer (frivilligt)",
-					"contactLabel": "Kontaktuppgifter",
-					"contactHelpText": "Ange vem som ska kontaktas om mer information behövs för att hantera förfrågan, eller om det finns frågor kring den."
-				},
-				"category": {
-					"title": "Typ av lokalbehov",
-					"loading": "Hämtar typer...",
-					"required": "Välj typ av lokalbehov.",
-					"noneAvailable": "Det går för närvarande inte att hämta typer av lokalbehov. Försök igen senare.",
-					"descriptions": {
-						"88": "När lokaler behöver anpassas för att uppfylla krav på tillgänglighet och användbarhet.",
-						"89": "När verksamheten behöver utreda ett lokalbehov där lösning, omfattning eller framtida behov ännu inte är klarlagt.",
-						"90": "När verksamheten behöver mindre förändringar i befintliga lokaler.",
-						"91": "När verksamheten behöver mer eller mindre yta, nya lokaler eller större ombyggnationer.",
-						"97": "När verksamheten har behov av en eller flera lägenheter för sin verksamhet. (Endast GVN)"
-					}
-				},
-				"building": {
-					"select": "Byggnad (frivilligt)",
-					"add": "Välj byggnad (frivilligt)",
-					"notSupported": "Den valda byggnaden stödjer inte förfrågningar om förändrade lokalbehov. Välj en annan byggnad."
-				},
-				"room": {
-					"select": "Rum (frivilligt)",
-					"add": "Välj rum (frivilligt)"
-				},
-				"info": {
-					"title": "Information",
-					"paragraphs": [
-						"Beskriv verksamhetens lokalbehov så tydligt som möjligt och välj den kategori som bäst motsvarar ärendet.",
-						"Om behovet är kopplat till en specifik byggnad rekommenderas att byggnaden anges i ärendet. Om lämplig byggnad ännu inte är identifierad kan fältet lämnas tomt.",
-						"För att underlätta den fortsatta hanteringen är det värdefullt att bifoga relevant underlag, exempelvis utredningar, beslutsunderlag, ritningar, bilder eller annan dokumentation som tydliggör behovet.",
-						"Efter inskickad förfrågan hanteras ärendet enligt kommunens lokalförsörjningsprocess."
-					]
-				},
-				"completed": {
-					"title": "Tack för din förfrågan!",
-					"description": "Vi har mottagit din förfrågan om förändrade lokalbehov och kommer att hantera den så snart som möjligt.",
-					"goHome": "Gå till startsidan",
-					"feedbackTitle": "Hur fungerade det att skicka in en förfrågan om förändrade lokalbehov?"
-				}
-			},
-			"buildingSelector": {
-				"searchLabel": "Sök efter byggnad eller ange adress",
-				"noResults": "Vi kunde inte hitta några byggnader som matchade din sökning.",
-				"selectOnMap": "Välj på karta",
-				"searchHelp": "Använd sökrutan eller välj på kartan för att hitta den byggnad du söker.",
-				"favoritesTitle": "Mina favoriter ({count})",
-				"favoritesDescription": "Du kan också välja byggnad eller rum direkt från dina favoriter."
-			},
-			"roomSelector": {
-				"none": "Du har inte valt något rum.",
-				"description": "Välj rum i listan eller markera det på planritningen.",
-				"selectOnBlueprint": "Välj på planritning"
+			"completed": {
+				"title": "Tack för din felanmälan!",
+				"description": "Vi har mottagit din felanmälan och kommer att hantera den så snart som möjligt.",
+				"goHome": "Gå till startsidan",
+				"feedbackTitle": "Hur fungerade det att göra en felanmälan?"
 			}
 		},
-		"kvittensUserAnswer": {
-			"approved": "Kvitterad",
-			"unanswered": "Ej kvitterat",
-			"iApproved": "Du har kvitterat",
-			"iHaveNotAnswered": "Du har ej kvitterat",
-			"notAnsweredByAll": "Ej kvitterat av samtliga"
+		"order": {
+			"title": "Beställning",
+			"description": "Här kan du beställa mindre bygg- och monteringsarbeten från Byggservice samt praktisk hjälp och fastighetsnära service från Stadshusservice och Verksamhetsservice.",
+			"submitButton": "Skicka in beställning",
+			"general": {
+				"descriptionTitle": "Beskrivning",
+				"descriptionLabel": "Beskriv vad du vill beställa",
+				"descriptionHelpText": "Beskriv beställningen så tydligt som möjligt – vad du vill beställa, varför och när du önskar att det ska vara på plats. Ju mer information du lämnar, desto bättre kan vi hantera din beställning.",
+				"fileUploadLabel": "Bifoga gärna en bild som visar var arbetet ska utföras (frivilligt)",
+				"contactLabel": "Kontaktuppgifter",
+				"contactHelpText": "Ange vem vi kan kontakta om vi behöver mer information eller har frågor om beställningen."
+			},
+			"category": {
+				"title": "Typ av beställning",
+				"select": "Välj",
+				"selected": "Vald",
+				"townHallServices": {
+					"title": "Stadshusservice",
+					"description": "Praktisk hjälp och fastighetsnära service inom Stadshusområdet, Majorsbostället och Leoparden."
+				},
+				"buildingServices": {
+					"title": "Byggservice",
+					"description": "Reparationer och enklare byggarbeten, till exempel uppsättning av hyllor, krokar och anslagstavlor samt mindre målningsarbeten."
+				},
+				"facilitiesManager": {
+					"title": "Verksamhetsvaktmästare",
+					"description": "Praktisk hjälp och fastighetsnära service i verksamheter, till exempel skyltning, återvinning och enklare transporter."
+				},
+				"spaceRequirement": {
+					"title": "Förändrade lokalbehov",
+					"description": "Anmäl behov av förändrade lokaler, till exempel mer eller mindre yta."
+				},
+				"noneAvailable": "Det finns inga beställningstjänster tillgängliga för den här byggnaden."
+			},
+			"room": {
+				"select": "Vilket rum gäller beställningen?"
+			},
+			"info": {
+				"title": "Information",
+				"text1": "Byggservice utför mindre bygg- och monteringsarbeten, till exempel uppsättning av hyllor, krokar, lister och anslagstavlor samt enklare målningsarbeten.",
+				"text2": "Observera! Rena elarbeten utförs ej av Byggservice (till exempel komplettering av eluttag eller belysning) utan beställs via Proceedo. Beställaren (oftast enhetschef) ansvarar för arbetsmiljön, även vid arbete som utförs av extern entreprenör.",
+				"text3": "Efter att din beställning är inskickad kommer Byggservice att göra en första bedömning av ditt behovs genomförbarhet, vid behov konsulteras även ansvarig fastighetsförvaltare. Ofta bokas därefter ett platsbesök för bedömning på plats avseende exempelvis arbetets omfattning innan beslut fattas om beställningen ska genomföras eller ej.",
+				"text4": "Säkerställ att din beskrivning är så tydlig som möjligt för att undvika behov av komplettering av ärendet, samt att kontaktuppgifterna är korrekta."
+			},
+			"completed": {
+				"title": "Tack för din beställning!",
+				"description": "Vi har mottagit din beställning och kommer att hantera den så snart som möjligt.",
+				"goHome": "Gå till startsidan",
+				"feedbackTitle": "Hur fungerade det att göra en beställning?"
+			}
 		},
-		"BaseLoginMethods": {
-			"title": "Logga in",
-			"externalTitle": "Logga in som privatperson",
-			"internalTitle": "Logga in som medarbetare",
-			"helpTitle": "Hjälp",
-			"loginMethodHelpTitle": "Vilken inloggningsmetod ska jag välja?",
-			"loginMethodHelpPart1": "Logga in med BankID eller Freja eID+ för att hantera och följa dina privata ärenden.",
-			"loginMethodHelpPart2": "Logga in med ditt personalkonto för att handlägga ärenden och använda e-tjänster i din yrkesroll.",
-			"aboutEId": "Vill du veta mer om eller skaffa en e-legitimation?"
+		"spaceRequirement": {
+			"title": "Förändrade lokalbehov",
+			"description": "Skicka in en förfrågan om förändrade lokaler, till exempel mer eller mindre yta, anpassningar eller andra förändringar i din verksamhets lokaler.",
+			"submitButton": "Skicka in förfrågan",
+			"general": {
+				"descriptionTitle": "Beskrivning",
+				"descriptionLabel": "Beskriv ditt förändrade lokalbehov",
+				"descriptionHelpText": "Beskriv så tydligt som möjligt vilket behov du har, varför det uppstått och när förändringen behöver vara på plats. Ju mer information du kan ge, desto bättre kan förfrågan hanteras.",
+				"fileUploadLabel": "Bifoga filer (frivilligt)",
+				"contactLabel": "Kontaktuppgifter",
+				"contactHelpText": "Ange vem som ska kontaktas om mer information behövs för att hantera förfrågan, eller om det finns frågor kring den."
+			},
+			"category": {
+				"title": "Typ av lokalbehov",
+				"loading": "Hämtar typer...",
+				"required": "Välj typ av lokalbehov.",
+				"noneAvailable": "Det går för närvarande inte att hämta typer av lokalbehov. Försök igen senare.",
+				"descriptions": {
+					"88": "När lokaler behöver anpassas för att uppfylla krav på tillgänglighet och användbarhet.",
+					"89": "När verksamheten behöver utreda ett lokalbehov där lösning, omfattning eller framtida behov ännu inte är klarlagt.",
+					"90": "När verksamheten behöver mindre förändringar i befintliga lokaler.",
+					"91": "När verksamheten behöver mer eller mindre yta, nya lokaler eller större ombyggnationer.",
+					"97": "När verksamheten har behov av en eller flera lägenheter för sin verksamhet. (Endast GVN)"
+				}
+			},
+			"building": {
+				"select": "Byggnad (frivilligt)",
+				"add": "Välj byggnad (frivilligt)",
+				"notSupported": "Den valda byggnaden stödjer inte förfrågningar om förändrade lokalbehov. Välj en annan byggnad."
+			},
+			"room": {
+				"select": "Rum (frivilligt)",
+				"add": "Välj rum (frivilligt)"
+			},
+			"info": {
+				"title": "Information",
+				"paragraphs": [
+					"Beskriv verksamhetens lokalbehov så tydligt som möjligt och välj den kategori som bäst motsvarar ärendet.",
+					"Om behovet är kopplat till en specifik byggnad rekommenderas att byggnaden anges i ärendet. Om lämplig byggnad ännu inte är identifierad kan fältet lämnas tomt.",
+					"För att underlätta den fortsatta hanteringen är det värdefullt att bifoga relevant underlag, exempelvis utredningar, beslutsunderlag, ritningar, bilder eller annan dokumentation som tydliggör behovet.",
+					"Efter inskickad förfrågan hanteras ärendet enligt kommunens lokalförsörjningsprocess."
+				]
+			},
+			"completed": {
+				"title": "Tack för din förfrågan!",
+				"description": "Vi har mottagit din förfrågan om förändrade lokalbehov och kommer att hantera den så snart som möjligt.",
+				"goHome": "Gå till startsidan",
+				"feedbackTitle": "Hur fungerade det att skicka in en förfrågan om förändrade lokalbehov?"
+			}
 		},
-		"baseAutocomplete": {
-			"loading": "Laddar innehåll...",
-			"noDataAvailable": "Inga matchande resultat."
-		}
-	},
-	"consent": {
-		"userStatus": {
-			"notAnswered": "Ej besvarad",
-			"approved": "Samtycker",
-			"rejected": "Samtycker inte"
-		}
-	},
-	"schoolForm": {
-		"FS": "Förskola",
-		"FK": "Förskoleklass",
-		"GR": "Grundskolor",
-		"S": "Anpassade grundskolor",
-		"GY": "Gymnasieskolor",
-		"GS": "Anpassade gymnasieskolor",
-		"PC": "Pedagogisk omsorg"
-	},
-	"estateCommon": {
-		"addressLabel": "Adress",
-		"areaLabel": "Yta (m²)",
-		"buildingLabel": "Byggnad",
-		"floorLabel": "Våning",
-		"municipalityAreaLabel": "Kommundel",
-		"nameLabel": "Namn",
-		"operationalAreaLabel": "Driftområde",
-		"administrativeAreaLabel": "Förvaltningsområde",
-		"propertyDesignationLabel": "Fastighetsbeteckning",
-		"propertyLabel": "Fastighet",
-		"type": {
-			"estate": "Fastighet",
-			"building": "Byggnad",
-			"room": "Rum"
+		"buildingSelector": {
+			"searchLabel": "Sök efter byggnad eller ange adress",
+			"noResults": "Vi kunde inte hitta några byggnader som matchade din sökning.",
+			"selectOnMap": "Välj på karta",
+			"searchHelp": "Använd sökrutan eller välj på kartan för att hitta den byggnad du söker.",
+			"favoritesTitle": "Mina favoriter ({count})",
+			"favoritesDescription": "Du kan också välja byggnad eller rum direkt från dina favoriter."
 		},
-		"buildingCount": "{count} byggnad | {count} byggnader",
-		"floorCount": "{count} våning | {count} våningar",
-		"roomCount": "{count} rum",
-		"yearOfConstructionLabel": "Byggnadsår",
-		"externalOwner": {
-			"status": "Ägandeförhållande",
-			"name": "Fastighetsägare",
-			"note": "Kontaktuppgifter"
+		"roomSelector": {
+			"none": "Du har inte valt något rum.",
+			"description": "Välj rum i listan eller markera det på planritningen.",
+			"selectOnBlueprint": "Välj på planritning"
 		}
 	}
 }

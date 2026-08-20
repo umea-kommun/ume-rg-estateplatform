@@ -1,8 +1,9 @@
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/utils/ErrorService.ts
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentPublicInstance } from 'vue';
 import store from '../store/store';
 import { appInsights } from '@/plugins/appInsights';
-import Config from './Config';
 import i18n from '@/plugins/i18next';
 import { MutationType } from '@/models/Enums';
 import { IErrorPage, IErrorToDisplay } from '@/models/Interfaces';
@@ -28,7 +29,6 @@ interface OnError {
 	errorPage?: IErrorPage | null;
 }
 
-const isMocked = (Config.VUE_APP_MOCK_DATA || '').trim() === 'yes';
 export default class ErrorService {
 	/**
 	 * Benign browser errors that should be silently ignored (substring match)
@@ -84,7 +84,7 @@ export default class ErrorService {
 			});
 		}
 
-		if (!isMocked && log) {
+		if (log) {
 			// Compose and send error to Insights
 			const error = this.composeError({ err, instance, info });
 			this.sendError(error);

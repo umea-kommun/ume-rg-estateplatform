@@ -1,3 +1,5 @@
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/auth/AuthCallback.vue -->
 <template>
 	<div class="auth-callback">
 		<app-loading-spinner :isVisible="true"></app-loading-spinner>
@@ -10,8 +12,7 @@ import { useStore } from 'vuex';
 import IAuthManager from '@/plugins/auth/IAuthManager';
 import AppLoadingSpinner from '@/components/app/AppLoadingSpinner.vue';
 import { IRootState } from '@/models/Interfaces';
-import Config from '@/Config';
-import { MyPagesRoutes } from '@/router/routes';
+import { EstateRoutes } from '@/router/routes';
 
 const store = useStore<IRootState>();
 const $auth = inject('$auth') as IAuthManager;
@@ -33,18 +34,7 @@ onMounted(async () => {
 
 			// If no specific route specified, redirect to fitting page
 			if (afterLoginPath === '/') {
-				switch (store.state.user.authClientName) {
-					case Config.VUE_APP_AUTH_PUBLIC_AD_CLIENT_NAME:
-						// Redirect to internal start page
-						router.push({ name: MyPagesRoutes.InternalStart });
-						break;
-					case Config.VUE_APP_AUTH_PUBLIC_FREJA_CLIENT_NAME:
-					case Config.VUE_APP_AUTH_PUBLIC_CLIENT_NAME:
-					case Config.VUE_APP_AUTH_PUBLIC_ELEVAD_CLIENT_NAME:
-						// Redirect to external start page
-						router.push({ name: MyPagesRoutes.AppStart });
-						break;
-				}
+				router.push({ name: EstateRoutes.Search });
 			} else {
 				router.push({ path: afterLoginPath });
 			}

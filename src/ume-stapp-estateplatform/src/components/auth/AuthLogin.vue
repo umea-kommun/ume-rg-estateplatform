@@ -1,39 +1,7 @@
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/auth/AuthLogin.vue -->
 <template>
-	<app-content
-		:size="contentSize"
-		:isLoading="isBusyLoadingFromServer"
-		class="app-start"
-		:pageTitle="$t('component.BaseLoginMethods.title')"
-	>
-		<!-- Login to start -->
-		<base-login-methods
-			:clientState="clientState"
-			:clientNames="clientNames"
-			:cancelUrl="cancelUrl"
-			:allClientsConfig="allClientsConfig"
-		>
-			<template v-slot:sideInfo>
-				<v-card flat class="side-info mb-6">
-					<h2 class="mb-3">{{ $t('app.auth.loginInfo.title') }}</h2>
-					<p>
-						{{ $t('app.auth.loginInfo.text') }}
-					</p>
-					<h3 class="mt-4 mb-1">
-						{{
-							$t('app.auth.loginInfo.externalFunctionalityTitle')
-						}}
-					</h3>
-					<ul class="pa-0">
-						<li class="ml-6">
-							{{
-								$t('app.auth.loginInfo.externalFunctionality1')
-							}}
-						</li>
-					</ul>
-				</v-card>
-			</template>
-		</base-login-methods>
-	</app-content>
+	<app-content :size="contentSize" :isLoading="true" />
 </template>
 <script setup lang="ts">
 import { ref, inject, computed, onMounted } from 'vue';
@@ -43,12 +11,10 @@ import { useRoute, useRouter } from 'vue-router';
 import IAuthManager from '@/plugins/auth/IAuthManager';
 import { IRootState } from '@/models/Interfaces';
 import { AppContentSize } from '@/models/Enums';
-import IAuthClientConfig from '@/plugins/auth/IAuthClientConfig';
 
 const store = useStore<IRootState>();
 const route = useRoute();
 const router = useRouter();
-const isBusyLoadingFromServer = ref<boolean>(false);
 const $auth = inject('$auth') as IAuthManager;
 
 const user = computed(() => store.state.user);
@@ -58,46 +24,28 @@ const contentSize = ref<AppContentSize>(
 		: AppContentSize.Default
 );
 
-const doLogin = ref(false);
-const clientState = ref('');
-const clientNames = ref('');
-const cancelUrl = ref('');
-const allClientsConfig = ref<IAuthClientConfig[]>([]);
-
+/**
+ * The portal is internal-only, so there is no login-method picker: this page
+ * exists purely to bounce the user at IDProxy and come back to where they were.
+ */
 function login(): void {
-	if (!user.value.isAuthenticated) {
-		isBusyLoadingFromServer.value = true;
-
-		let comeBackUrl = '/';
-		if (route.query.comeBack) {
-			// TODO: comeBackUrl should be able to include route params, not only path
-			const { name, path } = router.resolve({
-				path: route.query.comeBack.toString(),
-			});
-			// Set the comeBackUrl if it is valid
-			if (name && path && !path.startsWith('//')) {
-				comeBackUrl = path;
-
-				if (path.startsWith('/internt')) {
-					return $auth.loginInternal(comeBackUrl);
-				}
-			}
-		}
-
-		const tempLoginUrl =
-			$auth.loginCitizen(comeBackUrl, ['AllLoginMethods']) ?? '';
-		clientState.value = tempLoginUrl.split('&state=')[1].split('&')[0];
-		clientNames.value = tempLoginUrl
-			.split('&client_name=')[1]
-			.split('&')[0];
-		cancelUrl.value = tempLoginUrl
-			.split('&frejaCancelUrl=')[1]
-			.split('&')[0];
-		allClientsConfig.value = $auth.getAllClientsConfig();
-
-		doLogin.value = true;
-		isBusyLoadingFromServer.value = false;
+	if (user.value.isAuthenticated) {
+		return;
 	}
+
+	let comeBackUrl = '/';
+	if (route.query.comeBack) {
+		// TODO: comeBackUrl should be able to include route params, not only path
+		const { name, path } = router.resolve({
+			path: route.query.comeBack.toString(),
+		});
+		// Set the comeBackUrl if it is valid
+		if (name && path && !path.startsWith('//')) {
+			comeBackUrl = path;
+		}
+	}
+
+	$auth.loginInternal(comeBackUrl);
 }
 
 onMounted(() => {

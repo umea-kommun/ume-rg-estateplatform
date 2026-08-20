@@ -1,8 +1,10 @@
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/app/AppError.vue -->
 <template>
 	<app-content
 		:size="AppContentSize.Narrow"
 		class="app-error"
-		:pageTitle="$t('component.external.kvittensStart.title')"
+		:pageTitle="$t('component.appError.pageTitle')"
 	>
 		<base-back-button />
 		<div v-if="error">
@@ -23,7 +25,7 @@
 				</v-btn>
 				<v-btn
 					:to="{
-						name: MyPagesRoutes.AppStart,
+						name: EstateRoutes.Search,
 					}"
 				>
 					{{ t('app.nav.startPage') }}
@@ -42,13 +44,13 @@
 
 <script setup lang="ts">
 import AppContent from './AppContent.vue';
-import BaseBackButton from '../base/BaseBackButton.vue';
+import BaseBackButton from '@/components/shared/BaseBackButton.vue';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import { useI18n } from 'vue-i18n';
 import { AppContentSize } from '@/models/Enums';
-import { MyPagesRoutes } from '@/router/routes';
+import { EstateRoutes } from '@/router/routes';
 import Config from '@/Config';
 import moment from 'moment';
 

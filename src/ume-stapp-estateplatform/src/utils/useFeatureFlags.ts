@@ -1,3 +1,5 @@
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/utils/useFeatureFlags.ts
 import { ref, readonly } from 'vue';
 import { createHttpClient } from '@/utils/httpClient';
 import Config from '@/utils/Config';

@@ -1,3 +1,5 @@
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/utils/appInsightsContext.ts
 import type {
 	ApplicationInsights,
 	ITelemetryItem,

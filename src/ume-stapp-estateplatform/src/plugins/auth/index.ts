@@ -1,3 +1,5 @@
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/plugins/auth/index.ts
 import Config from '@/Config';
 import store from '@/store/store';
 import ErrorService from '@/utils/ErrorService';
@@ -5,7 +7,7 @@ import { Router } from 'vue-router';
 import AuthConfig from './AuthConfig';
 import IAuthManager from './IAuthManager';
 import authLoader from './Oauth';
-import { MyPagesRoutes } from '@/router/routes';
+import { EstateRoutes } from '@/router/routes';
 import { MutationType } from '@/models/Enums';
 
 let auth: IAuthManager;
@@ -42,9 +44,7 @@ export function useAuthMiddleware(router: Router): void {
 		}
 
 		if (
-			(to.meta.requiresExternalLogin ||
-				to.meta.requiresInternalLogin ||
-				to.meta.requiresGroup) &&
+			(to.meta.requiresInternalLogin || to.meta.requiresGroup) &&
 			!store.state.user.isAuthenticated
 		) {
 			// User needs to log in to access this page
@@ -60,30 +60,17 @@ export function useAuthMiddleware(router: Router): void {
 		) {
 			// User can't be logged in when accessing this page
 			return next({
-				name: MyPagesRoutes.AppStart,
+				name: EstateRoutes.Search,
 			});
 		}
 		if (
-			to.meta.requiresExternalLogin &&
-			store.state.user.authClientName !==
-				Config.VUE_APP_AUTH_PUBLIC_FREJA_CLIENT_NAME &&
-			store.state.user.authClientName !==
-				Config.VUE_APP_AUTH_PUBLIC_CLIENT_NAME &&
-			store.state.user.authClientName !==
-				Config.VUE_APP_AUTH_PUBLIC_ELEVAD_CLIENT_NAME
-		) {
-			// User is not logged in with the any of the external methods, deny access
-			return next({
-				name: MyPagesRoutes.InternalStart,
-			});
-		} else if (
 			to.meta.requiresInternalLogin &&
 			store.state.user.authClientName !==
-				Config.VUE_APP_AUTH_PUBLIC_AD_CLIENT_NAME
+				Config.VUE_APP_AUTH_INTERNAL_CLIENT_NAME
 		) {
 			// User is not logged in with AD, deny access
 			return next({
-				name: MyPagesRoutes.AppStart,
+				name: EstateRoutes.Search,
 			});
 		}
 
