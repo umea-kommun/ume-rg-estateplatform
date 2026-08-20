@@ -1,0 +1,61 @@
+/** 
+ * ----------------------------------------------------------------------
+ * SCSS version of theme variables for Umeå kommun. 
+ * Used to access SCSS-variables in components since Vuetify is based on stylus
+ * These variables are available globally in components without any import
+ * 
+ * All brand and status colors also have a light version (-bg) that can 
+ * be used as background-color.
+ * ----------------------------------------------------------------------
+ */
+
+$font-family: 'Calibri', 'Candara', 'Segoe', 'Segoe UI', 'Optima', Arial,
+	sans-serif;
+
+/** Brand colors */
+$primary: #006e1e; // Björk, darker version, Umeå kommy. Darker version is used to achieve enough contrast for WCAG
+$primary-bg: rgba($primary, 0.2);
+$secondary: #00a01e; // Björk, lighter version, Umeå kommun
+$secondary-bg: rgba($secondary, 0.2);
+$accent: #e4b1c2; // Rosa, Umeå kommun
+$accent-bg: rgba($accent, 0.2);
+
+/** Status colors */
+$error: #cf1916;
+$error-file: #c44e47;
+$error-bg: rgba($error, 0.2);
+$info: #424242; // Grey-darken-3 from Material design
+$info-bg: rgba($info, 0.2);
+$success: #006e1e; // Green
+$success-bg: rgba($success, 0.2);
+$warning: rgb(226, 171, 4); // Orange
+$warning-bg: rgba($warning, 0.2);
+
+/** Neutral colors
+ * Grey scales from Material Design. Black and white from Umeå kommun.
+ */
+$black: #333; // Black, Umeå kommun
+$black-bg: rgba($black, 0.12);
+$white: #ffffff; // White, Umeå kommun
+$grey: #9e9e9e;
+$grey-lighten-1: #fafafa;
+$grey-lighten-2: #f5f5f5;
+$grey-lighten-3: #eeeeee;
+$grey-lighten-4: #e0e0e0;
+$grey-lighten-5: #bdbdbd;
+$grey-lighten-6: #ababab;
+$grey-darken-1: #757575;
+$grey-darken-2: #616161;
+$grey-darken-3: #424242;
+$grey-darken-4: #212121;
+
+$border-radius: 8px;
+
+$site-horizontal-padding: 38px;
+$site-content-vertical-padding: 45px;
+$site-max-width: 1240px;
+$site-max-width-narrow: 740px;
+$site-header-height: 5rem;
+
+$estate-mobile-threshold: 900px;
+$estate-blueprint-background: #d6e1d9;

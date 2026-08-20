@@ -1,0 +1,97 @@
+@use './variables.scss' as *;
+@use './mixins.scss' as *;
+
+/**
+ * Vuetify theme for Umeå kommun. Modifies default material design theme.
+ */
+
+h1 {
+	font-size: size(30);
+}
+
+h2 {
+	font-size: size(24);
+}
+
+body .grecaptcha-badge {
+	display: none !important;
+}
+
+html {
+	font-family: $font-family !important;
+}
+.v-application,
+.v-overlay-container {
+	font-family: $font-family;
+	line-height: 1.5;
+	background-color: $white;
+
+	a {
+		color: #333;
+	}
+
+	.text-h1,
+	.text-h2,
+	.text-h3,
+	.text-h4,
+	.text-h5,
+	.text-h6,
+	.text-caption,
+	.text-subtitle-1 {
+		font-family: $font-family !important;
+	}
+}
+
+.v-btn__prepend,
+.v-btn__append {
+	.v-icon {
+		font-size: size(20);
+	}
+}
+
+.v-card__title {
+	.theme--light.v-icon {
+		color: #111;
+	}
+}
+
+.v-text-field__slot {
+	.theme--light.v-label {
+		color: rgba(0, 0, 0, 0.55);
+	}
+}
+
+.fullscreen-fixed {
+	position: fixed;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	display: flex;
+	z-index: 100;
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: #ffffff;
+	z-index: 10000;
+
+	.v-container {
+		max-width: none !important;
+	}
+}
+
+.loader-lazy {
+	animation: loader-in 0.5s;
+}
+@keyframes loader-in {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
