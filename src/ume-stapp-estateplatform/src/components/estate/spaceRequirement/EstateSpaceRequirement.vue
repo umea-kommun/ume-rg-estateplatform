@@ -382,15 +382,18 @@ import BuildingMapSelector from '../faultReport/buildingSelector/BuildingMapSele
 
 const route = useRoute();
 const router = useRouter();
-const { t, te, tm } = useI18n();
+const { t, te, tm, locale } = useI18n();
 const store = useStore<IRootState>();
 
-const breadcrumbs = computed(() => [
-	{
-		title: t('component.spaceRequirement.title'),
-		to: { name: EstateRoutes.SpaceRequirement },
-	},
-]);
+const breadcrumbs = computed(() => {
+	if (!locale.value) return [];
+	return [
+		{
+			title: t('component.spaceRequirement.title'),
+			to: { name: EstateRoutes.SpaceRequirement },
+		},
+	];
+});
 
 const selectedBuilding = ref<IBuildingDetails | null>(null);
 const selectedRoom = ref<IBuildingRoom | null>(null);
@@ -456,9 +459,13 @@ const DEFAULT_CATEGORY_ICON = 'space_dashboard';
 // 88 = Tillgänglighetsanpassningar, 90 = Mindre anpassningar i befintliga lokaler.
 const BUILDING_PROMPTED_CATEGORIES = new Set<number>([88, 90]);
 
-// Short explanatory text per SpaceRequirement leaf category, keyed by the stable
-// Pythagoras leaf-category id (see locales -> category.descriptions). Categories without
-// a matching locale key simply show no description.
+// Translated text per SpaceRequirement leaf category, keyed by the stable
+// Pythagoras leaf-category id. New categories fall back to the API label and no description.
+const categoryTitle = (option: IWorkOrderCategoryOption) => {
+	const key = `component.spaceRequirement.category.titles.${option.id}`;
+	return te(key) ? t(key) : option.name;
+};
+
 const categoryDescription = (id: number) => {
 	const key = `component.spaceRequirement.category.descriptions.${id}`;
 	return te(key) ? t(key) : '';
@@ -468,7 +475,7 @@ const categoryCards = computed<OptionCard[]>(() =>
 	categoryOptions.value.map((option) => ({
 		value: option.id.toString(),
 		icon: CATEGORY_ICONS[option.id] ?? DEFAULT_CATEGORY_ICON,
-		title: option.name,
+		title: categoryTitle(option),
 		description: categoryDescription(option.id),
 	}))
 );

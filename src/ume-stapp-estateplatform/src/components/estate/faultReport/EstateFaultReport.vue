@@ -379,15 +379,18 @@ import ExternalOwnerInfo from '../estate/ExternalOwnerInfo.vue';
 
 const route = useRoute();
 const router = useRouter();
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const store = useStore<IRootState>();
 
-const breadcrumbs = computed(() => [
-	{
-		title: t('component.faultReport.title'),
-		to: { name: EstateRoutes.FaultReport },
-	},
-]);
+const breadcrumbs = computed(() => {
+	if (!locale.value) return [];
+	return [
+		{
+			title: t('component.faultReport.title'),
+			to: { name: EstateRoutes.FaultReport },
+		},
+	];
+});
 
 const locationTitleRef = useTemplateRef('locationTitle');
 const roomTitleRef = useTemplateRef('roomTitle');

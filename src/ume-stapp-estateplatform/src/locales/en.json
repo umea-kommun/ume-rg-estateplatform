@@ -2,17 +2,11 @@
 	"app": {
 		"title": "My pages - Umeå municipality",
 		"nav": {
-			"home": "Home",
 			"close": "Close",
-			"save": "Save",
-			"yes": "Yes",
-			"no": "No",
-			"cancel": "Cancel",
 			"logo": "Logo Umeå municipality",
 			"skipToContent": "Skip to content",
 			"startPage": "Go to start page",
 			"goBack": "Go back",
-			"more": "More",
 			"services": {
 				"faultReport": "Report a fault",
 				"order": "Place an order",
@@ -20,26 +14,14 @@
 			}
 		},
 		"time": {
-			"minute": "minute | minutes",
-			"second": "second | seconds"
+			"minute": "minute | minutes"
 		},
 		"auth": {
-			"logIn": "Log in",
-			"logOut": "Log out",
 			"loggedOutManual": "You have been logged out, see you another time!",
 			"loggedOutTokenError": "You have been logged out because of a technical problem!",
-			"loggedOutIdleTitle": "Logged out",
 			"loggedOutIdleText": "You have been logged out due to inactivity. Please log in to continue.",
 			"loggedOutExpiredSessionText": "Your login session has expired. Please login to continue.",
-			"loggingOut": "You will automatically be logged out due to inactivity in {time}. Cancel log out by moving the mouse or using the keyboard.",
-			"loggedInAs": "Logged in as",
-			"loggingOutDifferentLogin": "You are automatically logged out because this e-service has a different login.",
-			"loginInfo": {
-				"title": "What is my pages?",
-				"text": "Umeå municipality's my pages is a new platform for managing your errands digitally. We are actively working on expanding my pages and plan to launch more functionality in the future.",
-				"externalFunctionalityTitle": "As a private individual, you can",
-				"externalFunctionality1": "Manage consent and receipts for yourself and for your children in public schools."
-			}
+			"loggingOut": "You will automatically be logged out due to inactivity in {time}. Cancel log out by moving the mouse or using the keyboard."
 		},
 		"error": {
 			"400": {
@@ -52,9 +34,7 @@
 			"403": "You do not have the necessary access to do this.",
 			"404": "Page could not be found",
 			"general": "Temporary technical error, please try again later.",
-			"couldnotfindconversation": "Could not get conversation",
-			"differentLogin": "You are already logged in to another e-service. Log out of it and try again.",
-			"network": "Could not connect to Umeå kommun, please check your internet connection and try again.",
+			"network": "Could not connect to Umeå municipality, please check your internet connection and try again.",
 			"permissionDenied": "You are not authorized to access this page.",
 			"estate": {
 				"unableToFetchEstateBuildings": "Unable to fetch estate buildings. Please try again later.",
@@ -109,7 +89,6 @@
 		"buildingLabel": "Building",
 		"floorLabel": "Floor",
 		"municipalityAreaLabel": "Municipality Area",
-		"nameLabel": "Name",
 		"operationalAreaLabel": "Operational Area",
 		"administrativeAreaLabel": "Administrative Area",
 		"propertyDesignationLabel": "Property Designation",
@@ -167,15 +146,11 @@
 			"locale": {
 				"change": "Other languages"
 			},
-			"navigation": "",
-			"logoAlt": "Logotype for Umeå kommun",
-			"appName": "Umeå kommuns my pages",
 			"loginButton": "Log in",
 			"menuButton": "Menu",
 			"menu": {
 				"logout": "Sign out",
 				"appStart": "Start page",
-				"eServices": "List of e-services",
 				"about": "About website",
 				"umeaSe": "Umea.se",
 				"errorReport": "Report errors",
@@ -195,14 +170,6 @@
 			"title": "Sorry, we can't find the page you were looking for!",
 			"text": "This may be because the page has been removed or moved. The page may also have a different web address because we have updated our website."
 		},
-		"baseValidationSummary": {
-			"error": "There are {count} errors.",
-			"resolution": " Please fix it before publishing the template."
-		},
-		"baseExpandableContent": {
-			"showMoreButtonOpen": "Show more",
-			"showMoreButtonClose": "Show less"
-		},
 		"baseFileUpload": {
 			"selectFiles": "Select file",
 			"dropFiles": "or drop your file here | or drop files here",
@@ -212,10 +179,6 @@
 				"fileTooLarge": "\"{filename}\" is too large.",
 				"tooManyFiles": "You cannot upload more than {maxFiles} files."
 			}
-		},
-		"baseAutocomplete": {
-			"loading": "Loading...",
-			"noDataAvailable": "No matching results."
 		},
 		"feedback": {
 			"subtitle": "Help us improve.",
@@ -317,8 +280,6 @@
 			"title": "Documents",
 			"searchPlaceholder": "Search documents...",
 			"category": "Category",
-			"searchNoResults": "No documents matched your search.",
-			"noContent": "No content",
 			"downloadFile": "Download {filename}",
 			"noPreview": "No preview available for this file type.",
 			"openPdf": "Open PDF"
@@ -409,10 +370,6 @@
 					"title": "Facilities Manager",
 					"description": "Practical assistance and on-site services for businesses, such as signage, recycling and simple transport services."
 				},
-				"spaceRequirement": {
-					"title": "Changed Space Requirements",
-					"description": "Report a need for changed premises, for example more or less space."
-				},
 				"noneAvailable": "There are no order services available for this building."
 			},
 			"room": {
@@ -449,6 +406,13 @@
 				"loading": "Loading types...",
 				"required": "Select a type of space requirement.",
 				"noneAvailable": "Space requirement types could not be loaded right now. Please try again later.",
+				"titles": {
+					"88": "Accessibility adaptations",
+					"89": "General investigations",
+					"90": "Minor adaptations to existing premises",
+					"91": "Major changes in space requirements",
+					"97": "Apartment needs"
+				},
 				"descriptions": {
 					"88": "When premises need to be adapted to meet accessibility and usability requirements.",
 					"89": "When the operation needs to investigate a space requirement where the solution, scope, or future needs are not yet established.",
@@ -492,7 +456,7 @@
 		},
 		"roomSelector": {
 			"none": "You have not selected a room.",
-			"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula cursus vestibulum. Duis et nisl ut ipsum fermentum",
+			"description": "Select a room from the list or mark it on the blueprint.",
 			"selectOnBlueprint": "Select on blueprint"
 		}
 	}

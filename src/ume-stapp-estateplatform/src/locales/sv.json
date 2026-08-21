@@ -2,17 +2,11 @@
 	"app": {
 		"title": "Mina sidor - Umeå kommun",
 		"nav": {
-			"home": "Hem",
 			"close": "Stäng",
-			"save": "Spara",
-			"yes": "Ja",
-			"no": "Nej",
-			"cancel": "Avbryt",
 			"logo": "Logotyp Umeå kommun",
 			"skipToContent": "Hoppa till innehåll",
 			"startPage": "Gå till startsidan",
 			"goBack": "Gå tillbaka",
-			"more": "Mer",
 			"services": {
 				"faultReport": "Felanmälan",
 				"order": "Beställning",
@@ -20,26 +14,14 @@
 			}
 		},
 		"time": {
-			"minute": "minut | minuter",
-			"second": "sekund | sekunder"
+			"minute": "minut | minuter"
 		},
 		"auth": {
-			"logIn": "Logga in",
-			"logOut": "Logga ut",
-			"loggedInAs": "Inloggad som",
 			"loggedOutExpiredSessionText": "Din inloggningsession har upphört. Logga in igen för att fortsätta.",
 			"loggedOutIdleText": "Du har loggats ut på grund av inaktivitet. Logga in igen för att fortsätta.",
-			"loggedOutIdleTitle": "Utloggad",
 			"loggedOutManual": "Du har nu blivit utloggad, tack för besöket!",
 			"loggedOutTokenError": "Du har blivit utloggad på grund av ett tekniskt problem!",
-			"loggingOut": "Du loggas automatiskt ut på grund av inaktivitet om {time}. Avbryt utloggningen genom att röra musen eller använda tangentbordet.",
-			"loggingOutDifferentLogin": "Du loggas automatiskt ut på grund av att denna e-tjänst har en annan inloggning.",
-			"loginInfo": {
-				"title": "Vad är mina sidor?",
-				"text": "Umeå kommuns mina sidor är en ny plattform för att hantera dina ärenden digitalt. Vi arbetar aktivt med att bygga ut mina sidor och planerar att lansera mer funktionalitet i framtiden.",
-				"externalFunctionalityTitle": "Som privatperson kan du",
-				"externalFunctionality1": "Hantera samtycken och kvittenser för dig eller dina barn i kommunala skolor."
-			}
+			"loggingOut": "Du loggas automatiskt ut på grund av inaktivitet om {time}. Avbryt utloggningen genom att röra musen eller använda tangentbordet."
 		},
 		"error": {
 			"400": {
@@ -52,8 +34,6 @@
 			"403": "Du har inte den åtkomst som krävs för att göra detta.",
 			"404": "Sidan kunde inte hittas.",
 			"general": "Tillfälligt tekniskt fel, var god försök senare.",
-			"couldnotfindconversation": "Kunde inte hämta konversation",
-			"differentLogin": "Du är redan vara inloggad på annan e-tjänst. Logga ut från den och testa igen.",
 			"network": "Det gick inte att ansluta till Umeå kommun, kontrollera din internetanslutning och försök igen.",
 			"permissionDenied": "Du saknar behörighet för att komma åt denna sida.",
 			"estate": {
@@ -109,7 +89,6 @@
 		"buildingLabel": "Byggnad",
 		"floorLabel": "Våning",
 		"municipalityAreaLabel": "Kommundel",
-		"nameLabel": "Namn",
 		"operationalAreaLabel": "Driftområde",
 		"administrativeAreaLabel": "Förvaltningsområde",
 		"propertyDesignationLabel": "Fastighetsbeteckning",
@@ -167,15 +146,11 @@
 			"locale": {
 				"change": "Other languages"
 			},
-			"navigation": "Meny",
-			"logoAlt": "Logotyp för Umeå kommun",
-			"appName": "Umeå kommuns mina sidor",
 			"loginButton": "Logga in",
 			"menuButton": "Meny",
 			"menu": {
 				"logout": "Logga ut",
 				"appStart": "Startsida",
-				"eServices": "Lista av e-tjänster",
 				"about": "Om webbplatsen",
 				"umeaSe": "Umea.se",
 				"errorReport": "Felanmälan",
@@ -195,14 +170,6 @@
 			"title": "Oj, vi kan tyvärr inte hitta sidan du sökte!",
 			"text": "Det kan bero på att sidan har tagits bort eller flyttats. Sidan kan också ha en annan webbadress eftersom vi har uppdaterat vår webbplats."
 		},
-		"baseValidationSummary": {
-			"error": "Det finns {count} fel.",
-			"resolution": " Vänligen åtgärda det innan du publicerar mallen."
-		},
-		"baseExpandableContent": {
-			"showMoreButtonOpen": "Visa mer",
-			"showMoreButtonClose": "Visa mindre"
-		},
 		"baseFileUpload": {
 			"selectFiles": "Välj fil",
 			"dropFiles": "eller släpp filen här | eller släpp filer här",
@@ -212,10 +179,6 @@
 				"fileTooLarge": "\"{filename}\" är för stor.",
 				"tooManyFiles": "Du kan inte ladda upp fler än {maxFiles} filer."
 			}
-		},
-		"baseAutocomplete": {
-			"loading": "Laddar innehåll...",
-			"noDataAvailable": "Inga matchande resultat."
 		},
 		"feedback": {
 			"subtitle": "Hjälp oss bli bättre.",
@@ -317,8 +280,6 @@
 			"title": "Handlingar",
 			"searchPlaceholder": "Sök efter handlingar...",
 			"category": "Kategori",
-			"searchNoResults": "Inga handlingar matchade din sökning.",
-			"noContent": "Inget innehåll",
 			"downloadFile": "Ladda ner {filename}",
 			"noPreview": "Förhandsgranskning saknas för denna filtyp.",
 			"openPdf": "Öppna PDF"
@@ -409,10 +370,6 @@
 					"title": "Verksamhetsvaktmästare",
 					"description": "Praktisk hjälp och fastighetsnära service i verksamheter, till exempel skyltning, återvinning och enklare transporter."
 				},
-				"spaceRequirement": {
-					"title": "Förändrade lokalbehov",
-					"description": "Anmäl behov av förändrade lokaler, till exempel mer eller mindre yta."
-				},
 				"noneAvailable": "Det finns inga beställningstjänster tillgängliga för den här byggnaden."
 			},
 			"room": {
@@ -449,6 +406,13 @@
 				"loading": "Hämtar typer...",
 				"required": "Välj typ av lokalbehov.",
 				"noneAvailable": "Det går för närvarande inte att hämta typer av lokalbehov. Försök igen senare.",
+				"titles": {
+					"88": "Tillgänglighetsanpassningar",
+					"89": "Generella utredningar",
+					"90": "Mindre anpassningar i befintliga lokaler",
+					"91": "Större förändringar i lokalbehov",
+					"97": "Lägenhetsbehov"
+				},
 				"descriptions": {
 					"88": "När lokaler behöver anpassas för att uppfylla krav på tillgänglighet och användbarhet.",
 					"89": "När verksamheten behöver utreda ett lokalbehov där lösning, omfattning eller framtida behov ännu inte är klarlagt.",

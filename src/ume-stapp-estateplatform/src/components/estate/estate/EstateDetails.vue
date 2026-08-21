@@ -151,7 +151,7 @@ const props = defineProps<{
 	estateId: string;
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const store = useStore<IRootState>();
 const estate = ref<IEstateDetails | null>(null);
 const buildingMapRef = useTemplateRef('building-map');
@@ -161,6 +161,7 @@ const estateName = computed(() => {
 });
 
 const breadcrumbs = computed(() => {
+	if (!locale.value) return [];
 	return [
 		{
 			title: t('component.estateSearch.breadcrumb'),

@@ -138,7 +138,7 @@ const props = defineProps<{
 	buildingId: string;
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const store = useStore<IRootState>();
 const route = useRoute();
 const building = ref<IBuildingDetails | null>(null);
@@ -160,6 +160,7 @@ const buildingName = computed(() => {
 });
 
 const breadcrumbs = computed(() => {
+	if (!locale.value) return [];
 	return [
 		{
 			title: t('component.estateSearch.breadcrumb'),

@@ -154,7 +154,7 @@ import FavoriteList from '../favorite/FavoriteList.vue';
 import { appInsights } from '@/plugins/appInsights';
 
 const route = useRoute();
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const buildingMapRef = useTemplateRef('building-map');
 const hoveredSearchResultId = ref<number | null>(null);
@@ -165,12 +165,15 @@ const searchFilter = ref<SearchFilter>(
 	route.query.filter ? JSON.parse(route.query.filter.toString()) : {}
 );
 
-const breadcrumbs = computed(() => [
-	{
-		title: t('component.estateSearch.breadcrumb'),
-		to: { name: EstateRoutes.Search },
-	},
-]);
+const breadcrumbs = computed(() => {
+	if (!locale.value) return [];
+	return [
+		{
+			title: t('component.estateSearch.breadcrumb'),
+			to: { name: EstateRoutes.Search },
+		},
+	];
+});
 
 const userHasSearched = computed(() => {
 	return !!search.value || Object.keys(searchFilter.value).length > 0;

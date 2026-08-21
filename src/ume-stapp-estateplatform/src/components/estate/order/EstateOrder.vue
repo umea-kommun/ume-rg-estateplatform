@@ -315,15 +315,18 @@ import BuildingMapSelector from '../faultReport/buildingSelector/BuildingMapSele
 
 const route = useRoute();
 const router = useRouter();
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const store = useStore<IRootState>();
 
-const breadcrumbs = computed(() => [
-	{
-		title: t('component.order.title'),
-		to: { name: EstateRoutes.Order },
-	},
-]);
+const breadcrumbs = computed(() => {
+	if (!locale.value) return [];
+	return [
+		{
+			title: t('component.order.title'),
+			to: { name: EstateRoutes.Order },
+		},
+	];
+});
 
 const categoryTitleRef = useTemplateRef('categoryTitle');
 const roomTitleRef = useTemplateRef('roomTitle');
