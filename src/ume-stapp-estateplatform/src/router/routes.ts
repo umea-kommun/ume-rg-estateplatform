@@ -5,6 +5,7 @@ export enum AppRoutes {
 
 export enum EstateRoutes {
 	Search = 'Estate.EstateSearch',
+	AboutWebsite = 'Estate.AboutWebsite',
 	FaultReport = 'Estate.FaultReport',
 	Order = 'Estate.Order',
 	SpaceRequirement = 'Estate.SpaceRequirement',

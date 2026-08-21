@@ -27,6 +27,16 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
+		path: '/om-webbplatsen',
+		name: EstateRoutes.AboutWebsite,
+		component: () => import('@/components/app/AboutWebsite.vue'),
+		meta: {
+			requiresInternalLogin: true,
+			requiresFeature: 'EstateService',
+			contentSize: AppContentSize.Narrow,
+		},
+	},
+	{
 		path: '/felanmalan',
 		name: EstateRoutes.FaultReport,
 		component: () =>

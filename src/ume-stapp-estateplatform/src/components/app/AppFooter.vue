@@ -32,9 +32,9 @@
 								)
 							}}
 						</a>
-						<a :href="aboutPageUrl" target="blank">
+						<router-link :to="{ name: EstateRoutes.AboutWebsite }">
 							{{ $t('component.appHeader.menu.about') }}
-						</a>
+						</router-link>
 					</div>
 				</v-col>
 			</v-layout>
@@ -45,13 +45,13 @@
 <script setup lang="ts">
 import Config from '@/utils/Config';
 import footerBackground from '@/assets/footer.svg';
+import { EstateRoutes } from '@/router/routes';
 
 // Navigation
 const umeaSeURL = Config.VUE_APP_UMEA_SE_URL;
 const errorReportUrl = Config.VUE_APP_ERROR_REPORT_URL;
 const availabilityStatementUrl =
 	Config.VUE_APP_AVAILABILITY_STATEMENT_URL ?? '';
-const aboutPageUrl = Config.VUE_APP_ABOUT_URL;
 </script>
 
 <style scoped lang="scss">

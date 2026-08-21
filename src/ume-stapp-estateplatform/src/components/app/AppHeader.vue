@@ -181,7 +181,7 @@
 							}}</v-list-item-title>
 						</v-list-item>
 						<hr v-if="isErrorReportEnabled" />
-						<v-list-item :href="aboutPageUrl" target="_blank">
+						<v-list-item :to="{ name: EstateRoutes.AboutWebsite }">
 							<v-list-item-title>{{
 								$t('component.appHeader.menu.about')
 							}}</v-list-item-title>
@@ -240,7 +240,6 @@ import { AppRoutes, EstateRoutes } from '@/router/routes';
 import { useFeatureFlags } from '@/utils/useFeatureFlags';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
-import Config from '@/Config';
 import { AppContentSize, AppHeaderTitle } from '@/models/Enums';
 import logoGreen from '@/assets/logo_green.png';
 import { appInsights } from '@/plugins/appInsights';
@@ -293,10 +292,6 @@ function logout(): void {
 }
 
 const startPageRoute = EstateRoutes.Search;
-const aboutPageUrl = computed(() => {
-	return Config.VUE_APP_ABOUT_URL;
-});
-
 /** Handle translations */
 const languages = [
 	{ title: 'Svenska', locale: 'sv' },

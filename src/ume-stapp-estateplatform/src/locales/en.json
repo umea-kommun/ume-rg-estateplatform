@@ -165,6 +165,16 @@
 		"appFooter": {
 			"linksTitle": "Find quickly"
 		},
+		"aboutWebsite": {
+			"pageTitle": "About this website",
+			"title": "About the Estate portal",
+			"intro": "The Estate portal is Umeå municipality's internal service for information about municipal properties, buildings and premises.",
+			"usedForTitle": "What you can do here",
+			"usedForText": "In the Estate portal, you can search for properties and buildings, view information about premises and create cases such as fault reports, orders and changed space requirements.",
+			"supplierTitle": "Supplier",
+			"supplierText": "The Estate portal is provided by IT at Umeå municipality.",
+			"placeholderText": "This page is an initial placeholder and will be expanded with more information later."
+		},
 		"pageNotFound": {
 			"pageTitle": "Page could not be found",
 			"title": "Sorry, we can't find the page you were looking for!",
