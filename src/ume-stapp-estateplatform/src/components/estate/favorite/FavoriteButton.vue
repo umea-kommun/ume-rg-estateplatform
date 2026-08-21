@@ -56,6 +56,7 @@ const toggleFavorite = async () => {
 		);
 
 		isFavorite.value = !isFavorite.value;
+		window.dispatchEvent(new CustomEvent('estate-favorite-changed'));
 	} catch (err) {
 		ErrorService.onError({
 			err,

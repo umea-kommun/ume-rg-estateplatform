@@ -62,7 +62,7 @@
 <script setup lang="ts">
 import { DispatchType } from '@/models/Enums';
 import { IRootState } from '@/models/Interfaces';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import EstateSearchResultItem from '../search/EstateSearchResultItem.vue';
 import {
@@ -148,8 +148,10 @@ const filteredFavorites = computed(() => {
 
 const isFetchingFavorites = ref(false);
 const failedToFetchFavorites = ref(false);
+const shouldRefetchFavorites = ref(false);
 const fetchFavorites = async () => {
 	if (isFetchingFavorites.value) {
+		shouldRefetchFavorites.value = true;
 		return;
 	}
 
@@ -165,10 +167,19 @@ const fetchFavorites = async () => {
 		});
 	} finally {
 		isFetchingFavorites.value = false;
+		if (shouldRefetchFavorites.value) {
+			shouldRefetchFavorites.value = false;
+			fetchFavorites();
+		}
 	}
 };
 
 onMounted(() => {
+	window.addEventListener('estate-favorite-changed', fetchFavorites);
 	fetchFavorites();
+});
+
+onBeforeUnmount(() => {
+	window.removeEventListener('estate-favorite-changed', fetchFavorites);
 });
 </script>
