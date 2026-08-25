@@ -1,0 +1,147 @@
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/plugins/auth/AuthConfig.ts
+import IAuthClientConfig from './IAuthClientConfig';
+
+export default class AuthConfig {
+	public loginStatusCommunicatorPath: string | null;
+	public publicScope: string;
+	public adminScope: string;
+	public internalScope: string;
+	public authClass: string;
+	private authClients: IAuthClientConfig[] = [];
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public constructor(config: any) {
+		this.publicScope = config.VUE_APP_AUTH_SCOPE_PUBLIC;
+		this.internalScope = config.VUE_APP_AUTH_SCOPE_INTERNAL;
+		this.adminScope = config.VUE_APP_AUTH_SCOPE_ADMIN;
+		this.loginStatusCommunicatorPath =
+			config.VUE_APP_AUTH_SSO_LOGIN_STATUS_PATH;
+		this.authClass = config.VUE_APP_AUTH_CLASS;
+
+		// Parse out the auth clients that we have in config
+
+		const variableSuffixes = [
+			'CLIENT_ID',
+			'CLIENT_NAME',
+			'CLIENT_DISPLAY_NAME',
+			'CLIENT_SECRET',
+			'AUTHORITY_URL',
+			'REDIRECT_URL',
+			'LOGOUT_URL',
+			'CLIENT_LOGO',
+		];
+
+		const authClientMap = new Map<string, IAuthClientConfig>();
+		Object.keys(config).forEach((key) => {
+			if (key.indexOf('VUE_APP_AUTH_') === 0) {
+				// Remove prefix
+				const configName = key.replace('VUE_APP_AUTH_', '');
+				// Find which type of variable this is (check which suffix the variable name ends with)
+				const variableName = variableSuffixes.find(
+					(suffix) =>
+						configName.substring(configName.indexOf(suffix)) ===
+						suffix
+				);
+				if (variableName) {
+					// Add config data to the client config
+					const authClientKey = configName.replace(
+						'_' + variableName,
+						''
+					);
+					if (!authClientMap.has(authClientKey)) {
+						authClientMap.set(authClientKey, {
+							scope:
+								key.indexOf('VUE_APP_AUTH_INTERNAL_') === 0
+									? this.internalScope
+									: this.publicScope,
+							internal:
+								key.indexOf('VUE_APP_AUTH_INTERNAL_') === 0,
+							// eslint-disable-next-line @typescript-eslint/no-explicit-any
+						} as any);
+					}
+					const configPropName =
+						// eslint-disable-next-line @typescript-eslint/no-use-before-define
+						upperKebabCaseToCamelCase(variableName);
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					// @ts-expect-error TEST, FIX ME
+					authClientMap.get(authClientKey)[configPropName] =
+						config[key];
+				}
+			}
+		});
+		this.authClients = [...authClientMap.values()];
+	}
+
+	public getInternalClientConfig(): IAuthClientConfig {
+		const config = this.authClients.find(
+			(clientConfig) => clientConfig.scope === this.internalScope
+		);
+		if (!config) {
+			throw new Error('No internal auth client configuration found');
+		}
+		return config;
+	}
+
+	public getPublicAuthClientConfigs(): IAuthClientConfig[] {
+		return this.authClients.filter(
+			(clientConfig) => clientConfig.scope === this.publicScope
+		);
+	}
+
+	public getClientConfig(clientId: string): IAuthClientConfig {
+		const configs = this.authClients.filter(
+			(clientConfig) => clientConfig.clientId === clientId
+		);
+		if (configs.length === 0) {
+			throw new Error(
+				'No auth client configuration found for client with client id ' +
+					clientId
+			);
+		}
+		return configs[0];
+	}
+
+	public getClientConfigByName(clientName: string): IAuthClientConfig {
+		if (clientName === 'AllLoginMethods') {
+			const configAllLoginMethods = {
+				clientId: 'AllLoginMethods',
+				clientName: 'AllLoginMethods',
+				clientDisplayName: '',
+				clientSecret: '',
+				authorityUrl: '',
+				logoutUrl: '',
+				redirectUrl: '',
+				scope: '',
+			} as IAuthClientConfig;
+			return configAllLoginMethods;
+		}
+		const configs = this.authClients.filter(
+			(clientConfig) => clientConfig.clientName === clientName
+		);
+		if (configs.length === 0) {
+			throw new Error(
+				'No auth client configuration found for client with name ' +
+					clientName
+			);
+		}
+		return configs[0];
+	}
+
+	public getAllClientsConfig(): IAuthClientConfig[] {
+		return this.authClients;
+	}
+}
+
+const upperKebabCaseToCamelCase = (str: string): string => {
+	const chunks: string[] = [];
+	str.toLowerCase()
+		.split('_')
+		.forEach((chunk) => {
+			chunks.push(
+				chunk.substring(0, 1).toUpperCase() + chunk.substring(1)
+			);
+		});
+	const newString = chunks.join('');
+	return newString.substring(0, 1).toLowerCase() + newString.substring(1); // leading lower case
+};

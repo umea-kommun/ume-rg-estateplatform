@@ -1,0 +1,250 @@
+// Duplicated from ume-rg-myplatform @ 84b4a5dc
+// src/ume-stapp-minasidor/src/plugins/auth/Oauth.ts
+import { IUser } from '@/models/Interfaces';
+import { b64DecodeUnicode } from './index';
+import { MutationType } from '@/models/Enums';
+import Axios, { AxiosResponse } from 'axios';
+import store from '@/store/store';
+import IAuthManager from './IAuthManager';
+import AuthConfig from './AuthConfig';
+import IAuthClientConfig from './IAuthClientConfig';
+import router from '@/router';
+import { AppRoutes } from '@/router/routes';
+
+const buildUrl = (host: string, pathWithLeadingSlash: string): string => {
+	return (
+		(host.slice(-1) === '/' ? host.substring(0, host.length - 1) : host) +
+		pathWithLeadingSlash
+	);
+};
+
+class Oauth implements IAuthManager {
+	private config: AuthConfig;
+
+	public constructor(config: AuthConfig) {
+		this.config = config;
+	}
+
+	public loginCitizen(
+		routeAfterLogin: string,
+		authClientName: string[]
+	): string {
+		return this.login(
+			routeAfterLogin,
+			this.config.publicScope,
+			authClientName
+		);
+	}
+
+	public loginInternal(routeAfterLogin: string): void {
+		this.login(routeAfterLogin, this.config.internalScope);
+	}
+
+	public getAllClientsConfig(): IAuthClientConfig[] {
+		return this.config.getAllClientsConfig();
+	}
+
+	public getAuthClientsUsedForCitizenLogin(): Array<{
+		displayName: string;
+		name: string;
+	}> {
+		return this.config.getPublicAuthClientConfigs().map((config) => {
+			return {
+				displayName: config.clientDisplayName,
+				name: config.clientName,
+			};
+		});
+	}
+
+	public getAuthClientLogo(authClientName: string): string {
+		return this.config.getClientConfigByName(authClientName).clientLogo;
+	}
+
+	public getAllAuthClientUsedForCitizenLogin(): Array<{
+		displayName: string;
+		name: string;
+		logo: string;
+	}> {
+		return this.config.getPublicAuthClientConfigs().map((config) => {
+			return {
+				displayName: config.clientDisplayName,
+				name: config.clientName,
+				logo: config.clientLogo,
+			};
+		});
+	}
+
+	public getDefaultAuthClientUsedForCitizenLogin(): string {
+		return this.config.getPublicAuthClientConfigs()[0].clientName;
+	}
+
+	public logoutRedirectingToStartPage(
+		authClientName?: string,
+		extraQueryParams: string = ''
+	): void {
+		const loginRoute = router.resolve({
+			name: AppRoutes.AuthLogin,
+		});
+		let urlAfterLogout = window.location.origin + loginRoute.path;
+		urlAfterLogout += extraQueryParams === '' ? '' : '?' + extraQueryParams;
+		this.logoutUser(urlAfterLogout, authClientName);
+	}
+
+	public logout(routeAfterLogin: string, authClientName?: string): void {
+		this.logoutUser(
+			window.location.origin + routeAfterLogin,
+			authClientName
+		);
+	}
+
+	public async handleLoginCallbackAsync(
+		state: string,
+		code: string
+	): Promise<string> {
+		if (!code) {
+			throw new Error('No code supplied');
+		}
+
+		// Validate that we have come back with the same state as when we started
+		// the login process(to prevent cross site forgery)
+		const storedState = window.localStorage.getItem('OauthState');
+		if (storedState !== state) {
+			throw new Error('State not known...');
+		}
+
+		// extract state data
+		const stateData = JSON.parse(b64DecodeUnicode(state)) as IStateData;
+
+		// Build API request
+		const clientConfig = this.config.getClientConfigByName(
+			stateData.authClientName
+		);
+		const data = new FormData();
+		data.append('client_id', clientConfig.clientId);
+		data.append('client_secret', clientConfig.clientSecret);
+		data.append('grant_type', 'authorization_code');
+		data.append('redirect_uri', clientConfig.redirectUrl);
+		data.append('code', code);
+
+		let response: AxiosResponse;
+		try {
+			response = await Axios.post(
+				buildUrl(clientConfig.authorityUrl, '/connect/token'),
+				data,
+				{
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+				}
+			);
+		} catch (err) {
+			throw new Error(
+				'Got unexpected response from server when trying to fetch auth token'
+			);
+		}
+
+		// parse jwt and send payload to store
+		const rawJwt = response.data.access_token;
+		const jwtPayload = JSON.parse(
+			b64DecodeUnicode(rawJwt.split('.')[1])
+		) as IUser;
+		store.commit(MutationType.UserLogIn, {
+			jwtPayload,
+			rawJwt,
+			authClientName: clientConfig.clientName,
+		});
+		return stateData.routeAfterLogin;
+	}
+
+	private logoutUser(urlAfterLogout: string, authClientName?: string): void {
+		store.commit(MutationType.UserLogOut);
+		const authClientConfig = authClientName
+			? this.config.getClientConfigByName(authClientName)
+			: this.config.getInternalClientConfig();
+		window.location.replace(
+			authClientConfig.logoutUrl +
+				'?redirect=' +
+				encodeURIComponent(urlAfterLogout)
+		);
+	}
+
+	private login(
+		routeAfterLogin: string,
+		scope: string,
+		authClientName: string | string[] | null = null
+	): string {
+		const clientConfig: IAuthClientConfig[] = [];
+		if (scope === this.config.internalScope) {
+			clientConfig.push(this.config.getInternalClientConfig());
+		} else if (authClientName && Array.isArray(authClientName)) {
+			authClientName.forEach((element) => {
+				clientConfig.push(this.config.getClientConfigByName(element));
+			});
+		} else if (authClientName && !Array.isArray(authClientName)) {
+			clientConfig.push(
+				this.config.getClientConfigByName(authClientName)
+			);
+		} else {
+			clientConfig.push(
+				this.config.getClientConfigByName(
+					this.getDefaultAuthClientUsedForCitizenLogin()
+				)
+			);
+		}
+
+		const clientNames = clientConfig.map((item) => item.clientName);
+		const clientIds = clientConfig.map((item) => item.clientId);
+		// Store information needed when coming back from sso in our state variable
+		// add a random id to make it unique, be vary of 414 Request URI too long
+		const stateData = {
+			id: Math.random(),
+			authClientName: clientNames.join(','),
+			routeAfterLogin,
+			scope,
+		} as IStateData;
+
+		const state = btoa(JSON.stringify(stateData));
+
+		// Save state locally, to be verified when coming back from sso
+		window.localStorage.setItem('OauthState', state);
+
+		// Build login url
+		const loginUrl =
+			buildUrl(clientConfig[0].authorityUrl, '/connect/authorize') +
+			'?client_id=' +
+			clientIds +
+			'&scope=' +
+			scope +
+			'+offline_access' +
+			'&response_type=code&redirect_uri=' +
+			clientConfig[0].redirectUrl +
+			'&state=' +
+			state;
+
+		// Internal login directly
+		if (scope === this.config.internalScope) {
+			window.location.replace(loginUrl);
+		}
+
+		return (
+			loginUrl +
+			'&client_name=' +
+			clientNames +
+			'&frejaCancelUrl=' +
+			window.location.href
+		);
+	}
+}
+
+const loader = (config: AuthConfig): Oauth => {
+	return new Oauth(config);
+};
+
+interface IStateData {
+	routeAfterLogin: string;
+	scope: string;
+	id: number;
+	authClientName: string;
+}
+
+export default loader;

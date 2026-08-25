@@ -1,0 +1,57 @@
+<!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
+     src/ume-stapp-minasidor/src/components/app/AppErrorSnackbar.vue -->
+<template>
+	<v-snackbar
+		v-if="isError"
+		v-model="isError"
+		location="top"
+		multi-line
+		:timeout="-1"
+	>
+		<div class="userMessageWrap">
+			<v-icon size="default" icon="error" />
+			<p>{{ errorMessage }}</p>
+			<v-btn variant="text" color="white" @click="isError = false">
+				{{ $t('app.nav.close') }}
+			</v-btn>
+		</div>
+	</v-snackbar>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import { IRootState } from '@/models/Interfaces';
+import { useI18n } from 'vue-i18n';
+import { MutationType } from '@/models/Enums';
+
+const store = useStore<IRootState>();
+const { t } = useI18n();
+
+const isError = computed({
+	get: () => !!store.state.error && !store.state.error?.errorPage?.visible,
+	set: (value) => {
+		if (!value && store.state.error) {
+			store.commit(MutationType.SetError, null);
+		}
+	},
+});
+const errorMessage = computed(
+	() => store.state.error?.userMessage ?? t('app.error.general')
+);
+</script>
+
+<style scoped lang="scss">
+.v-snackbar {
+	.userMessageWrap {
+		display: flex;
+		align-items: center;
+		flex: 1;
+
+		p {
+			flex: 1;
+			margin: 0 10px;
+		}
+	}
+}
+</style>

@@ -12,7 +12,7 @@ resources:
     - repository: templates
       type: git
       name: Turkos/ume-pipeline-templates
-      ref: refs/tags/release/v260213T1327-15561
+      ref: refs/tags/release/v260629T1533-18638
 
 parameters:
   - name: environment
@@ -37,8 +37,9 @@ stages:
           comparisonBranch: origin/$(System.PullRequest.TargetBranchName)
           paths:
             - src/ume-app-estateservice
+            - src/ume-stapp-estateplatform
 
-  # EstateService
+  # ume-app-estateservice
   - stage: BuildEstateServiceStage
     displayName: Build EstateService
     dependsOn: CheckForChangesStage
@@ -54,5 +55,24 @@ stages:
         parameters:
           projectFolderName: ume-app-estateservice
           entrypointProjectName: Umea.se.EstateService.API
+          shouldPublish: false
+  # ------
+
+  # ume-stapp-estateplatform
+  - stage: BuildEstatePlatformStage
+    displayName: Build EstatePlatform
+    dependsOn: CheckForChangesStage
+    variables:
+      changedPaths: $[ dependencies.CheckForChangesStage.outputs['Job.Task.CHANGED_PATHS'] ]
+    condition: >-
+      and(
+        not(or(failed(), canceled())),
+        contains(variables['changedPaths'], 'ume-stapp-estateplatform')
+      )
+    jobs:
+      - template: pipelines/azure/template-build-frontend.yml@templates
+        parameters:
+          environment: ${{ parameters.environment }}
+          projectFolderName: ume-stapp-estateplatform
           shouldPublish: false
   # ------

@@ -1,0 +1,473 @@
+{
+	"app": {
+		"title": "My pages - Umeå municipality",
+		"nav": {
+			"close": "Close",
+			"logo": "Logo Umeå municipality",
+			"skipToContent": "Skip to content",
+			"startPage": "Go to start page",
+			"goBack": "Go back",
+			"services": {
+				"faultReport": "Report a fault",
+				"order": "Place an order",
+				"spaceRequirement": "Changed space requirements"
+			}
+		},
+		"time": {
+			"minute": "minute | minutes"
+		},
+		"auth": {
+			"loggedOutManual": "You have been logged out, see you another time!",
+			"loggedOutTokenError": "You have been logged out because of a technical problem!",
+			"loggedOutIdleText": "You have been logged out due to inactivity. Please log in to continue.",
+			"loggedOutExpiredSessionText": "Your login session has expired. Please login to continue.",
+			"loggingOut": "You will automatically be logged out due to inactivity in {time}. Cancel log out by moving the mouse or using the keyboard."
+		},
+		"error": {
+			"400": {
+				"invalidUserSSN": {
+					"title": "Unable to retrieve personal data from Skatteverket",
+					"message": "We were not able to retrieve your personal data from Skatteverket as you, your child or your guardian do not have a valid social security number. You currently need to handle your case manually."
+				}
+			},
+			"401": "We could not authenticate you, please check that you are logged in.",
+			"403": "You do not have the necessary access to do this.",
+			"404": "Page could not be found",
+			"general": "Temporary technical error, please try again later.",
+			"network": "Could not connect to Umeå municipality, please check your internet connection and try again.",
+			"permissionDenied": "You are not authorized to access this page.",
+			"estate": {
+				"unableToFetchEstateBuildings": "Unable to fetch estate buildings. Please try again later.",
+				"unableToFetchFloors": "Unable to fetch information about the building's floors. Please try again later.",
+				"unableToFetchRooms": "Unable to fetch the building's rooms. Please try again later.",
+				"unableToFetchRoom": "Unable to fetch information about the room. Please try again later.",
+				"unableToFetchBlueprint": "Unable to fetch the blueprint. Please try again later.",
+				"unableToFetchSearchFilter": "Unable to fetch search filter. Please try again later.",
+				"unableToFetchBuildingDocuments": "Unable to fetch documents. Please try again later.",
+				"unableToFetchBuildingDocument": "Unable to fetch the document. Please try again later.",
+				"unableToSubmitFaultReport": "Something unexpected went wrong and your fault report was not submitted. Please try again later.",
+				"unableToSubmitOrder": "Something unexpected went wrong and your order was not submitted. Please try again later.",
+				"unableToAddFavorite": "Oops, something went wrong. Unable to add to favorites. Please try again later.",
+				"unableToRemoveFavorite": "Oops, something went wrong. Unable to remove from favorites. Please try again later.",
+				"unableToFetchFavorites": "Unable to fetch your favorites. Please try again later.",
+				"validation": {
+					"required": "This field is required.",
+					"invalid_value": "Invalid value.",
+					"invalid_format": "Invalid format.",
+					"max_length": "The value is too long.",
+					"not_found": "Could not be found.",
+					"file_too_large": "The file is too large.",
+					"too_many_files": "Too many files.",
+					"invalid_content_type": "The file type is not supported.",
+					"unrecognized_file_content": "The file could not be identified.",
+					"content_type_mismatch": "The file content does not match the declared file type.",
+					"not_supported": "Not supported for the selected building.",
+					"conflict": "Invalid selection in combination with other choices."
+				}
+			}
+		},
+		"validation": {
+			"types": {
+				"required": "Required field"
+			},
+			"messages": {
+				"required": "{0} is required, please enter a value",
+				"validDate": "Enter a correct date in the format YYYY-MM-DD.",
+				"invalidDate": "Enter a correct date in the format YYYY-MM-DD.",
+				"minDate": "Select date no earlier than {1}.",
+				"maxDate": "Select date no later than {1}.",
+				"validPersNumber": "Enter a valid social security number.",
+				"email": "Enter a valid email address.",
+				"phone": "Enter a valid phone number.",
+				"max": "The field can contain a maximum of {1} characters."
+			}
+		}
+	},
+	"estateCommon": {
+		"addressLabel": "Address",
+		"areaLabel": "Area (m²)",
+		"buildingLabel": "Building",
+		"floorLabel": "Floor",
+		"municipalityAreaLabel": "Municipality Area",
+		"operationalAreaLabel": "Operational Area",
+		"administrativeAreaLabel": "Administrative Area",
+		"propertyDesignationLabel": "Property Designation",
+		"propertyLabel": "Property",
+		"type": {
+			"estate": "Property",
+			"building": "Building",
+			"room": "Room"
+		},
+		"buildingCount": "{count} building | {count} buildings",
+		"floorCount": "{count} floor | {count} floors",
+		"roomCount": "{count} room | {count} rooms",
+		"yearOfConstructionLabel": "Year of construction",
+		"externalOwner": {
+			"status": "Ownership",
+			"name": "Property owner",
+			"note": "Contact information"
+		}
+	},
+	"component": {
+		"map": {
+			"fullScreenClose": "Close full screen",
+			"fullScreenOpen": "Open full screen",
+			"zoomIn": "Zoom in",
+			"zoomOut": "Zoom out",
+			"buildingXofY": "Building {buildingNumber} of {totalBuildings}",
+			"selectBuilding": "Select building",
+			"layer": {
+				"regular": "Map",
+				"photo": "Photo"
+			}
+		},
+		"blueprintMap": {
+			"floor": "Floor",
+			"reportRoom": "Report a fault",
+			"selectRoom": "Select room"
+		},
+		"appError": {
+			"reportError": "Report error",
+			"defaultMessage": "If the problem persists, please report it to us.",
+			"time": "The error occurred at {time}",
+			"pageTitle": "An error occurred"
+		},
+		"appHeader": {
+			"title": {
+				"default": "Estate portal",
+				"faultReport": "Fault Report - Real Estate",
+				"order": "Order - Real Estate",
+				"spaceRequirement": "Changed space requirements - Real Estate"
+			},
+			"nav": {
+				"label": "Primary navigation",
+				"search": "Search"
+			},
+			"locale": {
+				"change": "Other languages"
+			},
+			"loginButton": "Log in",
+			"menuButton": "Menu",
+			"menu": {
+				"logout": "Sign out",
+				"appStart": "Start page",
+				"about": "About website",
+				"umeaSe": "Umea.se",
+				"errorReport": "Report errors",
+				"availabilityStatement": "Availability statement"
+			}
+		},
+		"appContent": {
+			"warning": {
+				"adUserMissingSSN": "We are currently experiencing technical problems and were unable to retrieve your full details, you may therefore notice that some functionality does not work."
+			}
+		},
+		"appFooter": {
+			"linksTitle": "Find quickly"
+		},
+		"aboutWebsite": {
+			"pageTitle": "About this website",
+			"title": "About the Estate portal",
+			"intro": "The Estate portal is Umeå municipality's internal service for information about municipal properties, buildings and premises.",
+			"usedForTitle": "What you can do here",
+			"usedForText": "In the Estate portal, you can search for properties and buildings, view information about premises and create cases such as fault reports, orders and changed space requirements.",
+			"supplierTitle": "Supplier",
+			"supplierText": "The Estate portal is provided by IT at Umeå municipality.",
+			"placeholderText": "This page is an initial placeholder and will be expanded with more information later."
+		},
+		"pageNotFound": {
+			"pageTitle": "Page could not be found",
+			"title": "Sorry, we can't find the page you were looking for!",
+			"text": "This may be because the page has been removed or moved. The page may also have a different web address because we have updated our website."
+		},
+		"baseFileUpload": {
+			"selectFiles": "Select file",
+			"dropFiles": "or drop your file here | or drop files here",
+			"rulesHint": "Max {size} | Up to {maxFiles} files, max {size} per file",
+			"acceptedFormats": "Accepted formats: {formats}",
+			"error": {
+				"fileTooLarge": "\"{filename}\" is too large.",
+				"tooManyFiles": "You cannot upload more than {maxFiles} files."
+			}
+		},
+		"feedback": {
+			"subtitle": "Help us improve.",
+			"thanksForRating": "Thank you for your rating!",
+			"commentLabel": "What worked well or could be improved?",
+			"commentHelpText": "Do not enter any personal information.",
+			"sendComment": "Submit comment",
+			"thanksForComment": "Your feedback has been received, thank you for helping us improve!",
+			"ratingStars": {
+				"starLabel": "{n} star | {n} stars"
+			}
+		},
+		"tCookieBanner": {
+			"title": "We use cookies",
+			"text": "This site uses cookies for analytics and personalized content. By clicking OK, you agree to this use. ",
+			"urlText": "For more information",
+			"button": "OK, I understand"
+		},
+		"estateSearch": {
+			"breadcrumb": "Estate portal",
+			"searchPlaceholder": "Search by property, address or building...",
+			"searchButton": "Search",
+			"filter": "Filter",
+			"selectOnMap": "Select on map",
+			"noResults": "We could not find any properties or buildings that matched your search."
+		},
+		"estateSearchFilter": {
+			"businessTypeLabel": "Main business type",
+			"clearFilter": "Clear filter"
+		},
+		"estatePortal": {
+			"title": "Estate portal",
+			"description": "Find information about the municipality's properties, buildings and premises.",
+			"actions": {
+				"faultReport": {
+					"title": "Fault report",
+					"description": "Something is broken or not working as it should in your premises."
+				},
+				"order": {
+					"title": "Order",
+					"description": "Order work or services from Byggservice, Stadshusservice or Verksamhetsservice."
+				},
+				"spaceRequirement": {
+					"title": "Changed space requirements",
+					"description": "Your organization needs more, less or a different type of premises."
+				}
+			},
+			"selectOnMap": "Select a building on the map"
+		},
+		"estateFavorite": {
+			"title": "My favorites ({count})",
+			"noFavorites": "Here you can see your favorites. To add a favorite, click on the star next to the name of a property, building, or room.",
+			"addFavorite": "Add to my favorites",
+			"removeFavorite": "Remove from my favorites"
+		},
+		"estateDetails": {
+			"noBuildings": "This property has no buildings associated with it.",
+			"buildings": "Buildings",
+			"informationMissing": "Information missing"
+		},
+		"buildingDetails": {
+			"floorLabel": "Floor",
+			"noRooms": "This building has no rooms associated with it.",
+			"mapButton": "Map",
+			"buildingImageAlt": "Image of building",
+			"blueprintButton": "Blueprint",
+			"blueprintMissingTooltip": "Blueprint missing",
+			"contactPersonsButton": "Contact persons",
+			"contactPersonsMissingTooltip": "No contact persons specified",
+			"documentsButton": "Documents",
+			"documentsMissingTooltip": "There are no documents associated with this building",
+			"createCase": "Create case",
+			"buildingImage": "Image of building",
+			"room": {
+				"title": "Rooms",
+				"search": "Search",
+				"searchPlaceholder": "Search rooms...",
+				"floor": "Floor",
+				"type": "Room type",
+				"noMatches": "There are no rooms that match your search.",
+				"noMatchesSelectedFloor": "There are no rooms on floor {floor} that match your search.",
+				"matchesOnOtherFloors": "Rooms on other floors",
+				"showMoreRooms": "Show more rooms"
+			}
+		},
+		"buildingContact": {
+			"title": "Contact persons",
+			"propertyManager": "Property manager",
+			"operationsManager": "Operations manager",
+			"operationCoordinator": "Operations coordinator",
+			"rentalAdministrator": "Rental administrator",
+			"caretaker": "Caretaker",
+			"operationsTechnician": "Operations technician",
+			"valueMissing": "Not specified",
+			"callAriaLabel": "Call {name}",
+			"emailAriaLabel": "Send email to {name}"
+		},
+		"buildingDocument": {
+			"title": "Documents",
+			"searchPlaceholder": "Search documents...",
+			"category": "Category",
+			"downloadFile": "Download {filename}",
+			"noPreview": "No preview available for this file type.",
+			"openPdf": "Open PDF"
+		},
+		"faultReport": {
+			"title": "Fault Report",
+			"description": "If something isn’t working properly on the premises, you can report the fault here.",
+			"changeAnswer": "Change",
+			"submitButton": "Submit Fault Report",
+			"rentedBuildingNotice": "This building is rented, which means that the property owner is responsible for maintenance and repairs.",
+			"rentedBuildingNoticeConfirmButton": "I understand, continue anyway",
+			"building": {
+				"select": "Select building",
+				"selected": "Building"
+			},
+			"location": {
+				"select": "Is the problem indoor or outdoor?",
+				"indoor": {
+					"title": "The problem is indoor",
+					"description": "Select indoor if the fault is located inside the building, for example in rooms, corridors or communal areas.",
+					"select": "Indoor",
+					"selectButton": "Select indoor",
+					"selected": "You have chosen to report a fault inside the building."
+				},
+				"outdoor": {
+					"title": "The problem is outdoor",
+					"description": "Select outdoor if the fault is located outside the building, for example on the façade, roof or surrounding areas.",
+					"select": "Outdoor",
+					"selectButton": "Select outdoor",
+					"selected": "You have selected that the fault report concerns the exterior of the building."
+				}
+			},
+			"room": {
+				"select": "Which room does it concern?",
+				"selected": "Room",
+				"none": "No room",
+				"skip": "Skip"
+			},
+			"general": {
+				"problemTitle": "Problem description",
+				"problemLabel": "Describe the problem",
+				"problemHelpText": "Please describe the problem as clearly as possible – what it involves and when it occurred. The more information you provide, the better we can resolve the issue.",
+				"fileUploadLabel": "Please feel free to attach a photo showing the fault (optional)",
+				"contactLabel": "Contact information",
+				"contactHelpText": "Please let us know who we can contact if we need further information or have any questions regarding the fault report.",
+				"contactNameLabel": "Name",
+				"contactEmailLabel": "Email",
+				"contactPhoneLabel": "Phone number"
+			},
+			"info": {
+				"title": "Information",
+				"text1": "Important to bear in mind. Please describe the fault as clearly as possible and state where it is located (building, floor, room). The more information you provide, the quicker we can help you. Please feel free to attach a photo if this helps.",
+				"text2": "Once your fault report has been registered, it will be handled by the property management team. Issues are assessed and prioritised based on their urgency and the impact the fault has on operations. We may contact you if we need further information or to arrange a time for the work to be carried out.",
+				"text3": "<b>In the event of an emergency</b> (e.g. a water leak, power cut or danger to life or property), please contact the switchboard by telephone (090-16 10 00) rather than reporting the fault via the portal. They will ensure that the right person is contacted immediately and that action is taken straight away."
+			},
+			"completed": {
+				"title": "Thank you for your fault report!",
+				"description": "We have received your fault report and will handle it as soon as possible.",
+				"goHome": "Go to the homepage",
+				"feedbackTitle": "How did reporting a fault work?"
+			}
+		},
+		"order": {
+			"title": "Order",
+			"description": "Here you can order minor building and fitting work from Byggservice, as well as practical assistance and property-related services from Stadshusservice and Verksamhetsservice.",
+			"submitButton": "Submit your order",
+			"general": {
+				"descriptionTitle": "Description",
+				"descriptionLabel": "Describe what you want to order",
+				"descriptionHelpText": "Describe as clearly as possible what you want to order, why you want to order it, and when you want it to be in place. The more information you can provide, the better the order can be handled.",
+				"fileUploadLabel": "Please feel free to attach a photo showing where the work is to be carried out (optional)",
+				"contactLabel": "Contact information",
+				"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to handle the order, or if there are questions regarding the order."
+			},
+			"category": {
+				"title": "Type of order",
+				"select": "Select",
+				"selected": "Selected",
+				"townHallServices": {
+					"title": "Town Hall Services",
+					"description": "Practical assistance and local services in the City Hall area, Majorsbostället and Leoparden."
+				},
+				"buildingServices": {
+					"title": "Building Services",
+					"description": "Repairs and minor building work, such as putting up shelves, hooks and noticeboards, as well as minor painting jobs."
+				},
+				"facilitiesManager": {
+					"title": "Facilities Manager",
+					"description": "Practical assistance and on-site services for businesses, such as signage, recycling and simple transport services."
+				},
+				"noneAvailable": "There are no order services available for this building."
+			},
+			"room": {
+				"select": "Which room does the order concern?"
+			},
+			"info": {
+				"title": "Information",
+				"text1": "Byggservice carries out minor construction and fitting work, such as installing shelves, hooks, mouldings and noticeboards, as well as simple painting jobs.",
+				"text2": "Please note! Purely electrical work is not carried out by Byggservice (such as the installation of additional sockets or lighting) but must be ordered via Proceedo. The client (usually the unit manager) is responsible for the working environment, even when work is carried out by an external contractor.",
+				"text3": "Once your order has been submitted, Byggservice will make an initial assessment of the feasibility of your request; if necessary, the responsible property manager will also be consulted. A site visit is then often booked to assess the scope of the work, for example, before a decision is made on whether or not to proceed with the order.",
+				"text4": "Ensure that your description is as clear as possible to avoid the need for further information, and that your contact details are correct."
+			},
+			"completed": {
+				"title": "Thank you for your order!",
+				"description": "We have received your order and will handle it as soon as possible.",
+				"goHome": "Go to the homepage",
+				"feedbackTitle": "How did placing an order work?"
+			}
+		},
+		"spaceRequirement": {
+			"title": "Changed space requirements",
+			"description": "Submit a request for changed premises, for example more or less space, adaptations, or other changes to your operation's premises.",
+			"submitButton": "Submit request",
+			"general": {
+				"descriptionTitle": "Description",
+				"descriptionLabel": "Describe your changed space requirement",
+				"descriptionHelpText": "Describe as clearly as possible what you need, why it has arisen, and when the change needs to be in place. The more information you can provide, the better the request can be handled.",
+				"fileUploadLabel": "Attach files (optional)",
+				"contactLabel": "Contact information",
+				"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to handle the request, or if there are questions regarding it."
+			},
+			"category": {
+				"title": "Type of space requirement",
+				"loading": "Loading types...",
+				"required": "Select a type of space requirement.",
+				"noneAvailable": "Space requirement types could not be loaded right now. Please try again later.",
+				"titles": {
+					"88": "Accessibility adaptations",
+					"89": "General investigations",
+					"90": "Minor adaptations to existing premises",
+					"91": "Major changes in space requirements",
+					"97": "Apartment needs"
+				},
+				"descriptions": {
+					"88": "When premises need to be adapted to meet accessibility and usability requirements.",
+					"89": "When the operation needs to investigate a space requirement where the solution, scope, or future needs are not yet established.",
+					"90": "When the operation needs minor changes to existing premises.",
+					"91": "When the operation needs more or less space, new premises, or major rebuilds.",
+					"97": "When the operation needs one or more apartments for its activities. (GVN only)"
+				}
+			},
+			"building": {
+				"select": "Building (optional)",
+				"add": "Select a building (optional)",
+				"notSupported": "The selected building does not support requests for changed space requirements. Please choose another building."
+			},
+			"room": {
+				"select": "Room (optional)",
+				"add": "Select a room (optional)"
+			},
+			"info": {
+				"title": "Information",
+				"paragraphs": [
+					"Describe the operation's space requirement as clearly as possible and choose the category that best matches the matter.",
+					"If the need is tied to a specific building, we recommend stating the building in the matter. If a suitable building has not yet been identified, the field can be left empty.",
+					"To ease the continued handling, it is valuable to attach relevant supporting material, for example investigations, decision documentation, drawings, images, or other documentation that clarifies the need.",
+					"Once the request is submitted, the matter is handled according to the municipality's space provision process."
+				]
+			},
+			"completed": {
+				"title": "Thank you for your request!",
+				"description": "We have received your request for changed space requirements and will handle it as soon as possible.",
+				"goHome": "Go to the homepage",
+				"feedbackTitle": "How did submitting a request for changed space requirements work?"
+			}
+		},
+		"buildingSelector": {
+			"searchLabel": "Search for a building or enter an address",
+			"noResults": "No buildings matched your search.",
+			"selectOnMap": "Select on map",
+			"searchHelp": "Use the search box or select a location on the map to find the building you are looking for.",
+			"favoritesTitle": "My favorites ({count})",
+			"favoritesDescription": "You can also select a building or room directly from your favorites."
+		},
+		"roomSelector": {
+			"none": "You have not selected a room.",
+			"description": "Select a room from the list or mark it on the blueprint.",
+			"selectOnBlueprint": "Select on blueprint"
+		}
+	}
+}

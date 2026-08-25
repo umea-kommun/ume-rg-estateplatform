@@ -16,6 +16,7 @@ param estateserviceSqldbName string
 
 param openaiEndpoint string
 param applicationInsightsConnectionString string
+param estateplatformName string
 
 param personalAccessToken string
 param organization string
@@ -44,12 +45,21 @@ var libraryVariables = [
     value: ''
   }
   {
+    name: 'estateplatform-deployment-token'
+    value: staticWebApp_estateplatform.listSecrets().properties.apiKey
+  }
+  {
     name: 'openai-endpoint'
     value: openaiEndpoint
   }
 ]
 
 // ------------ Resources ------------
+// Static Web App - EstatePlatform
+resource staticWebApp_estateplatform 'Microsoft.Web/staticSites@2025-03-01' existing = {
+  name: estateplatformName
+}
+
 // Deployment Script - Library Variables
 module libraryVariablesDeploymentScript 'br/ume:umea.deploymentscripts.libraryvariables:v2.4' = {
   name: 'libraryVariablesDeploymentScript'

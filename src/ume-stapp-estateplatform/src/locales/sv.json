@@ -1,0 +1,473 @@
+{
+	"app": {
+		"title": "Mina sidor - Umeå kommun",
+		"nav": {
+			"close": "Stäng",
+			"logo": "Logotyp Umeå kommun",
+			"skipToContent": "Hoppa till innehåll",
+			"startPage": "Gå till startsidan",
+			"goBack": "Gå tillbaka",
+			"services": {
+				"faultReport": "Felanmälan",
+				"order": "Beställning",
+				"spaceRequirement": "Förändrade lokalbehov"
+			}
+		},
+		"time": {
+			"minute": "minut | minuter"
+		},
+		"auth": {
+			"loggedOutExpiredSessionText": "Din inloggningsession har upphört. Logga in igen för att fortsätta.",
+			"loggedOutIdleText": "Du har loggats ut på grund av inaktivitet. Logga in igen för att fortsätta.",
+			"loggedOutManual": "Du har nu blivit utloggad, tack för besöket!",
+			"loggedOutTokenError": "Du har blivit utloggad på grund av ett tekniskt problem!",
+			"loggingOut": "Du loggas automatiskt ut på grund av inaktivitet om {time}. Avbryt utloggningen genom att röra musen eller använda tangentbordet."
+		},
+		"error": {
+			"400": {
+				"invalidUserSSN": {
+					"title": "Kunde inte hämta personuppgifter från Skatteverket",
+					"message": "Vi kunde inte hämta dina personuppgifter från Skatteverket då du, ditt barn eller din vårdnadshavare inte har ett giltigt personnummer. Du behöver för närvarande hantera ditt ärende manuellt."
+				}
+			},
+			"401": "Vi kunde inte autentisera dig, var vänlig kontrollera att du är inloggad.",
+			"403": "Du har inte den åtkomst som krävs för att göra detta.",
+			"404": "Sidan kunde inte hittas.",
+			"general": "Tillfälligt tekniskt fel, var god försök senare.",
+			"network": "Det gick inte att ansluta till Umeå kommun, kontrollera din internetanslutning och försök igen.",
+			"permissionDenied": "Du saknar behörighet för att komma åt denna sida.",
+			"estate": {
+				"unableToFetchEstateBuildings": "Det gick inte att hämta fastighetens byggnader. Försök igen senare.",
+				"unableToFetchFloors": "Det gick inte att hämta information om byggnadens våningar. Försök igen senare.",
+				"unableToFetchRooms": "Det gick inte att hämta byggnadens rum. Försök igen senare.",
+				"unableToFetchRoom": "Det gick inte att hämta information om rummet. Försök igen senare.",
+				"unableToFetchBlueprint": "Det gick inte att hämta ritningen. Försök igen senare.",
+				"unableToFetchSearchFilter": "Det gick inte att hämta sökfilter. Försök igen senare.",
+				"unableToFetchBuildingDocuments": "Det gick inte att hämta dokument. Försök igen senare.",
+				"unableToFetchBuildingDocument": "Det gick inte att hämta dokumentet. Försök igen senare.",
+				"unableToSubmitFaultReport": "Något oväntat gick fel och din felanmälan har inte skickats in. Försök igen senare.",
+				"unableToSubmitOrder": "Något oväntat gick fel och din beställning har inte skickats in. Försök igen senare.",
+				"unableToAddFavorite": "Hoppsan, något gick fel. Det gick inte att lägga till som favorit. Försök igen senare.",
+				"unableToRemoveFavorite": "Hoppsan, något gick fel. Det gick inte att ta bort som favorit. Försök igen senare.",
+				"unableToFetchFavorites": "Det gick inte att hämta dina favoriter. Försök igen senare.",
+				"validation": {
+					"required": "Fältet är obligatoriskt.",
+					"invalid_value": "Ogiltigt värde.",
+					"invalid_format": "Ogiltigt format.",
+					"max_length": "Värdet är för långt.",
+					"not_found": "Kunde inte hittas.",
+					"file_too_large": "Filen är för stor.",
+					"too_many_files": "För många filer.",
+					"invalid_content_type": "Filtypen stöds inte.",
+					"unrecognized_file_content": "Filen kunde inte identifieras.",
+					"content_type_mismatch": "Filinnehållet matchar inte den angivna filtypen.",
+					"not_supported": "Stöds inte för den valda byggnaden.",
+					"conflict": "Ogiltigt val i kombination med övriga val."
+				}
+			}
+		},
+		"validation": {
+			"types": {
+				"required": "Obligatoriskt fält"
+			},
+			"messages": {
+				"required": "Fältet \"{0}\" är obligatoriskt.",
+				"validDate": "Ange ett korrekt datum i formatet ÅÅÅÅ-MM-DD.",
+				"invalidDate": "Ange ett korrekt datum i formatet ÅÅÅÅ-MM-DD.",
+				"minDate": "Ange ett datum som är {1} eller senare.",
+				"maxDate": "Ange ett datum som är {1} eller tidigare.",
+				"validPersNumber": "Ange ett giltigt personnummer.",
+				"email": "Ange en giltig mejladress.",
+				"phone": "Ange ett giltigt telefonnummer.",
+				"max": "Fältet får maximalt innehålla {1} tecken."
+			}
+		}
+	},
+	"estateCommon": {
+		"addressLabel": "Adress",
+		"areaLabel": "Yta (m²)",
+		"buildingLabel": "Byggnad",
+		"floorLabel": "Våning",
+		"municipalityAreaLabel": "Kommundel",
+		"operationalAreaLabel": "Driftområde",
+		"administrativeAreaLabel": "Förvaltningsområde",
+		"propertyDesignationLabel": "Fastighetsbeteckning",
+		"propertyLabel": "Fastighet",
+		"type": {
+			"estate": "Fastighet",
+			"building": "Byggnad",
+			"room": "Rum"
+		},
+		"buildingCount": "{count} byggnad | {count} byggnader",
+		"floorCount": "{count} våning | {count} våningar",
+		"roomCount": "{count} rum",
+		"yearOfConstructionLabel": "Byggnadsår",
+		"externalOwner": {
+			"status": "Ägandeförhållande",
+			"name": "Fastighetsägare",
+			"note": "Kontaktuppgifter"
+		}
+	},
+	"component": {
+		"map": {
+			"fullScreenClose": "Stäng helskärm",
+			"fullScreenOpen": "Öppna helskärm",
+			"zoomIn": "Zooma in",
+			"zoomOut": "Zooma ut",
+			"buildingXofY": "Byggnad {buildingNumber} av {totalBuildings}",
+			"selectBuilding": "Välj byggnad",
+			"layer": {
+				"regular": "Karta",
+				"photo": "Foto"
+			}
+		},
+		"blueprintMap": {
+			"floor": "Våning",
+			"reportRoom": "Felanmäl rum",
+			"selectRoom": "Välj rum"
+		},
+		"appError": {
+			"reportError": "Felanmäl",
+			"defaultMessage": "Om problemet kvarstår, vänligen felanmäl detta till oss.",
+			"time": "Felet uppstod {time}",
+			"pageTitle": "Ett fel uppstod"
+		},
+		"appHeader": {
+			"title": {
+				"default": "Fastighetsportalen",
+				"faultReport": "Felanmälan - Fastigheter",
+				"order": "Beställning - Fastigheter",
+				"spaceRequirement": "Förändrade lokalbehov - Fastigheter"
+			},
+			"nav": {
+				"label": "Huvudnavigation",
+				"search": "Sök"
+			},
+			"locale": {
+				"change": "Other languages"
+			},
+			"loginButton": "Logga in",
+			"menuButton": "Meny",
+			"menu": {
+				"logout": "Logga ut",
+				"appStart": "Startsida",
+				"about": "Om webbplatsen",
+				"umeaSe": "Umea.se",
+				"errorReport": "Felanmälan",
+				"availabilityStatement": "Tillgänglighetsredogörelse"
+			}
+		},
+		"appContent": {
+			"warning": {
+				"adUserMissingSSN": "Vi har för närvarande tekniska problem och kunde inte hämta dina fullständiga uppgifter, du kan därför märka att viss funktionalitet inte fungerar."
+			}
+		},
+		"appFooter": {
+			"linksTitle": "Hitta snabbt"
+		},
+		"aboutWebsite": {
+			"pageTitle": "Om webbplatsen",
+			"title": "Om Fastighetsportalen",
+			"intro": "Fastighetsportalen är Umeå kommuns interna tjänst för information om kommunens fastigheter, byggnader och lokaler.",
+			"usedForTitle": "Det här kan du göra här",
+			"usedForText": "I Fastighetsportalen kan du söka fram fastigheter och byggnader, se information om lokaler och skapa ärenden som felanmälan, beställningar och förändrade lokalbehov.",
+			"supplierTitle": "Leverantör",
+			"supplierText": "Fastighetsportalen tillhandahålls av IT på Umeå kommun.",
+			"placeholderText": "Denna sida är under konstruktion"
+		},
+		"pageNotFound": {
+			"pageTitle": "Sidan kunde inte hittas",
+			"title": "Oj, vi kan tyvärr inte hitta sidan du sökte!",
+			"text": "Det kan bero på att sidan har tagits bort eller flyttats. Sidan kan också ha en annan webbadress eftersom vi har uppdaterat vår webbplats."
+		},
+		"baseFileUpload": {
+			"selectFiles": "Välj fil",
+			"dropFiles": "eller släpp filen här | eller släpp filer här",
+			"rulesHint": "Max {size} | Upp till {maxFiles} filer, max {size} per fil",
+			"acceptedFormats": "Tillåtna format: {formats}",
+			"error": {
+				"fileTooLarge": "\"{filename}\" är för stor.",
+				"tooManyFiles": "Du kan inte ladda upp fler än {maxFiles} filer."
+			}
+		},
+		"feedback": {
+			"subtitle": "Hjälp oss bli bättre.",
+			"thanksForRating": "Tack för ditt betyg!",
+			"commentLabel": "Vad fungerade bra och vad kan bli bättre?",
+			"commentHelpText": "Ange inte några personuppgifter.",
+			"sendComment": "Skicka kommentar",
+			"thanksForComment": "Din feedback har tagits emot, tack för att du hjälper oss bli bättre!",
+			"ratingStars": {
+				"starLabel": "{n} stjärna | {n} stjärnor"
+			}
+		},
+		"tCookieBanner": {
+			"title": "Vi använder kakor (cookies)",
+			"text": "Denna webbplats använder cookies för statistik och anpassat innehåll. Genom att klicka OK godkänner du denna användning.",
+			"urlText": "För mer information",
+			"button": "OK, jag förstår"
+		},
+		"estateSearch": {
+			"breadcrumb": "Fastighetsportalen",
+			"searchPlaceholder": "Sök efter fastighet, adress eller byggnad...",
+			"searchButton": "Sök",
+			"filter": "Filtrera",
+			"selectOnMap": "Välj på karta",
+			"noResults": "Vi kunde inte hitta några fastigheter eller byggnader som matchade din sökning."
+		},
+		"estateSearchFilter": {
+			"businessTypeLabel": "Huvudsaklig verksamhetstyp",
+			"clearFilter": "Rensa filter"
+		},
+		"estatePortal": {
+			"title": "Fastighetsportalen",
+			"description": "Sök fram information om kommunens fastigheter, byggnader och lokaler.",
+			"actions": {
+				"faultReport": {
+					"title": "Felanmälan",
+					"description": "Något är trasigt eller fungerar inte som det ska i era lokaler."
+				},
+				"order": {
+					"title": "Beställning",
+					"description": "Beställ arbete eller tjänster från Byggservice, Stadshusservice eller Verksamhetsservice."
+				},
+				"spaceRequirement": {
+					"title": "Förändrade lokalbehov",
+					"description": "Er verksamhet behöver mer, mindre eller en annan typ av lokal."
+				}
+			},
+			"selectOnMap": "Välj byggnad på kartan"
+		},
+		"estateFavorite": {
+			"title": "Mina favoriter ({count})",
+			"noFavorites": "Här syns dina favoriter. För att lägga till en favorit, klicka på stjärnan vid namnet på en fastighet, byggnad eller ett rum.",
+			"addFavorite": "Lägg till i mina favoriter",
+			"removeFavorite": "Ta bort från mina favoriter"
+		},
+		"estateDetails": {
+			"noBuildings": "Denna fastighet har inga byggnader kopplade till sig.",
+			"buildings": "Byggnader",
+			"informationMissing": "Information saknas"
+		},
+		"buildingDetails": {
+			"floorLabel": "Våning",
+			"noRooms": "Denna byggnad har inga rum kopplade till sig.",
+			"mapButton": "Karta",
+			"buildingImageAlt": "Bild på byggnaden",
+			"blueprintButton": "Planritning",
+			"blueprintMissingTooltip": "Planritning saknas",
+			"contactPersonsButton": "Kontaktpersoner",
+			"contactPersonsMissingTooltip": "Det finns inga kontaktpersoner angivna",
+			"documentsButton": "Handlingar",
+			"documentsMissingTooltip": "Det finns inga handlingar kopplade till denna byggnad",
+			"createCase": "Skapa ärende",
+			"buildingImage": "Bild på byggnaden",
+			"room": {
+				"title": "Rum",
+				"search": "Sök",
+				"searchPlaceholder": "Sök på rum...",
+				"floor": "Våning",
+				"type": "Rumstyp",
+				"noMatches": "Det finns inga rum som matchar din sökning.",
+				"noMatchesSelectedFloor": "Det finns inga rum på våning {floor} som matchar din sökning.",
+				"matchesOnOtherFloors": "Rum på andra våningar",
+				"showMoreRooms": "Visa fler rum"
+			}
+		},
+		"buildingContact": {
+			"title": "Kontaktpersoner",
+			"propertyManager": "Fastighetsförvaltare",
+			"operationsManager": "Driftområdeschef",
+			"operationCoordinator": "Driftsamordnare",
+			"rentalAdministrator": "Hyresadministratör",
+			"caretaker": "Fastighetsskötare",
+			"operationsTechnician": "Drifttekniker",
+			"valueMissing": "Ej angivet",
+			"callAriaLabel": "Ring {name}",
+			"emailAriaLabel": "Skicka e-post till {name}"
+		},
+		"buildingDocument": {
+			"title": "Handlingar",
+			"searchPlaceholder": "Sök efter handlingar...",
+			"category": "Kategori",
+			"downloadFile": "Ladda ner {filename}",
+			"noPreview": "Förhandsgranskning saknas för denna filtyp.",
+			"openPdf": "Öppna PDF"
+		},
+		"faultReport": {
+			"title": "Felanmälan",
+			"description": "Här kan du göra en felanmälan om något inte fungerar som det ska i verksamhetens lokaler.",
+			"changeAnswer": "Ändra",
+			"submitButton": "Skicka in felanmälan",
+			"rentedBuildingNotice": "Denna byggnad är inhyrd, vilket innebär att fastighetsägaren ansvarar för underhåll och reparationer.",
+			"rentedBuildingNoticeConfirmButton": "Jag förstår, fortsätt ändå",
+			"building": {
+				"select": "Välj byggnad",
+				"selected": "Byggnad"
+			},
+			"location": {
+				"select": "Är problemet utvändigt eller invändigt?",
+				"indoor": {
+					"title": "Problemet är invändigt",
+					"description": "Välj invändigt om felet finns inne i byggnaden, till exempel i rum, korridorer eller gemensamma utrymmen.",
+					"select": "Invändigt",
+					"selectButton": "Välj invändigt",
+					"selected": "Du har valt att anmäla ett fel på byggnadens insida."
+				},
+				"outdoor": {
+					"title": "Problemet är utvändigt",
+					"description": "Välj utvändigt om felet finns utanför byggnaden, till exempel på fasad, tak, eller omkringliggande ytor.",
+					"select": "Utvändigt",
+					"selectButton": "Välj utvändigt",
+					"selected": "Du har valt att anmäla ett fel på byggnadens utsida."
+				}
+			},
+			"room": {
+				"select": "Vilket rum gäller felanmälan?",
+				"selected": "Rum",
+				"none": "Inget rum",
+				"skip": "Hoppa över"
+			},
+			"general": {
+				"problemTitle": "Problembeskrivning",
+				"problemLabel": "Beskriv problemet",
+				"problemHelpText": "Beskriv problemet så tydligt som möjligt – vad det gäller och när det uppstod. Ju mer information du lämnar, desto bättre kan vi åtgärda problemet.",
+				"fileUploadLabel": "Bifoga gärna en bild som visar felet (frivilligt)",
+				"contactLabel": "Kontaktuppgifter",
+				"contactHelpText": "Ange vem vi kan kontakta om vi behöver mer information eller har frågor om felanmälan.",
+				"contactNameLabel": "Namn",
+				"contactEmailLabel": "E-post",
+				"contactPhoneLabel": "Telefonnummer"
+			},
+			"info": {
+				"title": "Information",
+				"text1": "Viktigt att tänka på: Beskriv felet så tydligt som möjligt och ange var det finns (byggnad, våning, rum). Ju mer information du lämnar, desto snabbare kan vi hjälpa dig. Bifoga gärna en bild om det underlättar.",
+				"text2": "När din felanmälan är registrerad tas den om hand av fastighetsdriften. Ärenden bedöms och prioriteras utifrån hur brådskande de är och vilken påverkan felet har på verksamheten. Du kan bli kontaktad om vi behöver kompletterande information eller för att boka tid för åtgärd.",
+				"text3": "<b>Vid akuta fel</b> (t.ex. vattenläcka, strömavbrott eller fara för person eller egendom) ska du kontakta växeln via telefon (090-16 10 00) istället för att göra en felanmälan i portalen. De säkerställer att rätt person kontaktas omedelbart och åtgärd påbörjas direkt."
+			},
+			"completed": {
+				"title": "Tack för din felanmälan!",
+				"description": "Vi har mottagit din felanmälan och kommer att hantera den så snart som möjligt.",
+				"goHome": "Gå till startsidan",
+				"feedbackTitle": "Hur fungerade det att göra en felanmälan?"
+			}
+		},
+		"order": {
+			"title": "Beställning",
+			"description": "Här kan du beställa mindre bygg- och monteringsarbeten från Byggservice samt praktisk hjälp och fastighetsnära service från Stadshusservice och Verksamhetsservice.",
+			"submitButton": "Skicka in beställning",
+			"general": {
+				"descriptionTitle": "Beskrivning",
+				"descriptionLabel": "Beskriv vad du vill beställa",
+				"descriptionHelpText": "Beskriv beställningen så tydligt som möjligt – vad du vill beställa, varför och när du önskar att det ska vara på plats. Ju mer information du lämnar, desto bättre kan vi hantera din beställning.",
+				"fileUploadLabel": "Bifoga gärna en bild som visar var arbetet ska utföras (frivilligt)",
+				"contactLabel": "Kontaktuppgifter",
+				"contactHelpText": "Ange vem vi kan kontakta om vi behöver mer information eller har frågor om beställningen."
+			},
+			"category": {
+				"title": "Typ av beställning",
+				"select": "Välj",
+				"selected": "Vald",
+				"townHallServices": {
+					"title": "Stadshusservice",
+					"description": "Praktisk hjälp och fastighetsnära service inom Stadshusområdet, Majorsbostället och Leoparden."
+				},
+				"buildingServices": {
+					"title": "Byggservice",
+					"description": "Reparationer och enklare byggarbeten, till exempel uppsättning av hyllor, krokar och anslagstavlor samt mindre målningsarbeten."
+				},
+				"facilitiesManager": {
+					"title": "Verksamhetsvaktmästare",
+					"description": "Praktisk hjälp och fastighetsnära service i verksamheter, till exempel skyltning, återvinning och enklare transporter."
+				},
+				"noneAvailable": "Det finns inga beställningstjänster tillgängliga för den här byggnaden."
+			},
+			"room": {
+				"select": "Vilket rum gäller beställningen?"
+			},
+			"info": {
+				"title": "Information",
+				"text1": "Byggservice utför mindre bygg- och monteringsarbeten, till exempel uppsättning av hyllor, krokar, lister och anslagstavlor samt enklare målningsarbeten.",
+				"text2": "Observera! Rena elarbeten utförs ej av Byggservice (till exempel komplettering av eluttag eller belysning) utan beställs via Proceedo. Beställaren (oftast enhetschef) ansvarar för arbetsmiljön, även vid arbete som utförs av extern entreprenör.",
+				"text3": "Efter att din beställning är inskickad kommer Byggservice att göra en första bedömning av ditt behovs genomförbarhet, vid behov konsulteras även ansvarig fastighetsförvaltare. Ofta bokas därefter ett platsbesök för bedömning på plats avseende exempelvis arbetets omfattning innan beslut fattas om beställningen ska genomföras eller ej.",
+				"text4": "Säkerställ att din beskrivning är så tydlig som möjligt för att undvika behov av komplettering av ärendet, samt att kontaktuppgifterna är korrekta."
+			},
+			"completed": {
+				"title": "Tack för din beställning!",
+				"description": "Vi har mottagit din beställning och kommer att hantera den så snart som möjligt.",
+				"goHome": "Gå till startsidan",
+				"feedbackTitle": "Hur fungerade det att göra en beställning?"
+			}
+		},
+		"spaceRequirement": {
+			"title": "Förändrade lokalbehov",
+			"description": "Skicka in en förfrågan om förändrade lokaler, till exempel mer eller mindre yta, anpassningar eller andra förändringar i din verksamhets lokaler.",
+			"submitButton": "Skicka in förfrågan",
+			"general": {
+				"descriptionTitle": "Beskrivning",
+				"descriptionLabel": "Beskriv ditt förändrade lokalbehov",
+				"descriptionHelpText": "Beskriv så tydligt som möjligt vilket behov du har, varför det uppstått och när förändringen behöver vara på plats. Ju mer information du kan ge, desto bättre kan förfrågan hanteras.",
+				"fileUploadLabel": "Bifoga filer (frivilligt)",
+				"contactLabel": "Kontaktuppgifter",
+				"contactHelpText": "Ange vem som ska kontaktas om mer information behövs för att hantera förfrågan, eller om det finns frågor kring den."
+			},
+			"category": {
+				"title": "Typ av lokalbehov",
+				"loading": "Hämtar typer...",
+				"required": "Välj typ av lokalbehov.",
+				"noneAvailable": "Det går för närvarande inte att hämta typer av lokalbehov. Försök igen senare.",
+				"titles": {
+					"88": "Tillgänglighetsanpassningar",
+					"89": "Generella utredningar",
+					"90": "Mindre anpassningar i befintliga lokaler",
+					"91": "Större förändringar i lokalbehov",
+					"97": "Lägenhetsbehov"
+				},
+				"descriptions": {
+					"88": "När lokaler behöver anpassas för att uppfylla krav på tillgänglighet och användbarhet.",
+					"89": "När verksamheten behöver utreda ett lokalbehov där lösning, omfattning eller framtida behov ännu inte är klarlagt.",
+					"90": "När verksamheten behöver mindre förändringar i befintliga lokaler.",
+					"91": "När verksamheten behöver mer eller mindre yta, nya lokaler eller större ombyggnationer.",
+					"97": "När verksamheten har behov av en eller flera lägenheter för sin verksamhet. (Endast GVN)"
+				}
+			},
+			"building": {
+				"select": "Byggnad (frivilligt)",
+				"add": "Välj byggnad (frivilligt)",
+				"notSupported": "Den valda byggnaden stödjer inte förfrågningar om förändrade lokalbehov. Välj en annan byggnad."
+			},
+			"room": {
+				"select": "Rum (frivilligt)",
+				"add": "Välj rum (frivilligt)"
+			},
+			"info": {
+				"title": "Information",
+				"paragraphs": [
+					"Beskriv verksamhetens lokalbehov så tydligt som möjligt och välj den kategori som bäst motsvarar ärendet.",
+					"Om behovet är kopplat till en specifik byggnad rekommenderas att byggnaden anges i ärendet. Om lämplig byggnad ännu inte är identifierad kan fältet lämnas tomt.",
+					"För att underlätta den fortsatta hanteringen är det värdefullt att bifoga relevant underlag, exempelvis utredningar, beslutsunderlag, ritningar, bilder eller annan dokumentation som tydliggör behovet.",
+					"Efter inskickad förfrågan hanteras ärendet enligt kommunens lokalförsörjningsprocess."
+				]
+			},
+			"completed": {
+				"title": "Tack för din förfrågan!",
+				"description": "Vi har mottagit din förfrågan om förändrade lokalbehov och kommer att hantera den så snart som möjligt.",
+				"goHome": "Gå till startsidan",
+				"feedbackTitle": "Hur fungerade det att skicka in en förfrågan om förändrade lokalbehov?"
+			}
+		},
+		"buildingSelector": {
+			"searchLabel": "Sök efter byggnad eller ange adress",
+			"noResults": "Vi kunde inte hitta några byggnader som matchade din sökning.",
+			"selectOnMap": "Välj på karta",
+			"searchHelp": "Använd sökrutan eller välj på kartan för att hitta den byggnad du söker.",
+			"favoritesTitle": "Mina favoriter ({count})",
+			"favoritesDescription": "Du kan också välja byggnad eller rum direkt från dina favoriter."
+		},
+		"roomSelector": {
+			"none": "Du har inte valt något rum.",
+			"description": "Välj rum i listan eller markera det på planritningen.",
+			"selectOnBlueprint": "Välj på planritning"
+		}
+	}
+}
