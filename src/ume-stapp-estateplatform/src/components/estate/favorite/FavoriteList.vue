@@ -1,7 +1,7 @@
 <template>
 	<div class="favorite-list">
 		<v-skeleton-loader
-			v-if="isFetchingFavorites"
+			v-if="isInitiallyFetching"
 			class="mb-4 pa-0 loader-lazy"
 			type="subtitle,article"
 		/>
@@ -15,10 +15,7 @@
 					}}
 				</h2>
 			</slot>
-			<p
-				v-if="!isFetchingFavorites && !filteredFavorites?.length"
-				class="text-medium-emphasis"
-			>
+			<p v-if="!filteredFavorites?.length" class="text-medium-emphasis">
 				{{ $t('component.estateFavorite.noFavorites') }}
 			</p>
 
@@ -62,7 +59,7 @@
 <script setup lang="ts">
 import { DispatchType } from '@/models/Enums';
 import { IRootState } from '@/models/Interfaces';
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import EstateSearchResultItem from '../search/EstateSearchResultItem.vue';
 import {
@@ -72,6 +69,7 @@ import {
 import { EstateType } from '@/models/Enums';
 import ErrorService from '@/utils/ErrorService';
 import { useI18n } from 'vue-i18n';
+import { useFavorites } from './useFavorites';
 
 const props = defineProps<{
 	selectable?: boolean;
@@ -135,7 +133,15 @@ const select = (entry: IEstateSearchResultEntry) => {
 	}
 };
 
-const favorites = ref<IEstateSearchResultEntry[] | null>(null);
+const {
+	entries: favorites,
+	isLoaded,
+	isFetching,
+	failedToFetch: failedToFetchFavorites,
+	fetchFavorites,
+} = useFavorites();
+
+const isInitiallyFetching = computed(() => isFetching.value && !isLoaded.value);
 
 const filteredFavorites = computed(() => {
 	if (props.types) {
@@ -146,40 +152,8 @@ const filteredFavorites = computed(() => {
 	return favorites.value;
 });
 
-const isFetchingFavorites = ref(false);
-const failedToFetchFavorites = ref(false);
-const shouldRefetchFavorites = ref(false);
-const fetchFavorites = async () => {
-	if (isFetchingFavorites.value) {
-		shouldRefetchFavorites.value = true;
-		return;
-	}
-
-	isFetchingFavorites.value = true;
-	try {
-		favorites.value = await store.dispatch(DispatchType.GetFavorites);
-		failedToFetchFavorites.value = false;
-	} catch (err) {
-		failedToFetchFavorites.value = true;
-		ErrorService.onError({
-			err,
-			hidden: true,
-		});
-	} finally {
-		isFetchingFavorites.value = false;
-		if (shouldRefetchFavorites.value) {
-			shouldRefetchFavorites.value = false;
-			fetchFavorites();
-		}
-	}
-};
-
 onMounted(() => {
-	window.addEventListener('estate-favorite-changed', fetchFavorites);
+	// Silent when the list is already loaded — picks up changes made elsewhere.
 	fetchFavorites();
-});
-
-onBeforeUnmount(() => {
-	window.removeEventListener('estate-favorite-changed', fetchFavorites);
 });
 </script>

@@ -17,13 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import { DispatchType } from '@/models/Enums';
 import { EstateType } from '@/models/Enums';
-import { IRootState } from '@/models/Interfaces';
 import ErrorService from '@/utils/ErrorService';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useStore } from 'vuex';
+import { useFavorites } from './useFavorites';
 
 const props = defineProps<{
 	id: number;
@@ -32,10 +30,12 @@ const props = defineProps<{
 	size?: 'small' | 'default';
 }>();
 
-const store = useStore<IRootState>();
 const { t } = useI18n();
+const favorites = useFavorites();
 
-const isFavorite = ref(props.isFavorite ?? false);
+const isFavorite = computed(() =>
+	favorites.isFavorite(props.type, props.id, props.isFavorite ?? false)
+);
 
 const isBusySettingFavorite = ref(false);
 const toggleFavorite = async () => {
@@ -43,26 +43,16 @@ const toggleFavorite = async () => {
 		return;
 	}
 
+	const shouldBeFavorite = !isFavorite.value;
 	isBusySettingFavorite.value = true;
 	try {
-		await store.dispatch(
-			isFavorite.value
-				? DispatchType.UnsetFavorite
-				: DispatchType.SetFavorite,
-			{
-				id: props.id,
-				type: props.type,
-			}
-		);
-
-		isFavorite.value = !isFavorite.value;
-		window.dispatchEvent(new CustomEvent('estate-favorite-changed'));
+		await favorites.setFavorite(props.type, props.id, shouldBeFavorite);
 	} catch (err) {
 		ErrorService.onError({
 			err,
-			message: isFavorite.value
-				? t('app.error.estate.unableToRemoveFavorite')
-				: t('app.error.estate.unableToAddFavorite'),
+			message: shouldBeFavorite
+				? t('app.error.estate.unableToAddFavorite')
+				: t('app.error.estate.unableToRemoveFavorite'),
 		});
 	} finally {
 		isBusySettingFavorite.value = false;
