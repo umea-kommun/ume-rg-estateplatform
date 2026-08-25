@@ -40,7 +40,8 @@ var databasePurposes = {
   estateservice: 'estateservice'
 }
 var roleDefinitionIds = {
-  CognitiveServicesOpenAIUser: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
+  cognitiveServicesOpenAIUser: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
+  foundryUser: '53ca6127-db72-4b80-b1b0-d745d6d5456d'
 }
 
 // ------------ Functions ------------
@@ -50,10 +51,21 @@ func getKeyVaultAssignee(principalType string, principalId string) object => {
 }
 
 // ------------ Dependencies ------------
+// Resource Group - General
+resource dependency_resourceGroup_general 'Microsoft.Resources/resourceGroups@2025-04-01' existing = {
+  name: '${companyPrefix}-${resourceGroupType}-general-${environment}'
+}
+
 // Application Insights - General
 resource dependency_applicationInsights_general 'Microsoft.Insights/components@2020-02-02' existing = {
-  scope: az.resourceGroup('${companyPrefix}-rg-general-${environment}')
+  scope: dependency_resourceGroup_general
   name: '${companyPrefix}-appi-general-${environment}'
+}
+
+// AI Foundry - General (centralized AI resource, deployed by ume-rg-general)
+resource dependency_aiFoundry_general 'Microsoft.CognitiveServices/accounts@2024-10-01' existing = {
+  scope: dependency_resourceGroup_general
+  name: '${companyPrefix}-aif-general-${environment}'
 }
 
 // ------------ Resources ------------
@@ -75,12 +87,31 @@ module defaultRoleAssignments 'br/ume:umea.roleassignments.turkos.defaults:v2.0'
   }
 }
 
-// Role Assignment - Cognitive Services OpenAI User
-module openaiRoleAssignments 'br/ume:microsoft.authorization.roleassignments:v2.2' = {
-  scope: resourceGroup
-  name: 'openaiRoleAssignments'
+// Role Assignment - Cognitive Services OpenAI User: estateservice (on the centralized AI Foundry resource group)
+module roleAssignment_csoaiu_estateservice 'br/ume:microsoft.authorization.roleassignments:v2.2' = {
+  scope: dependency_resourceGroup_general
+  name: 'estateplatform_roleAssignment_csoaiu_estateservice'
   params: {
-    roleDefinitionId: roleDefinitionIds.CognitiveServicesOpenAIUser
+    roleDefinitionId: roleDefinitionIds.cognitiveServicesOpenAIUser
+    assignees: [
+      {
+        principalId: app_estateservice.outputs.principalId
+        principalType: 'ServicePrincipal'
+      }
+      {
+        principalId: app_estateservice.outputs.?stageDeploymentSlot.principalId!
+        principalType: 'ServicePrincipal'
+      }
+    ]
+  }
+}
+
+// Role Assignment - Foundry User: estateservice (on the centralized AI Foundry resource group)
+module roleAssignment_fu_estateservice 'br/ume:microsoft.authorization.roleassignments:v2.2' = {
+  scope: dependency_resourceGroup_general
+  name: 'estateplatform_roleAssignment_fu_estateservice'
+  params: {
+    roleDefinitionId: roleDefinitionIds.foundryUser
     assignees: [
       {
         principalId: app_estateservice.outputs.principalId
@@ -173,32 +204,6 @@ module storageAccount 'br/ume:microsoft.storage.storageaccounts:v2.1' = {
   }
 }
 
-// OpenAI
-module openai 'br/ume:microsoft.cognitiveservices.openai:v2.0' = {
-  scope: resourceGroup
-  name: 'openai'
-  params: {
-    environment: environment
-    companyPrefix: companyPrefix
-    location: location
-    purpose: purpose
-
-    deployments: [
-      {
-        name: 'gpt5nano'
-        sku: {
-          name: 'DataZoneStandard'
-          capacity: 10
-        }
-        model: {
-          name: 'gpt-5-nano'
-          version: '2025-08-07'
-        }
-      }
-    ]
-  }
-}
-
 // SQL Server
 module sqlServer 'br/ume:microsoft.sql.servers:v2.1' = {
   scope: resourceGroup
@@ -234,7 +239,7 @@ module libraryVariables 'library-variable-group.bicep' = {
     sqlServerName: sqlServer.outputs.name
     estateserviceSqldbName: sqlServer.outputs.databases.estateservice.name
 
-    openaiEndpoint: openai.outputs.resourceUri
+    openaiEndpoint: dependency_aiFoundry_general.properties.endpoint
     applicationInsightsConnectionString: dependency_applicationInsights_general.properties.ConnectionString
 
     personalAccessToken: personalAccessToken

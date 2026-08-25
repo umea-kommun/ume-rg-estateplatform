@@ -9,7 +9,7 @@ ASP.NET Core API that bridges Umeå Kommun's internal systems and the Pythagoras
 - **FusionCache** (memory + Azure Blob L2) for image and read-heavy caching
 - **Microsoft.Extensions.Http.Resilience** (Polly) for outbound Pythagoras calls
 - **JWT bearer** auth against Umeå's internal token service
-- **Azure OpenAI** via `Microsoft.Extensions.AI` for WorkOrder category classification
+- **Azure OpenAI** via `Microsoft.Extensions.AI` for WorkOrder category classification (uses the centralized AI Foundry resource in `ume-rg-general`, not a repo-owned OpenAI resource)
 - **xUnit v3** + **Shouldly** for tests; **Swashbuckle** for OpenAPI
 - **Bicep** + **Azure DevOps** pipelines for IaC and CI/CD
 

@@ -83,7 +83,7 @@ Most secrets are resolved from Azure Key Vault via the `@KeyVault(...)` placehol
 - **Database**: `ConnectionStrings:EstateService` for the EF Core data store
 - **Pythagoras API**: `Pythagoras:ApiKey` and `Pythagoras:BaseUrl`
 - **Authentication**: `Authentication:TokenServiceUrl` and `Authentication:Audience` for JWT bearer auth, plus `Api:Keys`
-- **Azure OpenAI**: `OpenAI:Endpoint`, `OpenAI:Model`, and `OpenAI:Enabled`
+- **Azure OpenAI**: `OpenAI:Endpoint`, `OpenAI:Model`, and `OpenAI:Enabled`. The endpoint is the centralized AI Foundry resource `ume-aif-general-{env}` in `ume-rg-general` (published to Key Vault as `openai-endpoint` by IaC); `OpenAI:Model` is the deployment name there (`ume-aifd-gpt54mini-{env}`). The app authenticates with `DefaultAzureCredential`, so local runs need the *Cognitive Services OpenAI User* role on that resource
 - **Images**: `ImageCache:BlobServiceUrl` and `ImageCache:BlobContainerName` for durable synced image originals and FusionCache-backed variants
 - **Work orders**: `WorkOrder:FileStorage`, `WorkOrder:FileStorageContainer`, and processing/validation settings
 - **Data sync**: `DataSync:Schedule` cron expressions
