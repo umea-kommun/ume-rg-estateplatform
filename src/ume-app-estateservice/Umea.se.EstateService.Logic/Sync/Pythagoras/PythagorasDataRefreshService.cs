@@ -35,14 +35,16 @@ public sealed class PythagorasDataRefreshService(
         (int)PropertyCategoryId.OperationsManager,
         (int)PropertyCategoryId.OperationCoordinator,
         (int)PropertyCategoryId.RentalAdministrator,
+        (int)PropertyCategoryId.Caretaker,
+        (int)PropertyCategoryId.OperationsTechnician,
         (int)PropertyCategoryId.TownHallServiceOrder,
         (int)PropertyCategoryId.FacilityServiceOrder
     ]);
 
     // Properties in the "Driftgrupper" category (8) are not cached by Pythagoras,
     // so uilistdata never returns them. We backfill these via the calculatedvalue endpoint.
-    // The *Contact IDs (306-309) are calculated outputs ("phone / email") derived from the
-    // name selections — they have no inputValue so they only come back via calculatedvalue.
+    // The *Contact IDs (306-311) hold "phone / email" text and only come back via calculatedvalue,
+    // as do the free-text Caretaker/OperationsTechnician names (304-305).
     private static readonly IReadOnlyCollection<int> _uncachedPropertyIds = Array.AsReadOnly(
     [
         (int)PropertyCategoryId.FacilityServiceOrder,
@@ -50,10 +52,14 @@ public sealed class PythagorasDataRefreshService(
         (int)PropertyCategoryId.OperationsManager,
         (int)PropertyCategoryId.OperationCoordinator,
         (int)PropertyCategoryId.RentalAdministrator,
+        (int)PropertyCategoryId.Caretaker,
+        (int)PropertyCategoryId.OperationsTechnician,
         (int)PropertyCategoryId.PropertyManagerContact,
         (int)PropertyCategoryId.OperationsManagerContact,
         (int)PropertyCategoryId.OperationCoordinatorContact,
         (int)PropertyCategoryId.RentalAdministratorContact,
+        (int)PropertyCategoryId.CaretakerContact,
+        (int)PropertyCategoryId.OperationsTechnicianContact,
         (int)PropertyCategoryId.TownHallServiceOrder
     ]);
 

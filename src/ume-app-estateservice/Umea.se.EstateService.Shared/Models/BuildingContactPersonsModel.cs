@@ -8,6 +8,8 @@ public sealed class BuildingContactPersonsModel
     public BuildingContactModel? OperationsManager { get; init; }
     public BuildingContactModel? OperationCoordinator { get; init; }
     public BuildingContactModel? RentalAdministrator { get; init; }
+    public BuildingContactModel? Caretaker { get; init; }
+    public BuildingContactModel? OperationsTechnician { get; init; }
 }
 
 public sealed class BuildingContactModel

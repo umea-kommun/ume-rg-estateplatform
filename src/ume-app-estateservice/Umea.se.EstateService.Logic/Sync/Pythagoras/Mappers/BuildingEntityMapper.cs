@@ -148,8 +148,8 @@ public static class BuildingEntityMapper
 
     /// <summary>
     /// Creates a BuildingContactPersonsModel from property values.
-    /// Name properties (282-285) drive presence. Contact properties (306-309) hold "phone / email"
-    /// text from Pythagoras and are parsed leniently via ContactInfoParser.
+    /// Name properties (282-285, 304-305) drive presence. Contact properties (306-311) hold
+    /// "phone / email" text from Pythagoras and are parsed leniently via ContactInfoParser.
     /// Returns null if no name property is populated.
     /// </summary>
     private static BuildingContactPersonsModel? CreateContactPersons(Dictionary<int, PropertyValueDto>? propertyValues)
@@ -163,11 +163,15 @@ public static class BuildingEntityMapper
         BuildingContactModel? operationsManager = BuildContact(propertyValues, PropertyCategoryId.OperationsManager, PropertyCategoryId.OperationsManagerContact);
         BuildingContactModel? operationCoordinator = BuildContact(propertyValues, PropertyCategoryId.OperationCoordinator, PropertyCategoryId.OperationCoordinatorContact);
         BuildingContactModel? rentalAdministrator = BuildContact(propertyValues, PropertyCategoryId.RentalAdministrator, PropertyCategoryId.RentalAdministratorContact);
+        BuildingContactModel? caretaker = BuildContact(propertyValues, PropertyCategoryId.Caretaker, PropertyCategoryId.CaretakerContact);
+        BuildingContactModel? operationsTechnician = BuildContact(propertyValues, PropertyCategoryId.OperationsTechnician, PropertyCategoryId.OperationsTechnicianContact);
 
         if (propertyManager is null &&
             operationsManager is null &&
             operationCoordinator is null &&
-            rentalAdministrator is null)
+            rentalAdministrator is null &&
+            caretaker is null &&
+            operationsTechnician is null)
         {
             return null;
         }
@@ -181,7 +185,9 @@ public static class BuildingEntityMapper
             PropertyManager = propertyManager,
             OperationsManager = operationsManager,
             OperationCoordinator = operationCoordinator,
-            RentalAdministrator = rentalAdministrator
+            RentalAdministrator = rentalAdministrator,
+            Caretaker = caretaker,
+            OperationsTechnician = operationsTechnician
         };
     }
 

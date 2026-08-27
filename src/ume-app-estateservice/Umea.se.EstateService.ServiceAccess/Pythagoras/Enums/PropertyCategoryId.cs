@@ -24,8 +24,12 @@ public enum PropertyCategoryId
     OperationCoordinator = 284,
     RentalAdministrator = 285,
     TownHallServiceOrder = 289,
+    OperationsTechnician = 304,
+    Caretaker = 305,
     PropertyManagerContact = 306,
     OperationsManagerContact = 307,
     OperationCoordinatorContact = 308,
     RentalAdministratorContact = 309,
+    CaretakerContact = 310,
+    OperationsTechnicianContact = 311,
 }

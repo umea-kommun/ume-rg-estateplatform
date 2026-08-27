@@ -276,6 +276,47 @@ public class BuildingEntityMapperTests
     }
 
     [Fact]
+    public void ToEntity_CaretakerAndOperationsTechnician_ParsePhoneAndEmail()
+    {
+        BuildingEntity entity = BuildingEntityMapper.ToEntity(new BuildingInfo
+        {
+            Id = 1,
+            PropertyValues = Props(
+                (PropertyCategoryId.Caretaker, "Johan Bergström"),
+                (PropertyCategoryId.CaretakerContact, "090-16 63 12 / johan.bergstrom.2@umea.se"),
+                (PropertyCategoryId.OperationsTechnician, "Victor Tyni Edmundsson"),
+                (PropertyCategoryId.OperationsTechnicianContact, "090-16 63 14 / victor.edmundsson@umea.se"))
+        });
+
+        entity.ContactPersons.ShouldNotBeNull();
+        entity.ContactPersons!.Caretaker.ShouldNotBeNull();
+        entity.ContactPersons.Caretaker!.Name.ShouldBe("Johan Bergström");
+        entity.ContactPersons.Caretaker.Phone.ShouldBe("090-16 63 12");
+        entity.ContactPersons.Caretaker.Email.ShouldBe("johan.bergstrom.2@umea.se");
+        entity.ContactPersons.OperationsTechnician.ShouldNotBeNull();
+        entity.ContactPersons.OperationsTechnician!.Name.ShouldBe("Victor Tyni Edmundsson");
+        entity.ContactPersons.OperationsTechnician.Phone.ShouldBe("090-16 63 14");
+        entity.ContactPersons.OperationsTechnician.Email.ShouldBe("victor.edmundsson@umea.se");
+    }
+
+    [Fact]
+    public void ToEntity_OnlyCaretakerPopulated_SynthesizesEmptyPropertyManager()
+    {
+        BuildingEntity entity = BuildingEntityMapper.ToEntity(new BuildingInfo
+        {
+            Id = 1,
+            PropertyValues = Props((PropertyCategoryId.Caretaker, "Mattias Nyberg"))
+        });
+
+        entity.ContactPersons.ShouldNotBeNull();
+        entity.ContactPersons!.PropertyManager.Name.ShouldBe(string.Empty);
+        entity.ContactPersons.Caretaker.ShouldNotBeNull();
+        entity.ContactPersons.Caretaker!.Name.ShouldBe("Mattias Nyberg");
+        entity.ContactPersons.Caretaker.Phone.ShouldBeNull();
+        entity.ContactPersons.Caretaker.Email.ShouldBeNull();
+    }
+
+    [Fact]
     public void ToEntity_NoExternalStatus_WorkOrderTypesHaveBaseSet()
     {
         BuildingEntity entity = BuildingEntityMapper.ToEntity(new BuildingInfo { Id = 1 });
