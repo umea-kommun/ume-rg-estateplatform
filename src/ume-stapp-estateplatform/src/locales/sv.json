@@ -169,10 +169,10 @@
 			"pageTitle": "Om webbplatsen",
 			"title": "Om Fastighetsportalen",
 			"intro": "Fastighetsportalen är Umeå kommuns interna tjänst för information om kommunens fastigheter, byggnader och lokaler.",
-			"usedForTitle": "Det här kan du göra här",
+			"usedForTitle": "Det här kan du göra i Fastighetsportalen",
 			"usedForText": "I Fastighetsportalen kan du söka fram fastigheter och byggnader, se information om lokaler och skapa ärenden som felanmälan, beställningar och förändrade lokalbehov.",
 			"supplierTitle": "Leverantör",
-			"supplierText": "Fastighetsportalen tillhandahålls av IT på Umeå kommun.",
+			"supplierText": "Fastighetsportalen tillhandahålls av DoIT på Umeå kommun.",
 			"placeholderText": "Denna sida är under konstruktion"
 		},
 		"pageNotFound": {
