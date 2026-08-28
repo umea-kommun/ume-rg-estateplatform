@@ -217,6 +217,17 @@ const onMapClick = (
 };
 
 let lastHit = false;
+let panning = false;
+
+const applyCursor = () => {
+	const el = map?.getTargetElement();
+	if (!el) {
+		return;
+	}
+
+	el.style.cursor = panning ? 'grabbing' : lastHit ? 'pointer' : '';
+};
+
 const onMapHover = (e: MapBrowserEvent) => {
 	if (!map || e.dragging) {
 		return;
@@ -225,14 +236,28 @@ const onMapHover = (e: MapBrowserEvent) => {
 	const hit = map.hasFeatureAtPixel(e.pixel);
 
 	if (hit !== lastHit) {
-		const el = map.getTargetElement();
-		if (!el) {
-			return;
-		}
-
-		el.style.cursor = hit ? 'pointer' : '';
-		lastHit = hit ?? false;
+		lastHit = hit;
+		applyCursor();
 	}
+};
+
+const onMapDrag = () => {
+	if (panning) {
+		return;
+	}
+
+	panning = true;
+	applyCursor();
+};
+
+const onPointerUp = (e: PointerEvent) => {
+	if (!panning) {
+		return;
+	}
+
+	panning = false;
+	lastHit = map ? map.hasFeatureAtPixel(map.getEventPixel(e)) : false;
+	applyCursor();
 };
 
 // Close overlays on Escape key
@@ -346,7 +371,11 @@ const initMap = () => {
 
 	map.on('singleclick', onMapClick);
 	map.on('pointermove', onMapHover);
+	map.on('pointerdrag', onMapDrag);
 	map.on('rendercomplete', onRenderComplete);
+
+	window.addEventListener('pointerup', onPointerUp);
+	window.addEventListener('pointercancel', onPointerUp);
 
 	updatePoints(props.points ?? [], map, props.fitPoints);
 
@@ -365,10 +394,14 @@ const initMap = () => {
 onMounted(initMap);
 
 onUnmounted(() => {
+	window.removeEventListener('pointerup', onPointerUp);
+	window.removeEventListener('pointercancel', onPointerUp);
+
 	if (!map) return;
 
 	map.un('singleclick', onMapClick);
 	map.un('pointermove', onMapHover);
+	map.un('pointerdrag', onMapDrag);
 	map.un('rendercomplete', onRenderComplete);
 
 	map.setTarget(undefined); // detach from DOM
@@ -392,6 +425,7 @@ onUnmounted(() => {
 	.map-viewer {
 		height: 100%;
 		width: 100%;
+		cursor: grab;
 	}
 
 	:deep(.ol-overlay-container) {
@@ -403,6 +437,7 @@ onUnmounted(() => {
 	.ol-popup {
 		max-width: 80%;
 		width: 440px;
+		cursor: auto;
 	}
 }
 </style>
