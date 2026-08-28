@@ -121,16 +121,6 @@
 					:loading="isFetchingBuildingLocations"
 					fit-points
 				/>
-				<!-- Desktop counterpart to the mobile map-btn: makes the
-				     map pane an entry point instead of a backdrop. -->
-				<v-btn
-					class="map-cta"
-					rounded="pill"
-					prepend-icon="location_pin"
-					@click="selectBuildingOnMap"
-				>
-					{{ $t('component.estatePortal.selectOnMap') }}
-				</v-btn>
 			</div>
 		</div>
 	</app-content>
@@ -258,16 +248,6 @@ onMounted(() => {
 	}
 	.map-btn {
 		display: none;
-	}
-	.map .map-cta {
-		position: absolute;
-		left: 20px;
-		bottom: 20px;
-		z-index: 2;
-		background: #fff;
-		color: $primary;
-		border-radius: 24px;
-		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
 	}
 	@media only screen and (max-width: $estate-mobile-threshold) {
 		.map-btn {

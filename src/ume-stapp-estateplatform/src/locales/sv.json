@@ -235,8 +235,7 @@
 					"title": "Förändrade lokalbehov",
 					"description": "Er verksamhet behöver mer, mindre eller en annan typ av lokal."
 				}
-			},
-			"selectOnMap": "Välj byggnad på kartan"
+			}
 		},
 		"estateFavorite": {
 			"title": "Mina favoriter ({count})",
