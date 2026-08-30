@@ -13,7 +13,7 @@ export default {
 		feedback: IFeedback
 	) {
 		await httpClient.post(
-			`${Config.VUE_APP_CONSENT_BRIDGE_SERVICE_FEEDBACK}/rate`,
+			`${Config.VUE_APP_ESTATE_SERVICE}/feedback/rate`,
 			feedback,
 			{
 				headers: {
@@ -28,7 +28,7 @@ export default {
 		feedback: IFeedback
 	) {
 		await httpClient.post(
-			`${Config.VUE_APP_CONSENT_BRIDGE_SERVICE_FEEDBACK}/comment`,
+			`${Config.VUE_APP_ESTATE_SERVICE}/feedback/comment`,
 			feedback,
 			{
 				headers: {

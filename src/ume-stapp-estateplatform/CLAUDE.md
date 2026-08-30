@@ -17,7 +17,7 @@ citizen-facing surface.
 - Blueprint viewer (SVG) and map viewer (OpenLayers + SWEREF 99 20 15)
 - Fault report, order, changed space requirements
 - Favorites
-- Feedback (posts to ConsentBridge in ume-rg-myplatform)
+- Feedback (posts to EstateService)
 
 ## Important architecture points
 

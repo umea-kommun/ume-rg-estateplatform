@@ -43,6 +43,7 @@ public static class DependencyInjectionLogic
             new WorkOrderAccessPolicy(sp.GetRequiredService<ApplicationConfig>().WorkOrderProcessing));
         services.AddScoped<IWorkOrderHandler, WorkOrderHandler>();
         services.AddScoped<IFavoriteHandler, FavoriteHandler>();
+        services.AddTransient<FeedbackHandler>();
 
         services.AddSingleton<RefreshPipelineRunner>();
         services.AddSingleton<DataSyncService>();

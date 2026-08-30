@@ -15,11 +15,8 @@ copies ever need reconciling.
 ## What it talks to
 
 - **EstateService** (`VUE_APP_ESTATE_SERVICE`) — this repo, `src/ume-app-estateservice`.
-  The only backend for estate data, work orders, favorites and the runtime
-  `GET /features` flags.
-- **ConsentBridge** (`VUE_APP_CONSENT_BRIDGE_SERVICE_FEEDBACK`) — lives in
-  `ume-rg-myplatform`. Used only by the feedback widget on the three completion
-  screens, so ratings stay pooled across Umeå services.
+  The only backend for estate data, work orders, favorites, feedback and the
+  runtime `GET /features` flags.
 - **IDProxy** (`authtoken.umea.se`) — one login client, internal AD only.
 
 ## Running it
