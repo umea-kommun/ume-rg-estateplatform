@@ -187,7 +187,8 @@
 			"acceptedFormats": "Tillåtna format: {formats}",
 			"error": {
 				"fileTooLarge": "\"{filename}\" är för stor.",
-				"tooManyFiles": "Du kan inte ladda upp fler än {maxFiles} filer."
+				"tooManyFiles": "Du kan inte ladda upp fler än {maxFiles} filer.",
+				"invalidType": "\"{filename}\" har ett filformat som inte tillåts."
 			}
 		},
 		"feedback": {

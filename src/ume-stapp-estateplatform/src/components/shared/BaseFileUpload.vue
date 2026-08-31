@@ -51,13 +51,14 @@
 			/>
 
 			<v-alert
-				v-if="error"
+				v-if="errors.length"
 				type="error"
 				variant="tonal"
 				class="mx-4 my-2"
 				rounded="lg"
-				:text="error"
-			/>
+			>
+				<div v-for="msg in errors" :key="msg">{{ msg }}</div>
+			</v-alert>
 
 			<v-alert
 				v-if="generalFileErrors.length"
@@ -116,6 +117,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { isFileAccepted, normalizeFileType } from '@/utils/fileAccept';
 
 const props = defineProps<{
 	id: string;
@@ -144,10 +146,13 @@ const maxSizeBytes = computed(() =>
 
 const files = computed(() => props.modelValue ?? []);
 const fileInput = ref<HTMLInputElement | null>(null);
-const error = ref<string>('');
+// Client-side validation errors for the current batch (invalid type, too
+// large, too many). Kept as a list so a mixed batch (e.g. one bad type + one
+// oversize file) surfaces every reason instead of clobbering earlier messages.
+const errors = ref<string[]>([]);
 
 const hasErrors = computed(
-	() => !!error.value || Object.keys(props.serverErrors ?? {}).length > 0
+	() => errors.value.length > 0 || Object.keys(props.serverErrors ?? {}).length > 0
 );
 
 const generalFileErrors = computed(() => {
@@ -214,7 +219,7 @@ const formatsHint = computed(() => {
 });
 
 function openPicker() {
-	error.value = '';
+	errors.value = [];
 	fileInput.value?.click();
 }
 
@@ -222,40 +227,108 @@ function fileKey(f: File) {
 	return `${f.name}|${f.size}|${f.lastModified}`;
 }
 
-function appendFiles(newOnes: File[]) {
-	error.value = '';
-
-	// Basic per-file validation
+/**
+ * Split an incoming batch into files that pass the `accept` filter and files
+ * that don't. Also normalises any file with empty `File.type` so downstream
+ * FormData carries a real MIME type (see normalizeFileType).
+ */
+function partitionByAcceptance(newOnes: File[]): {
+	accepted: File[];
+	rejected: File[];
+} {
+	const accepted: File[] = [];
+	const rejected: File[] = [];
 	for (const f of newOnes) {
-		if (f.size > maxSizeBytes.value) {
-			error.value = t('component.baseFileUpload.error.fileTooLarge', {
-				filename: f.name,
-			});
-			return;
+		const normalized = normalizeFileType(f);
+		if (isFileAccepted(normalized, props.accept)) {
+			accepted.push(normalized);
+		} else {
+			rejected.push(normalized);
 		}
 	}
+	return { accepted, rejected };
+}
 
-	// Merge + de-dupe
-	const existing = files.value.slice();
-	const existingKeys = new Set(existing.map(fileKey));
+/**
+ * Localised messages for the invalid-type case — one line per offending
+ * file so the user sees every filename, not a generic "some files" summary.
+ */
+function invalidTypeMessages(rejected: File[]): string[] {
+	return rejected.map((f) =>
+		t('component.baseFileUpload.error.invalidType', {
+			filename: f.name,
+		})
+	);
+}
 
-	const merged: File[] = [...existing];
-	for (const f of newOnes) {
+/** First file exceeding the size limit, or null if all fit. */
+function findOversize(candidates: File[]): File | null {
+	return candidates.find((f) => f.size > maxSizeBytes.value) ?? null;
+}
+
+/** Merge new files into the existing list, skipping duplicates by fileKey. */
+function mergeWithExisting(existing: File[], incoming: File[]): File[] {
+	const keys = new Set(existing.map(fileKey));
+	const out = existing.slice();
+	for (const f of incoming) {
 		const k = fileKey(f);
-		if (!existingKeys.has(k)) {
-			merged.push(f);
-			existingKeys.add(k);
+		if (!keys.has(k)) {
+			out.push(f);
+			keys.add(k);
 		}
 	}
+	return out;
+}
+
+/**
+ * Pure computation of the outcome for a picked/dropped batch: which errors
+ * should be shown, and (on success) the merged file list to emit. Kept
+ * side-effect-free so `appendFiles` can commit state in one place.
+ */
+function computeBatchOutcome(newOnes: File[]): {
+	errors: string[];
+	merged?: File[];
+} {
+	const errors: string[] = [];
+	const { accepted, rejected } = partitionByAcceptance(newOnes);
+
+	errors.push(...invalidTypeMessages(rejected));
+
+	if (accepted.length === 0) return { errors };
+
+	// Keep existing behaviour: any oversize file rejects the whole batch.
+	const oversize = findOversize(accepted);
+	if (oversize) {
+		errors.push(
+			t('component.baseFileUpload.error.fileTooLarge', {
+				filename: oversize.name,
+			})
+		);
+		return { errors };
+	}
+
+	const merged = mergeWithExisting(files.value, accepted);
 
 	if (merged.length > maxFiles.value) {
-		error.value = t('component.baseFileUpload.error.tooManyFiles', {
-			maxFiles: maxFiles.value,
-		});
-		return;
+		errors.push(
+			t('component.baseFileUpload.error.tooManyFiles', {
+				maxFiles: maxFiles.value,
+			})
+		);
+		return { errors };
 	}
 
-	emit('update:modelValue', merged);
+	return { errors, merged };
+}
+
+function appendFiles(newOnes: File[]) {
+	// Collect every reason we reject something in this batch so a mixed
+	// input (e.g. bad.exe + big.jpg) surfaces both messages instead of
+	// letting the last check clobber the earlier ones. The actual logic
+	// lives in computeBatchOutcome; here we only apply side effects.
+	const { errors: batchErrors, merged } = computeBatchOutcome(newOnes);
+	errors.value = batchErrors;
+	if (merged) emit('update:modelValue', merged);
 }
 
 function onPicked(e: Event) {

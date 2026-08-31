@@ -187,7 +187,8 @@
 			"acceptedFormats": "Accepted formats: {formats}",
 			"error": {
 				"fileTooLarge": "\"{filename}\" is too large.",
-				"tooManyFiles": "You cannot upload more than {maxFiles} files."
+				"tooManyFiles": "You cannot upload more than {maxFiles} files.",
+				"invalidType": "\"{filename}\" has a file format that is not allowed."
 			}
 		},
 		"feedback": {
