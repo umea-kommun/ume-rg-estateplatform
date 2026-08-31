@@ -17,19 +17,33 @@ public sealed class WorkOrderAccessPolicy(WorkOrderConfiguration config)
         return userGroups is not null && userGroups.Contains(requiredGroup, StringComparer.OrdinalIgnoreCase);
     }
 
-    public IReadOnlyList<WorkOrderType> FilterAllowed(IEnumerable<WorkOrderType> types, IReadOnlyCollection<string>? userGroups)
-        => [.. types.Where(type => IsTypeAllowed(type, userGroups))];
+    /// <summary>
+    /// Resolves the two independent questions the client would otherwise have to answer itself:
+    /// may this user use the type at all (if not it is left out, so the client never shows it), and
+    /// does this building offer it (if not it is Disabled, so the client can show it greyed).
+    /// </summary>
+    public IReadOnlyDictionary<WorkOrderType, WorkOrderAccessState> BuildAccessMap(
+        IEnumerable<WorkOrderType> buildingTypes, IReadOnlyCollection<string>? userGroups)
+    {
+        HashSet<WorkOrderType> offered = [.. buildingTypes];
 
-    public void StampAllowedWorkOrderTypes(
+        return Enum.GetValues<WorkOrderType>()
+            .Where(type => IsTypeAllowed(type, userGroups))
+            .ToDictionary(
+                type => type,
+                type => offered.Contains(type) ? WorkOrderAccessState.Enabled : WorkOrderAccessState.Disabled);
+    }
+
+    public void StampWorkOrderTypeAccess(
         IEnumerable<BuildingInfoModel> buildings, IReadOnlyCollection<string>? userGroups)
     {
         foreach (BuildingInfoModel building in buildings)
         {
-            StampAllowedWorkOrderTypes(building, userGroups);
+            StampWorkOrderTypeAccess(building, userGroups);
         }
     }
 
-    public void StampAllowedWorkOrderTypes(
+    public void StampWorkOrderTypeAccess(
         BuildingInfoModel building, IReadOnlyCollection<string>? userGroups)
-        => building.WorkOrderTypes = FilterAllowed(building.WorkOrderTypes, userGroups);
+        => building.WorkOrderTypeAccess = BuildAccessMap(building.WorkOrderTypes, userGroups);
 }

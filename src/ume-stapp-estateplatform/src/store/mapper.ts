@@ -364,7 +364,7 @@ export default {
 			};
 			contactPersons: IBuildingContactPersons | null;
 		};
-		workOrderTypes?: string[];
+		workOrderTypeAccess?: Record<string, string>;
 		geoLocation: {
 			lat: number;
 			lon: number;
@@ -382,7 +382,7 @@ export default {
 				r.extendedProperties?.blueprintAvailable ?? false,
 			imageUrl: r.imageUrl ? getBuildingImageUrl(r.id) : null,
 			isFavorite: r.isFavorite ?? false,
-			workOrderTypes: r.workOrderTypes ?? [],
+			workOrderTypeAccess: r.workOrderTypeAccess ?? {},
 			externalOwnerInfo: mapExternalOwnerInfo(
 				r.extendedProperties?.externalOwnerInfo,
 				r.name,

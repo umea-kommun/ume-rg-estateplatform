@@ -27,7 +27,22 @@ public sealed class BuildingInfoModel : ISearchable, IFavoriteable
     public BuildingAscendantModel? Region { get; set; }
     public BuildingAscendantModel? Organization { get; set; }
     public BuildingExtendedPropertiesModel? ExtendedProperties { get; init; }
+    /// <summary>
+    /// What the building itself offers, before the per-user group gate. Server-side plumbing for
+    /// <see cref="WorkOrderTypeAccess"/>, which is what clients read.
+    /// </summary>
+    [JsonIgnore]
     public IReadOnlyList<WorkOrderType> WorkOrderTypes { get; set; } = [];
+
+    /// <summary>
+    /// Per-type access for the current user on this building. A type gated behind an AD group the
+    /// user lacks is absent altogether, so the client hides it; a present type is either enabled or
+    /// disabled depending on whether this building offers it. The client renders this as given and
+    /// derives no access rules of its own.
+    /// </summary>
+    public IReadOnlyDictionary<WorkOrderType, WorkOrderAccessState> WorkOrderTypeAccess { get; set; }
+        = new Dictionary<WorkOrderType, WorkOrderAccessState>();
+
     public string? ImageUrl { get; set; }
     public bool? IsFavorite { get; set; }
     public DateTimeOffset UpdatedAt => DateTime.Now;

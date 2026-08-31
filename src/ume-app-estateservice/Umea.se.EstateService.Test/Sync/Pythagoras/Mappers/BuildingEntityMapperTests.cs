@@ -338,7 +338,7 @@ public class BuildingEntityMapperTests
     }
 
     [Fact]
-    public void ToEntity_ExternalStatusNotEgen_WorkOrderTypesOnlySpaceRequirement()
+    public void ToEntity_ExternalStatusNotEgen_WorkOrderTypesOnlyErrorReportAndSpaceRequirement()
     {
         BuildingEntity entity = BuildingEntityMapper.ToEntity(new BuildingInfo
         {
@@ -346,11 +346,11 @@ public class BuildingEntityMapperTests
             PropertyValues = Props((PropertyCategoryId.BuildingExternalStatus, "Extern"))
         });
 
-        entity.WorkOrderTypes.ShouldBe([WorkOrderType.SpaceRequirement]);
+        entity.WorkOrderTypes.ShouldBe([WorkOrderType.ErrorReport, WorkOrderType.SpaceRequirement]);
     }
 
     [Fact]
-    public void ToEntity_ExternalStatusNotEgenWithServiceOrderOptIn_StillOnlySpaceRequirement()
+    public void ToEntity_ExternalStatusNotEgenWithServiceOrderOptIn_StillNoServiceOrders()
     {
         BuildingEntity entity = BuildingEntityMapper.ToEntity(new BuildingInfo
         {
@@ -361,7 +361,7 @@ public class BuildingEntityMapperTests
                 (PropertyCategoryId.FacilityServiceOrder, "Ja"))
         });
 
-        entity.WorkOrderTypes.ShouldBe([WorkOrderType.SpaceRequirement]);
+        entity.WorkOrderTypes.ShouldBe([WorkOrderType.ErrorReport, WorkOrderType.SpaceRequirement]);
     }
 
     [Theory]

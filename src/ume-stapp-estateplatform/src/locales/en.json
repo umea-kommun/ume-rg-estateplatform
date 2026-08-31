@@ -292,7 +292,12 @@
 			"category": "Category",
 			"downloadFile": "Download {filename}",
 			"noPreview": "No preview available for this file type.",
-			"openPdf": "Open PDF"
+			"openPdf": "Open PDF",
+			"info": [
+				"Not all documents and drawings are available in the property portal yet. More documents will be added over time.",
+				"If a document or drawing is missing, contact Fastighet and we will help you."
+			],
+			"noDocuments": "There are no documents to show for this building yet."
 		},
 		"faultReport": {
 			"title": "Fault Report",
@@ -388,10 +393,22 @@
 			},
 			"info": {
 				"title": "Information",
-				"text1": "Byggservice carries out minor construction and fitting work, such as installing shelves, hooks, mouldings and noticeboards, as well as simple painting jobs.",
-				"text2": "Please note! Purely electrical work is not carried out by Byggservice (such as the installation of additional sockets or lighting) but must be ordered via Proceedo. The client (usually the unit manager) is responsible for the working environment, even when work is carried out by an external contractor.",
-				"text3": "Once your order has been submitted, Byggservice will make an initial assessment of the feasibility of your request; if necessary, the responsible property manager will also be consulted. A site visit is then often booked to assess the scope of the work, for example, before a decision is made on whether or not to proceed with the order.",
-				"text4": "Ensure that your description is as clear as possible to avoid the need for further information, and that your contact details are correct.",
+				"general": [
+					"Here you can order various services relating to the municipality's premises and properties, for example minor construction work, practical services and operational support.",
+					"Which orders are available depends on the building you select. Once you have chosen a building, the services that can be ordered for that property are shown."
+				],
+				"buildingService": [
+					"Byggservice carries out minor construction and fitting work, such as installing shelves, hooks, mouldings and noticeboards, as well as simple painting jobs.",
+					"Please note! Purely electrical work is not carried out by Byggservice (such as the installation of additional sockets or lighting) but must be ordered via Proceedo. The client (usually the unit manager) is responsible for the working environment, even when work is carried out by an external contractor.",
+					"Once your order has been submitted, Byggservice will make an initial assessment of the feasibility of your request; if necessary, the responsible property manager will also be consulted. A site visit is then often booked to assess the scope of the work, for example, before a decision is made on whether or not to proceed with the order.",
+					"Ensure that your description is as clear as possible to avoid the need for further information, and that your contact details are correct."
+				],
+				"facilityService": [
+					"Our caretakers work at a number of Umeå municipality's schools, preschools and residential care homes. Among other things they put up shelves and pictures, move furniture and carry out similar minor tasks. See the responsibility list (gränsdragningslistan) for more information."
+				],
+				"townHallService": [
+					"Stadshusservice is responsible for operational services within the city hall area. Submit a fault report or an order to Stadshusservice if you need help in the city hall area with updating signage, emptying cardboard recycling, mounting shelves, curtains or pictures, adding furniture or fixing faults in the meeting rooms (for example technical equipment)."
+				],
 				"responsibilityLink": "<a href=\"https://www.intranet.umea.se/sidor/serviceitochlokaler/byggnaderochlokaler/lokaler/gransdragningkommunalellerexternfastighetsagare.4.41b8dff11790bd2e90a781b.html\" target=\"_blank\" rel=\"noopener noreferrer\">Read more about responsibility distribution in Umeå kommun's properties<span class=\"material-icons external-link-icon\" aria-hidden=\"true\">open_in_new</span></a>"
 			},
 			"completed": {

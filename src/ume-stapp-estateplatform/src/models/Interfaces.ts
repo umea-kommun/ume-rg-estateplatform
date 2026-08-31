@@ -203,7 +203,12 @@ export interface IBuildingDetails {
 	numDocuments: number | null;
 	imageUrl: string | null;
 	isFavorite: boolean;
-	workOrderTypes: string[];
+	/**
+	 * Per-type access for the current user on this building, as resolved by the API. A type the
+	 * user may not use at all is absent; a present one is 'enabled' or 'disabled' depending on
+	 * whether this building offers it. Do not re-derive access rules from anything else.
+	 */
+	workOrderTypeAccess: Record<string, string>;
 	address: {
 		street: string;
 		zipCode: string;

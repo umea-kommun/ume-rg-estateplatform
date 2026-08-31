@@ -13,7 +13,23 @@
 
 			<div class="content">
 				<v-card-text>
-					<div class="d-flex ga-4 mx-6">
+					<v-alert
+						type="info"
+						variant="tonal"
+						rounded="lg"
+						class="mx-6 mb-4"
+					>
+						<p
+							v-for="(paragraph, index) in infoParagraphs"
+							:key="index"
+							:class="{
+								'mb-0': index === infoParagraphs.length - 1,
+							}"
+						>
+							{{ paragraph }}
+						</p>
+					</v-alert>
+					<div v-if="hasDocuments" class="d-flex ga-4 mx-6">
 						<v-text-field
 							v-model="search"
 							:placeholder="
@@ -48,6 +64,9 @@
 						class="ma-4 mt-1"
 						type="list-item-two-line, list-item-two-line"
 					/>
+					<p v-else-if="!hasDocuments" class="mx-6">
+						{{ $t('component.buildingDocument.noDocuments') }}
+					</p>
 					<v-list
 						v-else-if="filteredDocuments.length > 0"
 						class="px-6 mt-4"
@@ -96,7 +115,7 @@ const props = defineProps<{
 const emit = defineEmits(['update:modelValue']);
 
 const store = useStore<IRootState>();
-const { t } = useI18n();
+const { t, tm } = useI18n();
 
 const showModal = computed({
 	get: () => props.modelValue,
@@ -116,6 +135,12 @@ const showPreview = computed({
 const search = ref('');
 const selectedCategory = ref<string | null>(null);
 const documents = ref<IBuildingDocument[]>([]);
+
+const hasDocuments = computed(() => documents.value.length > 0);
+
+const infoParagraphs = computed<string[]>(
+	() => tm('component.buildingDocument.info') as unknown as string[]
+);
 
 const categories = computed(() => {
 	const names = new Set(

@@ -97,7 +97,7 @@ public class EstateController(IEstateDataQueryHandler pythagorasHandler, IFavori
         IReadOnlyList<BuildingInfoModel> buildings = await pythagorasHandler
             .GetBuildingsAsync(buildingIds: null, estateId: estateId, queryArgs: queryArgs, cancellationToken: cancellationToken);
 
-        workOrderAccessPolicy.StampAllowedWorkOrderTypes(buildings, userToken.Groups);
+        workOrderAccessPolicy.StampWorkOrderTypeAccess(buildings, userToken.Groups);
         await favoriteHandler.StampFavoritesAsync(userToken.GetRequiredEmail(), buildings, cancellationToken);
 
         return Ok(buildings);

@@ -43,7 +43,6 @@
 					: undefined
 			"
 			:count="building.numDocuments ?? undefined"
-			:disabled="building.numDocuments === 0"
 			@click="showDocumentModal = true"
 		/>
 		<!--
@@ -63,11 +62,17 @@
 			</template>
 			<v-list class="create-case-list">
 				<v-list-item
+					v-if="isPermitted('errorReport')"
 					prepend-icon="warning"
-					:to="{
-						name: EstateRoutes.FaultReport,
-						query: { buildingId: building.id },
-					}"
+					:disabled="!canFaultReport"
+					:to="
+						canFaultReport
+							? {
+									name: EstateRoutes.FaultReport,
+									query: { buildingId: building.id },
+							  }
+							: undefined
+					"
 					@click="trackAction('faultReport')"
 				>
 					<v-list-item-title>{{
@@ -80,11 +85,17 @@
 					}}</v-list-item-subtitle>
 				</v-list-item>
 				<v-list-item
+					v-if="isOrderPermitted"
 					prepend-icon="handyman"
-					:to="{
-						name: EstateRoutes.Order,
-						query: { buildingId: building.id },
-					}"
+					:disabled="!canOrder"
+					:to="
+						canOrder
+							? {
+									name: EstateRoutes.Order,
+									query: { buildingId: building.id },
+							  }
+							: undefined
+					"
 					@click="trackAction('order')"
 				>
 					<v-list-item-title>{{
@@ -95,11 +106,17 @@
 					}}</v-list-item-subtitle>
 				</v-list-item>
 				<v-list-item
+					v-if="isPermitted(EstateOrderCategory.SpaceRequirement)"
 					prepend-icon="space_dashboard"
-					:to="{
-						name: EstateRoutes.SpaceRequirement,
-						query: { buildingId: building.id },
-					}"
+					:disabled="!canSpaceRequirement"
+					:to="
+						canSpaceRequirement
+							? {
+									name: EstateRoutes.SpaceRequirement,
+									query: { buildingId: building.id },
+							  }
+							: undefined
+					"
 					@click="trackAction('spaceRequirement')"
 				>
 					<v-list-item-title>{{
@@ -130,7 +147,7 @@
 </template>
 
 <script setup lang="ts">
-import { ActiveMapType } from '@/models/Enums';
+import { ActiveMapType, EstateOrderCategory } from '@/models/Enums';
 import { computed, ref } from 'vue';
 import { useEstateIsMobile } from '../useEstateIsMobile';
 import { IBuildingDetails } from '@/models/Interfaces';
@@ -216,6 +233,44 @@ const trackAction = (type: string) => {
 		},
 	});
 };
+
+const ORDER_TYPES = [
+	EstateOrderCategory.BuildingService,
+	EstateOrderCategory.TownHallService,
+	EstateOrderCategory.FacilityService,
+];
+
+// The API resolves access per type: a type the user may not use at all is
+// absent from the map and gets no menu entry, while a present one is enabled or
+// disabled depending on whether this building offers it - disabled still shows,
+// greyed, so the user sees the action exists without reaching a submit the API
+// would reject. Externally owned buildings keep felanmälan enabled; the form
+// warns about the landlord and lets the user send it anyway.
+const workOrderTypeAccess = computed(
+	() => props.building?.workOrderTypeAccess ?? {}
+);
+
+// A response without the map (an older API) leaves every entry on offer rather
+// than emptying the menu.
+const hasAccessMap = computed(
+	() => Object.keys(workOrderTypeAccess.value).length > 0
+);
+
+const isPermitted = (type: string) =>
+	!hasAccessMap.value || type in workOrderTypeAccess.value;
+
+const isTypeEnabled = (type: string) =>
+	!hasAccessMap.value || workOrderTypeAccess.value[type] === 'enabled';
+
+const isOrderPermitted = computed(() => ORDER_TYPES.some(isPermitted));
+
+const canFaultReport = computed(() => isTypeEnabled('errorReport'));
+
+const canOrder = computed(() => ORDER_TYPES.some(isTypeEnabled));
+
+const canSpaceRequirement = computed(() =>
+	isTypeEnabled(EstateOrderCategory.SpaceRequirement)
+);
 
 const contactPersonsCount = computed(() => {
 	return Object.values(props.building?.contactPersons || {}).reduce(

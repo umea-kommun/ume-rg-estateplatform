@@ -340,7 +340,13 @@
 					>
 						{{ paragraph }}
 					</p>
-					<p v-html="$t('component.spaceRequirement.info.responsibilityLink')"></p>
+					<p
+						v-html="
+							$t(
+								'component.spaceRequirement.info.responsibilityLink'
+							)
+						"
+					></p>
 				</v-alert>
 			</div>
 		</div>
@@ -492,9 +498,9 @@ const selectedCategoryValue = computed(() =>
 const selectedBuildingSupportsType = computed(
 	() =>
 		!selectedBuilding.value ||
-		(selectedBuilding.value.workOrderTypes ?? []).includes(
+		selectedBuilding.value.workOrderTypeAccess?.[
 			EstateOrderCategory.SpaceRequirement
-		)
+		] === 'enabled'
 );
 
 const categoryMissing = computed(

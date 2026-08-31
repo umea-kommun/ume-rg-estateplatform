@@ -63,8 +63,6 @@
 					</estate-order-step>
 					<v-alert
 						v-else-if="selectedBuilding"
-						type="info"
-						variant="tonal"
 						rounded="lg"
 						class="mt-6"
 					>
@@ -255,19 +253,15 @@
 					<h2 class="ma-0">
 						{{ $t('component.order.info.title') }}
 					</h2>
-					<p>
-						{{ $t('component.order.info.text1') }}
+					<p
+						v-for="(paragraph, index) in infoParagraphs"
+						:key="index"
+					>
+						{{ paragraph }}
 					</p>
-					<p>
-						{{ $t('component.order.info.text2') }}
-					</p>
-					<p>
-						{{ $t('component.order.info.text3') }}
-					</p>
-					<p>
-						{{ $t('component.order.info.text4') }}
-					</p>
-					<p v-html="$t('component.order.info.responsibilityLink')"></p>
+					<p
+						v-html="$t('component.order.info.responsibilityLink')"
+					></p>
 				</v-alert>
 			</div>
 		</div>
@@ -316,7 +310,7 @@ import BuildingMapSelector from '../faultReport/buildingSelector/BuildingMapSele
 
 const route = useRoute();
 const router = useRouter();
-const { t, locale } = useI18n();
+const { t, locale, tm } = useI18n();
 const store = useStore<IRootState>();
 
 const breadcrumbs = computed(() => {
@@ -384,13 +378,36 @@ watch(
 	}
 );
 
-const orderCategoryValues = Object.values(EstateOrderCategory) as string[];
-const availableCategories = computed(
-	() =>
-		(selectedBuilding.value?.workOrderTypes ?? []).filter((t) =>
-			orderCategoryValues.includes(t)
-		) as EstateOrderCategory[]
-);
+// Only the three service types are ordered here - SpaceRequirement has its own
+// flow. A category counts as available when the API marks it enabled for this
+// building; disabled and absent both mean it cannot be ordered.
+const ORDER_CATEGORIES = [
+	EstateOrderCategory.BuildingService,
+	EstateOrderCategory.TownHallService,
+	EstateOrderCategory.FacilityService,
+];
+
+const availableCategories = computed(() => {
+	const access = selectedBuilding.value?.workOrderTypeAccess ?? {};
+	return ORDER_CATEGORIES.filter(
+		(category) => access[category] === 'enabled'
+	);
+});
+
+// The info box follows the chosen order type - a general text until a
+// category is picked, then the text for that specific service. Categories
+// without their own text fall back to the general one. Note that te()
+// reports false for array messages, so the presence check has to be made
+// on what tm() actually returns - it yields {} for a missing key.
+const infoParagraphs = computed<string[]>(() => {
+	const key = `component.order.info.${selectedCategory.value ?? 'general'}`;
+	const paragraphs = tm(key) as unknown;
+	return (
+		Array.isArray(paragraphs) && paragraphs.length > 0
+			? paragraphs
+			: tm('component.order.info.general')
+	) as string[];
+});
 
 const showLastSteps = computed(() => {
 	return (

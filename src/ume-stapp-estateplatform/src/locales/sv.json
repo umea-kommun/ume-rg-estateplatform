@@ -292,7 +292,12 @@
 			"category": "Kategori",
 			"downloadFile": "Ladda ner {filename}",
 			"noPreview": "Förhandsgranskning saknas för denna filtyp.",
-			"openPdf": "Öppna PDF"
+			"openPdf": "Öppna PDF",
+			"info": [
+				"Alla handlingar och ritningar finns ännu inte tillgängliga i Fastighetsportalen. Fler dokument kommer att läggas till successivt.",
+				"Saknar du en handling eller ritning, kontakta Fastighet så hjälper vi dig."
+			],
+			"noDocuments": "Det finns inga handlingar att visa för den här byggnaden ännu."
 		},
 		"faultReport": {
 			"title": "Felanmälan",
@@ -388,10 +393,22 @@
 			},
 			"info": {
 				"title": "Information",
-				"text1": "Byggservice utför mindre bygg- och monteringsarbeten, till exempel uppsättning av hyllor, krokar, lister och anslagstavlor samt enklare målningsarbeten.",
-				"text2": "Observera! Rena elarbeten utförs ej av Byggservice (till exempel komplettering av eluttag eller belysning) utan beställs via Proceedo. Beställaren (oftast enhetschef) ansvarar för arbetsmiljön, även vid arbete som utförs av extern entreprenör.",
-				"text3": "Efter att din beställning är inskickad kommer Byggservice att göra en första bedömning av ditt behovs genomförbarhet, vid behov konsulteras även ansvarig fastighetsförvaltare. Ofta bokas därefter ett platsbesök för bedömning på plats avseende exempelvis arbetets omfattning innan beslut fattas om beställningen ska genomföras eller ej.",
-				"text4": "Säkerställ att din beskrivning är så tydlig som möjligt för att undvika behov av komplettering av ärendet, samt att kontaktuppgifterna är korrekta.",
+				"general": [
+					"Här kan du beställa olika typer av tjänster kopplade till kommunens lokaler och fastigheter, exempelvis mindre byggarbeten, praktisk service och verksamhetsnära stöd.",
+					"Vilka beställningar som finns tillgängliga beror på vilken byggnad du väljer. När du har valt byggnad visas de tjänster som kan beställas för den aktuella fastigheten."
+				],
+				"buildingService": [
+					"Byggservice utför mindre bygg- och monteringsarbeten, till exempel uppsättning av hyllor, krokar, lister och anslagstavlor samt enklare målningsarbeten.",
+					"Observera! Rena elarbeten utförs ej av Byggservice (till exempel komplettering av eluttag eller belysning) utan beställs via Proceedo. Beställaren (oftast enhetschef) ansvarar för arbetsmiljön, även vid arbete som utförs av extern entreprenör.",
+					"Efter att din beställning är inskickad kommer Byggservice att göra en första bedömning av ditt behovs genomförbarhet, vid behov konsulteras även ansvarig fastighetsförvaltare. Ofta bokas därefter ett platsbesök för bedömning på plats avseende exempelvis arbetets omfattning innan beslut fattas om beställningen ska genomföras eller ej.",
+					"Säkerställ att din beskrivning är så tydlig som möjligt för att undvika behov av komplettering av ärendet, samt att kontaktuppgifterna är korrekta."
+				],
+				"facilityService": [
+					"Våra vaktmästare finns ute på ett antal av Umeå kommuns skolor, förskolor och äldreboenden. De utför bland annat upphängning av hyllor och tavlor, mindre flyttar av möbler, m.m. För mer information se gränsdragningslistan."
+				],
+				"townHallService": [
+					"Stadshusservice ansvarar för verksamhetsservice inom stadshusområdet. Gör en felanmälan eller beställning till Stadshusservice om du på stadshusområdet behöver hjälp med att uppdatera skyltning, tömma återvinning av kartonger, montera hyllor, gardiner eller tavlor, komplettera möbler eller åtgärda fel i mötesrummen (till exempel teknisk utrustning)."
+				],
 				"responsibilityLink": "<a href=\"https://www.intranet.umea.se/sidor/serviceitochlokaler/byggnaderochlokaler/lokaler/gransdragningkommunalellerexternfastighetsagare.4.41b8dff11790bd2e90a781b.html\" target=\"_blank\" rel=\"noopener noreferrer\">Läs mer om ansvarsfördelning i Umeå kommuns fastigheter<span class=\"material-icons external-link-icon\" aria-hidden=\"true\">open_in_new</span></a>"
 			},
 			"completed": {

@@ -48,7 +48,7 @@ public class BuildingController(IEstateDataQueryHandler pythagorasHandler, IFavo
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        workOrderAccessPolicy.StampAllowedWorkOrderTypes(buildings, userToken.Groups);
+        workOrderAccessPolicy.StampWorkOrderTypeAccess(buildings, userToken.Groups);
         await favoriteHandler.StampFavoritesAsync(userToken.GetRequiredEmail(), buildings, cancellationToken);
 
         return Ok(buildings);
@@ -158,7 +158,7 @@ public class BuildingController(IEstateDataQueryHandler pythagorasHandler, IFavo
             .GetBuildingByIdAsync(buildingId, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        workOrderAccessPolicy.StampAllowedWorkOrderTypes(building, userToken.Groups);
+        workOrderAccessPolicy.StampWorkOrderTypeAccess(building, userToken.Groups);
         await favoriteHandler.StampFavoriteAsync(userToken.GetRequiredEmail(), building, cancellationToken);
 
         return Ok(building);
