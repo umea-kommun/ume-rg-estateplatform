@@ -41,7 +41,9 @@ function reset(): void {
  * the session because one request lost the network".
  *
  * /me needs a token, so an unauthenticated caller is a no-op rather than a 401
- * that would leave the user without permissions right after signing in.
+ * that would leave the user without permissions right after signing in. The token
+ * goes on the request the same way store/actions.ts does it - createHttpClient
+ * adds App Insights headers only, no auth.
  */
 async function loadCurrentUser(): Promise<void> {
 	if (loaded.value || loading.value) return;
@@ -51,7 +53,12 @@ async function loadCurrentUser(): Promise<void> {
 
 	try {
 		const response = await httpClient.get<CurrentUserResponse>(
-			`${Config.VUE_APP_ESTATE_SERVICE}/me`
+			`${Config.VUE_APP_ESTATE_SERVICE}/me`,
+			{
+				headers: {
+					Authorization: 'Bearer ' + store.state.user.token,
+				},
+			}
 		);
 		email.value = response.data.email ?? null;
 		fullName.value = response.data.fullName ?? null;

@@ -13,7 +13,10 @@ vi.mock('@/utils/Config', () => ({
 	},
 }));
 
-const user: { isAuthenticated: boolean } = { isAuthenticated: true };
+const user: { isAuthenticated: boolean; token?: string } = {
+	isAuthenticated: true,
+	token: 'test-token',
+};
 vi.mock('@/store/store', () => ({
 	default: { state: { user } },
 }));
@@ -53,13 +56,16 @@ describe('useCurrentUser', () => {
 	beforeEach(() => {
 		get.mockReset();
 		user.isAuthenticated = true;
+		user.token = 'test-token';
 	});
 
-	test('calls GET /me', async () => {
+	test('calls GET /me with the bearer token', async () => {
+		// createHttpClient does not attach auth, so /me must carry it itself.
 		await loadWith({ workOrderTypes: [] });
 
 		expect(get).toHaveBeenCalledWith(
-			'https://estateservice.test/api/v1.0/me'
+			'https://estateservice.test/api/v1.0/me',
+			{ headers: { Authorization: 'Bearer test-token' } }
 		);
 	});
 
