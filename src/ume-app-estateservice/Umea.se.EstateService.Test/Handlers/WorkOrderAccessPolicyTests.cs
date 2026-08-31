@@ -74,4 +74,14 @@ public class WorkOrderAccessPolicyTests
         buildings[1].WorkOrderTypeAccess[WorkOrderType.ErrorReport].ShouldBe(WorkOrderAccessState.Disabled);
         buildings.ShouldAllBe(b => !b.WorkOrderTypeAccess.ContainsKey(WorkOrderType.SpaceRequirement));
     }
+
+    [Fact]
+    public void BuildAccessMap_NoGroupsClaim_OmitsGatedType()
+    {
+        // Fail-closed: a token without a groups claim is not a member of anything.
+        IReadOnlyDictionary<WorkOrderType, WorkOrderAccessState> map = CreateGatedPolicy()
+            .BuildAccessMap([WorkOrderType.SpaceRequirement], null);
+
+        map.ShouldNotContainKey(WorkOrderType.SpaceRequirement);
+    }
 }

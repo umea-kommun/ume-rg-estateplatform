@@ -58,6 +58,7 @@
 						{{ $t('app.nav.services.order') }}
 					</router-link>
 					<router-link
+						v-if="isSpaceRequirementAllowed"
 						:to="{ name: EstateRoutes.SpaceRequirement }"
 						@click="trackNav('spaceRequirement')"
 					>
@@ -173,7 +174,10 @@
 							}}</v-list-item-title>
 						</v-list-item>
 						<v-list-item
-							v-if="isErrorReportEnabled"
+							v-if="
+								isErrorReportEnabled &&
+								isSpaceRequirementAllowed
+							"
 							:to="{ name: EstateRoutes.SpaceRequirement }"
 						>
 							<v-list-item-title>{{
@@ -238,9 +242,14 @@ import IAuthManager from '@/plugins/auth/IAuthManager';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { AppRoutes, EstateRoutes } from '@/router/routes';
 import { useFeatureFlags } from '@/utils/useFeatureFlags';
+import { useCurrentUser } from '@/utils/useCurrentUser';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
-import { AppContentSize, AppHeaderTitle } from '@/models/Enums';
+import {
+	AppContentSize,
+	AppHeaderTitle,
+	EstateOrderCategory,
+} from '@/models/Enums';
 import logoGreen from '@/assets/logo_green.png';
 import { appInsights } from '@/plugins/appInsights';
 
@@ -261,6 +270,13 @@ const user = computed(() => store.state.user);
 
 const { isEnabled } = useFeatureFlags();
 const isErrorReportEnabled = computed(() => isEnabled('ErrorReport'));
+
+// "Förändrade lokalbehov" can be restricted to an AAD group (WorkOrder:RequiredGroupByType).
+// Non-members get the type stripped server-side, so don't advertise it to them.
+const { canCreateWorkOrderType } = useCurrentUser();
+const isSpaceRequirementAllowed = computed(() =>
+	canCreateWorkOrderType(EstateOrderCategory.SpaceRequirement)
+);
 
 const headerTitle = computed(() => {
 	if (route.meta.title) {

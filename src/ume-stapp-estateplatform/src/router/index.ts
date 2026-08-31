@@ -6,6 +6,8 @@ import AuthLogin from '@/components/auth/AuthLogin.vue';
 import { AppRoutes, EstateRoutes } from './routes';
 import { AppContentSize } from '@/models/Enums';
 import { useFeatureFlags } from '@/utils/useFeatureFlags';
+import { useCurrentUser } from '@/utils/useCurrentUser';
+import { EstateOrderCategory } from '@/models/Enums';
 
 /**
  * Path rendered when a route's feature flag is off and there is no enabled
@@ -67,6 +69,7 @@ const routes: Array<RouteRecordRaw> = [
 		meta: {
 			requiresInternalLogin: true,
 			requiresFeature: 'ErrorReport',
+			requiresWorkOrderType: EstateOrderCategory.SpaceRequirement,
 			contentSize: AppContentSize.FullWidth,
 		},
 	},
@@ -150,9 +153,14 @@ const router = createRouter({
 useAuthMiddleware(router);
 
 const { loadFeatures, isEnabled } = useFeatureFlags();
+const { loadCurrentUser, canCreateWorkOrderType } = useCurrentUser();
 
 router.beforeEach(async (to) => {
-	await loadFeatures();
+	// Both are load-once and swallow their own errors. /me has to be loaded on
+	// every route, not just the gated ones: the header reads the permissions to
+	// decide what to show, and an unloaded permission set is indistinguishable
+	// from a denied one.
+	await Promise.all([loadFeatures(), loadCurrentUser()]);
 	const requiredFeature = to.meta.requiresFeature as string | undefined;
 	if (requiredFeature && !isEnabled(requiredFeature)) {
 		// Mina sidor sent gated routes back to /internt. Here the start page is
@@ -161,6 +169,18 @@ router.beforeEach(async (to) => {
 		return to.path === '/'
 			? { path: FEATURE_UNAVAILABLE_PATH }
 			: { path: '/' };
+	}
+
+	// A work order type can be restricted to an AAD group (WorkOrder:RequiredGroupByType).
+	// The entry points are hidden for non-members, this catches direct links and bookmarks.
+	const requiredWorkOrderType = to.meta.requiresWorkOrderType as
+		| string
+		| undefined;
+	if (
+		requiredWorkOrderType &&
+		!canCreateWorkOrderType(requiredWorkOrderType)
+	) {
+		return { path: '/' };
 	}
 });
 

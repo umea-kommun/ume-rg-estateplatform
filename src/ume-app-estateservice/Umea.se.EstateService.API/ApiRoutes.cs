@@ -16,5 +16,6 @@ public class ApiRoutes : ApiRoutesBase
     public const string EstateBuildings = $"{Estates}/{{estateId:int}}/buildings";
     public const string WorkOrders = $"{RoutePrefixV1}/workorders";
     public const string Favorites = $"{RoutePrefixV1}/favorites";
+    public const string Me = $"{RoutePrefixV1}/me";
     public const string Feedback = $"{RoutePrefixV1}/feedback";
 }
