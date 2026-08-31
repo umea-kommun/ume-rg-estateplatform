@@ -339,12 +339,13 @@
 				"contactEmailLabel": "E-post",
 				"contactPhoneLabel": "Telefonnummer"
 			},
-			"info": {
-				"title": "Information",
-				"text1": "Viktigt att tänka på: Beskriv felet så tydligt som möjligt och ange var det finns (byggnad, våning, rum). Ju mer information du lämnar, desto snabbare kan vi hjälpa dig. Bifoga gärna en bild om det underlättar.",
-				"text2": "När din felanmälan är registrerad tas den om hand av fastighetsdriften. Ärenden bedöms och prioriteras utifrån hur brådskande de är och vilken påverkan felet har på verksamheten. Du kan bli kontaktad om vi behöver kompletterande information eller för att boka tid för åtgärd.",
-				"text3": "<b>Vid akuta fel</b> (t.ex. vattenläcka, strömavbrott eller fara för person eller egendom) ska du kontakta växeln via telefon (090-16 10 00) istället för att göra en felanmälan i portalen. De säkerställer att rätt person kontaktas omedelbart och åtgärd påbörjas direkt."
-			},
+      "info": {
+        "title": "Information",
+        "text1": "Viktigt att tänka på: Beskriv felet så tydligt som möjligt och ange var det finns (byggnad, våning, rum). Ju mer information du lämnar, desto snabbare kan vi hjälpa dig. Bifoga gärna en bild om det underlättar.",
+        "text2": "När din felanmälan är registrerad tas den om hand av fastighetsdriften. Ärenden bedöms och prioriteras utifrån hur brådskande de är och vilken påverkan felet har på verksamheten. Du kan bli kontaktad om vi behöver kompletterande information eller för att boka tid för åtgärd.",
+        "text3": "<b>Vid akuta fel</b> (t.ex. vattenläcka, strömavbrott eller fara för person eller egendom) ska du kontakta växeln via telefon (090-16 10 00) istället för att göra en felanmälan i portalen. De säkerställer att rätt person kontaktas omedelbart och åtgärd påbörjas direkt.",
+        "responsibilityLink": "<a href=\"https://www.intranet.umea.se/sidor/serviceitochlokaler/byggnaderochlokaler/lokaler/gransdragningkommunalellerexternfastighetsagare.4.41b8dff11790bd2e90a781b.html\" target=\"_blank\" rel=\"noopener noreferrer\">Läs mer om ansvarsfördelning i Umeå kommuns fastigheter<span class=\"material-icons external-link-icon\" aria-hidden=\"true\">open_in_new</span></a>"
+      },
 			"completed": {
 				"title": "Tack för din felanmälan!",
 				"description": "Vi har mottagit din felanmälan och kommer att hantera den så snart som möjligt.",
@@ -390,7 +391,8 @@
 				"text1": "Byggservice utför mindre bygg- och monteringsarbeten, till exempel uppsättning av hyllor, krokar, lister och anslagstavlor samt enklare målningsarbeten.",
 				"text2": "Observera! Rena elarbeten utförs ej av Byggservice (till exempel komplettering av eluttag eller belysning) utan beställs via Proceedo. Beställaren (oftast enhetschef) ansvarar för arbetsmiljön, även vid arbete som utförs av extern entreprenör.",
 				"text3": "Efter att din beställning är inskickad kommer Byggservice att göra en första bedömning av ditt behovs genomförbarhet, vid behov konsulteras även ansvarig fastighetsförvaltare. Ofta bokas därefter ett platsbesök för bedömning på plats avseende exempelvis arbetets omfattning innan beslut fattas om beställningen ska genomföras eller ej.",
-				"text4": "Säkerställ att din beskrivning är så tydlig som möjligt för att undvika behov av komplettering av ärendet, samt att kontaktuppgifterna är korrekta."
+				"text4": "Säkerställ att din beskrivning är så tydlig som möjligt för att undvika behov av komplettering av ärendet, samt att kontaktuppgifterna är korrekta.",
+				"responsibilityLink": "<a href=\"https://www.intranet.umea.se/sidor/serviceitochlokaler/byggnaderochlokaler/lokaler/gransdragningkommunalellerexternfastighetsagare.4.41b8dff11790bd2e90a781b.html\" target=\"_blank\" rel=\"noopener noreferrer\">Läs mer om ansvarsfördelning i Umeå kommuns fastigheter<span class=\"material-icons external-link-icon\" aria-hidden=\"true\">open_in_new</span></a>"
 			},
 			"completed": {
 				"title": "Tack för din beställning!",
@@ -447,7 +449,8 @@
 					"Om behovet är kopplat till en specifik byggnad rekommenderas att byggnaden anges i ärendet. Om lämplig byggnad ännu inte är identifierad kan fältet lämnas tomt.",
 					"För att underlätta den fortsatta hanteringen är det värdefullt att bifoga relevant underlag, exempelvis utredningar, beslutsunderlag, ritningar, bilder eller annan dokumentation som tydliggör behovet.",
 					"Efter inskickad förfrågan hanteras ärendet enligt kommunens lokalförsörjningsprocess."
-				]
+				],
+				"responsibilityLink": "<a href=\"https://www.intranet.umea.se/sidor/serviceitochlokaler/byggnaderochlokaler/lokaler/gransdragningkommunalellerexternfastighetsagare.4.41b8dff11790bd2e90a781b.html\" target=\"_blank\" rel=\"noopener noreferrer\">Läs mer om ansvarsfördelning i Umeå kommuns fastigheter<span class=\"material-icons external-link-icon\" aria-hidden=\"true\">open_in_new</span></a>"
 			},
 			"completed": {
 				"title": "Tack för din förfrågan!",

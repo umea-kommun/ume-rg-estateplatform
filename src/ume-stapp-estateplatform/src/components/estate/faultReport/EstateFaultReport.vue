@@ -329,6 +329,7 @@
 					<p>
 						{{ $t('component.faultReport.info.text2') }}
 					</p>
+					<p v-html="$t('component.faultReport.info.responsibilityLink')"></p>
 					<p v-html="$t('component.faultReport.info.text3')"></p>
 				</v-alert>
 			</div>

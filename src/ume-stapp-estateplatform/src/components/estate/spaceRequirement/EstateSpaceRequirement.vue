@@ -340,6 +340,7 @@
 					>
 						{{ paragraph }}
 					</p>
+					<p v-html="$t('component.spaceRequirement.info.responsibilityLink')"></p>
 				</v-alert>
 			</div>
 		</div>

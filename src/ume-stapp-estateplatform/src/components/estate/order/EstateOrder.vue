@@ -267,6 +267,7 @@
 					<p>
 						{{ $t('component.order.info.text4') }}
 					</p>
+					<p v-html="$t('component.order.info.responsibilityLink')"></p>
 				</v-alert>
 			</div>
 		</div>
