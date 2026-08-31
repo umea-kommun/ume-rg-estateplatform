@@ -46,6 +46,7 @@ const mountEstateSearch = async (query = '') => {
 				BuildingMap: true,
 				EstateSearchFilter: true,
 				FavoriteList: true,
+				RateFeedback: true,
 				'v-skeleton-loader': true,
 			},
 		},

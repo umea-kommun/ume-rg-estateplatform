@@ -110,6 +110,13 @@
 
 				<div v-if="!isBusyLoading && !userHasSearched" class="mt-4">
 					<favorite-list class="mt-4" />
+					<rate-feedback
+						category="estatePortal"
+						:feedback-title="
+							$t('component.estatePortal.feedbackTitle')
+						"
+						class="portal-feedback"
+					/>
 				</div>
 			</div>
 
@@ -141,6 +148,7 @@ import EstateSearchFilter from './EstateSearchFilter.vue';
 import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
 import { useEstateSearch } from './useEstateSearch';
 import FavoriteList from '../favorite/FavoriteList.vue';
+import RateFeedback from '@/components/shared/RateFeedback.vue';
 import { appInsights } from '@/plugins/appInsights';
 
 const route = useRoute();
@@ -245,6 +253,12 @@ onMounted(() => {
 	}
 	.content {
 		min-height: 50svh;
+	}
+	.portal-feedback {
+		// Vuetify's spacing scale tops out at mt-16 (64px); we want a little
+		// extra breathing room between the favorite list and the feedback card
+		// on the start page (~mt-30).
+		margin-top: 120px;
 	}
 	.map-btn {
 		display: none;

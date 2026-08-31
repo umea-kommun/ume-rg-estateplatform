@@ -16,6 +16,7 @@ public class FeedbackHandler(ILogger<FeedbackHandler> logger)
     {
         "estateOrder",
         "estateFaultReport",
+        "estatePortal",
     };
 
     public Task TrackFeedback(FeedbackModel feedback, bool requiresComment)

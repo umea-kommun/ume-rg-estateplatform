@@ -236,7 +236,8 @@
 					"title": "Förändrade lokalbehov",
 					"description": "Er verksamhet behöver mer, mindre eller en annan typ av lokal."
 				}
-			}
+			},
+			"feedbackTitle": "Hur fungerar Fastighetsportalen för dig?"
 		},
 		"estateFavorite": {
 			"title": "Mina favoriter ({count})",

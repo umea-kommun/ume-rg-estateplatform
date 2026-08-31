@@ -236,7 +236,8 @@
 					"title": "Changed space requirements",
 					"description": "Your organization needs more, less or a different type of premises."
 				}
-			}
+			},
+			"feedbackTitle": "How does estate portal work for you?"
 		},
 		"estateFavorite": {
 			"title": "My favorites ({count})",
