@@ -1,11 +1,14 @@
 # Code Style
 
-The authoritative source is the root `.editorconfig`. Combined with `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` in every `.csproj`, any rule with severity `warning` or `error` will fail the build.
+The authoritative source is the root `.editorconfig`. API, DataStore, and
+Toolkit.Images currently enable `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>`;
+other projects do not. Follow warning-level rules everywhere and do not rely on
+that project-level difference.
 
 ## Language Targets
 
-- C# language version: latest LTS (currently C# 12 features per `.github/copilot-instructions.md`).
-- Target framework: `net10.0` (set per project — do not change `global.json`).
+- C# language version: the default for the .NET 10 SDK (C# 14). Do not set a per-project `LangVersion` without approval.
+- Target framework: `net10.0` (set per project).
 - Nullable reference types: enabled. Trust the annotations; only null-check at entry points.
 
 ## Formatting

@@ -27,6 +27,7 @@ citizen-facing surface.
 - Auth implementation and middleware: `src/plugins/auth/*`
 - Runtime config object: `src/Config.ts` and `src/utils/Config.ts`
 - Feature flags: `src/utils/useFeatureFlags.ts`
+- Current-user capabilities: `src/utils/useCurrentUser.ts` (`GET /me`)
 
 ## Access model rules
 
@@ -36,8 +37,11 @@ citizen-facing surface.
   prefix. The prefix is load-bearing — see README.
 - Route access is additionally gated by runtime flags from `GET /features`
   (`EstateService`, `ErrorReport`). They fail open.
-- No AAD group gating is in use, though the middleware still supports
-  `requiresGroup`.
+- Work-order type access can be restricted by AAD group in the API. The SPA
+  reads capabilities from authenticated `GET /me`, fails closed if that request
+  fails, and uses `requiresWorkOrderType` to hide or redirect unavailable entry
+  points. Never inspect groups or reproduce the policy in the client; the API
+  remains the enforcement point.
 
 ## Conventions
 

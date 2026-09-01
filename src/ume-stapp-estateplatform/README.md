@@ -7,16 +7,16 @@ SPA for searching estates and buildings, viewing blueprints and maps, and
 submitting fault reports, orders and changed space requirements.
 
 It was extracted from `ume-rg-myplatform/src/ume-stapp-minasidor` (Mina sidor)
-so that UI and API ship in one PR — see `migrate_plan/` in the repo root. Files
-carrying a `Duplicated from ume-rg-myplatform` header are shared with Mina sidor
-and were copied at commit `84b4a5dc`; that header is the diff base if the two
-copies ever need reconciling.
+so UI and API changes can ship in one PR. Files carrying a
+`Duplicated from ume-rg-myplatform` header are shared with Mina sidor and were
+copied at commit `84b4a5dc`; that header is the diff base if the two copies ever
+need reconciling.
 
 ## What it talks to
 
 - **EstateService** (`VUE_APP_ESTATE_SERVICE`) — this repo, `src/ume-app-estateservice`.
   The only backend for estate data, work orders, favorites, feedback and the
-  runtime `GET /features` flags.
+  runtime `GET /features` flags and authenticated `GET /me` capabilities.
 - **IDProxy** (`authtoken.umea.se`) — one login client, internal AD only.
 
 ## Running it
@@ -41,10 +41,11 @@ npm run lint        # eslint --fix
 - `src/components/app/*` — shell (header, footer, content, error, 404)
 - `src/components/estate/*` — the application itself
 - `src/components/shared/*` — components duplicated from Mina sidor
-- `src/router/index.ts` — routes, auth gates and the feature-flag guard
+- `src/router/index.ts` — routes, auth, feature, and capability gates
 - `src/store/*` — root Vuex store (estate) plus the `feedback` module
 - `src/plugins/auth/*` — auth manager, middleware and client config
 - `src/utils/Config.ts` — runtime config, `VUE_APP_*` from `.env*`
+- `src/utils/useCurrentUser.ts` — current identity and work-order capabilities
 
 ## Environment
 
@@ -62,3 +63,11 @@ that cannot log anyone in.
 Routes are gated by `GET /features` on EstateService (`EstateService`,
 `ErrorReport`), fetched at navigation time and fail-open. A gated route falls
 back to `/`; if `/` itself is gated the 404 page is shown.
+
+## User capabilities
+
+Authenticated `GET /me` returns identity and the work-order types the current
+user may access. Capability loading fails closed and controls which entry points
+the SPA shows, including direct-route redirects. The API remains the enforcement
+point: do not inspect AAD groups or duplicate `WorkOrder:RequiredGroupByType` in
+the frontend.

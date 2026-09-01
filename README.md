@@ -1,10 +1,18 @@
 # ume-rg-estateplatform
 
-A .NET solution developed by Umeå Kommun for interfacing with the Pythagoras API data.
+Umeå Kommun's estate platform: an ASP.NET Core API plus the internal
+Fastighetsportalen Vue application.
 
 ## Overview
 
-This project provides a API layer that communicates with the Pythagoras system to access and manage data. It serves as a bridge between Umeå Kommun's internal systems and the Pythagoras API, enabling streamlined data retrieval and processing.
+The repository contains two separately deployed applications that are commonly
+changed together:
+
+- **EstateService** brokers estate data and work orders between Umeå Kommun's
+  internal systems and Pythagoras.
+- **Fastighetsportalen** is an internal-only SPA for finding estates, buildings,
+  rooms and documents, and for submitting fault reports, orders and changed
+  space requirements.
 
 ## Technology Stack
 
@@ -19,6 +27,9 @@ This project provides a API layer that communicates with the Pythagoras system t
 - **Swagger / Swashbuckle** - OpenAPI documentation
 - **Application Insights / OpenTelemetry** - Telemetry
 - **xUnit + Shouldly** - Testing
+- **Vue 3 + TypeScript** - Frontend application
+- **Vuetify 4 + Vite 6** - Frontend UI and build tooling
+- **Vitest + Vue Test Utils** - Frontend testing
 - **Bicep** - Infrastructure as Code
 - **Azure DevOps** - CI/CD Pipelines
 
@@ -34,6 +45,7 @@ src/ume-app-estateservice/
 ├── Umea.se.EstateService.Test/          # Unit and integration tests
 ├── Umea.se.Toolkit.Images/              # Shared image processing library
 └── docs/                                # Additional API documentation
+src/ume-stapp-estateplatform/             # Fastighetsportalen Vue SPA
 iac/                                     # Infrastructure as Code (Bicep)
 pipelines/                               # Azure DevOps pipeline definitions
 ```
@@ -43,6 +55,7 @@ pipelines/                               # Azure DevOps pipeline definitions
 ### Prerequisites
 
 - .NET 10 SDK
+- Node.js and npm for Fastighetsportalen
 - IDE of choice (Visual Studio, JetBrains Rider, or Visual Studio Code)
 - Access to Pythagoras API credentials
 - Access to an Azure Key Vault with the required secrets (see Configuration)
@@ -56,7 +69,7 @@ git clone https://github.com/[organization]/ume-rg-estateplatform.git
 cd ume-rg-estateplatform
 ```
 
-2. Restore dependencies:
+2. Restore backend dependencies:
 ```bash
 dotnet restore
 ```
@@ -69,11 +82,25 @@ dotnet restore
    - Update `appsettings.json` with your Pythagoras API configuration
    - Set up any required connection strings and API keys
 
-5. Build and run the application:
+5. Build and run EstateService:
 ```bash
 dotnet build
 dotnet run --project src/ume-app-estateservice/Umea.se.EstateService.API
 ```
+
+6. Install, test, and run Fastighetsportalen:
+
+```bash
+cd src/ume-stapp-estateplatform
+npm ci
+npm test
+npm run serve
+```
+
+The Vite development server runs on port 8080. The checked-in `.env` targets
+the development EstateService; use an uncommitted `.env.local` override for a
+local API. See the [frontend README](src/ume-stapp-estateplatform/README.md) for
+its environment, auth, and feature-gating details.
 
 ## Configuration
 
@@ -132,12 +159,13 @@ This project follows strict code quality standards enforced through:
 
 - **EditorConfig**: Consistent code formatting and style rules
 - **Code Analysis**: Extensive CA (Code Analysis) rules for best practices
-- **SonarLint**: Additional static code analysis is prefered
+- **SonarLint**: Additional static code analysis is preferred
 - **File-scoped namespaces**: Modern C# namespace declarations
-- **Warnings = Errors**: We treat warnings as errors
+- **Warnings as errors**: Enabled in the API, DataStore, and image toolkit
+  projects; other projects must still build without new warnings
 
 Key coding standards:
-- Explicit type declarations preferred over `var` (enforced as a warning, which fails the build under warnings-as-errors)
+- Explicit type declarations are preferred over `var` and enforced by `.editorconfig`
 - Mandatory curly braces for all code blocks
 - File-scoped namespace declarations
 - Comprehensive CA rules for performance and maintainability
@@ -150,7 +178,7 @@ Key coding standards:
 > - CI/CD pipelines
 > - Environment configurations
 > - Security settings
-> - Keyvaults and secrets
+> - Key Vaults and secrets
 
 ## Support
 

@@ -5,11 +5,19 @@ Below are Claude Code-specific additions.
 
 ## Project Context
 
-This API is in active production for Umeå Kommun. Treat the existing `.editorconfig` and `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` as load-bearing — silently violating them breaks the build. The codebase prefers directness over abstraction; favor small targeted edits over refactors.
+This platform is in active production for Umeå Kommun. The root instructions
+cover the backend and repository-wide concerns. Before frontend work, also read
+`src/ume-stapp-estateplatform/CLAUDE.md`; its auth, environment, localization,
+and shared-file rules are specific to that subtree. Treat `.editorconfig` and
+the analyzer settings as load-bearing. Some backend projects enable
+`TreatWarningsAsErrors`; all projects must still build cleanly. The codebase
+prefers directness over abstraction; favor small targeted edits over refactors.
 
 ## Working Style
 
-- Verify changes with `dotnet build` and `dotnet test` before reporting done — both must succeed.
+- Verify backend changes with `dotnet build` and `dotnet test` before reporting done.
+- Verify frontend changes from `src/ume-stapp-estateplatform` with the relevant
+  `npm run build`, `npm test`, and `npm run lint` commands.
 - For search-related changes, also re-read `SEARCH.MD` and update it if you alter scoring constants, field weights, `QueryOptions` defaults, or indexed `PythagorasDocument` fields.
 - For DataStore changes, generate a new EF Core migration rather than editing existing ones (the deployment pipeline runs them).
 - When adding NuGet packages, edit `Directory.Packages.props` (central package management) — don't pin versions in individual `.csproj` files.

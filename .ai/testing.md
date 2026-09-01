@@ -2,10 +2,14 @@
 
 ## Frameworks
 
-- **xUnit v3** as the test runner (`xunit` 2.9.3 + `xunit.runner.visualstudio` 3.1.5).
+- **xUnit.net v2** test framework (`xunit` 2.9.3) with the v3 Visual Studio runner (`xunit.runner.visualstudio` 3.1.5).
 - **Shouldly** for assertions (`Shouldly` 4.3.0).
 - **Microsoft.AspNetCore.Mvc.Testing** for in-process API tests via `Umea.se.TestToolkit`.
 - **Coverlet** for coverage collection.
+
+Frontend tests use **Vitest 3** + Vue Test Utils under
+`src/ume-stapp-estateplatform/`. Follow that subtree's `AGENTS.md` and run
+`npm test` there.
 
 ## Commands
 
