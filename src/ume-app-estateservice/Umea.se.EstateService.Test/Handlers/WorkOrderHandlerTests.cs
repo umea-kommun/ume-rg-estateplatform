@@ -42,7 +42,6 @@ public class WorkOrderHandlerTests : IDisposable
         }
 
         _dbContext = new EstateDbContext(options);
-        IWorkOrderRepository workOrderRepository = new WorkOrderRepository(_dbContext);
         _dataStore = new InMemoryDataStore();
 
         DataStoreSeeder.Seed(
@@ -56,12 +55,7 @@ public class WorkOrderHandlerTests : IDisposable
                 new WorkOrderCategoryNode { Id = 91, Name = "Ombyggnad", WorkOrderTypeIds = [3] },
             ]);
 
-        ApplicationConfig config = CreateTestConfig();
-        IWorkOrderFileStorage fileStorage = new LocalWorkOrderFileStorage(config);
-        WorkOrderFileValidator fileValidator = new(config);
-        WorkOrderCategoryProvider categoryProvider = new(_dataStore);
-        WorkOrderAccessPolicy accessPolicy = new(new WorkOrderConfiguration());
-        _handler = new WorkOrderHandler(workOrderRepository, _dataStore, new WorkOrderChannel(), fileStorage, fileValidator, categoryProvider, accessPolicy, NullLogger<WorkOrderHandler>.Instance);
+        _handler = CreateHandler();
     }
 
     [Fact]
@@ -513,19 +507,10 @@ public class WorkOrderHandlerTests : IDisposable
         handler.GetCategoriesForType(WorkOrderType.SpaceRequirement, ["some-other-group"]).ShouldBeEmpty();
     }
 
-    private WorkOrderHandler CreateGatedHandler()
+    private WorkOrderHandler CreateGatedHandler() => CreateHandler(accessConfig: new WorkOrderConfiguration
     {
-        ApplicationConfig config = CreateTestConfig();
-        IWorkOrderRepository repository = new WorkOrderRepository(_dbContext);
-        IWorkOrderFileStorage fileStorage = new LocalWorkOrderFileStorage(config);
-        WorkOrderFileValidator fileValidator = new(config);
-        WorkOrderCategoryProvider categoryProvider = new(_dataStore);
-        WorkOrderAccessPolicy accessPolicy = new(new WorkOrderConfiguration
-        {
-            RequiredGroupByType = { [WorkOrderType.SpaceRequirement] = SpaceRequirementGroup }
-        });
-        return new WorkOrderHandler(repository, _dataStore, new WorkOrderChannel(), fileStorage, fileValidator, categoryProvider, accessPolicy, NullLogger<WorkOrderHandler>.Instance);
-    }
+        RequiredGroupByType = { [WorkOrderType.SpaceRequirement] = SpaceRequirementGroup }
+    });
 
     [Fact]
     public async Task SubmitWorkOrder_TypeNotSupportedByBuilding_ThrowsNotSupported()
@@ -613,6 +598,33 @@ public class WorkOrderHandlerTests : IDisposable
 
         result.ShouldNotBeNull();
         result.Id.ShouldBe(created.Id);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrder_StatusSyncEnabled_SchedulesImmediateStatusRead()
+    {
+        DateTimeOffset scheduled = DateTimeOffset.UtcNow.AddHours(1);
+        WorkOrderEntity submitted = await InsertSubmittedAsync(nextSyncAt: scheduled);
+
+        await CreateHandler(CreateTestConfig(statusSyncEnabled: true)).SyncWorkOrderAsync(submitted.Uid, "test@example.com");
+
+        WorkOrderEntity reloaded = await ReloadAsync(submitted.Uid);
+        reloaded.NextSyncAt!.Value.ShouldBeLessThan(scheduled);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrder_StatusSyncDisabled_IsNoOp()
+    {
+        DateTimeOffset scheduled = DateTimeOffset.UtcNow.AddHours(1);
+        WorkOrderEntity submitted = await InsertSubmittedAsync(nextSyncAt: scheduled);
+
+        WorkOrderDetailModel result = await CreateHandler(CreateTestConfig(statusSyncEnabled: false))
+            .SyncWorkOrderAsync(submitted.Uid, "test@example.com");
+
+        result.Id.ShouldBe(submitted.Uid);
+
+        WorkOrderEntity reloaded = await ReloadAsync(submitted.Uid);
+        reloaded.NextSyncAt!.Value.ShouldBe(scheduled, TimeSpan.FromSeconds(1));
     }
 
     [Fact]
@@ -811,16 +823,40 @@ public class WorkOrderHandlerTests : IDisposable
         return entity;
     }
 
+    private WorkOrderHandler CreateHandler(ApplicationConfig? config = null, WorkOrderConfiguration? accessConfig = null)
+    {
+        config ??= CreateTestConfig();
+        return new WorkOrderHandler(
+            new WorkOrderRepository(_dbContext),
+            _dataStore,
+            new WorkOrderChannel(),
+            new LocalWorkOrderFileStorage(config),
+            new WorkOrderFileValidator(config),
+            new WorkOrderCategoryProvider(_dataStore),
+            new WorkOrderAccessPolicy(accessConfig ?? new WorkOrderConfiguration()),
+            config,
+            NullLogger<WorkOrderHandler>.Instance);
+    }
+
+    private async Task<WorkOrderEntity> InsertSubmittedAsync(DateTimeOffset nextSyncAt)
+    {
+        WorkOrderEntity entity = await InsertWorkOrderAsync(WorkOrderSyncStatus.Submitted, nextSyncAt, description: "Submitted order");
+        entity.PythagorasWorkOrderId = 555;
+        await _dbContext.SaveChangesAsync();
+        return entity;
+    }
+
     private async Task<WorkOrderEntity> ReloadAsync(Guid uid) =>
         (await _dbContext.WorkOrders.AsNoTracking().FirstOrDefaultAsync(w => w.Uid == uid))!;
 
-    private static ApplicationConfig CreateTestConfig()
+    private static ApplicationConfig CreateTestConfig(bool statusSyncEnabled = true)
     {
         Dictionary<string, string?> configData = new()
         {
             ["ASPNETCORE_ENVIRONMENT"] = "Test",
             ["WorkOrder:FileStorage"] = Path.Combine(Path.GetTempPath(), "workOrder-handler-tests"),
             ["WorkOrder:MaxRetries"] = "3",
+            ["WorkOrder:StatusSyncEnabled"] = statusSyncEnabled ? "true" : "false",
             ["Pythagoras:ApiKey"] = "test",
             ["Pythagoras:BaseUrl"] = "https://localhost/",
             ["Authentication:TokenServiceUrl"] = "https://localhost/",

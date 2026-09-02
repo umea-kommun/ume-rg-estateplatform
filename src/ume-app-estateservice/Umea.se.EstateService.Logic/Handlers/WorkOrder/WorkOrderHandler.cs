@@ -6,6 +6,7 @@ using Umea.se.EstateService.Shared.Data.Entities;
 using Umea.se.EstateService.Shared.Data.Enums;
 using Umea.se.EstateService.Shared.Exceptions;
 using Umea.se.EstateService.Shared.Infrastructure;
+using Umea.se.EstateService.Shared.Infrastructure.ConfigurationModels;
 using Umea.se.EstateService.Shared.Models;
 
 namespace Umea.se.EstateService.Logic.Handlers.WorkOrder;
@@ -18,8 +19,11 @@ public class WorkOrderHandler(
     WorkOrderFileValidator fileValidator,
     WorkOrderCategoryProvider categoryProvider,
     WorkOrderAccessPolicy accessPolicy,
+    ApplicationConfig appConfig,
     ILogger<WorkOrderHandler> logger) : IWorkOrderHandler
 {
+    private readonly WorkOrderConfiguration _config = appConfig.WorkOrderProcessing;
+
     private static readonly Dictionary<WorkOrderType, PythagorasWorkOrderType> _workOrderTypeMap = new()
     {
         [WorkOrderType.ErrorReport] = PythagorasWorkOrderType.ErrorReport,
@@ -214,7 +218,8 @@ public class WorkOrderHandler(
             throw new EntityNotFoundException($"Work order {uid} not found.");
         }
 
-        if (workOrder is { SyncStatus: WorkOrderSyncStatus.Submitted, PythagorasWorkOrderId: not null })
+        if (_config.StatusSyncEnabled
+            && workOrder is { SyncStatus: WorkOrderSyncStatus.Submitted, PythagorasWorkOrderId: not null })
         {
             workOrder.NextSyncAt = DateTimeOffset.UtcNow;
             workOrder.UpdatedAt = DateTimeOffset.UtcNow;

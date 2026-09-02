@@ -292,6 +292,62 @@ public class WorkOrderProcessorTests : IDisposable
         reloaded.ErrorMessage.ShouldContain("DefaultCategoryIdByType");
     }
 
+    [Fact]
+    public async Task ProcessPending_StatusSyncEnabled_ReadsStatusForSubmittedOrders()
+    {
+        await SeedSubmittedAsync();
+
+        await CreateProcessor(statusSyncEnabled: true).ProcessPendingAsync(CancellationToken.None);
+
+        _fakeClient.WorkOrderRequests.ShouldContain(r => r.Method == "GetWorkOrdersByIds");
+    }
+
+    [Fact]
+    public async Task ProcessPending_StatusSyncDisabled_DoesNotReadStatusForSubmittedOrders()
+    {
+        WorkOrderEntity workOrder = await SeedSubmittedAsync();
+        DateTimeOffset originalNextSync = workOrder.NextSyncAt!.Value;
+
+        await CreateProcessor(statusSyncEnabled: false).ProcessPendingAsync(CancellationToken.None);
+
+        _fakeClient.WorkOrderRequests.ShouldNotContain(r => r.Method == "GetWorkOrdersByIds");
+
+        WorkOrderEntity? reloaded = await _repository.GetByUidAsync(workOrder.Uid, workOrder.CreatedByEmail);
+        reloaded.ShouldNotBeNull();
+        reloaded.NextSyncAt!.Value.ShouldBe(originalNextSync, TimeSpan.FromSeconds(1));
+        reloaded.PythagorasStatusName.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task ProcessPending_StatusSyncDisabled_StillSubmitsPendingOrders()
+    {
+        WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport);
+
+        await CreateProcessor(statusSyncEnabled: false).ProcessPendingAsync(CancellationToken.None);
+
+        _fakeClient.CreateWorkOrderPayloads.ShouldNotBeEmpty();
+
+        WorkOrderEntity? reloaded = await _repository.GetByUidAsync(workOrder.Uid, workOrder.CreatedByEmail);
+        reloaded.ShouldNotBeNull();
+        reloaded.SyncStatus.ShouldBe(WorkOrderSyncStatus.Submitted);
+    }
+
+    private WorkOrderProcessor CreateProcessor(bool statusSyncEnabled) => new(
+        _repository, _fakeClient, _statusSync, _classifier, _fileStorage,
+        CreateConfig(statusSyncEnabled: statusSyncEnabled),
+        NullLogger<WorkOrderProcessor>.Instance);
+
+    private async Task<WorkOrderEntity> SeedSubmittedAsync()
+    {
+        WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport);
+        workOrder.SyncStatus = WorkOrderSyncStatus.Submitted;
+        workOrder.PythagorasWorkOrderId = 555;
+        workOrder.SubmittedAt = DateTimeOffset.UtcNow;
+        workOrder.NextSyncAt = DateTimeOffset.UtcNow.AddSeconds(-1);
+        await _repository.UpdateAsync(workOrder);
+        return workOrder;
+    }
+
     private async Task<WorkOrderEntity> SeedPendingAsync(PythagorasWorkOrderType type, int? categoryId = null, int? buildingId = 1933)
     {
         WorkOrderEntity workOrder = new()
@@ -313,11 +369,12 @@ public class WorkOrderProcessorTests : IDisposable
         return workOrder;
     }
 
-    private static ApplicationConfig CreateConfig(bool includeBuildingServiceDefault = true, double? classifierThreshold = null)
+    private static ApplicationConfig CreateConfig(bool includeBuildingServiceDefault = true, double? classifierThreshold = null, bool statusSyncEnabled = true)
     {
         Dictionary<string, string?> data = new()
         {
             ["ASPNETCORE_ENVIRONMENT"] = "Test",
+            ["WorkOrder:StatusSyncEnabled"] = statusSyncEnabled ? "true" : "false",
             ["WorkOrder:FileStorage"] = "./wo-proc-tests",
             ["WorkOrder:MaxRetries"] = "3",
             ["WorkOrder:RetryBaseDelaySeconds"] = "0",

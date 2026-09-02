@@ -11,7 +11,7 @@ public interface IWorkOrderRepository
     Task<WorkOrderEntity?> GetByUidAsync(Guid uid, CancellationToken cancellationToken = default);
     Task<int> GetFailedCountAsync(CancellationToken cancellationToken = default);
     Task<IReadOnlyList<WorkOrderEntity>> GetFailedWorkOrdersAsync(CancellationToken cancellationToken = default);
-    Task<IReadOnlyList<WorkOrderEntity>> GetDueForProcessingAsync(DateTimeOffset asOf, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<WorkOrderEntity>> GetDueForProcessingAsync(DateTimeOffset asOf, bool includeSubmitted = true, CancellationToken cancellationToken = default);
     Task<bool> TryClaimForProcessingAsync(int id, DateTimeOffset processingTimeout, CancellationToken cancellationToken = default);
     Task UpdateAsync(WorkOrderEntity workOrder, CancellationToken cancellationToken = default);
     Task UpdateManyAsync(IReadOnlyList<WorkOrderEntity> workOrders, CancellationToken cancellationToken = default);

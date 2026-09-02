@@ -26,7 +26,7 @@ public class WorkOrderProcessor(
         try
         {
             IReadOnlyList<WorkOrderEntity> workOrders = await workOrderRepository
-                .GetDueForProcessingAsync(DateTimeOffset.UtcNow, cancellationToken);
+                .GetDueForProcessingAsync(DateTimeOffset.UtcNow, _config.StatusSyncEnabled, cancellationToken);
 
             if (workOrders.Count == 0)
             {

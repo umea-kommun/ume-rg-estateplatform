@@ -23,6 +23,12 @@ public class WorkOrderConfiguration
     public int StatusCheckIntervalMinutes { get; set; } = 60;
     public int ProcessingTimeoutMinutes { get; set; } = 10;
 
+    /// <summary>
+    /// Polls Pythagoras for status changes on submitted work orders. When false the background loop
+    /// skips them and <c>POST /workorder/{id}/sync</c> is a no-op, so stored statuses go stale.
+    /// </summary>
+    public bool StatusSyncEnabled { get; set; } = true;
+
     public int? DocumentActionTypeId { get; set; }
     public int? DocumentActionTypeStatusId { get; set; }
 

@@ -74,14 +74,14 @@ public class WorkOrderRepository(EstateDbContext dbContext) : IWorkOrderReposito
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyList<WorkOrderEntity>> GetDueForProcessingAsync(DateTimeOffset asOf, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<WorkOrderEntity>> GetDueForProcessingAsync(DateTimeOffset asOf, bool includeSubmitted = true, CancellationToken cancellationToken = default)
     {
         return await dbContext.WorkOrders
             .Include(e => e.Files)
             .Where(e => e.NextSyncAt != null && e.NextSyncAt <= asOf)
             .Where(e => e.SyncStatus == WorkOrderSyncStatus.Pending
                 || e.SyncStatus == WorkOrderSyncStatus.Failed
-                || e.SyncStatus == WorkOrderSyncStatus.Submitted
+                || (includeSubmitted && e.SyncStatus == WorkOrderSyncStatus.Submitted)
                 || e.SyncStatus == WorkOrderSyncStatus.Processing)
             .OrderBy(e => e.NextSyncAt)
             .ToListAsync(cancellationToken);
