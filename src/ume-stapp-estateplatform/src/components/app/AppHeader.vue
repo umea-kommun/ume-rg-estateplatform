@@ -1,7 +1,11 @@
 <!-- Duplicated from ume-rg-myplatform @ 84b4a5dc
      src/ume-stapp-minasidor/src/components/app/AppHeader.vue -->
 <template>
-	<header class="app-header" :class="size">
+	<header
+		class="app-header"
+		:class="[size, { 'app-header--environment': showEnvironmentBadge }]"
+		:style="environmentHeaderStyle"
+	>
 		<div id="skip">
 			<a href="#main-content" class="subheading text-center">{{
 				$t('app.nav.skipToContent')
@@ -24,6 +28,15 @@
 					<div class="separator"></div>
 					{{ headerTitle }}
 				</div>
+
+				<span
+					v-if="showEnvironmentBadge"
+					class="environment-badge"
+					:aria-label="environmentBadgeTitle"
+					:title="environmentBadgeTitle"
+				>
+					{{ environmentBadgeLabel }}
+				</span>
 			</div>
 
 			<!--
@@ -252,6 +265,7 @@ import {
 } from '@/models/Enums';
 import logoGreen from '@/assets/logo_green.png';
 import { appInsights } from '@/plugins/appInsights';
+import { useEnvironmentBadge } from '@/utils/useEnvironmentBadge';
 
 defineProps({
 	size: {
@@ -267,6 +281,13 @@ const $auth = inject('$auth') as IAuthManager;
 const { t, locale } = useI18n();
 
 const user = computed(() => store.state.user);
+
+const {
+	environmentBadgeLabel,
+	environmentBadgeTitle,
+	showEnvironmentBadge,
+	environmentHeaderStyle,
+} = useEnvironmentBadge();
 
 const { isEnabled } = useFeatureFlags();
 const isErrorReportEnabled = computed(() => isEnabled('ErrorReport'));
@@ -365,6 +386,23 @@ const nextLanguage = computed(
 				color: $grey-darken-2;
 				font-size: size(20);
 				font-weight: bold;
+			}
+
+			.environment-badge {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				margin-left: 12px;
+				padding: 5px 10px;
+				border-radius: 999px;
+				background: var(--environment-badge-background);
+				color: var(--environment-badge-color);
+				font-size: size(12);
+				font-weight: 700;
+				letter-spacing: 0.08em;
+				line-height: 1;
+				text-transform: uppercase;
+				white-space: nowrap;
 			}
 		}
 
@@ -490,6 +528,12 @@ const nextLanguage = computed(
 				display: none;
 			}
 		}
+	}
+
+	// Coloured line across the top, so a non-production environment is
+	// impossible to miss. The custom properties come from useEnvironmentBadge.
+	&--environment {
+		border-top: 6px solid var(--environment-accent);
 	}
 
 	&.Size-FullWidth {

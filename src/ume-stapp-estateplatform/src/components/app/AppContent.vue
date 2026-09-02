@@ -36,6 +36,7 @@ import { useTitle } from '@vueuse/core';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import Config from '@/Config';
+import { useEnvironmentBadge } from '@/utils/useEnvironmentBadge';
 
 const props = defineProps({
 	size: {
@@ -62,15 +63,26 @@ const props = defineProps({
 
 const { t } = useI18n();
 const store = useStore<IRootState>();
+const { environmentPrefix } = useEnvironmentBadge();
 
 /**
  * Get full page title using value from property pageTitle
  */
 const fullPageTitle = computed(() => {
 	if (!props.pageTitle) {
-		return t('app.title').toString() + ' - ' + t('app.title').toString();
+		return (
+			environmentPrefix.value +
+			t('app.title').toString() +
+			' - ' +
+			t('app.title').toString()
+		);
 	}
-	return props.pageTitle + ' - ' + t('app.title').toString();
+	return (
+		environmentPrefix.value +
+		props.pageTitle +
+		' - ' +
+		t('app.title').toString()
+	);
 });
 // Automatically updates page title when fullPageTitle changes
 useTitle(fullPageTitle);

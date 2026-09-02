@@ -143,6 +143,14 @@
 				"label": "Huvudnavigation",
 				"search": "Sök"
 			},
+			"environment": {
+				"current": "Miljö: {env}",
+				"prod": "PROD",
+				"test": "TEST",
+				"dev": "DEV",
+				"local": "LOKAL",
+				"unknown": "OKÄND"
+			},
 			"locale": {
 				"change": "Other languages"
 			},

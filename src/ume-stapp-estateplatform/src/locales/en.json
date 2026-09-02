@@ -143,6 +143,14 @@
 				"label": "Primary navigation",
 				"search": "Search"
 			},
+			"environment": {
+				"current": "Environment: {env}",
+				"prod": "PROD",
+				"test": "TEST",
+				"dev": "DEV",
+				"local": "LOCAL",
+				"unknown": "UNKNOWN"
+			},
 			"locale": {
 				"change": "Other languages"
 			},
