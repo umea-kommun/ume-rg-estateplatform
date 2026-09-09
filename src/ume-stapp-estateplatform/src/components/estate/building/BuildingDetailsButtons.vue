@@ -74,16 +74,15 @@
 							: undefined
 					"
 					@click="trackAction('faultReport')"
-				>
-					<v-list-item-title>{{
+					:title="
 						$t('component.estatePortal.actions.faultReport.title')
-					}}</v-list-item-title>
-					<v-list-item-subtitle>{{
+					"
+					:subtitle="
 						$t(
 							'component.estatePortal.actions.faultReport.description'
 						)
-					}}</v-list-item-subtitle>
-				</v-list-item>
+					"
+				/>
 				<v-list-item
 					v-if="isOrderPermitted"
 					prepend-icon="handyman"
@@ -97,14 +96,11 @@
 							: undefined
 					"
 					@click="trackAction('order')"
-				>
-					<v-list-item-title>{{
-						$t('component.estatePortal.actions.order.title')
-					}}</v-list-item-title>
-					<v-list-item-subtitle>{{
+					:title="$t('component.estatePortal.actions.order.title')"
+					:subtitle="
 						$t('component.estatePortal.actions.order.description')
-					}}</v-list-item-subtitle>
-				</v-list-item>
+					"
+				/>
 				<v-list-item
 					v-if="isPermitted(EstateOrderCategory.SpaceRequirement)"
 					prepend-icon="space_dashboard"
@@ -118,18 +114,17 @@
 							: undefined
 					"
 					@click="trackAction('spaceRequirement')"
-				>
-					<v-list-item-title>{{
+					:title="
 						$t(
 							'component.estatePortal.actions.spaceRequirement.title'
 						)
-					}}</v-list-item-title>
-					<v-list-item-subtitle>{{
+					"
+					:subtitle="
 						$t(
 							'component.estatePortal.actions.spaceRequirement.description'
 						)
-					}}</v-list-item-subtitle>
-				</v-list-item>
+					"
+				/>
 			</v-list>
 		</v-menu>
 
@@ -294,7 +289,7 @@ const contactPersonsCount = computed(() => {
 	max-width: calc(100vw - 32px);
 
 	:deep(.v-list-item-subtitle) {
-		white-space: normal;
+		display: block; /* Text can be multiline */
 	}
 	:deep(.v-list-item) {
 		padding-top: 8px;
