@@ -6,6 +6,9 @@ import {
 	MIME_TO_EXTENSIONS,
 } from '../fileAccept';
 
+const DOCX_MIME =
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
 // isFileAccepted only reads `name` and `type`, so a plain object is enough for
 // the branch-coverage tests and avoids depending on File constructor semantics.
 function fakeFile(name: string, type = ''): Pick<File, 'name' | 'type'> {
@@ -27,9 +30,9 @@ describe('isFileAccepted', () => {
 
 	describe('extension token', () => {
 		it('accepts a matching extension regardless of MIME', () => {
-			expect(
-				isFileAccepted(fakeFile('report.PDF', ''), '.pdf')
-			).toBe(true);
+			expect(isFileAccepted(fakeFile('report.PDF', ''), '.pdf')).toBe(
+				true
+			);
 		});
 
 		it('rejects a non-matching extension', () => {
@@ -58,9 +61,9 @@ describe('isFileAccepted', () => {
 		});
 
 		it('falls back to extension when MIME is empty (e.g. HEIC on Chrome/Windows)', () => {
-			expect(
-				isFileAccepted(fakeFile('photo.heic', ''), 'image/*')
-			).toBe(true);
+			expect(isFileAccepted(fakeFile('photo.heic', ''), 'image/*')).toBe(
+				true
+			);
 		});
 
 		it('does not fall back for extensions outside the family', () => {
@@ -101,7 +104,8 @@ describe('isFileAccepted', () => {
 	});
 
 	describe('mixed acceptSpec', () => {
-		const spec = 'image/jpeg,image/png,image/heic,application/pdf';
+		const spec =
+			'image/jpeg,image/png,image/heic,application/pdf,' + DOCX_MIME;
 
 		it('accepts a matching exact MIME within a comma list', () => {
 			expect(
@@ -118,6 +122,28 @@ describe('isFileAccepted', () => {
 				false
 			);
 		});
+
+		it('accepts a Word document by its MIME', () => {
+			expect(
+				isFileAccepted(fakeFile('avtal.docx', DOCX_MIME), spec)
+			).toBe(true);
+		});
+
+		it('accepts a Word document with empty MIME via extension fallback', () => {
+			expect(isFileAccepted(fakeFile('avtal.docx', ''), spec)).toBe(true);
+		});
+
+		it('does not let a macro-enabled document through', () => {
+			expect(isFileAccepted(fakeFile('avtal.docm', ''), spec)).toBe(
+				false
+			);
+		});
+
+		it('does not let a Word document through an image wildcard', () => {
+			expect(isFileAccepted(fakeFile('avtal.docx', ''), 'image/*')).toBe(
+				false
+			);
+		});
 	});
 });
 
@@ -128,6 +154,8 @@ describe('guessMimeFromExtension', () => {
 		expect(guessMimeFromExtension('report.pdf')).toBe('application/pdf');
 		expect(guessMimeFromExtension('a.jpg')).toBe('image/jpeg');
 		expect(guessMimeFromExtension('a.jpeg')).toBe('image/jpeg');
+		expect(guessMimeFromExtension('avtal.docx')).toBe(DOCX_MIME);
+		expect(guessMimeFromExtension('avtal.DOCX')).toBe(DOCX_MIME);
 	});
 
 	it('is case-insensitive on the extension', () => {

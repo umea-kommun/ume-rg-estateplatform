@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.IO.Compression;
 using Microsoft.Extensions.Configuration;
 using Umea.se.EstateService.Logic.Handlers.WorkOrder;
 using Umea.se.EstateService.Shared.Exceptions;
@@ -14,6 +15,60 @@ public class WorkOrderFileValidatorTests
     private static readonly byte[] WebpMagic = [0x52, 0x49, 0x46, 0x46, 0x00, 0x00, 0x00, 0x00, 0x57, 0x45, 0x42, 0x50];
     private static readonly byte[] RiffNotWebp = [0x52, 0x49, 0x46, 0x46, 0x00, 0x00, 0x00, 0x00, 0x41, 0x56, 0x49, 0x20];
     private static readonly byte[] HeicMagic = [0x00, 0x00, 0x00, 0x18, 0x66, 0x74, 0x79, 0x70, 0x68, 0x65, 0x69, 0x63];
+
+    private const string DocxContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
+    private const string DocxContentTypesXml = """
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+          <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml" />
+          <Default Extension="xml" ContentType="application/xml" />
+          <Override PartName="{0}" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml" />
+        </Types>
+        """;
+
+    private const string DocmContentTypesXml = """
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+          <Default Extension="bin" ContentType="application/vnd.ms-office.vbaProject" />
+          <Override PartName="/word/document.xml" ContentType="application/vnd.ms-word.document.macroEnabled.main+xml" />
+        </Types>
+        """;
+
+    private const string XlsxContentTypesXml = """
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+          <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml" />
+        </Types>
+        """;
+
+    /// <summary>
+    /// Builds a ZIP archive from (entry name, content) pairs, mimicking an OPC package.
+    /// </summary>
+    private static byte[] Zip(params (string Name, string Content)[] entries)
+    {
+        using MemoryStream buffer = new();
+
+        using (ZipArchive archive = new(buffer, ZipArchiveMode.Create, leaveOpen: true))
+        {
+            foreach ((string name, string content) in entries)
+            {
+                using StreamWriter writer = new(archive.CreateEntry(name).Open());
+                writer.Write(content);
+            }
+        }
+
+        return buffer.ToArray();
+    }
+
+    /// <summary>
+    /// A Word package whose main part sits at <paramref name="mainPartName"/> — Word stores it
+    /// in word/document2.xml after repairing a document.
+    /// </summary>
+    private static byte[] DocxBytes(string mainPartName = "/word/document.xml")
+        => Zip(
+            ("[Content_Types].xml", DocxContentTypesXml.Replace("{0}", mainPartName, StringComparison.Ordinal)),
+            (mainPartName.TrimStart('/'), "<document />"));
 
     private static WorkOrderFileValidator CreateValidator(
         int maxFileCount = 3,
@@ -206,5 +261,156 @@ public class WorkOrderFileValidatorTests
 
         ex.Errors["files[0]"].ShouldContain(ValidationErrorCode.FileTooLarge);
         ex.Errors["files[1]"].ShouldContain(ValidationErrorCode.InvalidContentType);
+    }
+
+    [Fact]
+    public async Task ValidateAsync_ValidDocx_DoesNotThrow()
+    {
+        WorkOrderFileValidator validator = CreateValidator(
+            maxFileSizeBytes: 200_000,
+            allowedContentTypes: DocxContentType);
+
+        await Should.NotThrowAsync(async () => await validator.ValidateAsync([Upload(DocxContentType, DocxBytes())]));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_RepairedDocxWithRenamedMainPart_DoesNotThrow()
+    {
+        WorkOrderFileValidator validator = CreateValidator(
+            maxFileSizeBytes: 200_000,
+            allowedContentTypes: DocxContentType);
+
+        await Should.NotThrowAsync(async () =>
+            await validator.ValidateAsync([Upload(DocxContentType, DocxBytes("/word/document2.xml"))]));
+    }
+
+    [Fact]
+    public async Task ValidateAsync_MacroEnabledDocument_ReportsUnrecognizedFileContent()
+    {
+        WorkOrderFileValidator validator = CreateValidator(
+            maxFileSizeBytes: 200_000,
+            allowedContentTypes: DocxContentType);
+
+        BusinessValidationException ex = await ValidateExpectingErrors(
+            validator,
+            Upload(DocxContentType, Zip(
+                ("[Content_Types].xml", DocmContentTypesXml),
+                ("word/document.xml", "<document />"),
+                ("word/vbaProject.bin", "vba"))));
+
+        ex.Errors["files[0]"].ShouldContain(ValidationErrorCode.UnrecognizedFileContent);
+    }
+
+    [Fact]
+    public async Task ValidateAsync_MacroPartRenamedToEvadeNameCheck_ReportsUnrecognizedFileContent()
+    {
+        WorkOrderFileValidator validator = CreateValidator(
+            maxFileSizeBytes: 200_000,
+            allowedContentTypes: DocxContentType);
+
+        BusinessValidationException ex = await ValidateExpectingErrors(
+            validator,
+            Upload(DocxContentType, Zip(
+                ("[Content_Types].xml", DocmContentTypesXml),
+                ("word/document.xml", "<document />"),
+                ("word/vbaProject2.bin", "vba"))));
+
+        ex.Errors["files[0]"].ShouldContain(ValidationErrorCode.UnrecognizedFileContent);
+    }
+
+    [Fact]
+    public async Task ValidateAsync_VbaPartWithoutMacroContentType_ReportsUnrecognizedFileContent()
+    {
+        WorkOrderFileValidator validator = CreateValidator(
+            maxFileSizeBytes: 200_000,
+            allowedContentTypes: DocxContentType);
+
+        BusinessValidationException ex = await ValidateExpectingErrors(
+            validator,
+            Upload(DocxContentType, Zip(
+                ("[Content_Types].xml", DocxContentTypesXml.Replace("{0}", "/word/document.xml", StringComparison.Ordinal)),
+                ("word/document.xml", "<document />"),
+                ("word/vbaProject.bin", "vba"))));
+
+        ex.Errors["files[0]"].ShouldContain(ValidationErrorCode.UnrecognizedFileContent);
+    }
+
+    [Fact]
+    public async Task ValidateAsync_SpreadsheetClaimedAsDocx_ReportsUnrecognizedFileContent()
+    {
+        WorkOrderFileValidator validator = CreateValidator(
+            maxFileSizeBytes: 200_000,
+            allowedContentTypes: DocxContentType);
+
+        BusinessValidationException ex = await ValidateExpectingErrors(
+            validator,
+            Upload(DocxContentType, Zip(
+                ("[Content_Types].xml", XlsxContentTypesXml),
+                ("xl/workbook.xml", "<workbook />"))));
+
+        ex.Errors["files[0]"].ShouldContain(ValidationErrorCode.UnrecognizedFileContent);
+    }
+
+    [Fact]
+    public async Task ValidateAsync_PlainZipClaimedAsDocx_ReportsUnrecognizedFileContent()
+    {
+        WorkOrderFileValidator validator = CreateValidator(
+            maxFileSizeBytes: 200_000,
+            allowedContentTypes: DocxContentType);
+
+        BusinessValidationException ex = await ValidateExpectingErrors(
+            validator,
+            Upload(DocxContentType, Zip(("notes.txt", "hello"))));
+
+        ex.Errors["files[0]"].ShouldContain(ValidationErrorCode.UnrecognizedFileContent);
+    }
+
+    [Fact]
+    public async Task ValidateAsync_ArchiveWithImplausibleEntryCount_ReportsUnrecognizedFileContent()
+    {
+        WorkOrderFileValidator validator = CreateValidator(
+            maxFileSizeBytes: 2_000_000,
+            allowedContentTypes: DocxContentType);
+
+        (string, string)[] entries =
+        [
+            ("[Content_Types].xml", DocxContentTypesXml.Replace("{0}", "/word/document.xml", StringComparison.Ordinal)),
+            ("word/document.xml", "<document />"),
+            .. Enumerable.Range(0, 1_200).Select(i => ($"filler/{i}.bin", "x"))
+        ];
+
+        BusinessValidationException ex = await ValidateExpectingErrors(
+            validator,
+            Upload(DocxContentType, Zip(entries)));
+
+        ex.Errors["files[0]"].ShouldContain(ValidationErrorCode.UnrecognizedFileContent);
+    }
+
+    [Fact]
+    public async Task ValidateAsync_PdfClaimedAsDocx_ReportsContentTypeMismatch()
+    {
+        WorkOrderFileValidator validator = CreateValidator(
+            maxFileSizeBytes: 200_000,
+            allowedContentTypes: ["application/pdf", DocxContentType]);
+
+        BusinessValidationException ex = await ValidateExpectingErrors(
+            validator,
+            Upload(DocxContentType, PdfMagic));
+
+        ex.Errors["files[0]"].ShouldContain(ValidationErrorCode.ContentTypeMismatch);
+    }
+
+    [Fact]
+    public async Task ValidateAsync_DocxClaimedAsPdf_ReportsContentTypeMismatch()
+    {
+        WorkOrderFileValidator validator = CreateValidator(
+            maxFileSizeBytes: 200_000,
+            allowedContentTypes: ["application/pdf", DocxContentType]);
+
+        BusinessValidationException ex = await ValidateExpectingErrors(
+            validator,
+            Upload("application/pdf", DocxBytes()));
+
+        ex.Errors["files[0]"].ShouldContain(ValidationErrorCode.ContentTypeMismatch);
     }
 }

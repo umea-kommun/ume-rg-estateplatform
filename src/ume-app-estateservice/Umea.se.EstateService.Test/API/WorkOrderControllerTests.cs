@@ -359,6 +359,7 @@ public class WorkOrderControllerTests : ControllerTestCloud<TestApiFactory, Prog
         config.MaxFileSizeBytes.ShouldBeGreaterThan(0);
         config.AllowedContentTypes.ShouldNotBeEmpty();
         config.AllowedContentTypes.ShouldContain("application/pdf");
+        config.AllowedContentTypes.ShouldContain("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
     }
 
     // --- Admin: failed work orders (status dashboard) ---

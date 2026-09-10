@@ -201,6 +201,8 @@ const formatsHint = computed(() => {
 		'image/tiff': 'TIFF',
 		'image/heic': 'HEIC',
 		'application/pdf': 'PDF',
+		'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+			'Word',
 	};
 
 	const labels = props.accept

@@ -21,6 +21,9 @@ export const MIME_TO_EXTENSIONS: Record<string, string[]> = {
 	'image/bmp': ['.bmp'],
 	'image/tiff': ['.tif', '.tiff'],
 	'image/heic': ['.heic', '.heif'],
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [
+		'.docx',
+	],
 };
 
 /**
