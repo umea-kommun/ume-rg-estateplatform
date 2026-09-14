@@ -1,9 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "rangeStrategy": "bump",
   "packageRules": [
     {
       "description": "Ignore @turkos packages — updated manually",
-      "matchPackagePatterns": ["^@turkos/"],
+      "matchPackageNames": ["/^@turkos\\//"],
       "enabled": false
     },
     {
