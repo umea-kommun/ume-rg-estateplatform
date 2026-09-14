@@ -10,12 +10,17 @@
     {
       "description": "Group all NuGet updates into one PR",
       "matchManagers": ["nuget"],
-      "groupName": "All NuGet updates"
+      "groupName": "NuGet packages"
     },
     {
       "description": "Group all npm updates into one PR",
       "matchManagers": ["npm"],
-      "groupName": "All npm updates"
+      "groupName": "npm packages"
+    },
+    {
+      "description": "Label non-major group PRs, matching the (major) suffix",
+      "matchUpdateTypes": ["minor", "patch"],
+      "commitMessageSuffix": "(minor)"
     }
   ]
 }
