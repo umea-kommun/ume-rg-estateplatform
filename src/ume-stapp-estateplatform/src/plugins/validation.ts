@@ -1,7 +1,7 @@
 // Duplicated from ume-rg-myplatform @ 84b4a5dc
 // src/ume-stapp-minasidor/src/plugins/validation.ts
 import { configure, defineRule } from 'vee-validate';
-import AllRules from '@vee-validate/rules';
+import { all as AllRules } from '@vee-validate/rules';
 import moment from 'moment';
 import i18nInstance from './i18next';
 
