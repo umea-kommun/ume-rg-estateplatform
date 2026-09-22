@@ -41,7 +41,7 @@ Build: `npm run build`
 Test: `npm test`
 Lint/fix: `npm run lint`
 
-The API needs Key Vault access (or local user-secrets) for Pythagoras, OpenAI, blob storage, and Application Insights — see the README "Configuration" section.
+The API needs Key Vault access (or local user-secrets) for Pythagoras, OpenAI, blob storage, and Application Insights — see the README "Configuration" section. Local secret overrides go in `dotnet user-secrets`, never in a tracked `appsettings*.json`; `AppSettingsSecretGuardTests` enforces this, so add any new secret-bearing config key to its `SecretKeyPrefixes`.
 
 ## Repo Layout
 

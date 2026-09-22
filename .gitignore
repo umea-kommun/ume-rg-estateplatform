@@ -411,3 +411,13 @@ src/ume-app-estateservice/Umea.se.EstateService.API/DataStoreCache
 wwwroot/
 .env.local
 .env.*.local
+
+# Secrets and local config overrides - never commit these. Local secrets belong in
+# `dotnet user-secrets` (backend) or .env.local (frontend).
+secrets.json
+*.pem
+*.key
+*.p12
+
+# Local dev overrides - keep machine-specific settings out of the repo.
+appsettings.Development.json

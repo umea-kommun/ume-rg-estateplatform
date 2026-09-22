@@ -79,8 +79,9 @@ dotnet restore
    - Ensure you have access to the required package sources (see `NuGet.Config`)
 
 4. Configure your application settings:
-   - Update `appsettings.json` with your Pythagoras API configuration
-   - Set up any required connection strings and API keys
+   - With Key Vault access nothing needs changing: secrets resolve through the `@KeyVault(...)` placeholders
+   - Otherwise set local values with `dotnet user-secrets` (run from `src/ume-app-estateservice/Umea.se.EstateService.API`), e.g. `dotnet user-secrets set "Pythagoras:ApiKey" "<key>"`
+   - Never put real keys or connection strings in a tracked `appsettings*.json`; `AppSettingsSecretGuardTests` fails the test run if you do
 
 5. Build and run EstateService:
 ```bash
