@@ -217,19 +217,15 @@ public static class BuildingEntityMapper
     {
         string? externalStatus = TryGetPropertyValue(propertyValues, PropertyCategoryId.BuildingExternalStatus);
 
-        // Externally owned buildings (förhyrningar) offer no ordinary service orders — those
-        // errands belong to the landlord. Two exceptions: SpaceRequirement is an internal
-        // investigation of the tenant's space needs, handled by kommunen regardless of ownership,
-        // and ErrorReport stays open because the fault report warns about the external owner and
-        // then lets the user submit anyway (see EstateFaultReport.vue rentedBuildingNotice).
-        if (!string.IsNullOrEmpty(externalStatus) && externalStatus != "Egen")
-        {
-            return [WorkOrderType.ErrorReport, WorkOrderType.SpaceRequirement];
-        }
+        // Externally owned buildings (förhyrningar) get no Byggservice or Rådhusservice — that
+        // work belongs to the landlord. FacilityService follows its own opt-in below.
+        bool isExternallyOwned = !string.IsNullOrEmpty(externalStatus) && externalStatus != "Egen";
 
-        List<WorkOrderType> types = [WorkOrderType.ErrorReport, WorkOrderType.BuildingService, WorkOrderType.SpaceRequirement];
+        List<WorkOrderType> types = isExternallyOwned
+            ? [WorkOrderType.ErrorReport, WorkOrderType.SpaceRequirement]
+            : [WorkOrderType.ErrorReport, WorkOrderType.BuildingService, WorkOrderType.SpaceRequirement];
 
-        if (TryGetPropertyValue(propertyValues, PropertyCategoryId.TownHallServiceOrder) == "Ja")
+        if (!isExternallyOwned && TryGetPropertyValue(propertyValues, PropertyCategoryId.TownHallServiceOrder) == "Ja")
         {
             types.Add(WorkOrderType.TownHallService);
         }

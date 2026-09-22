@@ -350,7 +350,7 @@ public class BuildingEntityMapperTests
     }
 
     [Fact]
-    public void ToEntity_ExternalStatusNotEgenWithServiceOrderOptIn_StillNoServiceOrders()
+    public void ToEntity_ExternalStatusNotEgenWithServiceOrderOptIn_KeepsOnlyFacilityService()
     {
         BuildingEntity entity = BuildingEntityMapper.ToEntity(new BuildingInfo
         {
@@ -361,7 +361,22 @@ public class BuildingEntityMapperTests
                 (PropertyCategoryId.FacilityServiceOrder, "Ja"))
         });
 
-        entity.WorkOrderTypes.ShouldBe([WorkOrderType.ErrorReport, WorkOrderType.SpaceRequirement]);
+        entity.WorkOrderTypes.ShouldBe([WorkOrderType.ErrorReport, WorkOrderType.SpaceRequirement, WorkOrderType.FacilityService]);
+    }
+
+    [Fact]
+    public void ToEntity_ExternalStatusNotEgenWithFacilityServiceOptIn_StillNoBuildingService()
+    {
+        BuildingEntity entity = BuildingEntityMapper.ToEntity(new BuildingInfo
+        {
+            Id = 1,
+            PropertyValues = Props(
+                (PropertyCategoryId.BuildingExternalStatus, "Extern"),
+                (PropertyCategoryId.FacilityServiceOrder, "Ja"))
+        });
+
+        entity.WorkOrderTypes.ShouldContain(WorkOrderType.FacilityService);
+        entity.WorkOrderTypes.ShouldNotContain(WorkOrderType.BuildingService);
     }
 
     [Theory]
