@@ -39,7 +39,7 @@ public class PythagorasHealthCheck : DownstreamServiceHealthCheck<PythagorasHeal
         }
         catch (Exception ex) when (ex is HttpRequestException or OperationCanceledException or TimeoutException)
         {
-            _logger.LogDebug("Pythagoras health probe failed: {Reason}", ex.Message);
+            _logger.LogInformation("Pythagoras health probe failed: {Reason}", ex.Message);
             return HealthCheckResult.Degraded($"{HttpClientName} is unavailable: {ex.Message}");
         }
     }

@@ -10,10 +10,11 @@ namespace Umea.se.EstateService.API.HealthChecks;
 /// a backlog: the service itself is healthy, the orders just need manual remediation. The count is
 /// exposed both in the description and in the data so the dashboard can display it.
 /// </summary>
-public class FailedWorkOrdersHealthCheck(IWorkOrderRepository workOrderRepository)
+public class FailedWorkOrdersHealthCheck(IWorkOrderRepository workOrderRepository, ILogger<FailedWorkOrdersHealthCheck> logger)
     : CachedRetryHealthCheck<FailedWorkOrdersHealthCheck>
 {
     private readonly IWorkOrderRepository _workOrderRepository = workOrderRepository;
+    private readonly ILogger<FailedWorkOrdersHealthCheck> _logger = logger;
 
     protected override async Task<HealthCheckResult> ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -25,13 +26,20 @@ public class FailedWorkOrdersHealthCheck(IWorkOrderRepository workOrderRepositor
             ? "1 misslyckad arbetsorder"
             : $"{count} misslyckade arbetsordrar";
 
-        return count == 0
-            ? HealthCheckResult.Healthy("Inga misslyckade arbetsordrar.", data)
-            : HealthCheckResult.Degraded(description, data: data);
+        if (count == 0)
+        {
+            return HealthCheckResult.Healthy("Inga misslyckade arbetsordrar.", data);
+        }
+
+        _logger.LogInformation("Failed work orders health check degraded: {FailedCount} failed work orders", count);
+        return HealthCheckResult.Degraded(description, data: data);
     }
 
     // Failing to read the count is itself only a Degraded signal — it must never turn the
     // EstateService health red, since the service itself is unaffected by a counting hiccup.
-    protected override HealthCheckResult BuildUnhealthyResult(Exception exception, int attempts) =>
-        HealthCheckResult.Degraded($"Kunde inte läsa antal misslyckade arbetsordrar: {exception.Message} (efter {attempts} försök).");
+    protected override HealthCheckResult BuildUnhealthyResult(Exception exception, int attempts)
+    {
+        _logger.LogInformation("Failed work orders health check could not read count after {Attempts} attempts: {Reason}", attempts, exception.Message);
+        return HealthCheckResult.Degraded($"Kunde inte läsa antal misslyckade arbetsordrar: {exception.Message} (efter {attempts} försök).");
+    }
 }
