@@ -205,11 +205,22 @@ public class WorkOrderProcessor(
             operatingGroupId = defaultGroup;
         }
 
+        // Pythagoras deletes and recreates all floors and rooms when a drawing is re-imported, so our
+        // daily snapshot can hold room ids that are gone. Building ids survive, so fall back to the building.
+        bool roomMissing = workOrder.RoomId is int roomId && !await RoomExistsAsync(roomId, ct);
+        if (roomMissing)
+        {
+            logger.LogWarning(
+                "Room {RoomId} for workOrder {WorkOrderUid} no longer exists in Pythagoras. Falling back to building {BuildingId}.",
+                workOrder.RoomId, workOrder.Uid, workOrder.BuildingId);
+        }
+
         // Bind to the room (WORKSPACE) if present, else the building (BUILDING). SpaceRequirement
         // orders may have neither — Pythagoras accepts type-3 work orders with no bound object,
         // so we leave both unset and let category + description satisfy the mandatory fields.
-        int? boundObjectId = workOrder.RoomId ?? workOrder.BuildingId;
-        WorkOrderBoundObjectType? boundObjectType = workOrder.RoomId.HasValue
+        int? boundRoomId = roomMissing ? null : workOrder.RoomId;
+        int? boundObjectId = boundRoomId ?? workOrder.BuildingId;
+        WorkOrderBoundObjectType? boundObjectType = boundRoomId.HasValue
             ? WorkOrderBoundObjectType.WORKSPACE
             : workOrder.BuildingId.HasValue
                 ? WorkOrderBoundObjectType.BUILDING
@@ -217,7 +228,9 @@ public class WorkOrderProcessor(
 
         CreatePythagorasWorkOrderRequest createRequest = new()
         {
-            Description = workOrder.Description,
+            Description = roomMissing
+                ? $"{workOrder.Description}\n\nRum: {workOrder.RoomName ?? workOrder.RoomId.ToString()} (rummet finns inte längre i Pythagoras)"
+                : workOrder.Description,
             BoundObjectType = boundObjectType,
             BoundObjectIds = boundObjectId.HasValue ? [boundObjectId.Value] : null,
             NotifierEmail = workOrder.NotifierEmail ?? workOrder.CreatedByEmail,
@@ -239,6 +252,13 @@ public class WorkOrderProcessor(
         workOrder.PythagorasWorkOrderId = created.Id;
 
         await workOrderRepository.UpdateAsync(workOrder, ct);
+    }
+
+    private async Task<bool> RoomExistsAsync(int roomId, CancellationToken ct)
+    {
+        IReadOnlyList<Workspace> rooms = await pythagorasClient.GetWorkspacesAsync(
+            new PythagorasQuery<Workspace>().WithIds(roomId), ct);
+        return rooms.Count > 0;
     }
 
     private async Task UploadRemainingFilesAsync(WorkOrderEntity workOrder, CancellationToken ct)

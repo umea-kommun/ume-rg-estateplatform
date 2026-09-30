@@ -332,6 +332,78 @@ public class WorkOrderProcessorTests : IDisposable
         reloaded.SyncStatus.ShouldBe(WorkOrderSyncStatus.Submitted);
     }
 
+    [Fact]
+    public async Task ExistingRoom_BindsToWorkspace()
+    {
+        await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport, roomId: 5194);
+        _fakeClient.SetGetAsyncResult(new Workspace { Id = 5194 });
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        CreatePythagorasWorkOrderRequest payload = _fakeClient.CreateWorkOrderPayloads.ShouldHaveSingleItem();
+        payload.BoundObjectType.ShouldBe(WorkOrderBoundObjectType.WORKSPACE);
+        payload.BoundObjectIds.ShouldBe([5194]);
+        payload.Description.ShouldBe("Test");
+        _fakeClient.GetRequestsFor<Workspace>().ShouldHaveSingleItem().QueryString.ShouldNotBeNull().ShouldContain("5194");
+    }
+
+    [Fact]
+    public async Task NoRoom_BindsToBuildingWithoutLookup()
+    {
+        await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport);
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        CreatePythagorasWorkOrderRequest payload = _fakeClient.CreateWorkOrderPayloads.ShouldHaveSingleItem();
+        payload.BoundObjectType.ShouldBe(WorkOrderBoundObjectType.BUILDING);
+        payload.BoundObjectIds.ShouldBe([1933]);
+        _fakeClient.GetRequestsFor<Workspace>().ShouldBeEmpty();
+    }
+
+    [Fact]
+    public async Task MissingRoom_FallsBackToBuildingWithRoomNote()
+    {
+        await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport, roomId: 5194);
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        CreatePythagorasWorkOrderRequest payload = _fakeClient.CreateWorkOrderPayloads.ShouldHaveSingleItem();
+        payload.BoundObjectType.ShouldBe(WorkOrderBoundObjectType.BUILDING);
+        payload.BoundObjectIds.ShouldBe([1933]);
+        payload.Description.ShouldBe("Test\n\nRum: 1-1012 Ateljé (rummet finns inte längre i Pythagoras)");
+    }
+
+    [Fact]
+    public async Task MissingRoom_FallbackIsNotPersistedOnEntity()
+    {
+        // The note and the building binding go into the payload only; the stored order keeps
+        // what the user actually chose.
+        WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport, roomId: 5194);
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        WorkOrderEntity reloaded = (await _repository.GetByUidAsync(workOrder.Uid, workOrder.CreatedByEmail))!;
+        reloaded.SyncStatus.ShouldBe(WorkOrderSyncStatus.Submitted);
+        reloaded.RoomId.ShouldBe(5194);
+        reloaded.Description.ShouldBe("Test");
+    }
+
+    [Fact]
+    public async Task RoomLookupFails_RetriesNormallyWithoutCreating()
+    {
+        // A failed lookup is not proof the room is gone, so it must not trigger the fallback.
+        _fakeClient.ThrowOnGetAsync<Workspace>(new HttpRequestException("Pythagoras unavailable"));
+        WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport, roomId: 5194);
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        _fakeClient.CreateWorkOrderPayloads.ShouldBeEmpty();
+        WorkOrderEntity reloaded = (await _repository.GetByUidAsync(workOrder.Uid, workOrder.CreatedByEmail))!;
+        reloaded.SyncStatus.ShouldBe(WorkOrderSyncStatus.Failed);
+        reloaded.RetryCount.ShouldBe(1);
+        reloaded.NextSyncAt.ShouldNotBeNull();
+    }
+
     private WorkOrderProcessor CreateProcessor(bool statusSyncEnabled) => new(
         _repository, _fakeClient, _statusSync, _classifier, _fileStorage,
         CreateConfig(statusSyncEnabled: statusSyncEnabled),
@@ -348,13 +420,15 @@ public class WorkOrderProcessorTests : IDisposable
         return workOrder;
     }
 
-    private async Task<WorkOrderEntity> SeedPendingAsync(PythagorasWorkOrderType type, int? categoryId = null, int? buildingId = 1933)
+    private async Task<WorkOrderEntity> SeedPendingAsync(PythagorasWorkOrderType type, int? categoryId = null, int? buildingId = 1933, int? roomId = null)
     {
         WorkOrderEntity workOrder = new()
         {
             Uid = Guid.NewGuid(),
             BuildingId = buildingId,
             BuildingName = buildingId.HasValue ? "Test Building" : null,
+            RoomId = roomId,
+            RoomName = roomId.HasValue ? "1-1012 Ateljé" : null,
             Description = "Test",
             WorkOrderTypeId = (int)type,
             CategoryId = categoryId,

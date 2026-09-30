@@ -11,6 +11,7 @@ namespace Umea.se.EstateService.Test.TestHelpers;
 public sealed class FakePythagorasClient : IPythagorasClient
 {
     private readonly ConcurrentDictionary<Type, Queue<object>> _results = new();
+    private readonly ConcurrentDictionary<Type, Exception> _exceptions = new();
     private readonly Queue<IReadOnlyDictionary<int, CalculatedPropertyValueDto>> _calculatedPropertyResults = new();
     private readonly Queue<UiListDataResponse<BuildingInfo>> _buildingUiListDataResults = new();
     private readonly Queue<UiListDataResponse<NavigationFolder>> _navigationFolderUiListDataResults = new();
@@ -70,6 +71,14 @@ public sealed class FakePythagorasClient : IPythagorasClient
     public void EnqueueGetAsyncResult<T>(params T[] items) where T : class, IPythagorasDto
     {
         EnqueueGetAsyncResult((IReadOnlyList<T>)items);
+    }
+
+    /// <summary>
+    /// Makes every call for <typeparamref name="T"/> fail with <paramref name="exception"/>.
+    /// </summary>
+    public void ThrowOnGetAsync<T>(Exception exception) where T : class, IPythagorasDto
+    {
+        _exceptions[typeof(T)] = exception;
     }
 
     /// <summary>
@@ -252,6 +261,11 @@ public sealed class FakePythagorasClient : IPythagorasClient
         PythagorasQuery<T> effectiveQuery = originalQuery ?? new PythagorasQuery<T>();
         string queryString = effectiveQuery.BuildAsQueryString();
         Requests.Add(new RequestCapture(typeof(T), endpoint, originalQuery, queryString, cancellationToken));
+
+        if (_exceptions.TryGetValue(typeof(T), out Exception? exception))
+        {
+            return Task.FromException<IReadOnlyList<T>>(exception);
+        }
 
         if (_results.TryGetValue(typeof(T), out Queue<object>? queue) && queue.Count > 0)
         {
