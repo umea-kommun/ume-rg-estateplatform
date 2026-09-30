@@ -137,6 +137,15 @@ builder.Services.AddHttpClient(HttpClientNames.Pythagoras, client =>
     options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(90);
 });
 
+// Dedicated health-probe client: short timeout, no resilience handler. Fails fast (the next poll
+// is the retry) and emits no Polly Error telemetry that would spam the incident mailbox on blips.
+builder.Services.AddHttpClient(HttpClientNames.PythagorasHealthCheck, client =>
+{
+    client.BaseAddress = new Uri(config.PythagorasBaseUrl);
+    client.DefaultRequestHeaders.Add("api_key", config.PythagorasApiKey);
+    client.Timeout = TimeSpan.FromSeconds(3);
+});
+
 // Gallery image fetches have their own tighter budget so they fit inside the raster image
 // FusionCache FactoryHardTimeout (45s). This prevents slow image fetches from being torn down
 // mid-retry with TaskCanceled/Socket 995 noise.
