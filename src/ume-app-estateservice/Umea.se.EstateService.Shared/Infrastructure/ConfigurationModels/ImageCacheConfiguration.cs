@@ -15,6 +15,8 @@ public class ImageCacheConfiguration
     /// <summary>
     /// Blob storage connection string for L2 image cache.
     /// Used for local development (Azurite) or when managed identity is not available.
+    /// Blank counts as not set, so a deployed environment can clear the local default and fall back to
+    /// <see cref="BlobServiceUrl"/>.
     /// </summary>
     public string? BlobConnectionString { get; set; }
 

@@ -2,6 +2,8 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Umea.se.EstateService.API;
@@ -26,6 +28,12 @@ namespace Umea.se.EstateService.Test.API;
 [Collection("DataStoreTests")]
 public class WorkOrderControllerTests : ControllerTestCloud<TestApiFactory, Program, HttpClientNames>
 {
+    // Matches Program.cs: enums are camelCase strings on the wire.
+    private static readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web)
+    {
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+    };
+
     private readonly HttpClient _client;
 
     public WorkOrderControllerTests()
@@ -64,6 +72,14 @@ public class WorkOrderControllerTests : ControllerTestCloud<TestApiFactory, Prog
         db.WorkOrders.ExecuteDelete();
     }
 
+    private void SetStatusCategory(Guid uid, string statusCategory)
+    {
+        IDbContextFactory<EstateDbContext> factory = (IDbContextFactory<EstateDbContext>)WebAppFactory.Services.GetService(typeof(IDbContextFactory<EstateDbContext>))!;
+        using EstateDbContext db = factory.CreateDbContext();
+        db.WorkOrders.Where(e => e.Uid == uid)
+            .ExecuteUpdate(setters => setters.SetProperty(e => e.PythagorasStatusCategory, statusCategory));
+    }
+
     [Fact]
     public async Task CreateAndGetWorkOrder_RoundTrip_ReturnsCorrectData()
     {
@@ -90,7 +106,7 @@ public class WorkOrderControllerTests : ControllerTestCloud<TestApiFactory, Prog
         WorkOrderDetailModel? detail = await detailResponse.Content.ReadFromJsonAsync<WorkOrderDetailModel>();
         detail.ShouldNotBeNull();
         detail.Id.ShouldBe(created.Id);
-        detail.BuildingName.ShouldBe("Test Building");
+        detail.BuildingName.ShouldBe("TestB");
         detail.RoomName.ShouldBe("Room A");
         detail.Location.ShouldBe("Indoor");
         detail.Description.ShouldBe("Broken window");
@@ -130,10 +146,40 @@ public class WorkOrderControllerTests : ControllerTestCloud<TestApiFactory, Prog
         HttpResponseMessage syncResponse = await _client.PostAsync($"{ApiRoutes.WorkOrders}/{created.Id}/sync", null);
         syncResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-        WorkOrderDetailModel? detail = await syncResponse.Content.ReadFromJsonAsync<WorkOrderDetailModel>();
+        WorkOrderDetailModel? detail = await syncResponse.Content.ReadFromJsonAsync<WorkOrderDetailModel>(_jsonOptions);
         detail.ShouldNotBeNull();
         detail.Id.ShouldBe(created.Id);
         detail.Description.ShouldBe("Sync test");
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_ReturnsOkWithRefreshModel()
+    {
+        using MultipartFormDataContent content = new();
+        content.Add(new StringContent("100"), "BuildingId");
+        content.Add(new StringContent("ErrorReport"), "WorkOrderType");
+        content.Add(new StringContent("indoor"), "Location");
+        content.Add(new StringContent("List sync test"), "Description");
+        content.Add(new StringContent("+46 70 123 45 67"), "NotifierPhone");
+
+        HttpResponseMessage createResponse = await _client.PostAsync(ApiRoutes.WorkOrders, content);
+        WorkOrderSubmissionModel? created = await createResponse.Content.ReadFromJsonAsync<WorkOrderSubmissionModel>();
+        created.ShouldNotBeNull();
+
+        SetStatusCategory(created.Id, "ONGOING");
+
+        HttpResponseMessage syncResponse = await _client.PostAsync($"{ApiRoutes.WorkOrders}/sync", null);
+        syncResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        // The portal matches these camelCase spellings literally (useWorkOrders.ts).
+        string raw = await syncResponse.Content.ReadAsStringAsync();
+        raw.ShouldContain("\"outcome\":\"notDue\"");
+        raw.ShouldContain("\"displayStatus\":\"inProgress\"");
+
+        WorkOrderRefreshModel? refresh = await syncResponse.Content.ReadFromJsonAsync<WorkOrderRefreshModel>(_jsonOptions);
+        refresh.ShouldNotBeNull();
+        refresh.Outcome.ShouldBe(WorkOrderRefreshOutcome.NotDue);
+        refresh.WorkOrders.ShouldContain(e => e.Id == created.Id && e.DisplayStatus == WorkOrderDisplayStatus.InProgress);
     }
 
     [Fact]

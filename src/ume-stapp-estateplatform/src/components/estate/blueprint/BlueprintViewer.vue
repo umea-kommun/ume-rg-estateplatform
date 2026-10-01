@@ -4,28 +4,35 @@
 		<div v-if="loading" class="loader-lazy d-flex align-center h-100">
 			<app-loading-spinner :is-visible="true" />
 		</div>
-		<blueprint-map
-			v-if="blueprint && !loading"
-			ref="blueprint-map"
-			:blueprintSvg="blueprint"
-			:selectedRoomId="selectedRoom?.id"
-			:start-position="startPosition"
-			:room-zoom-padding="roomZoomPadding"
-			@room-clicked="(roomId) => emit('room-opened', roomId)"
-			@camera-moved="(a) => (startPosition = a)"
-			@user-interacted="logUserInteractionOnce"
-		/>
-		<blueprint-controls
-			v-if="!hideControls"
-			v-model:fullScreen="fullScreen"
-			v-model:selectedFloorId="selectedFloorId"
-			:floors="floors"
-			@print="emit('print')"
-			@zoom-in="blueprintMap?.zoomIn()"
-			@zoom-out="blueprintMap?.zoomOut()"
-			:zoom-in-disabled="blueprintMap?.zoomInDisabled"
-			:zoom-out-disabled="blueprintMap?.zoomOutDisabled"
-		/>
+		<v-fade-transition hide-on-leave>
+			<blueprint-map
+				v-if="blueprint && !loading"
+				ref="blueprint-map"
+				:blueprintSvg="blueprint"
+				:selectedRoomId="selectedRoom?.id"
+				:start-position="startPosition"
+				:room-zoom-padding="roomZoomPadding"
+				@room-clicked="(roomId) => emit('room-opened', roomId)"
+				@camera-moved="(a) => (startPosition = a)"
+				@user-interacted="logUserInteractionOnce"
+			/>
+		</v-fade-transition>
+		<v-fade-transition>
+			<blueprint-controls
+				v-if="!hideControls && !floorsLoading"
+				v-model:fullScreen="fullScreen"
+				v-model:selectedFloorId="selectedFloorId"
+				:floors="floors"
+				:closable="closable"
+				:can-leave-fullscreen="canLeaveFullscreen"
+				@print="emit('print')"
+				@zoom-in="blueprintMapRef?.zoomIn()"
+				@zoom-out="blueprintMapRef?.zoomOut()"
+				@close="emit('close')"
+				:zoom-in-disabled="blueprintMapRef?.zoomInDisabled"
+				:zoom-out-disabled="blueprintMapRef?.zoomOutDisabled"
+			/>
+		</v-fade-transition>
 		<blueprint-room-card
 			v-if="selectedRoom && !hideControls"
 			:room="selectedRoom"
@@ -59,6 +66,7 @@ const props = defineProps<{
 	blueprint: string | null;
 	loading: boolean;
 	floors: IBuildingFloor[];
+	floorsLoading?: boolean;
 	startPosition?: IBlueprintPosition | null;
 	selectedRoom: IBuildingRoom | null;
 	selectedFloorId: number | null;
@@ -67,6 +75,8 @@ const props = defineProps<{
 	roomZoomPadding?: number;
 	selectable?: boolean;
 	printTitle?: string;
+	closable?: boolean;
+	canLeaveFullscreen?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -76,9 +86,10 @@ const emit = defineEmits<{
 	(e: 'update:selected-floor-id', value: number | null): void;
 	(e: 'update:start-position', value: IBlueprintPosition | null): void;
 	(e: 'print'): void;
+	(e: 'close'): void;
 }>();
 
-const blueprintMap = useTemplateRef('blueprint-map');
+const blueprintMapRef = useTemplateRef('blueprint-map');
 
 const fullScreen = computed({
 	get: () => props.fullScreen,
@@ -149,14 +160,29 @@ const logUserInteractionOnce = () => {
 	hasLoggedInteraction = true;
 };
 
+const trackFullscreenOpened = () => {
+	appInsights?.trackEvent({
+		name: 'EstateBlueprintFullscreen',
+		properties: {
+			url: window.location.href,
+		},
+	});
+};
+
+// Track entering fullscreen after mount too, e.g. when a windowed dialog is
+// expanded (a viewer that mounts already fullscreen is tracked in onMounted).
+watch(
+	() => props.fullScreen,
+	(value) => {
+		if (value) {
+			trackFullscreenOpened();
+		}
+	}
+);
+
 onMounted(() => {
 	if (props.fullScreen) {
-		appInsights?.trackEvent({
-			name: 'EstateBlueprintFullscreen',
-			properties: {
-				url: window.location.href,
-			},
-		});
+		trackFullscreenOpened();
 	}
 });
 
@@ -171,6 +197,8 @@ onBeforeUnmount(() => {
 	width: 100%;
 	position: relative;
 	overflow: hidden;
+	// Queried by the controls and the room card, which size against the pane
+	container: blueprint / inline-size;
 
 	background-color: $estate-blueprint-background;
 

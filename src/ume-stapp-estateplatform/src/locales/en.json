@@ -6,6 +6,7 @@
 			"logo": "Logo Umeå municipality",
 			"skipToContent": "Skip to content",
 			"startPage": "Go to start page",
+			"home": "Home",
 			"goBack": "Go back",
 			"services": {
 				"faultReport": "Report a fault",
@@ -86,6 +87,7 @@
 	"estateCommon": {
 		"addressLabel": "Address",
 		"areaLabel": "Area (m²)",
+		"usableArea": "{area} m² usable floor area",
 		"buildingLabel": "Building",
 		"floorLabel": "Floor",
 		"municipalityAreaLabel": "Municipality Area",
@@ -112,6 +114,7 @@
 		"map": {
 			"fullScreenClose": "Close full screen",
 			"fullScreenOpen": "Open full screen",
+			"close": "Close map",
 			"zoomIn": "Zoom in",
 			"zoomOut": "Zoom out",
 			"buildingXofY": "Building {buildingNumber} of {totalBuildings}",
@@ -123,8 +126,11 @@
 		},
 		"blueprintMap": {
 			"floor": "Floor",
+			"collapseFloors": "Click to collapse",
+			"expandFloors": "Click to expand",
 			"reportRoom": "Report a fault",
-			"selectRoom": "Select room"
+			"selectRoom": "Select room",
+			"close": "Close floor plan"
 		},
 		"appError": {
 			"reportError": "Report error",
@@ -160,6 +166,7 @@
 				"logout": "Sign out",
 				"appStart": "Start page",
 				"about": "About website",
+				"releaseNotes": "Release notes",
 				"umeaSe": "Umea.se",
 				"errorReport": "Report an error in the Estate portal",
 				"availabilityStatement": "Availability statement"
@@ -175,13 +182,22 @@
 		},
 		"aboutWebsite": {
 			"pageTitle": "About this website",
-			"title": "About the Estate portal",
-			"intro": "The Estate portal is Umeå municipality's internal service for information about municipal properties, buildings and premises.",
-			"usedForTitle": "What you can do in the Estate portal",
-			"usedForText": "In the Estate portal, you can search for properties and buildings, view information about premises and create cases such as fault reports, orders and changed space requirements.",
+			"title": "About The Estate Portal",
+			"intro": "The Estate Portal is Umeå municipality's internal service for information about municipal properties, buildings and premises.",
+			"usedForTitle": "What you can do in The Estate Portal",
+			"usedForText": "In The Estate Portal, you can search for properties and buildings, view information about premises and create cases such as fault reports, orders and changed space requirements.",
 			"supplierTitle": "Supplier",
 			"supplierText": "The Estate portal is provided by IT at Umeå municipality.",
-			"placeholderText": "This page is an initial placeholder and will be expanded with more information later."
+			"intranetLink": "Read more about The Estate Portal here on the Intranet."
+		},
+		"releaseBanner": {
+			"text": "The Estate Portal have gotten an update!",
+			"readMore": "Read more about it here."
+		},
+		"releaseNotes": {
+			"pageTitle": "Release notes",
+			"title": "Release notes",
+			"intro": "Here you can read about news and changes in The Estate Portal."
 		},
 		"pageNotFound": {
 			"pageTitle": "Page could not be found",
@@ -217,16 +233,38 @@
 			"button": "OK, I understand"
 		},
 		"estateSearch": {
-			"breadcrumb": "Estate portal",
+			"title": "Search",
+			"description": "Search the municipality's properties, buildings and premises.",
+			"breadcrumb": "Search",
 			"searchPlaceholder": "Search by property, address or building...",
 			"searchButton": "Search",
-			"filter": "Filter",
+			"showFilters": "Show search filters",
+			"hideFilters": "Hide search filters",
 			"selectOnMap": "Select on map",
-			"noResults": "We could not find any properties or buildings that matched your search."
+			"noResults": "We could not find anything that matched your search.",
+			"noSearchYet": "Your search results show up here. Search by property, address or building to get started.",
+			"resultsHeading": "Search results",
+			"noResultsForType": {
+				"estate": "No properties matched your search.",
+				"building": "No buildings matched your search."
+			},
+			"otherTypeHeading": {
+				"estate": "Matches among properties",
+				"building": "Matches among buildings"
+			}
 		},
 		"estateSearchFilter": {
+			"typeLabel": "Search for",
+			"typeFilter": {
+				"estate": "Properties",
+				"building": "Buildings"
+			},
+			"typeTag": {
+				"estate": "Showing properties only",
+				"building": "Showing buildings only"
+			},
 			"businessTypeLabel": "Main business type",
-			"clearFilter": "Clear filter"
+			"clearAll": "Clear all filters"
 		},
 		"estatePortal": {
 			"title": "Estate portal",
@@ -247,6 +285,43 @@
 			},
 			"feedbackTitle": "How does estate portal work for you?"
 		},
+		"estateStart": {
+			"showAllResultsFor": "Show all results for “{query}”",
+			"openMap": "Open map",
+			"searching": "Searching…"
+		},
+		"estateOngoingErrands": {
+			"title": "My work orders ({count})",
+			"titleWithoutCount": "My work orders",
+			"noErrands": "Here you can see your ongoing errands. If you submit a fault report or an order, it will show up here.",
+			"loadFailed": "Could not load your work orders.",
+			"showAll": "Show all",
+			"showFewer": "Show fewer",
+			"showClosed": "Show closed",
+			"hideClosed": "Hide closed",
+			"status": {
+				"sent": "Sent",
+				"received": "Received",
+				"inProgress": "In progress",
+				"closed": "Closed",
+				"onHold": "On hold",
+				"materialOrdered": "Material ordered",
+				"sentToContractor": "Sent to contractor"
+			}
+		},
+		"workOrderModal": {
+			"title": "Work order",
+			"where": "Location",
+			"showBuilding": "Show building",
+			"room": "Room: {room}",
+			"indoor": "Indoor",
+			"outdoor": "Outdoor",
+			"description": "Description",
+			"workOrderNumber": "Work order number {number}",
+			"sentOn": "Sent {date}",
+			"updatedOn": "Updated {date}",
+			"performed": "Work performed"
+		},
 		"estateFavorite": {
 			"title": "My favorites ({count})",
 			"noFavorites": "Here you can see your favorites. To add a favorite, click on the star next to the name of a property, building, or room.",
@@ -256,7 +331,14 @@
 		"estateDetails": {
 			"noBuildings": "This property has no buildings associated with it.",
 			"buildings": "Buildings",
-			"informationMissing": "Information missing"
+			"informationMissing": "Information missing",
+			"sort": {
+				"label": "Sort by",
+				"areaDesc": "Area (largest first)",
+				"areaAsc": "Area (smallest first)",
+				"name": "Name (A–Z)",
+				"address": "Address (A–Z)"
+			}
 		},
 		"buildingDetails": {
 			"floorLabel": "Floor",
@@ -266,6 +348,7 @@
 			"blueprintButton": "Blueprint",
 			"blueprintMissingTooltip": "Blueprint missing",
 			"contactPersonsButton": "Contact persons",
+			"contactPersonsButtonShort": "Contacts",
 			"contactPersonsMissingTooltip": "No contact persons specified",
 			"documentsButton": "Documents",
 			"documentsMissingTooltip": "There are no documents associated with this building",
@@ -273,6 +356,7 @@
 			"buildingImage": "Image of building",
 			"room": {
 				"title": "Rooms",
+				"noRoomInformation": "Room information for this building is missing.",
 				"search": "Search",
 				"searchPlaceholder": "Search rooms...",
 				"floor": "Floor",
@@ -280,23 +364,22 @@
 				"noMatches": "There are no rooms that match your search.",
 				"noMatchesSelectedFloor": "There are no rooms on floor {floor} that match your search.",
 				"matchesOnOtherFloors": "Rooms on other floors",
-				"showMoreRooms": "Show more rooms"
+				"showMoreRooms": "Show more rooms",
+				"showFewerRooms": "Show fewer rooms"
 			}
 		},
 		"buildingContact": {
-			"title": "Contact persons",
+			"valueMissing": "Not specified",
 			"propertyManager": "Property manager",
 			"operationsManager": "Operations manager",
 			"operationCoordinator": "Operations coordinator",
 			"rentalAdministrator": "Rental administrator",
 			"caretaker": "Caretaker",
 			"operationsTechnician": "Operations technician",
-			"valueMissing": "Not specified",
 			"callAriaLabel": "Call {name}",
 			"emailAriaLabel": "Send email to {name}"
 		},
 		"buildingDocument": {
-			"title": "Documents",
 			"searchPlaceholder": "Search documents...",
 			"category": "Category",
 			"downloadFile": "Download {filename}",
@@ -311,13 +394,21 @@
 		"faultReport": {
 			"title": "Fault Report",
 			"description": "If something isn’t working properly on the premises, you can report the fault here.",
+			"stepCounter": "Step {step}/{stepCount}",
+			"stepTitle": {
+				"building": "Building",
+				"location": "Location",
+				"room": "Room"
+			},
 			"changeAnswer": "Change",
 			"submitButton": "Submit Fault Report",
 			"rentedBuildingNotice": "This building is rented, which means that the property owner is responsible for maintenance and repairs.",
 			"rentedBuildingNoticeConfirmButton": "I understand, continue anyway",
 			"building": {
 				"select": "Select building",
-				"selected": "Building"
+				"selected": "Building",
+				"showMap": "Show on map",
+				"hideMap": "Hide map"
 			},
 			"location": {
 				"select": "Is the problem indoor or outdoor?",
@@ -340,7 +431,12 @@
 				"select": "Which room does it concern?",
 				"selected": "Room",
 				"none": "No room",
-				"skip": "Skip"
+				"noneOutdoor": "This is an outdoor fault",
+				"skip": "Skip",
+				"skipButton": "Skip this step",
+				"skipHelp": "Can't find the room? Skip this step and explain where it is in the next step.",
+				"noInfoTitle": "No room information",
+				"noInfo": "Room information for this building is missing, so this step is skipped. Please describe where in the building the fault is in the next step."
 			},
 			"general": {
 				"problemTitle": "Problem description",
@@ -379,6 +475,24 @@
 				"contactLabel": "Contact information",
 				"contactHelpText": "Provide the contact details of the person to be contacted if more information is needed to handle the order, or if there are questions regarding the order."
 			},
+			"stepTitle": {
+				"building": "Building",
+				"location": "Location",
+				"room": "Room"
+			},
+			"location": {
+				"select": "Is the order indoor or outdoor?",
+				"indoor": {
+					"select": "Indoor",
+					"description": "Select indoor if the order concerns the inside of the building, for example rooms, corridors or communal areas.",
+					"selected": "You have selected that the order concerns the interior of the building."
+				},
+				"outdoor": {
+					"select": "Outdoor",
+					"description": "Select outdoor if the order concerns the outside of the building, for example the façade, roof or surrounding areas.",
+					"selected": "You have selected that the order concerns the exterior of the building."
+				}
+			},
 			"category": {
 				"title": "Type of order",
 				"select": "Select",
@@ -398,7 +512,10 @@
 				"noneAvailable": "There are no order services available for this building."
 			},
 			"room": {
-				"select": "Which room does the order concern?"
+				"select": "Which room does the order concern?",
+				"noneOutdoor": "This is an outdoor order",
+				"noInfoTitle": "No room information",
+				"noInfo": "Room information for this building is missing, so this step is skipped. Please describe where in the building the order applies in the next step."
 			},
 			"info": {
 				"title": "Information",
@@ -491,12 +608,26 @@
 			"selectOnMap": "Select on map",
 			"searchHelp": "Use the search box or select a location on the map to find the building you are looking for.",
 			"favoritesTitle": "My favorites ({count})",
-			"favoritesDescription": "You can also select a building or room directly from your favorites."
+			"favoritesDescription": "You can also select a building or room directly from your favorites.",
+			"showMore": "Show more results"
 		},
 		"roomSelector": {
+			"noneTitle": "No room",
 			"none": "You have not selected a room.",
-			"description": "Select a room from the list or mark it on the blueprint.",
-			"selectOnBlueprint": "Select on blueprint"
+			"selectOnBlueprint": "Select on blueprint",
+			"showBlueprint": "Show on blueprint",
+			"hideBlueprint": "Hide blueprint",
+			"floorArea": "Floor {floor} · {area} m²",
+			"methodLead": "How do you want to find the room the fault is in?",
+			"methodList": "Choose from the list",
+			"methodListDesc": "Search by room name or number",
+			"methodBlueprint": "Select on blueprint",
+			"methodBlueprintDesc": "Point out the room on the plan",
+			"noMatchesTitle": "No rooms match",
+			"noMatchesSkipHint": "You can skip this step and describe where the fault is in the next step.",
+			"clearFilters": "Clear filters",
+			"fetchErrorTitle": "Couldn't load the rooms",
+			"fetchErrorSkipHint": "You can skip this step and describe where the fault is in the next step."
 		}
 	}
 }

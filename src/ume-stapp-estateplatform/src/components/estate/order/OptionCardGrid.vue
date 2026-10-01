@@ -1,8 +1,5 @@
 <template>
-	<div
-		class="option-card-grid pt-4"
-		:class="{ 'option-card-grid--dense': dense }"
-	>
+	<div class="option-card-grid" :class="{ 'option-card-grid--dense': dense }">
 		<v-card
 			v-for="option in options"
 			:key="option.value"
@@ -101,7 +98,6 @@ const emit = defineEmits<{
 		min-height: 220px;
 		display: flex;
 		flex-direction: column;
-		border: 1px solid rgba(0, 0, 0, 0.08);
 
 		&--selected {
 			outline: 2px solid rgb(46, 125, 50);

@@ -160,17 +160,18 @@ public class PythagorasClientWorkOrderTests
     [Fact]
     public async Task GetWorkOrderInfosByIdsAsync_Success_PostsAndDeserializes()
     {
-        (PythagorasClient client, StubHandler handler, _) = Build(content: "[{\"id\":5,\"statusCategory\":\"OPEN\"}]");
+        (PythagorasClient client, StubHandler handler, _) = Build(
+            content: "[{\"id\":5,\"statusCategory\":\"OPEN\"},{\"id\":6},{\"id\":7}]");
 
-        IReadOnlyList<WorkOrderInfoDto> result = await client.GetWorkOrderInfosByIdsAsync([5]);
+        IReadOnlyList<WorkOrderInfoDto> result = await client.GetWorkOrderInfosByIdsAsync([5, 6, 7]);
 
-        WorkOrderInfoDto info = result.ShouldHaveSingleItem();
-        info.Id.ShouldBe(5);
-        info.StatusCategory.ShouldBe("OPEN");
+        result.Select(e => e.Id).ShouldBe([5, 6, 7]);
+        result[0].StatusCategory.ShouldBe("OPEN");
 
         handler.LastRequest!.Method.ShouldBe(HttpMethod.Post);
-        handler.LastRequest.RequestUri!.ToString().ShouldBe("https://example.org/rest/v1/workorder/info");
-        handler.LastRequestContent.ShouldBe("[5]");
+        // maxResults tracks the id count: a constant here would truncate a full batch.
+        handler.LastRequest.RequestUri!.ToString().ShouldBe("https://example.org/rest/v1/workorder/info?maxResults=3");
+        handler.LastRequestContent.ShouldBe("[5,6,7]");
     }
 
     [Fact]

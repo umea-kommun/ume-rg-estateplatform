@@ -17,7 +17,7 @@ namespace Umea.se.EstateService.DataStore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.5")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -494,6 +494,9 @@ namespace Umea.se.EstateService.DataStore.Migrations
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<DateTimeOffset?>("CompletedAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
 
@@ -530,6 +533,16 @@ namespace Umea.se.EstateService.DataStore.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("PerformedDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("PerformedDescriptionAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("PythagorasStatusCategory")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
                     b.Property<int?>("PythagorasStatusId")
                         .HasColumnType("int");
 
@@ -540,6 +553,10 @@ namespace Umea.se.EstateService.DataStore.Migrations
                     b.Property<int?>("PythagorasWorkOrderId")
                         .HasColumnType("int");
 
+                    b.Property<string>("PythagorasWorkOrderName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<int>("RetryCount")
                         .HasColumnType("int");
 
@@ -549,6 +566,12 @@ namespace Umea.se.EstateService.DataStore.Migrations
                     b.Property<string>("RoomName")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTimeOffset?>("StatusChangedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("StatusCheckedAt")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<DateTimeOffset?>("SubmittedAt")
                         .HasColumnType("datetimeoffset");

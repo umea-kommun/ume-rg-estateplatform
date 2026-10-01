@@ -152,7 +152,9 @@ const fileInput = ref<HTMLInputElement | null>(null);
 const errors = ref<string[]>([]);
 
 const hasErrors = computed(
-	() => errors.value.length > 0 || Object.keys(props.serverErrors ?? {}).length > 0
+	() =>
+		errors.value.length > 0 ||
+		Object.keys(props.serverErrors ?? {}).length > 0
 );
 
 const generalFileErrors = computed(() => {

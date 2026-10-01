@@ -21,6 +21,12 @@ public sealed class BuildingInfoModel : ISearchable, IFavoriteable
     public int? NumFloors { get; set; }
     public int? NumRooms { get; set; }
     public int? NumDocuments { get; set; }
+
+    /// <summary>
+    /// Whether the building has real room information. False when the building only carries the
+    /// Pythagoras placeholder structure: a single floor named "VF01" with a single room named "R01".
+    /// </summary>
+    public bool HasRoomInformation { get; init; }
     public BusinessTypeModel? BusinessType { get; set; }
     public AddressModel? Address { get; init; }
     public BuildingAscendantModel? Estate { get; set; }

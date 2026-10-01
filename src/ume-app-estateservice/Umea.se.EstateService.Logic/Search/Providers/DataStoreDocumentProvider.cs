@@ -1,3 +1,4 @@
+using Umea.se.EstateService.Logic.Handlers;
 using Umea.se.EstateService.Shared.Data;
 using Umea.se.EstateService.Shared.Data.Entities;
 using Umea.se.EstateService.Shared.Search;
@@ -81,6 +82,7 @@ public class DataStoreDocumentProvider(IDataStore dataStore) : IPythagorasDocume
             Ancestors = [],
             NumFloors = building.Floors.Count,
             NumRooms = building.Rooms.Count,
+            HasRoomInformation = EstateModelMapper.HasRoomInformation(building),
             ExtendedProperties = CreateBuildingExtendedProperties(building)
         };
     }

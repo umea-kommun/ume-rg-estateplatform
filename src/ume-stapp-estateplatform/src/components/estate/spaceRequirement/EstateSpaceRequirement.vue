@@ -31,6 +31,7 @@
 					<!-- CATEGORY (the primary choice - shown first, no building gate) -->
 					<estate-order-step
 						id="space-requirement-category"
+						class="mt-0"
 						:title="$t('component.spaceRequirement.category.title')"
 					>
 						<div
@@ -50,6 +51,7 @@
 						</div>
 						<option-card-grid
 							v-else-if="categoryCards.length > 0"
+							class="mt-4"
 							:options="categoryCards"
 							:selected="selectedCategoryValue"
 							dense
@@ -156,9 +158,7 @@
 										'component.spaceRequirement.building.select'
 								  )
 						"
-						:show-clear="!!selectedBuilding"
 						:show-skip="!selectedBuilding"
-						@clear="changeBuilding"
 						@skip="showBuildingSelector = false"
 						class="mt-6"
 					>
@@ -178,7 +178,7 @@
 							type="warning"
 							variant="tonal"
 							rounded="lg"
-							class="mt-4"
+							class="mt-4 unsupported-building-alert"
 						>
 							{{
 								$t(
@@ -188,10 +188,13 @@
 						</v-alert>
 					</estate-order-step>
 
-					<!-- ROOM (optional refinement of the chosen building) -->
+					<!-- ROOM (optional refinement of the chosen building). Only
+					offered when the building has a room breakdown; without one there
+					is nothing to pick, so the room option is hidden entirely. -->
 					<div
 						v-if="
 							selectedBuilding &&
+							selectedBuilding.hasRoomInformation !== false &&
 							!showRoomSelector &&
 							!selectedRoom
 						"
@@ -208,10 +211,12 @@
 						</v-btn>
 					</div>
 					<estate-order-step
-						v-else-if="selectedBuilding"
-						:show-clear="!!selectedRoom"
+						v-else-if="
+							selectedBuilding &&
+							(selectedBuilding.hasRoomInformation !== false ||
+								selectedRoom)
+						"
 						:show-skip="!selectedRoom"
-						@clear="changeRoom"
 						@skip="showRoomSelector = false"
 						class="mt-6"
 					>
@@ -225,23 +230,15 @@
 								}}
 							</span>
 						</template>
-						<template
-							#header-btn
-							v-if="
-								selectedBuilding.blueprintAvailable &&
-								!selectedRoom
-							"
-						>
-							<room-blueprint-selector
-								:building="selectedBuilding"
-								@room-selected="selectRoom"
-							/>
-						</template>
+						<!-- Room is optional here: the step header's "Hoppa över" is
+						the way out, so the picker's own skip is turned off. The picker
+						owns list/blueprint; the selected-room card owns "Ändra". -->
 						<room-selector
 							class="mt-2"
 							:building="selectedBuilding"
 							:skipped-room="false"
 							:selected-room="selectedRoom"
+							:skippable="false"
 							@select="selectRoom"
 						/>
 					</estate-order-step>
@@ -362,21 +359,18 @@ import {
 	ISubmitEstateOrder,
 	IWorkOrderCategoryOption,
 } from '@/models/Interfaces';
-import { computed, onMounted, ref, useTemplateRef, watch } from 'vue';
+import { computed, onMounted, ref, useTemplateRef } from 'vue';
 import { EstateRoutes } from '@/router/routes';
 import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
 import { useI18n } from 'vue-i18n';
-import { EstateOrderCategory } from '@/models/Enums';
-import { useRoute, useRouter } from 'vue-router';
-import { DispatchType } from '@/models/Enums';
+import { EstateOrderCategory, DispatchType } from '@/models/Enums';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import BaseFileUpload from '@/components/shared/BaseFileUpload.vue';
 import { Form as VeeForm } from 'vee-validate';
 import BaseTextBox from '@/components/shared/BaseTextBox.vue';
 import ErrorService from '@/utils/ErrorService';
-import { useServerValidation } from '@/utils/useServerValidation';
-import { useWorkOrderConfig } from '@/utils/useWorkOrderConfig';
+import { useWorkOrderForm } from '@/utils/useWorkOrderForm';
 import BuildingSelector from '../faultReport/buildingSelector/BuildingSelector.vue';
 import RoomSelector from '../faultReport/roomSelector/RoomSelector.vue';
 import EstateSpaceRequirementCompleted from './EstateSpaceRequirementCompleted.vue';
@@ -384,11 +378,8 @@ import OptionCardGrid from '../order/OptionCardGrid.vue';
 import type { OptionCard } from '../order/OptionCardGrid.vue';
 import FaultContactInfo from '../faultReport/FaultContactInfo.vue';
 import EstateOrderStep from '../order/EstateOrderStep.vue';
-import RoomBlueprintSelector from '../faultReport/roomSelector/RoomBlueprintSelector.vue';
 import BuildingMapSelector from '../faultReport/buildingSelector/BuildingMapSelector.vue';
 
-const route = useRoute();
-const router = useRouter();
 const { t, te, tm, locale } = useI18n();
 const store = useStore<IRootState>();
 
@@ -402,8 +393,31 @@ const breadcrumbs = computed(() => {
 	];
 });
 
-const selectedBuilding = ref<IBuildingDetails | null>(null);
-const selectedRoom = ref<IBuildingRoom | null>(null);
+const {
+	selectedBuilding,
+	selectedRoom,
+	isLoadingFromQuery,
+	isBusySubmitting,
+	hasSubmitted,
+	problemDescription,
+	attachments,
+	uploadMaxFiles,
+	uploadMaxSizeMb,
+	uploadAccept,
+	serverErrors,
+	fileServerErrors,
+	fieldError,
+	descriptionServerError,
+	contactName,
+	contactEmail,
+	contactPhone,
+	updateQueryParams,
+	loadFromQueryParams,
+	submit,
+} = useWorkOrderForm();
+
+// Category and the opt-in selector visibility are this flow's own state; building
+// and room come from the shared work-order form (both optional here, never skipped).
 const selectedCategoryId = ref<number | null>(null);
 
 // Building and room are optional and most space requirements need neither, so their
@@ -414,41 +428,9 @@ const showRoomSelector = ref(false);
 const categoryOptions = ref<IWorkOrderCategoryOption[]>([]);
 const isLoadingCategories = ref(false);
 
-const isLoadingFromQuery = ref(false);
-const isBusySubmitting = ref(false);
-const hasSubmitted = ref(false);
 const submitAttempted = ref(false);
 
-const user = computed(() => store.state.user);
-
 const formValidator = useTemplateRef('formValidator');
-const problemDescription = ref('');
-const attachments = ref<File[]>([]);
-
-const {
-	maxFiles: uploadMaxFiles,
-	maxSizeMb: uploadMaxSizeMb,
-	accept: uploadAccept,
-} = useWorkOrderConfig();
-
-const {
-	serverErrors,
-	fileErrors: fileServerErrors,
-	fieldError,
-	setFromError,
-	clear: clearServerErrors,
-} = useServerValidation('app.error.estate.validation');
-const descriptionServerError = fieldError('description');
-
-const contactName = ref(user.value?.fullName ?? '');
-const contactEmail = ref(user.value?.email ?? '');
-const contactPhone = ref('');
-
-watch(
-	[problemDescription, attachments, contactName, contactEmail, contactPhone],
-	clearServerErrors,
-	{ deep: true }
-);
 
 // Material Icons (md set) per SpaceRequirement leaf category, keyed by the stable
 // Pythagoras leaf-category id. New/unknown categories fall back to a neutral icon.
@@ -508,8 +490,10 @@ const categoryMissing = computed(
 );
 
 // Aggregated, anchor-linked summary of the non-form (card-based) requirements,
-// shown alongside the vee-validate field errors above the submit button. Building
-// is optional, so only the category can be "missing" here.
+// shown alongside the vee-validate field errors above the submit button. The
+// building is optional, but if one IS picked it must support this work order type
+// - otherwise submit silently no-ops, so surface it here too (the inline warning
+// up in the building step may be scrolled out of view).
 const manualErrors = computed(() => {
 	const list: { id: string; message: string }[] = [];
 	if (categoryMissing.value) {
@@ -518,19 +502,14 @@ const manualErrors = computed(() => {
 			message: t('component.spaceRequirement.category.required'),
 		});
 	}
+	if (submitAttempted.value && !selectedBuildingSupportsType.value) {
+		list.push({
+			id: 'space-requirement-building',
+			message: t('component.spaceRequirement.building.notSupported'),
+		});
+	}
 	return list;
 });
-
-const updateQueryParams = () => {
-	const queryParams: Record<string, string | number | undefined> = {
-		buildingId: selectedBuilding.value?.id,
-		roomId: selectedRoom.value?.id,
-		submitted: hasSubmitted.value ? 'true' : undefined,
-	};
-	if (route.name) {
-		router.replace({ name: route.name, query: queryParams });
-	}
-};
 
 // SpaceRequirement categories are type-global (the endpoint is keyed by work-order type,
 // not by building), so we load them once up front - independent of any building selection.
@@ -559,8 +538,10 @@ const selectBuilding = async (building: IBuildingDetails | null) => {
 	selectedRoom.value = null;
 	showRoomSelector.value = false;
 	selectedBuilding.value = building;
-	// Collapse back to the button when the building is cleared; keep it open otherwise.
-	showBuildingSelector.value = building !== null;
+	// Keep the selector open even when the building is cleared, so pressing "Ändra"
+	// lands on the building search instead of collapsing to the "add" button. The
+	// step's own skip is the way back to no building.
+	showBuildingSelector.value = true;
 	updateQueryParams();
 };
 
@@ -569,19 +550,6 @@ const selectRoom = async (room: IBuildingRoom | null) => {
 	// Collapse back to the button when the room is cleared.
 	showRoomSelector.value = room !== null;
 	updateQueryParams();
-};
-
-// "Ändra" resets the current pick but keeps the selector expanded (and empty), so the user
-// lands on the same state as the up-front prompt - ready to choose another building/room -
-// rather than folding all the way back to the button. Folding away is "Hoppa över" (skip).
-const changeBuilding = async () => {
-	await selectBuilding(null);
-	showBuildingSelector.value = true;
-};
-
-const changeRoom = async () => {
-	await selectRoom(null);
-	showRoomSelector.value = true;
 };
 
 const selectCategory = async (value: string) => {
@@ -606,48 +574,6 @@ const selectBuildingAndRoom = async ({
 	selectRoom(room);
 };
 
-const loadFromQueryParams = async () => {
-	const query = route.query;
-
-	if (query.submitted === 'true') {
-		hasSubmitted.value = true;
-		return;
-	}
-
-	const buildingId = query.buildingId
-		? parseInt(query.buildingId as string)
-		: null;
-	const roomId = query.roomId ? parseInt(query.roomId as string) : null;
-
-	if (buildingId) {
-		isLoadingFromQuery.value = true;
-		try {
-			const building = await store.dispatch(
-				DispatchType.GetBuildingById,
-				{
-					buildingId,
-				}
-			);
-			await selectBuilding(building ?? null);
-			if (building && roomId) {
-				const room = await store.dispatch(DispatchType.GetRoomById, {
-					roomId,
-				});
-				selectRoom(room);
-			}
-		} catch (err) {
-			ErrorService.onError({
-				err,
-				hidden: true,
-				message:
-					'Failed to load building from query params on space requirement page, user have to manually select',
-			});
-		}
-	}
-
-	isLoadingFromQuery.value = false;
-};
-
 const submitReport = async () => {
 	submitAttempted.value = true;
 	const validationResult = await formValidator.value?.validate();
@@ -661,8 +587,6 @@ const submitReport = async () => {
 		return;
 	}
 
-	isBusySubmitting.value = true;
-
 	const reportData: ISubmitEstateOrder = {
 		buildingId: selectedBuilding.value?.id,
 		category: EstateOrderCategory.SpaceRequirement,
@@ -675,28 +599,21 @@ const submitReport = async () => {
 		notifierPhone: contactPhone.value,
 	};
 
-	try {
-		clearServerErrors();
-		await store.dispatch(DispatchType.SubmitEstateOrder, reportData);
-
-		hasSubmitted.value = true;
-		updateQueryParams();
-		window.scrollTo({ top: 0 });
-	} catch (err) {
-		if (!setFromError(err)) {
-			ErrorService.onError({
-				err,
-				message: t('app.error.estate.unableToSubmitOrder'),
-			});
-		}
-	} finally {
-		isBusySubmitting.value = false;
-	}
+	await submit(
+		reportData,
+		DispatchType.SubmitEstateOrder,
+		t('app.error.estate.unableToSubmitOrder')
+	);
 };
 
 onMounted(() => {
 	loadCategories();
-	loadFromQueryParams();
+	loadFromQueryParams({
+		onBuilding: (building) => selectBuilding(building),
+		onRoom: (room) => selectRoom(room),
+		errorContext:
+			'Failed to load building from query params on space requirement page, user have to manually select',
+	});
 });
 </script>
 
@@ -714,6 +631,13 @@ onMounted(() => {
 		:deep(.help-and-error-wrap) {
 			margin-bottom: 8px;
 		}
+	}
+
+	// The warning alert renders its text in the light amber warning colour, which
+	// is too low-contrast to read. Keep the amber icon/border but force the message
+	// itself to a dark, high-contrast colour.
+	.unsupported-building-alert :deep(.v-alert__content) {
+		color: $grey-darken-4;
 	}
 }
 </style>

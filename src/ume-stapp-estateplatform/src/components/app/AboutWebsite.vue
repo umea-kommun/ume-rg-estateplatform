@@ -8,7 +8,7 @@
 			<nav-breadcrumbs class="mt-4 mb-2" :breadcrumbs="breadcrumbs" />
 		</template>
 
-		<div class="content px-6 py-4">
+		<div class="content py-4">
 			<h1>{{ t('component.aboutWebsite.title') }}</h1>
 			<p class="lead mt-4">
 				{{ t('component.aboutWebsite.intro') }}
@@ -23,10 +23,14 @@
 				<h2>{{ t('component.aboutWebsite.supplierTitle') }}</h2>
 				<p>{{ t('component.aboutWebsite.supplierText') }}</p>
 			</section>
-
-			<v-alert class="mt-8" rounded="lg" color="info" variant="tonal">
-				{{ t('component.aboutWebsite.placeholderText') }}
-			</v-alert>
+			
+			<section class="mt-8">
+				<a href="https://www.intranet.umea.se/sidor/serviceitochlokaler/itsystemitstod/systemao/felanmalningarbestallningarochfastighetsinformationfastighetsportalen.4.463658d2177d4c931e02e51.html"
+				   target="_blank"
+				   rel="noopener noreferrer">
+					{{ t('component.aboutWebsite.intranetLink') }}
+				</a>
+			</section>
 		</div>
 	</app-content>
 </template>
@@ -76,6 +80,10 @@ const breadcrumbs = computed(() => {
 
 	.lead {
 		font-size: size(20);
+	}
+	
+	a {
+		font-size: size(18);
 	}
 }
 </style>

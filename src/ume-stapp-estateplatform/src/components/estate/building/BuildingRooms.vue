@@ -24,6 +24,7 @@
 				"
 				prepend-inner-icon="search"
 				v-model="searchTerm"
+				class="filter-search"
 				color="primary"
 				rounded="lg"
 				variant="outlined"
@@ -35,6 +36,7 @@
 				:label="t('component.buildingDetails.room.type')"
 				:items="roomTypes"
 				v-model="selectedRoomType"
+				class="filter-type"
 				color="primary"
 				rounded="lg"
 				density="comfortable"
@@ -44,8 +46,9 @@
 			/>
 			<v-select
 				:label="t('component.buildingDetails.room.floor')"
-				v-model="selectedFloorId"
+				v-model="selectedFloorOption"
 				:items="floors ?? []"
+				class="filter-floor"
 				item-title="name"
 				item-value="id"
 				color="primary"
@@ -79,6 +82,7 @@
 			<room-list
 				:rooms="filteredRoomsForFloor"
 				:focused-room-id="focusedRoomId"
+				:no-padding="noPadding"
 				@room-click="clickRoom"
 			/>
 			<div v-if="selectedFloorId && filteredRoomsForOtherFloors.length">
@@ -90,6 +94,7 @@
 				<room-list
 					:rooms="filteredRoomsForOtherFloors"
 					:focused-room-id="focusedRoomId"
+					:no-padding="noPadding"
 					@room-click="clickRoom"
 				/>
 			</div>
@@ -108,6 +113,7 @@ import { sortByBoolean } from '@/utils/sortByBoolean';
 import { useStore } from 'vuex';
 import RoomList from './RoomList.vue';
 import ErrorService from '@/utils/ErrorService';
+import { pickDefaultFloor } from '../defaultFloor';
 
 const props = defineProps<{
 	buildingId: number;
@@ -131,6 +137,18 @@ const selectedFloorId = computed<number | null>({
 	get: () => props.floor,
 	set: (value: number | null) => {
 		emit('update:floor', value);
+	},
+});
+
+// The id arrives before the floors it names, and the select would render the
+// raw id until the list catches up
+const selectedFloorOption = computed<number | null>({
+	get: () =>
+		floors.value?.some((floor) => floor.id === selectedFloorId.value)
+			? selectedFloorId.value
+			: null,
+	set: (value: number | null) => {
+		selectedFloorId.value = value;
 	},
 });
 
@@ -205,6 +223,10 @@ const fetchFloors = async (buildingId: number) => {
 			buildingId,
 			includeRooms: false,
 		});
+
+		if (floors.value?.length && selectedFloorId.value === null) {
+			selectedFloorId.value = pickDefaultFloor(floors.value)?.id ?? null;
+		}
 	} catch (err) {
 		ErrorService.onError({
 			err,
@@ -291,8 +313,22 @@ h3 {
 		min-width: 150px;
 		flex: 2;
 
-		&.v-select {
+		&.filter-floor {
 			flex: 1;
+		}
+	}
+
+	@media only screen and (max-width: $estate-mobile-threshold) {
+		.v-input {
+			min-width: 0;
+
+			&.filter-search {
+				flex: 1 1 100%;
+			}
+			&.filter-type,
+			&.filter-floor {
+				flex: 1 1 calc(50% - 8px);
+			}
 		}
 	}
 }

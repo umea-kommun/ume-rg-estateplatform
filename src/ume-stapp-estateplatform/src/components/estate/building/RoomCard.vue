@@ -1,7 +1,7 @@
 <template>
 	<v-list-item
 		:key="room.id"
-		class="room-card pt-4"
+		class="room-card py-4"
 		:data-room-id="room.id"
 		:class="{ focused: room.id === focusedRoomId }"
 	>
@@ -26,7 +26,6 @@
 			</li>
 			<li>{{ room.grossArea?.toLocaleString() }} m²</li>
 		</ul>
-		<hr class="mt-4" />
 	</v-list-item>
 </template>
 
@@ -44,10 +43,10 @@ defineProps<{
 <style scoped lang="scss">
 .room-card {
 	transition: background-color 0.2s ease-in-out;
+	border-bottom: solid 1px $grey-lighten-2;
 
-	hr {
-		border: none;
-		border-bottom: solid 1px $grey-lighten-2;
+	&:first-child {
+		border-top: solid 1px $grey-lighten-2;
 	}
 
 	.title {

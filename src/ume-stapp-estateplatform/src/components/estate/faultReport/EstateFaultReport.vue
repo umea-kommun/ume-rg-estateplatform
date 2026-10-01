@@ -24,24 +24,27 @@
 
 					<!-- BUILDING SELECTOR -->
 					<estate-order-step
-						:title="
-							selectedBuilding
-								? $t('component.faultReport.building.selected')
-								: $t('component.faultReport.building.select')
-						"
+						:title="$t('component.faultReport.stepTitle.building')"
 						:step="1"
 						:step-count="stepCount"
-						:show-clear="!!selectedBuilding"
-						@clear="selectBuilding(null)"
+						:state="faultStepState(1)"
+						ref="buildingTitle"
+						class="mt-0"
+						rail
 					>
-						<template #header-btn v-if="!selectedBuilding">
-							<building-map-selector @select="selectBuilding" />
-						</template>
 						<building-selector
 							:selected-building="selectedBuilding"
 							@select="selectBuilding"
 							@select-room="selectBuildingAndRoom"
-						/>
+						>
+							<template #search-action>
+								<building-map-selector
+									@select="selectBuilding"
+								/>
+							</template>
+						</building-selector>
+						<!-- Rented-building notice: shown once a rented building is
+					picked, gating the next step until acknowledged -->
 						<v-alert
 							v-if="
 								selectedBuildingIsRented &&
@@ -84,51 +87,20 @@
 
 					<!-- OUTDOOR / INDOOR SELECTOR -->
 					<estate-order-step
-						v-if="
-							selectedBuilding &&
-							(!selectedBuildingIsRented ||
-								hasConfirmedRentedBuildingNotice)
-						"
-						:show-clear="!!problemLocation"
-						@clear="selectLocation(null)"
+						:title="$t('component.faultReport.stepTitle.location')"
 						:step="2"
 						:step-count="stepCount"
-						class="mt-6"
+						:state="faultStepState(2)"
 						ref="locationTitle"
+						rail
 					>
-						<template #title>
-							<span
-								v-if="
-									problemLocation ===
-									EstateFaultLocation.Indoor
-								"
-							>
-								{{
-									$t(
-										'component.faultReport.location.indoor.title'
-									)
-								}}
-							</span>
-							<span
-								v-else-if="
-									problemLocation ===
-									EstateFaultLocation.Outdoor
-								"
-							>
-								{{
-									$t(
-										'component.faultReport.location.outdoor.title'
-									)
-								}}
-							</span>
-							<span v-else>
-								{{
-									$t('component.faultReport.location.select')
-								}}
-							</span>
-						</template>
+						<p
+							v-if="!problemLocation"
+							class="text-medium-emphasis mt-2"
+						>
+							{{ $t('component.faultReport.location.select') }}
+						</p>
 						<fault-location-selector
-							class="mt-2"
 							:problem-location="problemLocation"
 							@select="selectLocation"
 						/>
@@ -136,67 +108,72 @@
 
 					<!-- ROOM SELECTOR -->
 					<estate-order-step
-						v-if="
-							problemLocation === EstateFaultLocation.Indoor &&
-							selectedBuilding
-						"
+						:title="$t('component.faultReport.stepTitle.room')"
 						:step="3"
 						:step-count="stepCount"
-						:show-clear="!!selectedRoom || skippedRoom"
-						@clear="selectRoom(null)"
-						:show-skip="!selectedRoom && !skippedRoom"
-						@skip="selectRoom(null, true)"
+						:state="faultStepState(3)"
 						ref="roomTitle"
-						class="mt-6"
+						rail
 					>
-						<template #title>
-							<span v-if="selectedRoom && !skippedRoom">
-								{{ $t('component.faultReport.room.selected') }}
-							</span>
-							<span v-else-if="!selectedRoom && skippedRoom">
-								{{ $t('component.faultReport.room.none') }}
-							</span>
-							<span v-else>
-								{{ $t('component.faultReport.room.select') }}
-							</span>
-						</template>
-						<template
-							#header-btn
-							v-if="
-								selectedBuilding.blueprintAvailable &&
-								!selectedRoom &&
-								!skippedRoom
+						<!-- Building has no real room breakdown: the step is skipped
+						automatically with an explanation, like an outdoor fault. -->
+						<selection-card
+							v-if="roomInfoUnavailable"
+							class="mt-2"
+							muted
+							icon="no_meeting_room"
+							:title="
+								$t('component.faultReport.room.noInfoTitle')
 							"
-						>
-							<room-blueprint-selector
-								:building="selectedBuilding"
-								@room-selected="selectRoom"
-							/>
-						</template>
+							:description="
+								$t('component.faultReport.room.noInfo')
+							"
+						/>
 						<room-selector
+							v-else-if="
+								problemLocation ===
+									EstateFaultLocation.Indoor &&
+								selectedBuilding
+							"
 							class="mt-2"
 							:building="selectedBuilding"
 							:skipped-room="skippedRoom"
 							:selected-room="selectedRoom"
 							@select="selectRoom"
+							@skip="selectRoom(null, true)"
+						/>
+						<selection-card
+							v-else-if="
+								problemLocation === EstateFaultLocation.Outdoor
+							"
+							class="mt-2"
+							muted
+							icon="no_meeting_room"
+							:title="$t('component.roomSelector.noneTitle')"
+							:description="
+								$t('component.faultReport.room.noneOutdoor')
+							"
 						/>
 					</estate-order-step>
 
 					<!-- PROBLEM DESCRIPTION -->
 					<vee-form
-						v-if="showLastSteps"
 						ref="formValidator"
 						v-slot="{ errors }"
 						@submit.prevent="submitReport"
 					>
+						<!-- Final step: problem description, attachments and the
+						(pre-filled) contact details together, so the rail stays
+						strictly one-step-at-a-time through to submit. -->
 						<estate-order-step
 							:title="
 								$t('component.faultReport.general.problemTitle')
 							"
-							:step="stepCount - 1"
+							:step="stepCount"
 							:step-count="stepCount"
-							class="mt-6"
+							:state="faultStepState(4)"
 							ref="problemTitle"
+							rail
 						>
 							<base-text-box
 								id="problem-description"
@@ -236,85 +213,91 @@
 								:server-errors="fileServerErrors"
 								class="mt-6"
 							/>
-						</estate-order-step>
 
-						<!-- CONTACT INFORMATION -->
-						<estate-order-step
-							:title="
-								$t('component.faultReport.general.contactLabel')
-							"
-							:step="stepCount"
-							:step-count="stepCount"
-							class="mt-6"
-						>
-							<p class="text-medium-emphasis">
-								{{
-									$t(
-										'component.faultReport.general.contactHelpText'
-									)
-								}}
-							</p>
-							<fault-contact-info
-								v-model:contactName="contactName"
-								v-model:contactEmail="contactEmail"
-								v-model:contactPhone="contactPhone"
-								:field-error="fieldError"
-							/>
-						</estate-order-step>
-						<v-alert
-							v-if="Object.keys(errors).length"
-							type="error"
-							variant="outlined"
-							rounded="lg"
-							class="mt-4"
-						>
-							<ul
-								v-for="(error, fieldId) in errors"
-								:key="error + fieldId"
-							>
-								<li>
-									<a :href="`#${fieldId}`">{{ error }}</a>
-								</li>
-							</ul>
-						</v-alert>
-						<v-alert
-							v-if="serverErrors"
-							type="error"
-							variant="outlined"
-							rounded="lg"
-							class="mt-4"
-						>
-							<ul>
-								<li
-									v-for="(codes, field) in serverErrors"
-									:key="field"
-								>
-									<span v-for="code in codes" :key="code">
-										{{
-											t(
-												`app.error.estate.validation.${code}`,
-												code
-											)
-										}}
-									</span>
-								</li>
-							</ul>
-						</v-alert>
-
-						<div
-							class="d-flex align-center justify-center pa-4 mt-4"
-						>
-							<v-btn
-								color="primary"
-								size="large"
+							<!-- Contact details: a labelled subsection rather than a
+							separate step, since they are pre-filled from the user. -->
+							<div class="contact-section mt-8">
+								<h3 class="ma-0 mb-1">
+									{{
+										$t(
+											'component.faultReport.general.contactLabel'
+										)
+									}}
+								</h3>
+								<p class="text-medium-emphasis mt-0">
+									{{
+										$t(
+											'component.faultReport.general.contactHelpText'
+										)
+									}}
+								</p>
+								<fault-contact-info
+									v-model:contactName="contactName"
+									v-model:contactEmail="contactEmail"
+									v-model:contactPhone="contactPhone"
+									:field-error="fieldError"
+								/>
+							</div>
+							<v-alert
+								v-if="
+									showLastSteps && Object.keys(errors).length
+								"
+								type="error"
+								variant="outlined"
 								rounded="lg"
-								:disabled="isBusySubmitting"
-								:loading="isBusySubmitting"
-								@click="submitReport"
+								class="mt-4"
 							>
-								{{ $t('component.faultReport.submitButton') }}
-							</v-btn>
-						</div>
+								<ul
+									v-for="(error, fieldId) in errors"
+									:key="error + fieldId"
+								>
+									<li>
+										<a :href="`#${fieldId}`">{{ error }}</a>
+									</li>
+								</ul>
+							</v-alert>
+							<v-alert
+								v-if="serverErrors"
+								type="error"
+								variant="outlined"
+								rounded="lg"
+								class="mt-4"
+							>
+								<ul>
+									<li
+										v-for="(codes, field) in serverErrors"
+										:key="field"
+									>
+										<span v-for="code in codes" :key="code">
+											{{
+												t(
+													`app.error.estate.validation.${code}`,
+													code
+												)
+											}}
+										</span>
+									</li>
+								</ul>
+							</v-alert>
+
+							<div
+								v-if="showLastSteps"
+								class="d-flex align-center justify-center pa-4 mt-4"
+							>
+								<v-btn
+									color="primary"
+									size="large"
+									rounded="lg"
+									:disabled="isBusySubmitting"
+									:loading="isBusySubmitting"
+									@click="submitReport"
+								>
+									{{
+										$t('component.faultReport.submitButton')
+									}}
+								</v-btn>
+							</div>
+						</estate-order-step>
 					</vee-form>
 				</div>
 			</div>
@@ -329,7 +312,11 @@
 					<p>
 						{{ $t('component.faultReport.info.text2') }}
 					</p>
-					<p v-html="$t('component.faultReport.info.responsibilityLink')"></p>
+					<p
+						v-html="
+							$t('component.faultReport.info.responsibilityLink')
+						"
+					></p>
 					<p v-html="$t('component.faultReport.info.text3')"></p>
 				</v-alert>
 			</div>
@@ -345,43 +332,28 @@ import {
 	IBuildingRoom,
 	ISubmitEstateFaultReport,
 } from '@/models/Interfaces';
-import {
-	computed,
-	nextTick,
-	onMounted,
-	Ref,
-	ref,
-	useTemplateRef,
-	watch,
-} from 'vue';
+import { computed, onMounted, ref, useTemplateRef, watch } from 'vue';
 import { EstateRoutes } from '@/router/routes';
 import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
 import { useI18n } from 'vue-i18n';
 import { EstateFaultLocation, ExternalOwnerStatus } from '@/models/Enums';
 import BuildingSelector from './buildingSelector/BuildingSelector.vue';
 import RoomSelector from './roomSelector/RoomSelector.vue';
-import { useRoute, useRouter } from 'vue-router';
 import { DispatchType } from '@/models/Enums';
-import { useStore } from 'vuex';
-import { IRootState } from '@/models/Interfaces';
 import BaseFileUpload from '@/components/shared/BaseFileUpload.vue';
 import FaultLocationSelector from './FaultLocationSelector.vue';
 import EstateFaultReportCompleted from './EstateFaultReportCompleted.vue';
 import { Form as VeeForm } from 'vee-validate';
 import BaseTextBox from '@/components/shared/BaseTextBox.vue';
-import ErrorService from '@/utils/ErrorService';
-import { useServerValidation } from '@/utils/useServerValidation';
-import { useWorkOrderConfig } from '@/utils/useWorkOrderConfig';
+import { useWorkOrderForm } from '@/utils/useWorkOrderForm';
+import { useStepScroll } from '@/utils/useStepScroll';
 import FaultContactInfo from './FaultContactInfo.vue';
 import EstateOrderStep from '../order/EstateOrderStep.vue';
-import RoomBlueprintSelector from './roomSelector/RoomBlueprintSelector.vue';
+import SelectionCard from '../order/SelectionCard.vue';
 import BuildingMapSelector from './buildingSelector/BuildingMapSelector.vue';
 import ExternalOwnerInfo from '../estate/ExternalOwnerInfo.vue';
 
-const route = useRoute();
-const router = useRouter();
 const { t, locale } = useI18n();
-const store = useStore<IRootState>();
 
 const breadcrumbs = computed(() => {
 	if (!locale.value) return [];
@@ -393,44 +365,49 @@ const breadcrumbs = computed(() => {
 	];
 });
 
+const {
+	selectedBuilding,
+	selectedRoom,
+	skippedRoom,
+	isLoadingFromQuery,
+	isBusySubmitting,
+	hasSubmitted,
+	problemDescription,
+	attachments,
+	uploadMaxFiles,
+	uploadMaxSizeMb,
+	uploadAccept,
+	serverErrors,
+	fileServerErrors,
+	fieldError,
+	descriptionServerError,
+	contactName,
+	contactEmail,
+	contactPhone,
+	updateQueryParams,
+	loadFromQueryParams,
+	submit,
+} = useWorkOrderForm();
+
+const { scrollToStep } = useStepScroll();
+
+const buildingTitleRef = useTemplateRef('buildingTitle');
 const locationTitleRef = useTemplateRef('locationTitle');
 const roomTitleRef = useTemplateRef('roomTitle');
 const problemTitleRef = useTemplateRef('problemTitle');
 
-const selectedBuilding = ref<IBuildingDetails | null>(null);
-const selectedRoom = ref<IBuildingRoom | null>(null);
-const skippedRoom = ref(false);
-const problemLocation = ref<EstateFaultLocation | null>(null);
-
-const isLoadingFromQuery = ref(false);
-const isBusySubmitting = ref(false);
-const hasSubmitted = ref(false);
-const hasConfirmedRentedBuildingNotice = ref(false);
-
-const user = computed(() => store.state.user);
-
 const formValidator = useTemplateRef('formValidator');
-const problemDescription = ref('');
-const attachments = ref<File[]>([]);
 
-const {
-	maxFiles: uploadMaxFiles,
-	maxSizeMb: uploadMaxSizeMb,
-	accept: uploadAccept,
-} = useWorkOrderConfig();
+// Fault-report-specific state: indoor/outdoor location and the rented-building
+// acknowledgement. Building and room come from the shared work-order flow.
+const problemLocation = ref<EstateFaultLocation | null>(null);
+const roomInfoUnavailable = computed(
+	() =>
+		problemLocation.value === EstateFaultLocation.Indoor &&
+		selectedBuilding.value?.hasRoomInformation === false
+);
 
-const {
-	serverErrors,
-	fileErrors: fileServerErrors,
-	fieldError,
-	setFromError,
-	clear: clearServerErrors,
-} = useServerValidation('app.error.estate.validation');
-const descriptionServerError = fieldError('description');
-
-const contactName = ref(user.value?.fullName ?? '');
-const contactEmail = ref(user.value?.email ?? '');
-const contactPhone = ref('');
+const hasConfirmedRentedBuildingNotice = ref(false);
 
 const selectedBuildingIsRented = computed(() => {
 	return (
@@ -438,12 +415,6 @@ const selectedBuildingIsRented = computed(() => {
 		ExternalOwnerStatus.Inhyrd
 	);
 });
-
-watch(
-	[problemDescription, attachments, contactName, contactEmail, contactPhone],
-	clearServerErrors,
-	{ deep: true }
-);
 
 watch(
 	() => selectedBuilding.value,
@@ -465,38 +436,29 @@ watch(
 		}
 	}
 );
+// A building without room info auto-resolves the room step, so a room carried in
+// from a deep link or favourite would otherwise stay selected and be submitted
+// behind the "no room information" card. Clear it so what's shown is what's sent.
+// Watch both conditions together since the room may be set after the location.
+watch(
+	() => roomInfoUnavailable.value && !!selectedRoom.value,
+	(hasOrphanedRoom) => {
+		if (hasOrphanedRoom) {
+			selectedRoom.value = null;
+		}
+	},
+	{ immediate: true }
+);
 
 const showLastSteps = computed(() => {
 	return (
 		(selectedRoom.value &&
 			problemLocation.value === EstateFaultLocation.Indoor) ||
 		skippedRoom.value ||
+		roomInfoUnavailable.value ||
 		problemLocation.value === EstateFaultLocation.Outdoor
 	);
 });
-
-const updateQueryParams = () => {
-	const queryParams: Record<string, string | number | undefined> = {
-		buildingId: selectedBuilding.value?.id,
-		roomId: selectedRoom.value?.id,
-		submitted: hasSubmitted.value ? 'true' : undefined,
-	};
-	if (route.name) {
-		router.replace({ name: route.name, query: queryParams });
-	}
-};
-
-const scrollToAfterUiUpdate = async (
-	elRef: Ref<InstanceType<typeof EstateOrderStep> | null>
-) => {
-	await nextTick();
-	setTimeout(() => {
-		elRef.value?.title?.scrollIntoView({
-			behavior: 'smooth',
-			block: 'center',
-		});
-	}, 50);
-};
 
 const selectBuilding = async (building: IBuildingDetails | null) => {
 	selectedRoom.value = null;
@@ -504,7 +466,9 @@ const selectBuilding = async (building: IBuildingDetails | null) => {
 	problemLocation.value = null;
 	selectedBuilding.value = building;
 
-	scrollToAfterUiUpdate(locationTitleRef);
+	// Scroll to the next step on selection, or back to this step's title when
+	// cleared so it isn't left hidden behind the sticky header.
+	scrollToStep(building ? locationTitleRef : buildingTitleRef);
 	updateQueryParams();
 };
 
@@ -513,16 +477,18 @@ const selectLocation = async (location: EstateFaultLocation | null) => {
 	skippedRoom.value = false;
 	problemLocation.value = location;
 
-	scrollToAfterUiUpdate(
-		location === EstateFaultLocation.Indoor ? roomTitleRef : problemTitleRef
-	);
+	// Always land on the room step: when there's a room to pick, to pick it; when
+	// it's auto-resolved (outdoor or a building without room info), so the user
+	// sees why. The step is compact when skipped, so the problem step shows right
+	// below it.
+	scrollToStep(location ? roomTitleRef : locationTitleRef);
 };
 
 const selectRoom = async (room: IBuildingRoom | null, skipped = false) => {
 	selectedRoom.value = room;
 	skippedRoom.value = skipped;
 
-	scrollToAfterUiUpdate(problemTitleRef);
+	scrollToStep(room || skipped ? problemTitleRef : roomTitleRef);
 	updateQueryParams();
 };
 
@@ -538,52 +504,45 @@ const selectBuildingAndRoom = async ({
 	selectRoom(room);
 };
 
-const stepCount = computed(() =>
-	problemLocation.value === EstateFaultLocation.Outdoor ? 4 : 5
+// Building, location, room, and a final description-and-contact step. The room
+// step is always present (step 3); an outdoor fault or a building without room
+// info auto-resolves it rather than dropping it, so the numbering stays stable.
+const stepCount = 4;
+
+// Step 2 unlocks only once a building is chosen and, for rented buildings, the
+// tenant has acknowledged the ownership notice.
+const buildingReady = computed(
+	() =>
+		!!selectedBuilding.value &&
+		(!selectedBuildingIsRented.value ||
+			hasConfirmedRentedBuildingNotice.value)
 );
 
-const loadFromQueryParams = async () => {
-	const query = route.query;
-
-	if (query.submitted === 'true') {
-		hasSubmitted.value = true;
-		return;
+const faultStepState = (
+	step: number
+): 'completed' | 'current' | 'skipped' | 'upcoming' => {
+	switch (step) {
+		case 1:
+			return buildingReady.value ? 'completed' : 'current';
+		case 2:
+			if (!buildingReady.value) return 'upcoming';
+			return problemLocation.value ? 'completed' : 'current';
+		case 3:
+			if (!problemLocation.value) return 'upcoming';
+			// Outdoor faults, an explicit skip, and buildings without room
+			// info all pass the room step without a real choice, so mark it
+			// skipped rather than answered.
+			if (problemLocation.value === EstateFaultLocation.Outdoor)
+				return 'skipped';
+			if (selectedRoom.value) return 'completed';
+			if (skippedRoom.value || roomInfoUnavailable.value)
+				return 'skipped';
+			return 'current';
+		case 4:
+			return showLastSteps.value ? 'current' : 'upcoming';
+		default:
+			return 'upcoming';
 	}
-
-	const buildingId = query.buildingId
-		? parseInt(query.buildingId as string)
-		: null;
-	const roomId = query.roomId ? parseInt(query.roomId as string) : null;
-
-	if (buildingId) {
-		isLoadingFromQuery.value = true;
-		try {
-			const building = await store.dispatch(
-				DispatchType.GetBuildingById,
-				{
-					buildingId,
-				}
-			);
-			selectBuilding(building ?? null);
-
-			if (building && roomId) {
-				problemLocation.value = EstateFaultLocation.Indoor;
-				const room = await store.dispatch(DispatchType.GetRoomById, {
-					roomId,
-				});
-				selectRoom(room);
-			}
-		} catch (err) {
-			ErrorService.onError({
-				err,
-				hidden: true,
-				message:
-					'Failed to load building/room from query params on fault report page, user have to manually select',
-			});
-		}
-	}
-
-	isLoadingFromQuery.value = false;
 };
 
 const submitReport = async () => {
@@ -596,8 +555,6 @@ const submitReport = async () => {
 		return;
 	}
 
-	isBusySubmitting.value = true;
-
 	const reportData: ISubmitEstateFaultReport = {
 		buildingId: selectedBuilding.value?.id,
 		location: problemLocation.value,
@@ -609,27 +566,24 @@ const submitReport = async () => {
 		notifierPhone: contactPhone.value,
 	};
 
-	try {
-		clearServerErrors();
-		await store.dispatch(DispatchType.SubmitFaultReport, reportData);
-
-		hasSubmitted.value = true;
-		updateQueryParams();
-		window.scrollTo({ top: 0 });
-	} catch (err) {
-		if (!setFromError(err)) {
-			ErrorService.onError({
-				err,
-				message: t('app.error.estate.unableToSubmitFaultReport'),
-			});
-		}
-	} finally {
-		isBusySubmitting.value = false;
-	}
+	await submit(
+		reportData,
+		DispatchType.SubmitFaultReport,
+		t('app.error.estate.unableToSubmitFaultReport')
+	);
 };
 
 onMounted(() => {
-	loadFromQueryParams();
+	loadFromQueryParams({
+		onBuilding: (building) => selectBuilding(building),
+		// A deep-linked room is always indoor; set the location before selecting it.
+		onRoom: (room) => {
+			problemLocation.value = EstateFaultLocation.Indoor;
+			selectRoom(room);
+		},
+		errorContext:
+			'Failed to load building/room from query params on fault report page, user have to manually select',
+	});
 });
 </script>
 
@@ -646,6 +600,16 @@ onMounted(() => {
 		}
 		:deep(.help-and-error-wrap) {
 			margin-bottom: 8px;
+		}
+	}
+
+	// Contact details sit in the final step as a divided subsection.
+	.contact-section {
+		border-top: solid 1px $grey-lighten-3;
+		padding-top: 1.5rem;
+
+		h3 {
+			font-size: size(18);
 		}
 	}
 }

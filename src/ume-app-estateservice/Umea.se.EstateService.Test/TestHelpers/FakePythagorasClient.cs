@@ -320,12 +320,25 @@ public sealed class FakePythagorasClient : IPythagorasClient
 
     private List<WorkOrderInfoDto> _workOrderInfoResults = [];
 
+    public Exception? WorkOrderInfoException { get; set; }
+
+    /// <summary>Cancelled while the info request is in flight, simulating a caller that went away.</summary>
+    public CancellationTokenSource? CancelOnWorkOrderInfoRequest { get; set; }
+
     public void SetWorkOrderInfoResults(List<WorkOrderInfoDto> results) => _workOrderInfoResults = results;
 
     public Task<IReadOnlyList<WorkOrderInfoDto>> GetWorkOrderInfosByIdsAsync(IReadOnlyList<int> workOrderIds, CancellationToken cancellationToken = default)
     {
         WorkOrderRequests.Add(new WorkOrderRequestCapture("GetWorkOrderInfosByIds", 0, $"ids={string.Join(',', workOrderIds)}"));
-        return Task.FromResult<IReadOnlyList<WorkOrderInfoDto>>(_workOrderInfoResults);
+        if (CancelOnWorkOrderInfoRequest is not null)
+        {
+            CancelOnWorkOrderInfoRequest.Cancel();
+            return Task.FromCanceled<IReadOnlyList<WorkOrderInfoDto>>(CancelOnWorkOrderInfoRequest.Token);
+        }
+
+        return WorkOrderInfoException is not null
+            ? Task.FromException<IReadOnlyList<WorkOrderInfoDto>>(WorkOrderInfoException)
+            : Task.FromResult<IReadOnlyList<WorkOrderInfoDto>>(_workOrderInfoResults);
     }
 
     public Task<IReadOnlyList<WorkOrderCategoryInfoDto>> GetWorkOrderCategoriesAsync(int moduleId, CancellationToken cancellationToken = default)

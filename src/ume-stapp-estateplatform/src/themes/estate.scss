@@ -18,6 +18,20 @@
 		}
 	}
 
+	// The "7 våningar • 1021 rum • 18 968 m²" line on search cards, the map
+	// card and the building/estate headers.
+	.metrics li {
+		list-style-type: none;
+		display: inline;
+		font-size: size(14);
+		color: $grey-darken-2;
+
+		&:not(:first-child):before {
+			content: '•';
+			margin: 0 size(8);
+		}
+	}
+
 	.container {
 		display: flex;
 
@@ -98,9 +112,9 @@
 	.content-wrap {
 		display: flex;
 		gap: 2rem;
+		justify-content: space-between;
 		padding: 16px 24px 32px;
-		// 650px form + 2rem gap + 420px info panel + side paddings (border-box)
-		max-width: 1150px;
+		max-width: $site-max-width;
 		margin-inline: auto;
 
 		.report-wrap,

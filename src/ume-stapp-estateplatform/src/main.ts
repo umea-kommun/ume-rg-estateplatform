@@ -12,6 +12,7 @@ import IAuthManager from './plugins/auth/IAuthManager';
 import Validation from './plugins/validation';
 import Auth from '@/plugins/auth/index';
 import '@turkos/components/styles';
+import './themes/fontstyle.css';
 import moment from 'moment';
 import 'moment/dist/locale/sv';
 import ErrorService from './utils/ErrorService';
@@ -49,7 +50,7 @@ window.addEventListener('error', (e: ErrorEvent) => {
 });
 
 app.use(appInsights, {
-	baseName: 'ume-stapp-minasidor',
+	baseName: 'ume-stapp-estateplatform',
 	router,
 	appInsightsConfig: {
 		connectionString: Config.VUE_APP_APPINSIGHT_CONNECTION_STRING,

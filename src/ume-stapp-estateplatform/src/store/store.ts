@@ -24,7 +24,7 @@ const vuexPersistToSessionStorage = new VuexPersist({
 });
 
 const store: StoreOptions<IRootState> = {
-	strict: Config.NODE_ENV !== 'production',
+	strict: !import.meta.env.PROD,
 	state,
 	mutations,
 	actions,

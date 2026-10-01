@@ -20,12 +20,16 @@ public class WorkOrderConfiguration
     public int ProcessingIntervalSeconds { get; set; } = 30;
     public int MaxRetries { get; set; } = 5;
     public int RetryBaseDelaySeconds { get; set; } = 60;
-    public int StatusCheckIntervalMinutes { get; set; } = 60;
+    /// <summary>Minimum seconds between status reads of the same order. Floored at 60.</summary>
+    public int StatusRefreshCooldownSeconds { get; set; } = 300;
+    public List<string> CompletedStatusCategories { get; set; } = ["COMPLETED"];
+
+    /// <summary>Days a completed order keeps being read, to pick up a late performed description.</summary>
+    public int CompletedRefreshDays { get; set; } = 3;
     public int ProcessingTimeoutMinutes { get; set; } = 10;
 
     /// <summary>
-    /// Polls Pythagoras for status changes on submitted work orders. When false the background loop
-    /// skips them and <c>POST /workorder/{id}/sync</c> is a no-op, so stored statuses go stale.
+    /// Enables user-triggered status refreshes. Submitted orders are never polled in the background.
     /// </summary>
     public bool StatusSyncEnabled { get; set; } = true;
 

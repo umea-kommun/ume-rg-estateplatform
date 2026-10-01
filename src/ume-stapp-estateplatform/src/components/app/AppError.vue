@@ -25,7 +25,7 @@
 				</v-btn>
 				<v-btn
 					:to="{
-						name: EstateRoutes.Search,
+						name: EstateRoutes.Home,
 					}"
 				>
 					{{ t('app.nav.startPage') }}

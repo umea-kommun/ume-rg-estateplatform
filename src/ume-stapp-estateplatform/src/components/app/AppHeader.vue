@@ -14,7 +14,7 @@
 		<div class="header-content">
 			<div class="logo-wrap">
 				<router-link
-					:to="{ name: startPageRoute }"
+					:to="{ name: EstateRoutes.Home }"
 					:title="$t('app.nav.startPage')"
 				>
 					<img
@@ -24,10 +24,14 @@
 						:alt="$t('app.nav.logo')"
 				/></router-link>
 
-				<div class="title">
+				<router-link
+					:to="{ name: EstateRoutes.Home }"
+					class="title"
+					:title="$t('app.nav.startPage')"
+				>
 					<div class="separator"></div>
 					{{ headerTitle }}
-				</div>
+				</router-link>
 
 				<span
 					v-if="showEnvironmentBadge"
@@ -48,37 +52,49 @@
 				class="primary-nav"
 				:aria-label="$t('component.appHeader.nav.label')"
 			>
-				<router-link
-					:to="{ name: EstateRoutes.Search }"
-					@click="trackNav('search')"
-				>
-					<v-icon icon="search" :size="18" />
-					{{ $t('component.appHeader.nav.search') }}
-				</router-link>
-				<template v-if="isErrorReportEnabled">
-					<router-link
-						:to="{ name: EstateRoutes.FaultReport }"
-						@click="trackNav('faultReport')"
+				<v-defaults-provider :defaults="{ VBtn: { rounded: 0 } }">
+					<v-tabs
+						:model-value="activeNavTab"
+						:mandatory="false"
+						height="100%"
 					>
-						<v-icon icon="warning" :size="18" />
-						{{ $t('app.nav.services.faultReport') }}
-					</router-link>
-					<router-link
-						:to="{ name: EstateRoutes.Order }"
-						@click="trackNav('order')"
-					>
-						<v-icon icon="handyman" :size="18" />
-						{{ $t('app.nav.services.order') }}
-					</router-link>
-					<router-link
-						v-if="isSpaceRequirementAllowed"
-						:to="{ name: EstateRoutes.SpaceRequirement }"
-						@click="trackNav('spaceRequirement')"
-					>
-						<v-icon icon="space_dashboard" :size="18" />
-						{{ $t('app.nav.services.spaceRequirement') }}
-					</router-link>
-				</template>
+						<v-tab
+							:value="EstateRoutes.Search"
+							:to="{ name: EstateRoutes.Search }"
+							prepend-icon="search"
+							@click="trackNav('search')"
+						>
+							{{ $t('component.appHeader.nav.search') }}
+						</v-tab>
+						<template v-if="isErrorReportEnabled">
+							<v-tab
+								:value="EstateRoutes.FaultReport"
+								:to="{ name: EstateRoutes.FaultReport }"
+								prepend-icon="warning"
+								@click="trackNav('faultReport')"
+							>
+								{{ $t('app.nav.services.faultReport') }}
+							</v-tab>
+							<v-tab
+								:value="EstateRoutes.Order"
+								:to="{ name: EstateRoutes.Order }"
+								prepend-icon="handyman"
+								@click="trackNav('order')"
+							>
+								{{ $t('app.nav.services.order') }}
+							</v-tab>
+							<v-tab
+								v-if="isSpaceRequirementAllowed"
+								:value="EstateRoutes.SpaceRequirement"
+								:to="{ name: EstateRoutes.SpaceRequirement }"
+								prepend-icon="space_dashboard"
+								@click="trackNav('spaceRequirement')"
+							>
+								{{ $t('app.nav.services.spaceRequirement') }}
+							</v-tab>
+						</template>
+					</v-tabs>
+				</v-defaults-provider>
 			</nav>
 
 			<div
@@ -164,12 +180,17 @@
 						>
 					</template>
 					<v-list>
-						<v-list-item :to="{ name: startPageRoute }">
+						<v-list-item :to="{ name: EstateRoutes.Home }">
 							<v-list-item-title>{{
 								$t('component.appHeader.menu.appStart')
 							}}</v-list-item-title>
 						</v-list-item>
-						<hr v-if="isErrorReportEnabled" />
+						<hr />
+						<v-list-item :to="{ name: EstateRoutes.Search }">
+							<v-list-item-title>{{
+								$t('component.appHeader.nav.search')
+							}}</v-list-item-title>
+						</v-list-item>
 						<v-list-item
 							v-if="isErrorReportEnabled"
 							:to="{ name: EstateRoutes.FaultReport }"
@@ -201,6 +222,11 @@
 						<v-list-item :to="{ name: EstateRoutes.AboutWebsite }">
 							<v-list-item-title>{{
 								$t('component.appHeader.menu.about')
+							}}</v-list-item-title>
+						</v-list-item>
+						<v-list-item :to="{ name: EstateRoutes.ReleaseNotes }">
+							<v-list-item-title>{{
+								$t('component.appHeader.menu.releaseNotes')
 							}}</v-list-item-title>
 						</v-list-item>
 						<v-list-group :value="selectedLocale">
@@ -306,6 +332,8 @@ const headerTitle = computed(() => {
 	return t('component.appHeader.title.' + AppHeaderTitle.Default);
 });
 
+const activeNavTab = computed(() => route.name ?? undefined);
+
 const trackNav = (target: string) => {
 	appInsights?.trackEvent({
 		name: 'EstateHeaderNavClicked',
@@ -328,7 +356,6 @@ function logout(): void {
 	);
 }
 
-const startPageRoute = EstateRoutes.Search;
 /** Handle translations */
 const languages = [
 	{ title: 'Svenska', locale: 'sv' },
@@ -358,17 +385,23 @@ const nextLanguage = computed(
 	align-items: center;
 	display: flex;
 
+	position: sticky;
+	top: 0;
+	z-index: 30;
+	height: $site-header-height;
+
 	.header-content {
-		padding: 14px $site-horizontal-padding;
+		height: 100%;
+		padding: 0 $site-horizontal-padding;
 		display: flex;
 		width: 100%;
-		max-width: $site-max-width;
 		justify-content: space-between;
 
 		.logo-wrap {
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			margin: 14px 0;
 			.logo {
 				height: 46px;
 			}
@@ -386,6 +419,7 @@ const nextLanguage = computed(
 				color: $grey-darken-2;
 				font-size: size(20);
 				font-weight: bold;
+				text-decoration: none;
 			}
 
 			.environment-badge {
@@ -408,62 +442,38 @@ const nextLanguage = computed(
 
 		.primary-nav {
 			display: flex;
-			align-items: center;
-			gap: 4px;
+			align-items: stretch;
 			margin-left: 24px;
 			margin-right: auto;
 
-			a {
-				position: relative;
-				display: inline-flex;
-				align-items: center;
-				gap: 6px;
-				padding: 6px 10px;
-				color: $grey-darken-3;
-				text-decoration: none;
+			:deep(.v-tab) {
 				font-size: size(16);
-				border-radius: $border-radius;
-				white-space: nowrap;
+				text-transform: none;
+				letter-spacing: normal;
+				min-width: 0;
+				padding: 0 14px;
+				color: $grey-darken-2;
 
 				.v-icon {
-					color: $grey-darken-2;
+					font-size: 18px;
 				}
 
-				&:hover {
-					background-color: rgba($primary, 0.06);
-				}
-
-				&.router-link-exact-active {
+				&.v-tab--selected {
 					color: $primary;
 					font-weight: bold;
-
-					.v-icon {
-						color: $primary;
-					}
-
-					&::after {
-						content: '';
-						position: absolute;
-						left: 10px;
-						right: 10px;
-						bottom: 0;
-						height: 2px;
-						background-color: $primary;
-					}
 				}
 			}
 
-			@media only screen and (max-width: $estate-mobile-threshold) {
+			@media only screen and (max-width: 1100px) {
 				display: none;
 			}
 		}
 
 		.menu-wrap {
-			align-self: flex-end;
+			margin: 14px 0 14px 10px;
 			display: flex;
 			align-items: center;
 			min-height: 52px;
-			margin-left: 10px;
 
 			.locale-btn {
 				min-width: 0;
@@ -502,7 +512,7 @@ const nextLanguage = computed(
 			}
 		}
 
-		.v-btn {
+		.menu-wrap .v-btn {
 			--v-btn-height: 40px;
 			margin-top: 0;
 			margin-bottom: 0;
@@ -537,14 +547,9 @@ const nextLanguage = computed(
 	}
 
 	&.Size-FullWidth {
-		position: sticky;
-		top: 0;
-		z-index: 10;
-		height: $site-header-height;
-
 		.header-content {
 			max-width: none;
-			padding: 14px 24px;
+			padding: 0 24px;
 		}
 	}
 

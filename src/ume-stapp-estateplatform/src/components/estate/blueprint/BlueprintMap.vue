@@ -4,6 +4,12 @@
 	</div>
 </template>
 
+<script lang="ts">
+// devicePixelRatio at page load. Only its change from here is browser zoom; the
+// screen's own ratio must not scale the wheel threshold.
+const initialDevicePixelRatio = window.devicePixelRatio || 1;
+</script>
+
 <script setup lang="ts">
 import { IBlueprintPosition } from '@/models/Interfaces';
 import { useDebounceFn } from '@vueuse/core';
@@ -522,9 +528,15 @@ const onTouchMove = (e: TouchEvent) => {
 let wheelAccum = 0;
 let wheelScheduled = false;
 let wheelTouchpad = false;
-const isTouchpadWheel = (e: WheelEvent) =>
-	Math.abs(e.deltaY) < WHEEL_DELTA_PER_ZOOM_STEP ||
-	!Number.isInteger(e.deltaY);
+// Browser zoom reports deltaY in CSS pixels, so a mouse notch shrinks and stops
+// being a whole number - undoing the zoom restores the delta the threshold
+// compares against, which is what tells a mouse wheel and a touchpad apart
+const isTouchpadWheel = (e: WheelEvent) => {
+	const browserZoom =
+		(window.devicePixelRatio || 1) / initialDevicePixelRatio;
+
+	return Math.abs(e.deltaY) * browserZoom < WHEEL_DELTA_PER_ZOOM_STEP;
+};
 
 const onWheel = (e: WheelEvent) => {
 	if (!svgElement) return;
@@ -546,9 +558,13 @@ const onWheel = (e: WheelEvent) => {
 		const zoomIntensity = wheelTouchpad
 			? Math.log(ZOOM_STEP) / WHEEL_DELTA_PER_ZOOM_STEP
 			: MOUSE_WHEEL_ZOOM_INTENSITY;
-		let factorExp = Math.exp(-wheelAccum * zoomIntensity); // >1 in, <1 out
-		if (!Number.isFinite(factorExp))
-			factorExp = wheelAccum < 0 ? 1e6 : 1e-6;
+		// One frame of scrolling never zooms further than a button press
+		const maxExponent = Math.log(ZOOM_STEP);
+		const exponent = Math.max(
+			-maxExponent,
+			Math.min(maxExponent, -wheelAccum * zoomIntensity)
+		);
+		const factorExp = Math.exp(exponent); // >1 in, <1 out
 		wheelAccum = 0;
 		wheelTouchpad = false;
 

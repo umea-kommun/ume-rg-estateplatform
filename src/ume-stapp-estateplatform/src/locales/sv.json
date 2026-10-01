@@ -6,6 +6,7 @@
 			"logo": "Logotyp Umeå kommun",
 			"skipToContent": "Hoppa till innehåll",
 			"startPage": "Gå till startsidan",
+			"home": "Hem",
 			"goBack": "Gå tillbaka",
 			"services": {
 				"faultReport": "Felanmälan",
@@ -86,6 +87,7 @@
 	"estateCommon": {
 		"addressLabel": "Adress",
 		"areaLabel": "Yta (m²)",
+		"usableArea": "{area} m² bruksarea",
 		"buildingLabel": "Byggnad",
 		"floorLabel": "Våning",
 		"municipalityAreaLabel": "Kommundel",
@@ -112,6 +114,7 @@
 		"map": {
 			"fullScreenClose": "Stäng helskärm",
 			"fullScreenOpen": "Öppna helskärm",
+			"close": "Stäng karta",
 			"zoomIn": "Zooma in",
 			"zoomOut": "Zooma ut",
 			"buildingXofY": "Byggnad {buildingNumber} av {totalBuildings}",
@@ -123,8 +126,11 @@
 		},
 		"blueprintMap": {
 			"floor": "Våning",
+			"collapseFloors": "Klicka för att fälla ihop",
+			"expandFloors": "Klicka för att fälla ut",
 			"reportRoom": "Felanmäl rum",
-			"selectRoom": "Välj rum"
+			"selectRoom": "Välj rum",
+			"close": "Stäng planritning"
 		},
 		"appError": {
 			"reportError": "Felanmäl",
@@ -160,6 +166,7 @@
 				"logout": "Logga ut",
 				"appStart": "Startsida",
 				"about": "Om webbplatsen",
+				"releaseNotes": "Versionsinformation",
 				"umeaSe": "Umea.se",
 				"errorReport": "Rapportera fel i Fastighetsportalen",
 				"availabilityStatement": "Tillgänglighetsredogörelse"
@@ -181,7 +188,16 @@
 			"usedForText": "I Fastighetsportalen kan du söka fram fastigheter och byggnader, se information om lokaler och skapa ärenden som felanmälan, beställningar och förändrade lokalbehov.",
 			"supplierTitle": "Leverantör",
 			"supplierText": "Fastighetsportalen tillhandahålls av DoIT på Umeå kommun.",
-			"placeholderText": "Denna sida är under konstruktion"
+			"intranetLink": "Läs mer om Fastighetsportalen på Intranätet."
+		},
+		"releaseBanner": {
+			"text": "Fastighetsportalen har fått en uppdatering!",
+			"readMore": "Läs mer om detta här."
+		},
+		"releaseNotes": {
+			"pageTitle": "Versionsinformation",
+			"title": "Versionsinformation",
+			"intro": "Här kan du läsa om nyheter och förändringar i Fastighetsportalen."
 		},
 		"pageNotFound": {
 			"pageTitle": "Sidan kunde inte hittas",
@@ -217,16 +233,38 @@
 			"button": "OK, jag förstår"
 		},
 		"estateSearch": {
-			"breadcrumb": "Fastighetsportalen",
+			"title": "Sök",
+			"description": "Sök bland kommunens fastigheter, byggnader och lokaler.",
+			"breadcrumb": "Sök",
 			"searchPlaceholder": "Sök efter fastighet, adress eller byggnad...",
 			"searchButton": "Sök",
-			"filter": "Filtrera",
+			"showFilters": "Visa sökfilter",
+			"hideFilters": "Dölj sökfilter",
 			"selectOnMap": "Välj på karta",
-			"noResults": "Vi kunde inte hitta några fastigheter eller byggnader som matchade din sökning."
+			"noResults": "Vi kunde inte hitta något som matchade din sökning.",
+			"noSearchYet": "Här visas dina sökresultat. Sök efter fastighet, adress eller byggnad för att komma igång.",
+			"resultsHeading": "Sökresultat",
+			"noResultsForType": {
+				"estate": "Inga fastigheter matchade din sökning.",
+				"building": "Inga byggnader matchade din sökning."
+			},
+			"otherTypeHeading": {
+				"estate": "Träffar bland fastigheter",
+				"building": "Träffar bland byggnader"
+			}
 		},
 		"estateSearchFilter": {
+			"typeLabel": "Sök efter",
+			"typeFilter": {
+				"estate": "Fastigheter",
+				"building": "Byggnader"
+			},
+			"typeTag": {
+				"estate": "Visar endast fastigheter",
+				"building": "Visar endast byggnader"
+			},
 			"businessTypeLabel": "Huvudsaklig verksamhetstyp",
-			"clearFilter": "Rensa filter"
+			"clearAll": "Rensa alla filter"
 		},
 		"estatePortal": {
 			"title": "Fastighetsportalen",
@@ -247,6 +285,43 @@
 			},
 			"feedbackTitle": "Hur fungerar Fastighetsportalen för dig?"
 		},
+		"estateStart": {
+			"showAllResultsFor": "Visa alla resultat för ”{query}”",
+			"openMap": "Öppna karta",
+			"searching": "Söker…"
+		},
+		"estateOngoingErrands": {
+			"title": "Mina ärenden ({count})",
+			"titleWithoutCount": "Mina ärenden",
+			"noErrands": "Här syns dina pågående ärenden. Om du gör en felanmälan eller beställning dyker den upp här.",
+			"loadFailed": "Kunde inte hämta dina ärenden.",
+			"showAll": "Visa alla",
+			"showFewer": "Visa färre",
+			"showClosed": "Visa avslutade",
+			"hideClosed": "Dölj avslutade",
+			"status": {
+				"sent": "Skickat",
+				"received": "Mottaget",
+				"inProgress": "Pågående",
+				"closed": "Avslutat",
+				"onHold": "Vilande",
+				"materialOrdered": "Beställt material",
+				"sentToContractor": "Skickat till entreprenör"
+			}
+		},
+		"workOrderModal": {
+			"title": "Ärende",
+			"where": "Plats",
+			"showBuilding": "Visa byggnad",
+			"room": "Rum: {room}",
+			"indoor": "Invändigt",
+			"outdoor": "Utvändigt",
+			"description": "Beskrivning",
+			"workOrderNumber": "Ärendenummer {number}",
+			"sentOn": "Skickat {date}",
+			"updatedOn": "Uppdaterad {date}",
+			"performed": "Utfört arbete"
+		},
 		"estateFavorite": {
 			"title": "Mina favoriter ({count})",
 			"noFavorites": "Här syns dina favoriter. För att lägga till en favorit, klicka på stjärnan vid namnet på en fastighet, byggnad eller ett rum.",
@@ -256,7 +331,14 @@
 		"estateDetails": {
 			"noBuildings": "Denna fastighet har inga byggnader kopplade till sig.",
 			"buildings": "Byggnader",
-			"informationMissing": "Information saknas"
+			"informationMissing": "Information saknas",
+			"sort": {
+				"label": "Sortera",
+				"areaDesc": "Yta (störst först)",
+				"areaAsc": "Yta (minst först)",
+				"name": "Namn (A–Ö)",
+				"address": "Adress (A–Ö)"
+			}
 		},
 		"buildingDetails": {
 			"floorLabel": "Våning",
@@ -266,6 +348,7 @@
 			"blueprintButton": "Planritning",
 			"blueprintMissingTooltip": "Planritning saknas",
 			"contactPersonsButton": "Kontaktpersoner",
+			"contactPersonsButtonShort": "Kontakter",
 			"contactPersonsMissingTooltip": "Det finns inga kontaktpersoner angivna",
 			"documentsButton": "Handlingar",
 			"documentsMissingTooltip": "Det finns inga handlingar kopplade till denna byggnad",
@@ -273,6 +356,7 @@
 			"buildingImage": "Bild på byggnaden",
 			"room": {
 				"title": "Rum",
+				"noRoomInformation": "Rumsinformation för den här byggnaden saknas.",
 				"search": "Sök",
 				"searchPlaceholder": "Sök på rum...",
 				"floor": "Våning",
@@ -280,23 +364,22 @@
 				"noMatches": "Det finns inga rum som matchar din sökning.",
 				"noMatchesSelectedFloor": "Det finns inga rum på våning {floor} som matchar din sökning.",
 				"matchesOnOtherFloors": "Rum på andra våningar",
-				"showMoreRooms": "Visa fler rum"
+				"showMoreRooms": "Visa fler rum",
+				"showFewerRooms": "Visa färre rum"
 			}
 		},
 		"buildingContact": {
-			"title": "Kontaktpersoner",
+			"valueMissing": "Ej angivet",
 			"propertyManager": "Fastighetsförvaltare",
 			"operationsManager": "Driftområdeschef",
 			"operationCoordinator": "Driftsamordnare",
 			"rentalAdministrator": "Hyresadministratör",
 			"caretaker": "Fastighetsskötare",
 			"operationsTechnician": "Drifttekniker",
-			"valueMissing": "Ej angivet",
 			"callAriaLabel": "Ring {name}",
 			"emailAriaLabel": "Skicka e-post till {name}"
 		},
 		"buildingDocument": {
-			"title": "Handlingar",
 			"searchPlaceholder": "Sök efter handlingar...",
 			"category": "Kategori",
 			"downloadFile": "Ladda ner {filename}",
@@ -311,13 +394,21 @@
 		"faultReport": {
 			"title": "Felanmälan",
 			"description": "Här kan du göra en felanmälan om något inte fungerar som det ska i verksamhetens lokaler.",
+			"stepCounter": "Steg {step}/{stepCount}",
+			"stepTitle": {
+				"building": "Byggnad",
+				"location": "Plats",
+				"room": "Rum"
+			},
 			"changeAnswer": "Ändra",
 			"submitButton": "Skicka in felanmälan",
 			"rentedBuildingNotice": "Denna byggnad är inhyrd, vilket innebär att fastighetsägaren ansvarar för underhåll och reparationer.",
 			"rentedBuildingNoticeConfirmButton": "Jag förstår, fortsätt ändå",
 			"building": {
 				"select": "Välj byggnad",
-				"selected": "Byggnad"
+				"selected": "Byggnad",
+				"showMap": "Visa på karta",
+				"hideMap": "Dölj karta"
 			},
 			"location": {
 				"select": "Är problemet utvändigt eller invändigt?",
@@ -340,7 +431,12 @@
 				"select": "Vilket rum gäller felanmälan?",
 				"selected": "Rum",
 				"none": "Inget rum",
-				"skip": "Hoppa över"
+				"noneOutdoor": "Gäller ett utvändigt fel",
+				"skip": "Hoppa över",
+				"skipButton": "Hoppa över steget",
+				"skipHelp": "Hittar du inte rummet? Hoppa över steget och förklara i nästa steg var det ligger.",
+				"noInfoTitle": "Rumsinformation saknas",
+				"noInfo": "Rumsinformation för den här byggnaden saknas, så det här steget hoppas över. Beskriv gärna var i byggnaden felet finns i nästa steg."
 			},
 			"general": {
 				"problemTitle": "Problembeskrivning",
@@ -353,13 +449,13 @@
 				"contactEmailLabel": "E-post",
 				"contactPhoneLabel": "Telefonnummer"
 			},
-      "info": {
-        "title": "Information",
-        "text1": "Viktigt att tänka på: Beskriv felet så tydligt som möjligt och ange var det finns (byggnad, våning, rum). Ju mer information du lämnar, desto snabbare kan vi hjälpa dig. Bifoga gärna en bild om det underlättar.",
-        "text2": "När din felanmälan är registrerad tas den om hand av fastighetsdriften. Ärenden bedöms och prioriteras utifrån hur brådskande de är och vilken påverkan felet har på verksamheten. Du kan bli kontaktad om vi behöver kompletterande information eller för att boka tid för åtgärd.",
-        "text3": "<b>Vid akuta fel</b> (t.ex. vattenläcka, strömavbrott eller fara för person eller egendom) ska du kontakta växeln via telefon (090-16 23 42) istället för att göra en felanmälan i portalen. De säkerställer att rätt person kontaktas omedelbart och åtgärd påbörjas direkt.",
-        "responsibilityLink": "<a href=\"https://www.intranet.umea.se/sidor/serviceitochlokaler/byggnaderochlokaler/lokaler/gransdragningkommunalellerexternfastighetsagare.4.41b8dff11790bd2e90a781b.html\" target=\"_blank\" rel=\"noopener noreferrer\">Läs mer om ansvarsfördelning i Umeå kommuns fastigheter<span class=\"material-icons external-link-icon\" aria-hidden=\"true\">open_in_new</span></a>"
-      },
+			"info": {
+				"title": "Information",
+				"text1": "Viktigt att tänka på: Beskriv felet så tydligt som möjligt och ange var det finns (byggnad, våning, rum). Ju mer information du lämnar, desto snabbare kan vi hjälpa dig. Bifoga gärna en bild om det underlättar.",
+				"text2": "När din felanmälan är registrerad tas den om hand av fastighetsdriften. Ärenden bedöms och prioriteras utifrån hur brådskande de är och vilken påverkan felet har på verksamheten. Du kan bli kontaktad om vi behöver kompletterande information eller för att boka tid för åtgärd.",
+				"text3": "<b>Vid akuta fel</b> (t.ex. vattenläcka, strömavbrott eller fara för person eller egendom) ska du kontakta växeln via telefon (090-16 23 42) istället för att göra en felanmälan i portalen. De säkerställer att rätt person kontaktas omedelbart och åtgärd påbörjas direkt.",
+				"responsibilityLink": "<a href=\"https://www.intranet.umea.se/sidor/serviceitochlokaler/byggnaderochlokaler/lokaler/gransdragningkommunalellerexternfastighetsagare.4.41b8dff11790bd2e90a781b.html\" target=\"_blank\" rel=\"noopener noreferrer\">Läs mer om ansvarsfördelning i Umeå kommuns fastigheter<span class=\"material-icons external-link-icon\" aria-hidden=\"true\">open_in_new</span></a>"
+			},
 			"completed": {
 				"title": "Tack för din felanmälan!",
 				"description": "Vi har mottagit din felanmälan och kommer att hantera den så snart som möjligt.",
@@ -378,6 +474,24 @@
 				"fileUploadLabel": "Bifoga gärna en bild som visar var arbetet ska utföras (frivilligt)",
 				"contactLabel": "Kontaktuppgifter",
 				"contactHelpText": "Ange vem vi kan kontakta om vi behöver mer information eller har frågor om beställningen."
+			},
+			"stepTitle": {
+				"building": "Byggnad",
+				"location": "Plats",
+				"room": "Rum"
+			},
+			"location": {
+				"select": "Gäller beställningen invändigt eller utvändigt?",
+				"indoor": {
+					"select": "Invändigt",
+					"description": "Välj invändigt om beställningen gäller inne i byggnaden, till exempel i rum, korridorer eller gemensamma utrymmen.",
+					"selected": "Du har valt att beställningen gäller byggnadens insida."
+				},
+				"outdoor": {
+					"select": "Utvändigt",
+					"description": "Välj utvändigt om beställningen gäller utanför byggnaden, till exempel på fasad, tak eller omkringliggande ytor.",
+					"selected": "Du har valt att beställningen gäller byggnadens utsida."
+				}
 			},
 			"category": {
 				"title": "Typ av beställning",
@@ -398,7 +512,10 @@
 				"noneAvailable": "Det finns inga beställningstjänster tillgängliga för den här byggnaden."
 			},
 			"room": {
-				"select": "Vilket rum gäller beställningen?"
+				"select": "Vilket rum gäller beställningen?",
+				"noneOutdoor": "Gäller en utvändig beställning",
+				"noInfoTitle": "Rumsinformation saknas",
+				"noInfo": "Rumsinformation för den här byggnaden saknas, så det här steget hoppas över. Beskriv gärna var i byggnaden beställningen gäller i nästa steg."
 			},
 			"info": {
 				"title": "Information",
@@ -491,12 +608,26 @@
 			"selectOnMap": "Välj på karta",
 			"searchHelp": "Använd sökrutan eller välj på kartan för att hitta den byggnad du söker.",
 			"favoritesTitle": "Mina favoriter ({count})",
-			"favoritesDescription": "Du kan också välja byggnad eller rum direkt från dina favoriter."
+			"favoritesDescription": "Du kan också välja byggnad eller rum direkt från dina favoriter.",
+			"showMore": "Visa fler resultat"
 		},
 		"roomSelector": {
+			"noneTitle": "Inget rum",
 			"none": "Du har inte valt något rum.",
-			"description": "Välj rum i listan eller markera det på planritningen.",
-			"selectOnBlueprint": "Välj på planritning"
+			"selectOnBlueprint": "Välj på planritning",
+			"showBlueprint": "Visa på planritning",
+			"hideBlueprint": "Dölj planritning",
+			"floorArea": "Våning {floor} · {area} m²",
+			"methodLead": "Hur vill du välja rummet där felet finns?",
+			"methodList": "Välj från listan",
+			"methodListDesc": "Sök på rummets namn eller nummer",
+			"methodBlueprint": "Välj på planritning",
+			"methodBlueprintDesc": "Peka ut rummet på ritningen",
+			"noMatchesTitle": "Inga rum matchar",
+			"noMatchesSkipHint": "Om du inte hittar rummet kan du hoppa över steget och beskriva var felet finns i nästa steg.",
+			"clearFilters": "Rensa filter",
+			"fetchErrorTitle": "Kunde inte hämta rummen",
+			"fetchErrorSkipHint": "Du kan hoppa över steget och beskriva var felet finns i nästa steg."
 		}
 	}
 }

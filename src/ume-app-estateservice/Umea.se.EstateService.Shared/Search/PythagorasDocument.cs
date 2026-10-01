@@ -46,6 +46,12 @@ public sealed class PythagorasDocument : IFavoriteable
     /// Number of rooms/workspaces associated with the entity, if available.
     /// </summary>
     public int? NumRooms { get; set; }
+    /// <summary>
+    /// Whether the building has real room information. False when the building only carries the
+    /// Pythagoras placeholder structure: a single floor named "VF01" with a single room named "R01".
+    /// Only meaningful for building documents. Display-only; not indexed or scored.
+    /// </summary>
+    public bool HasRoomInformation { get; set; }
     public BusinessTypeModel? BusinessType { get; set; }
     public IReadOnlyDictionary<string, string>? ExtendedProperties { get; set; }
     public bool? IsFavorite { get; set; }

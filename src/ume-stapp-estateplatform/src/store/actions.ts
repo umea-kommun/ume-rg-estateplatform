@@ -25,8 +25,9 @@ const buildQueryParams = (params: {
 	if (params.query) {
 		queryParams.append('query', params.query);
 	}
-	if (params.type) {
-		params.type.forEach((type) => {
+	const types = params.type ?? params.searchFilter?.types;
+	if (types) {
+		types.forEach((type) => {
 			queryParams.append('type', type);
 		});
 	}
@@ -53,12 +54,13 @@ export default {
 			params: {
 				query: string;
 				searchFilter?: SearchFilter;
+				type?: string[];
+				limit?: number;
 			};
 			abortController: AbortController;
 		}
 	) {
-		const queryParams = buildQueryParams(params);
-		queryParams.append('limit', '50');
+		const queryParams = buildQueryParams({ limit: 50, ...params });
 
 		const response = await httpClient.get(
 			'/search?' + queryParams.toString(),

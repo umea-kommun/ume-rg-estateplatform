@@ -11,8 +11,11 @@ public interface IWorkOrderRepository
     Task<WorkOrderEntity?> GetByUidAsync(Guid uid, CancellationToken cancellationToken = default);
     Task<int> GetFailedCountAsync(CancellationToken cancellationToken = default);
     Task<IReadOnlyList<WorkOrderEntity>> GetFailedWorkOrdersAsync(CancellationToken cancellationToken = default);
-    Task<IReadOnlyList<WorkOrderEntity>> GetDueForProcessingAsync(DateTimeOffset asOf, bool includeSubmitted = true, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<WorkOrderEntity>> GetDueForProcessingAsync(DateTimeOffset asOf, CancellationToken cancellationToken = default);
     Task<bool> TryClaimForProcessingAsync(int id, DateTimeOffset processingTimeout, CancellationToken cancellationToken = default);
     Task UpdateAsync(WorkOrderEntity workOrder, CancellationToken cancellationToken = default);
-    Task UpdateManyAsync(IReadOnlyList<WorkOrderEntity> workOrders, CancellationToken cancellationToken = default);
+    /// <summary>Stamps StatusCheckedAt on due orders and returns the ids it stamped.</summary>
+    Task<IReadOnlyList<int>> ClaimForStatusRefreshAsync(IReadOnlyList<int> ids, DateTimeOffset staleBefore, DateTimeOffset now, CancellationToken cancellationToken = default);
+    /// <summary>Saves the status columns only, for a whole batch.</summary>
+    Task SaveStatusesAsync(IReadOnlyList<WorkOrderEntity> workOrders, CancellationToken cancellationToken = default);
 }

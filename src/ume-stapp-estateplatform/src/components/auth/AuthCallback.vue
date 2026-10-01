@@ -34,7 +34,7 @@ onMounted(async () => {
 
 			// If no specific route specified, redirect to fitting page
 			if (afterLoginPath === '/') {
-				router.push({ name: EstateRoutes.Search });
+				router.push({ name: EstateRoutes.Home });
 			} else {
 				router.push({ path: afterLoginPath });
 			}

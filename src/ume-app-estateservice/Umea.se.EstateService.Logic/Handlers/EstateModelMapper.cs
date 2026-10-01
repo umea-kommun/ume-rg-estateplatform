@@ -150,8 +150,33 @@ internal static class EstateModelMapper
             NumFloors = building.NumFloors,
             NumRooms = building.NumRooms,
             NumDocuments = building.NumDocuments,
+            HasRoomInformation = HasRoomInformation(building),
             ImageUrl = EstateDataQueryHandler.GetBuildingImageUrl(building)
         };
+    }
+
+    /// <summary>
+    /// A building has no room information when it lacks floors or rooms entirely, when its only
+    /// room is the Pythagoras placeholder "R01", or when its only floor is the Pythagoras
+    /// placeholder "VF01" carrying at most one room. Anything else counts as real room information.
+    /// </summary>
+    internal static bool HasRoomInformation(BuildingEntity building)
+    {
+        if (building.Floors.Count == 0 || building.Rooms.Count == 0)
+        {
+            return false;
+        }
+
+        bool singlePlaceholderRoom =
+            building.Rooms.Count == 1 &&
+            string.Equals(building.Rooms[0].Name, "R01", StringComparison.OrdinalIgnoreCase);
+
+        bool singlePlaceholderFloor =
+            building.Floors.Count == 1 &&
+            string.Equals(building.Floors[0].Name, "VF01", StringComparison.OrdinalIgnoreCase) &&
+            building.Rooms.Count <= 1;
+
+        return !singlePlaceholderRoom && !singlePlaceholderFloor;
     }
 
     private static ExternalOwnerInfoModel? MapExternalOwnerInfo(string? status, string? name, string? note)

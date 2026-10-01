@@ -29,7 +29,7 @@ export function createPointLayers() {
 	const pointSource = new VectorSource();
 
 	const clusterSource = new Cluster({
-		distance: 40, // px; how close points must be to merge
+		distance: 70, // px; how close points must be to merge
 		minDistance: 15, // optional; helps avoid tiny clusters
 		source: pointSource,
 	});

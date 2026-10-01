@@ -21,8 +21,11 @@
 			v-if="!hideControls"
 			v-model:full-screen="fullscreen"
 			v-model:base-layer="visibleBaseLayer"
+			:closable="closable"
+			:can-leave-fullscreen="canLeaveFullscreen"
 			@zoom-in="smoothZoom(map, 1)"
 			@zoom-out="smoothZoom(map, -1)"
+			@close="emit('close')"
 		/>
 	</div>
 </template>
@@ -56,6 +59,8 @@ import { panToWithPixelOffset, smoothZoom } from './pan';
 import { TileWMS } from 'ol/source';
 import TileLayer from 'ol/layer/Tile';
 import { appInsights } from '@/plugins/appInsights';
+import ErrorService from '@/utils/ErrorService';
+import { createTileErrorTracker } from './tileErrors';
 
 const props = defineProps<{
 	mapId: string;
@@ -67,14 +72,36 @@ const props = defineProps<{
 	loading?: boolean;
 	hideControls?: boolean;
 	selectable?: boolean;
+	closable?: boolean;
+	canLeaveFullscreen?: boolean;
 }>();
 
-const emit = defineEmits(['update:fullscreen', 'select-building']);
+const emit = defineEmits(['update:fullscreen', 'select-building', 'close']);
 
 const fullscreen = computed({
 	get: () => props.fullscreen ?? false,
 	set: (value: boolean) => emit('update:fullscreen', value),
 });
+
+const trackFullscreenOpened = () => {
+	appInsights?.trackEvent({
+		name: 'EstateMapFullscreen',
+		properties: {
+			url: window.location.href,
+		},
+	});
+};
+
+// Track entering fullscreen after mount too, e.g. when a windowed dialog is
+// expanded (a map that mounts already fullscreen is tracked in initMap).
+watch(
+	() => props.fullscreen,
+	(value) => {
+		if (value) {
+			trackFullscreenOpened();
+		}
+	}
+);
 
 const {
 	clusterLayer,
@@ -270,7 +297,9 @@ watch(escape, () => {
 		return;
 	}
 	if (fullscreen.value) {
-		fullscreen.value = false;
+		// Escape closes the dialog outright (leaving fullscreen is an explicit
+		// button); closing without touching `fullscreen` avoids a close flash.
+		emit('close');
 	}
 });
 
@@ -287,7 +316,34 @@ function applyVisibleBaseLayer(selected: MapBaseLayer) {
 		mapBaseLayers[layerName]?.setVisible(layerName === selected);
 	}
 }
-watch(visibleBaseLayer, applyVisibleBaseLayer);
+
+/**
+ * Base layer tile errors. A failing WMS request emits one `tileloaderror` per
+ * tile, so we aggregate a burst into a single reported exception.
+ */
+let baseLayerErrorReported = false;
+
+const tileErrors = createTileErrorTracker((report) => {
+	if (baseLayerErrorReported) {
+		return;
+	}
+	baseLayerErrorReported = true;
+
+	ErrorService.onError({
+		err: new Error(
+			`Map failed to load ${report.failedTileCount} map tile(s) for base layer '${report.layerName}'` +
+				(report.exampleTileUrl
+					? ` (example: ${report.exampleTileUrl})`
+					: '')
+		),
+		hidden: true,
+	});
+});
+
+watch(visibleBaseLayer, (selected) => {
+	tileErrors.reset();
+	applyVisibleBaseLayer(selected);
+});
 
 /** Initialize the map */
 let initRenderComplete = false;
@@ -312,6 +368,14 @@ const initBaseLayers = (): TileLayer<TileWMS>[] => {
 		MapBaseLayer.Ortofoto,
 		'#08091a'
 	);
+
+	for (const layerName of Object.keys(mapBaseLayers) as MapBaseLayer[]) {
+		mapBaseLayers[layerName]
+			?.getSource()
+			?.on('tileloaderror', (event) =>
+				tileErrors.handleTileLoadError(layerName, event)
+			);
+	}
 
 	applyVisibleBaseLayer(visibleBaseLayer.value);
 
@@ -382,12 +446,7 @@ const initMap = () => {
 	setHighlightedPoint(props.highlightedPointId ?? null);
 
 	if (props.fullscreen) {
-		appInsights?.trackEvent({
-			name: 'EstateMapFullscreen',
-			properties: {
-				url: window.location.href,
-			},
-		});
+		trackFullscreenOpened();
 	}
 };
 
@@ -403,6 +462,8 @@ onUnmounted(() => {
 	map.un('pointermove', onMapHover);
 	map.un('pointerdrag', onMapDrag);
 	map.un('rendercomplete', onRenderComplete);
+
+	tileErrors.reset();
 
 	map.setTarget(undefined); // detach from DOM
 	map = null;

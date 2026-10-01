@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="blueprint-room-card map-card estate-default d-flex justify-center"
+		class="blueprint-room-card map-card estate-default d-flex"
 		:key="room.id"
 	>
 		<v-card class="room-card ma-4" :elevation="4">
@@ -117,6 +117,14 @@ const properties = computed(() => {
 	bottom: 0;
 	right: 0;
 	pointer-events: none;
+	justify-content: center;
+
+	// Below this the centred card reaches the print and zoom stack
+	@container blueprint (max-width: 520px) {
+		// 40px button + its 14px padding + an 8px gap
+		right: 62px;
+		justify-content: flex-start;
+	}
 
 	.room-card {
 		pointer-events: all;

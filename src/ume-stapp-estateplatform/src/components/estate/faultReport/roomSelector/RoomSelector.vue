@@ -1,62 +1,119 @@
 <template>
 	<div class="room-selector">
 		<div v-if="selectedRoom || skippedRoom">
-			<div v-if="skippedRoom">
-				<p class="text-medium-emphasis">
-					{{ $t('component.roomSelector.none') }}
-				</p>
-			</div>
-			<div
-				v-else-if="selectedRoom"
-				class="selected-room-wrap elevation-1 mt-1 rounded-lg"
+			<selection-card
+				v-if="skippedRoom"
+				class="mt-1"
+				muted
+				icon="no_meeting_room"
+				:title="$t('component.roomSelector.noneTitle')"
+				:description="$t('component.roomSelector.none')"
 			>
+				<template #actions>
+					<v-btn
+						rounded="lg"
+						variant="outlined"
+						color="grey-darken-2"
+						@click="selectRoom(null)"
+					>
+						{{ $t('component.faultReport.changeAnswer') }}
+					</v-btn>
+				</template>
+			</selection-card>
+			<div v-else-if="selectedRoom" class="selected-room mt-1">
+				<selection-card
+					:title="selectedRoomTitle"
+					:description="
+						$t('component.roomSelector.floorArea', {
+							floor: selectedRoom.floorName,
+							area: selectedRoom.grossArea,
+						})
+					"
+				>
+					<template #actions>
+						<v-btn
+							v-if="building.blueprintAvailable"
+							variant="text"
+							size="small"
+							rounded="lg"
+							color="primary"
+							:prepend-icon="
+								showBlueprint ? 'expand_less' : 'map'
+							"
+							@click="showBlueprint = !showBlueprint"
+						>
+							{{
+								showBlueprint
+									? $t('component.roomSelector.hideBlueprint')
+									: $t('component.roomSelector.showBlueprint')
+							}}
+						</v-btn>
+						<v-btn
+							rounded="lg"
+							variant="outlined"
+							color="grey-darken-2"
+							@click="selectRoom(null)"
+						>
+							{{ $t('component.faultReport.changeAnswer') }}
+						</v-btn>
+					</template>
+				</selection-card>
+
 				<building-blueprint
-					v-if="building.blueprintAvailable"
+					v-if="building.blueprintAvailable && showBlueprint"
 					ref="buildingBlueprintRef"
-					class="selected-room-blueprint"
+					class="selected-room-blueprint mt-2"
 					:building="building"
 					:floor="selectedRoom.floorId"
 					:room-zoom-padding="0.5"
 					hide-controls
 				/>
-				<room-card :room="selectedRoom" />
 			</div>
 		</div>
-		<div v-else>
-			<p class="text-medium-emphasis">
-				{{ $t('component.roomSelector.description') }}
-			</p>
-			<building-rooms
-				:building-id="building.id"
-				v-model:floor="floorId"
-				:return-object="true"
-				class="px-0"
-				@room-selected="selectRoom"
-				no-padding
-			/>
-		</div>
+		<fault-room-picker
+			v-else
+			:building="building"
+			:skippable="skippable"
+			@select="selectRoom"
+			@skip="emit('skip')"
+		/>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { IBuildingDetails, IBuildingRoom } from '@/models/Interfaces';
-import BuildingRooms from '../../building/BuildingRooms.vue';
-import { ref, useTemplateRef, watch } from 'vue';
-import RoomCard from '../../building/RoomCard.vue';
+import FaultRoomPicker from './FaultRoomPicker.vue';
+import { computed, ref, useTemplateRef, watch } from 'vue';
 import BuildingBlueprint from '../../blueprint/BuildingBlueprint.vue';
+import SelectionCard from '../../order/SelectionCard.vue';
 
-const props = defineProps<{
-	building: IBuildingDetails;
-	selectedRoom: IBuildingRoom | null;
-	skippedRoom?: boolean;
-}>();
-const emit = defineEmits(['select']);
+const props = withDefaults(
+	defineProps<{
+		building: IBuildingDetails;
+		selectedRoom: IBuildingRoom | null;
+		skippedRoom?: boolean;
+		skippable?: boolean;
+	}>(),
+	{ skippable: true }
+);
+const emit = defineEmits(['select', 'skip']);
 
 const selectRoom = (room: IBuildingRoom | null) => {
 	emit('select', room);
 };
 
-const floorId = ref<number | null>(null);
+// The popular name alone is the friendly label, but the raw name (usually a room
+// number) disambiguates it - so show both when a popular name exists, and fall
+// back to just the number when it doesn't.
+const selectedRoomTitle = computed(() => {
+	const room = props.selectedRoom;
+	if (!room) return '';
+	return room.popularName ? `${room.popularName} - ${room.name}` : room.name;
+});
+
+// The blueprint is hidden by default to keep the selected-room card compact; the
+// "Visa planritning" action expands it on demand.
+const showBlueprint = ref(false);
 
 const buildingBlueprintRef = useTemplateRef('buildingBlueprintRef');
 
@@ -73,33 +130,10 @@ watch(
 
 <style scoped lang="scss">
 .room-selector {
-	:deep(.v-list) {
-		overflow: visible;
-	}
-	:deep(.room-card) {
-		margin-bottom: 8px;
-		padding: 16px;
-
-		box-shadow:
-			0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-			0px 1px 1px 0px rgba(0, 0, 0, 0.14),
-			0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-
-		border-radius: $border-radius !important;
-		hr {
-			display: none;
-		}
-	}
-
-	.selected-room-wrap {
-		overflow: hidden;
-
-		:deep(.room-card) {
-			margin-bottom: 0;
-		}
+	.selected-room {
 		.selected-room-blueprint {
-			border: solid 1px rgba(0, 0, 0, 0.1);
-			border-radius: $border-radius $border-radius 0 0;
+			border: solid 1px rgba(0, 0, 0, 0.08);
+			border-radius: $border-radius;
 			overflow: hidden !important;
 			pointer-events: none !important;
 			height: 150px;

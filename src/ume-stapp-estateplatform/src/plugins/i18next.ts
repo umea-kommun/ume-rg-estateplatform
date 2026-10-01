@@ -18,18 +18,29 @@ function loadLocaleMessages() {
 	return messages;
 }
 
+/**
+ * The locale is kept in localStorage, not sessionStorage, so the choice
+ * survives closing the browser and applies on the next visit.
+ */
 export const getLocale = (): string => {
-	const storedLocale = sessionStorage.getItem('locale');
+	const storedLocale = localStorage.getItem('locale');
+	const isSupported =
+		storedLocale !== null &&
+		Object.hasOwn(loadLocaleMessages(), storedLocale);
 
-	return storedLocale ?? Config.VUE_APP_I18N_LOCALE;
+	return isSupported ? storedLocale : Config.VUE_APP_I18N_LOCALE;
 };
 export const setLocale = (locale: string): void => {
 	moment.locale(locale);
-	sessionStorage.setItem('locale', locale);
+	localStorage.setItem('locale', locale);
+	document.documentElement.lang = locale;
 };
 
+const locale = getLocale();
+document.documentElement.lang = locale;
+
 const i18n = createI18n({
-	locale: getLocale(),
+	locale,
 	fallbackLocale: Config.VUE_APP_I18N_FALLBACK_LOCALE,
 	messages: loadLocaleMessages(),
 	silentTranslationWarn: true,

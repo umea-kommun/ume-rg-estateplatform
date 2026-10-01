@@ -35,7 +35,7 @@ const contentSize = ref<AppContentSize>(
 		: AppContentSize.Default
 );
 
-const startPageRoute = EstateRoutes.Search;
+const startPageRoute = EstateRoutes.Home;
 </script>
 
 <style scoped lang="scss">

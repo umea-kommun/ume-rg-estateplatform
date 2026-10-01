@@ -37,7 +37,7 @@ function removeLeadingZerosRegex(str: string) {
 	return str.replace(/^0+(?=\d)/, '');
 }
 
-function getBuildingImageUrl(buildingId: number): string {
+export function getBuildingImageUrl(buildingId: number): string {
 	return `${Config.VUE_APP_ESTATE_SERVICE}/buildings/${buildingId}/image`;
 }
 
@@ -113,6 +113,7 @@ export default {
 			popularName: string | null;
 			numChildren: number | null;
 			numFloors: number | null;
+			hasRoomInformation?: boolean;
 			grossArea: number | null;
 			imageUrl: string | null;
 			isFavorite: boolean;
@@ -152,6 +153,7 @@ export default {
 				),
 				imageUrl: item.imageUrl ? getBuildingImageUrl(item.id) : null,
 				isFavorite: item.isFavorite ?? false,
+				hasRoomInformation: item.hasRoomInformation,
 				address: item.address
 					? {
 							street: capitalizeWords(
@@ -272,6 +274,7 @@ export default {
 			grossArea: number | null;
 			numFloors: number | null;
 			numRooms: number | null;
+			hasRoomInformation?: boolean;
 			imageUrl: string | null;
 			isFavorite?: boolean;
 			address: {
@@ -293,6 +296,7 @@ export default {
 			grossArea: Math.round(b.grossArea ?? 0),
 			imageUrl: b.imageUrl ? getBuildingImageUrl(b.id) : null,
 			isFavorite: b.isFavorite ?? false,
+			hasRoomInformation: b.hasRoomInformation,
 			metrics: {
 				floorCount: b.numFloors,
 				roomCount: b.numRooms,
@@ -344,6 +348,7 @@ export default {
 		grossArea: number | null;
 		numFloors: number | null;
 		numRooms: number | null;
+		hasRoomInformation?: boolean;
 		numDocuments: number | null;
 		estate: { id: number; name: string; popularName: string | null };
 		region: { id: number; name: string };
@@ -380,6 +385,7 @@ export default {
 			numDocuments: r.numDocuments,
 			blueprintAvailable:
 				r.extendedProperties?.blueprintAvailable ?? false,
+			hasRoomInformation: r.hasRoomInformation,
 			imageUrl: r.imageUrl ? getBuildingImageUrl(r.id) : null,
 			isFavorite: r.isFavorite ?? false,
 			workOrderTypeAccess: r.workOrderTypeAccess ?? {},

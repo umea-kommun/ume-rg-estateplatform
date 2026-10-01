@@ -1,24 +1,59 @@
 <template>
 	<div class="building-selector">
-		<div v-if="selectedBuilding" class="selected-building mt-2 elevation-1">
+		<div v-if="selectedBuilding" class="selected-building mt-2">
+			<selection-card
+				:image-url="buildingThumbUrl"
+				icon="apartment"
+				:title="selectedBuilding.popularName || selectedBuilding.name"
+				:description="buildingAddress"
+			>
+				<template #actions>
+					<v-btn
+						v-if="selectedBuilding.geoLocation"
+						variant="text"
+						size="small"
+						rounded="lg"
+						color="primary"
+						:prepend-icon="showMap ? 'expand_less' : 'map'"
+						@click="showMap = !showMap"
+					>
+						{{
+							showMap
+								? $t('component.faultReport.building.hideMap')
+								: $t('component.faultReport.building.showMap')
+						}}
+					</v-btn>
+					<v-btn
+						rounded="lg"
+						variant="outlined"
+						color="grey-darken-2"
+						@click="emit('select', null)"
+					>
+						{{ $t('component.faultReport.changeAnswer') }}
+					</v-btn>
+				</template>
+			</selection-card>
+
 			<building-map
+				v-if="showMap && selectedBuilding.geoLocation"
 				ref="building-map"
+				class="selected-building-map mt-2"
 				:points="selectedBuildingMapPoints"
 				hide-controls
 				fit-points
 			/>
-			<building-selector-item
-				:entry="selectedBuilding"
-				class="px-4 py-4"
-			/>
+
 			<building-notice-board
 				v-if="selectedBuilding.noticeBoard"
-				class="mx-4"
+				class="mt-2"
 				:notice-board="selectedBuilding.noticeBoard"
 			/>
 		</div>
 		<div v-else>
-			<div>
+			<!-- Search and the "pick on map" action share a row: two equal ways to
+			find a building, kept out of the step title. The button wraps below the
+			field on narrow screens. -->
+			<div class="search-row mt-4">
 				<v-text-field
 					v-model="search"
 					:label="$t('component.buildingSelector.searchLabel')"
@@ -29,11 +64,25 @@
 					clearable
 					rounded="lg"
 					variant="outlined"
-					class="mt-4"
+					class="search-field"
 					autocomplete="off"
+					hide-details
 					:loading="isBusyLoading"
 				>
+					<template #append-inner>
+						<v-btn
+							variant="flat"
+							color="primary"
+							class="ma-2"
+							@click="submitSearch"
+						>
+							{{ $t('component.estateSearch.searchButton') }}
+						</v-btn>
+					</template>
 				</v-text-field>
+				<div v-if="$slots['search-action']" class="search-action">
+					<slot name="search-action" />
+				</div>
 			</div>
 
 			<v-alert
@@ -52,7 +101,7 @@
 			</v-alert>
 			<v-list class="mt-2" v-if="searchResults?.length">
 				<estate-search-result-item
-					v-for="entry in searchResults"
+					v-for="entry in visibleSearchResults"
 					:key="entry.type + entry.id"
 					:entry="entry"
 					@click="selectBuilding(entry.id)"
@@ -62,6 +111,20 @@
 					@mouseenter="hoveredSearchResultId = entry.id"
 					@mouseleave="hoveredSearchResultId = null"
 				/>
+				<div
+					v-if="searchResults.length > visibleCount"
+					class="d-flex justify-center mt-2"
+				>
+					<v-btn
+						variant="text"
+						rounded="lg"
+						color="primary"
+						append-icon="expand_more"
+						@click="visibleCount += SEARCH_RESULT_PAGE_SIZE"
+					>
+						{{ $t('component.buildingSelector.showMore') }}
+					</v-btn>
+				</div>
 			</v-list>
 			<div v-if="!searchResults?.length && !search">
 				<favorite-list
@@ -70,6 +133,7 @@
 					@select-room="emit('select-room', $event)"
 					:types="[EstateType.Building, EstateType.Room]"
 					selectable
+					compact
 				>
 					<template #header="{ count }">
 						<h3 class="mt-4">
@@ -103,8 +167,8 @@ import { DispatchType } from '@/models/Enums';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
 import BuildingNoticeBoard from '@/components/estate/building/BuildingNoticeBoard.vue';
-import BuildingSelectorItem from './BuildingSelectorItem.vue';
 import BuildingMap from '@/components/estate/map/BuildingMap.vue';
+import SelectionCard from '../../order/SelectionCard.vue';
 import EstateSearchResultItem from '@/components/estate/search/EstateSearchResultItem.vue';
 import FavoriteList from '../../favorite/FavoriteList.vue';
 import { EstateType } from '@/models/Enums';
@@ -119,8 +183,47 @@ const store = useStore<IRootState>();
 
 const hoveredSearchResultId = ref<number | null>(null);
 
-const SEARCH_RESULT_LIMIT = 10;
+// The map is hidden by default to keep the selected-building card compact; the
+// "Visa karta" action expands it on demand.
+const showMap = ref(false);
+
+const SEARCH_RESULT_LIMIT = 25;
+// Show a short list by default so the step stays compact; "show more" reveals the
+// rest of the (already fetched) results a page at a time.
+const SEARCH_RESULT_PAGE_SIZE = 5;
 const search = ref('');
+const visibleCount = ref(SEARCH_RESULT_PAGE_SIZE);
+
+// Address data comes in mixed/upper case (e.g. "UMEÅ"); title-case each word so
+// it reads like the rest of the UI, matching the old building list item.
+const titleCase = (value: string) =>
+	value
+		.toLocaleLowerCase()
+		.replace(
+			/\p{L}[\p{L}\p{M}]*/gu,
+			(word) => word[0].toLocaleUpperCase() + word.slice(1)
+		);
+
+const buildingAddress = computed(() => {
+	const address = props.selectedBuilding?.address;
+	if (!address) return '';
+	const street = address.street?.trim() || '';
+	let result = street;
+	if (street && address.zipCode && address.city) {
+		result = `${street}, ${address.zipCode} ${address.city}`;
+	} else if (street && address.city) {
+		result = `${street}, ${address.city}`;
+	}
+	return titleCase(result);
+});
+
+// Request a small, retina-friendly thumbnail rather than the full-size image
+// for the 44px card media.
+const buildingThumbUrl = computed(() =>
+	props.selectedBuilding?.imageUrl
+		? `${props.selectedBuilding.imageUrl}?w=88`
+		: null
+);
 
 const { fetchSearchResults, searchResults, isBusyLoading } = useEstateSearch(
 	search,
@@ -129,6 +232,10 @@ const { fetchSearchResults, searchResults, isBusyLoading } = useEstateSearch(
 		updateQueryParams: false,
 		getBuildingLocations: false,
 	}
+);
+
+const visibleSearchResults = computed(
+	() => searchResults.value?.slice(0, visibleCount.value)
 );
 
 const isBusyFetchingBuildingId = ref<number | null>(null);
@@ -158,34 +265,61 @@ const selectedBuildingMapPoints = computed(() => {
 	];
 });
 
+const submitSearch = () => {
+	fetchSearchResults({ type: ['building'], limit: SEARCH_RESULT_LIMIT });
+};
+
 watchDebounced(
 	() => search.value,
 	() => {
-		fetchSearchResults({ type: ['building'], limit: SEARCH_RESULT_LIMIT });
+		visibleCount.value = SEARCH_RESULT_PAGE_SIZE;
+		submitSearch();
 	},
 	{ debounce: 200, maxWait: 500 }
 );
-onMounted(() => {
-	fetchSearchResults({ type: ['building'], limit: SEARCH_RESULT_LIMIT });
-});
+onMounted(submitSearch);
 </script>
 
 <style lang="scss" scoped>
 .building-selector {
+	// Search field + "Välj på karta" on one row; the button aligns with the input
+	// control box and drops full-width below the field on narrow screens.
+	.search-row {
+		display: flex;
+		align-items: stretch;
+		gap: 12px;
+
+		.search-field {
+			flex: 1 1 auto;
+			min-width: 0;
+		}
+		.search-action {
+			flex: 0 0 auto;
+			display: flex;
+			:deep(.v-btn) {
+				height: 100%;
+				min-height: 36px;
+			}
+		}
+
+		@media only screen and (max-width: 600px) {
+			flex-direction: column;
+			.search-action,
+			.search-action :deep(.v-btn) {
+				width: 100%;
+			}
+		}
+	}
+
 	.selected-building {
 		width: 100%;
-		border: solid 1px $grey-lighten-2;
-		border-radius: $border-radius;
-		overflow: hidden;
 
-		.building-selector-item {
-			flex: 1;
-			border: none;
-		}
-		.building-map {
+		.selected-building-map {
 			pointer-events: none;
-			flex: 1;
 			height: 150px;
+			border: solid 1px rgba(0, 0, 0, 0.08);
+			border-radius: $border-radius;
+			overflow: hidden;
 		}
 	}
 	.v-list {

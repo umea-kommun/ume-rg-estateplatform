@@ -72,7 +72,7 @@ const open = async () => {
 	showMap.value = true;
 	await waitForMapToRender();
 
-	buildingMapRef.value?.openFullscreen();
+	buildingMapRef.value?.open();
 	appInsights?.trackEvent({
 		name: 'EstateSelectOnMapClicked',
 		properties: {

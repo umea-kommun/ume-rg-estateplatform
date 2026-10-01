@@ -401,6 +401,7 @@ FodyWeavers.xsd
 
 # Custom
 .idea
+.claude/
 
 src/ume-app-estateservice/Umea.se.EstateService.API/DataStoreCache
 *.db
@@ -421,3 +422,4 @@ secrets.json
 
 # Local dev overrides - keep machine-specific settings out of the repo.
 appsettings.Development.json
+.env.development

@@ -60,7 +60,6 @@ public sealed class TestApiFactory : WebAppFactoryBase<Program, HttpClientNames>
                 ["WorkOrder:ProcessingIntervalSeconds"] = "9999",
                 ["WorkOrder:MaxRetries"] = "3",
                 ["WorkOrder:RetryBaseDelaySeconds"] = "1",
-                ["WorkOrder:StatusCheckIntervalMinutes"] = "60",
                 // Pythagoras per-type defaults (tests assert these in WorkOrderProcessorTests)
                 ["WorkOrder:DefaultCategoryIdByType:2"] = "82",
                 ["WorkOrder:DefaultCategoryIdByType:3"] = "89",

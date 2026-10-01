@@ -8,7 +8,7 @@
 					:size="24"
 					color="grey-darken-3"
 				/>
-				<div class="content pb-1">
+				<div class="file-info pb-1">
 					<div class="title">{{ document.name }}</div>
 					<div class="subtitle d-flex flex-wrap">
 						<div>
@@ -89,6 +89,13 @@ const canPreview = computed(() => {
 
 <style scoped lang="scss">
 .document-file {
+	border-bottom: solid 1px $grey-lighten-2;
+	padding-bottom: 4px;
+
+	&:first-child {
+		border-top: solid 1px $grey-lighten-2;
+	}
+
 	.document-file-inner {
 		display: flex;
 		align-items: center;
@@ -98,7 +105,7 @@ const canPreview = computed(() => {
 			display: flex;
 		}
 
-		.content {
+		.file-info {
 			flex: 1;
 			.title {
 				font-size: size(18);

@@ -78,6 +78,14 @@ public sealed class WorkOrderInfoDto
     public string? NotifierUsername { get; init; }
     public string? NotifierName { get; init; }
     public string? NotifierEmail { get; init; }
+    public string? PerformedDescriptionDescription { get; init; }
+    public long? PerformedDescriptionCreated { get; init; }
+
+    /// <summary>
+    /// Pythagoras' last-modified time for the work order (equal to entity.updated in the responses seen).
+    /// Which edits move it is not documented, so it only dates changes the refresh detects itself.
+    /// </summary>
+    public long? Updated { get; init; }
 }
 
 public sealed class WorkOrderInlineDocument

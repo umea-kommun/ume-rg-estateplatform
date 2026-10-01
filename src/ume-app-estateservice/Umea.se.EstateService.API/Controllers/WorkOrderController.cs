@@ -65,9 +65,20 @@ public class WorkOrderController(IWorkOrderHandler workOrderHandler, UserToken u
         return Ok(await workOrderHandler.GetWorkOrdersAsync(email, cancellationToken));
     }
 
+    /// <summary>Refreshes the user's due work orders and returns the list with an outcome.</summary>
+    /// <example><code>POST /api/v1.0/workorders/sync</code></example>
+    [HttpPost("sync")]
+    [SwaggerOperation(Summary = "Refresh work order statuses", Description = "Returns saved orders and a refresh outcome after checking Pythagoras.")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Refresh result, including failed or not-due refreshes.", typeof(WorkOrderRefreshModel))]
+    public async Task<ActionResult<WorkOrderRefreshModel>> SyncWorkOrdersAsync(CancellationToken cancellationToken)
+    {
+        return Ok(await workOrderHandler.SyncWorkOrdersAsync(userToken.GetRequiredEmail(), cancellationToken));
+    }
+
+    /// <summary>Refreshes one work order under the same rules as the list refresh.</summary>
     [HttpPost("{id:guid}/sync")]
-    [SwaggerOperation(Summary = "Sync workOrder", Description = "Force a status sync from Pythagoras for a submitted work order.")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Synced work order details.", typeof(WorkOrderDetailModel))]
+    [SwaggerOperation(Summary = "Sync workOrder", Description = "Refresh the status of a submitted work order from Pythagoras, subject to the refresh cooldown.")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Work order details with the refresh outcome.", typeof(WorkOrderDetailModel))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "WorkOrder not found.")]
     public async Task<ActionResult<WorkOrderDetailModel>> SyncWorkOrderAsync(Guid id, CancellationToken cancellationToken)
     {

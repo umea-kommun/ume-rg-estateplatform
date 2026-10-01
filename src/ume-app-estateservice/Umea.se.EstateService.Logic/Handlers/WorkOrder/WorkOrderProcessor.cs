@@ -13,7 +13,6 @@ namespace Umea.se.EstateService.Logic.Handlers.WorkOrder;
 public class WorkOrderProcessor(
     IWorkOrderRepository workOrderRepository,
     IPythagorasClient pythagorasClient,
-    WorkOrderStatusSyncService statusSyncService,
     IWorkOrderCategoryClassifier categoryClassifier,
     IWorkOrderFileStorage fileStorage,
     ApplicationConfig appConfig,
@@ -26,7 +25,7 @@ public class WorkOrderProcessor(
         try
         {
             IReadOnlyList<WorkOrderEntity> workOrders = await workOrderRepository
-                .GetDueForProcessingAsync(DateTimeOffset.UtcNow, _config.StatusSyncEnabled, cancellationToken);
+                .GetDueForProcessingAsync(DateTimeOffset.UtcNow, cancellationToken);
 
             if (workOrders.Count == 0)
             {
@@ -35,15 +34,8 @@ public class WorkOrderProcessor(
 
             logger.LogInformation("Processing {Count} workOrders.", workOrders.Count);
 
-            // Batch sync all submitted orders in a single Pythagoras call
-            List<WorkOrderEntity> submitted = [.. workOrders.Where(wo => wo.SyncStatus == WorkOrderSyncStatus.Submitted)];
-            if (submitted.Count > 0)
-            {
-                await statusSyncService.SyncStaleWorkOrdersAsync(submitted, cancellationToken);
-            }
-
             // Submit pending/failed/stale-processing orders individually
-            foreach (WorkOrderEntity workOrder in workOrders.Where(wo => wo.SyncStatus != WorkOrderSyncStatus.Submitted))
+            foreach (WorkOrderEntity workOrder in workOrders)
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
@@ -250,6 +242,7 @@ public class WorkOrderProcessor(
         WorkOrderDto? created = await pythagorasClient.CreateWorkOrderAsync(
             type, PythagorasWorkOrderOrigin.PYTHAGORAS_WEB, createRequest, ct) ?? throw new InvalidOperationException("Pythagoras returned null when creating workOrder.");
         workOrder.PythagorasWorkOrderId = created.Id;
+        workOrder.PythagorasWorkOrderName = created.Name;
 
         await workOrderRepository.UpdateAsync(workOrder, ct);
     }
@@ -306,7 +299,7 @@ public class WorkOrderProcessor(
         workOrder.SyncStatus = WorkOrderSyncStatus.Submitted;
         workOrder.SubmittedAt = DateTimeOffset.UtcNow;
         workOrder.ErrorMessage = null;
-        workOrder.NextSyncAt = DateTimeOffset.UtcNow.AddMinutes(_config.StatusCheckIntervalMinutes);
+        workOrder.NextSyncAt = null;
         workOrder.UpdatedAt = DateTimeOffset.UtcNow;
         await workOrderRepository.UpdateAsync(workOrder, ct);
 

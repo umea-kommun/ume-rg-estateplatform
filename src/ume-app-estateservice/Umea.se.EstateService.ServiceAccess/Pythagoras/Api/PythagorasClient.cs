@@ -692,7 +692,7 @@ where TValue : class
             return [];
         }
 
-        string requestUri = NormalizeEndpoint("rest/v1/workorder/info");
+        string requestUri = NormalizeEndpoint($"rest/v1/workorder/info?maxResults={workOrderIds.Count}");
         string json = JsonSerializer.Serialize(workOrderIds, _serializerOptions);
 
         using HttpRequestMessage message = new(HttpMethod.Post, requestUri)

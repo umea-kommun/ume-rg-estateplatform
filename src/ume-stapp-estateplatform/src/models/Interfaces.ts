@@ -104,6 +104,7 @@ export interface IEstateSearchResultEntry {
 		zipCode: string;
 		city: string;
 	} | null;
+	hasRoomInformation?: boolean;
 	metrics: {
 		buildingCount: number | null;
 		floorCount: number | null;
@@ -145,6 +146,7 @@ export interface IEstateBuilding {
 	grossArea: number;
 	imageUrl: string | null;
 	isFavorite: boolean;
+	hasRoomInformation?: boolean;
 	metrics: {
 		floorCount: number | null;
 		roomCount: number | null;
@@ -200,6 +202,12 @@ export interface IBuildingDetails {
 	name: string;
 	popularName: string | null;
 	blueprintAvailable: boolean;
+	/**
+	 * Whether the building has a real room breakdown. Some buildings only carry a
+	 * placeholder floor/room (Pythagoras "VF01"/"R01"), meaning there is nothing
+	 * meaningful to pick
+	 */
+	hasRoomInformation?: boolean;
 	numDocuments: number | null;
 	imageUrl: string | null;
 	isFavorite: boolean;
@@ -290,6 +298,7 @@ export interface IMapState {
 }
 
 export interface SearchFilter {
+	types?: EstateType[];
 	businessTypes?: number[];
 }
 

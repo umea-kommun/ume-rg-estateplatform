@@ -44,7 +44,7 @@ import { IRootState } from './models/Interfaces';
 
 const store = useStore<IRootState>();
 const route = useRoute();
-const routeName = route.name?.toString();
+const routeName = computed(() => route.name?.toString());
 
 const isFullPageError = computed(() => {
 	return store.state.error?.errorPage?.visible;

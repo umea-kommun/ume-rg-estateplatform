@@ -11,6 +11,7 @@
 			:selectable="true"
 		/>
 		<v-btn
+			v-if="!hideTrigger"
 			color="primary"
 			variant="tonal"
 			rounded="lg"
@@ -30,6 +31,9 @@ import { IBuildingDetails, IBuildingRoom } from '@/models/Interfaces';
 
 defineProps<{
 	building: IBuildingDetails;
+	// Hide the built-in button and drive the blueprint via the exposed open()
+	// instead (used when the trigger lives elsewhere, e.g. a choice-screen row).
+	hideTrigger?: boolean;
 }>();
 
 const emit = defineEmits(['room-selected']);
@@ -50,7 +54,7 @@ const open = async () => {
 	showBlueprint.value = true;
 	await waitForBlueprintToRender();
 
-	buildingBlueprintRef.value?.openFullscreen();
+	buildingBlueprintRef.value?.open();
 
 	appInsights?.trackEvent({
 		name: 'EstateSelectRoomOnBlueprintClicked',
@@ -75,4 +79,6 @@ const selectRoom = (room: IBuildingRoom) => {
 		},
 	});
 };
+
+defineExpose({ open });
 </script>

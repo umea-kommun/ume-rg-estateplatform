@@ -426,8 +426,13 @@ public class EstateDbContext(DbContextOptions<EstateDbContext> options) : DbCont
             entity.Property(e => e.NotifierPhone)
                 .HasMaxLength(50);
 
+            entity.Property(e => e.PythagorasWorkOrderName)
+                .HasMaxLength(50);
+
             entity.Property(e => e.PythagorasStatusName)
                 .HasMaxLength(200);
+
+            entity.Property(e => e.PythagorasStatusCategory).HasMaxLength(64);
 
             entity.HasMany(e => e.Files)
                 .WithOne(f => f.WorkOrder)

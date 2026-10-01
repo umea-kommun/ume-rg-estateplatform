@@ -60,7 +60,7 @@ export function useAuthMiddleware(router: Router): void {
 		) {
 			// User can't be logged in when accessing this page
 			return next({
-				name: EstateRoutes.Search,
+				name: EstateRoutes.Home,
 			});
 		}
 		if (
@@ -70,7 +70,7 @@ export function useAuthMiddleware(router: Router): void {
 		) {
 			// User is not logged in with AD, deny access
 			return next({
-				name: EstateRoutes.Search,
+				name: EstateRoutes.Home,
 			});
 		}
 

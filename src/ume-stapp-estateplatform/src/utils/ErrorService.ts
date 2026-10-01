@@ -87,7 +87,6 @@ export default class ErrorService {
 		if (log) {
 			// Compose and send error to Insights
 			const error = this.composeError({ err, instance, info });
-			this.sendError(error);
 
 			// Send error directly to app insights
 			if (appInsights) {
@@ -138,10 +137,6 @@ export default class ErrorService {
 		}
 
 		return error;
-	}
-
-	private static sendError(error: any): void {
-		store.dispatch('sendError', { error });
 	}
 
 	/**

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Umea.se.EstateService.Logic.HostedServices;
 using Umea.se.EstateService.ServiceAccess.Pythagoras.Enums;
@@ -6,8 +7,8 @@ using Umea.se.EstateService.Shared.Data.Entities;
 using Umea.se.EstateService.Shared.Data.Enums;
 using Umea.se.EstateService.Shared.Exceptions;
 using Umea.se.EstateService.Shared.Infrastructure;
-using Umea.se.EstateService.Shared.Infrastructure.ConfigurationModels;
 using Umea.se.EstateService.Shared.Models;
+using Umea.se.Toolkit.Logging;
 
 namespace Umea.se.EstateService.Logic.Handlers.WorkOrder;
 
@@ -19,10 +20,11 @@ public class WorkOrderHandler(
     WorkOrderFileValidator fileValidator,
     WorkOrderCategoryProvider categoryProvider,
     WorkOrderAccessPolicy accessPolicy,
-    ApplicationConfig appConfig,
+    WorkOrderStatusSyncService statusSyncService,
     ILogger<WorkOrderHandler> logger) : IWorkOrderHandler
 {
-    private readonly WorkOrderConfiguration _config = appConfig.WorkOrderProcessing;
+    // Custom event emitted on every successful submission
+    private const string WorkOrderSubmittedEventName = "EstateWorkOrderSubmitted";
 
     private static readonly Dictionary<WorkOrderType, PythagorasWorkOrderType> _workOrderTypeMap = new()
     {
@@ -98,6 +100,7 @@ public class WorkOrderHandler(
 
         int? roomId = null;
         string? roomName = null;
+        string? roomPopularName = null;
         // Room applies to all work order types (fault reports and orders). For orders
         // location is never set, so the Outdoor conflict check below is a no-op for them.
         if (request.RoomId.HasValue)
@@ -123,6 +126,7 @@ public class WorkOrderHandler(
             {
                 roomId = room.Id;
                 roomName = room.Name;
+                roomPopularName = room.PopularName;
             }
         }
 
@@ -144,7 +148,11 @@ public class WorkOrderHandler(
         {
             Uid = Guid.NewGuid(),
             BuildingId = request.BuildingId,
-            BuildingName = building?.Name,
+            // The popular name is what users recognise the building by; Name is the fallback
+            // for buildings Pythagoras has no popular name for.
+            BuildingName = building is null
+                ? null
+                : (!string.IsNullOrWhiteSpace(building.PopularName) ? building.PopularName : building.Name),
             RoomId = roomId,
             RoomName = roomName,
             Location = location,
@@ -190,13 +198,87 @@ public class WorkOrderHandler(
 
         logger.LogInformation("WorkOrder {WorkOrderUid} created for building {BuildingId} by {Email}", workOrder.Uid, workOrder.BuildingId, email);
 
+        TrackWorkOrderSubmitted(request, workOrderType, building, roomId, roomName, roomPopularName, location);
+
         return WorkOrderMapper.MapToSubmission(workOrder);
+    }
+
+    // Buckets the fine-grained work order type into the errand kinds the users think in: a fault
+    // report, a space requirement, or an order. The raw type is still logged separately as
+    // WorkOrderType, which doubles as the order category for orders. Every order type is listed
+    // explicitly so a type added later falls to "N/A" (prompting a deliberate decision) rather than
+    // being silently swept into "Order".
+    private static string ResolveErrandType(WorkOrderType type) => type switch
+    {
+        WorkOrderType.ErrorReport => "FaultReport",
+        WorkOrderType.SpaceRequirement => "SpaceRequirement",
+        WorkOrderType.BuildingService
+            or WorkOrderType.FacilityService
+            or WorkOrderType.TownHallService => "Order",
+        _ => "N/A",
+    };
+
+    private void TrackWorkOrderSubmitted(
+        CreateWorkOrderRequest request,
+        PythagorasWorkOrderType workOrderType,
+        BuildingEntity? building,
+        int? roomId,
+        string? roomName,
+        string? roomPopularName,
+        WorkOrderLocation? location)
+    {
+        logger.LogCustomEvent(WorkOrderSubmittedEventName, options =>
+        {
+            options.WithProperty("ErrandType", ResolveErrandType(request.WorkOrderType));
+            options.WithProperty("WorkOrderType", request.WorkOrderType.ToString());
+
+            // Building is absent for space requirements submitted without one; "N/A" keeps those
+            // apart from a real "No" so the dimensions aren't muddled in App Insights.
+            options.WithProperty("BuildingId", building?.Id.ToString(CultureInfo.InvariantCulture) ?? "N/A");
+            // Log the popular (human-recognisable) name, falling back to the formal name when a
+            // building has none.
+            options.WithProperty("BuildingName", building is null
+                ? "N/A"
+                : string.IsNullOrWhiteSpace(building.PopularName) ? building.Name : building.PopularName);
+            options.WithProperty("HasRoomInformation", building is null
+                ? "N/A"
+                : EstateModelMapper.HasRoomInformation(building) ? "Yes" : "No");
+            options.WithProperty("HasBlueprint", building is null
+                ? "N/A"
+                : building.BlueprintAvailable == true ? "Yes" : "No");
+
+            options.WithProperty("RoomId", roomId?.ToString(CultureInfo.InvariantCulture) ?? "N/A");
+            // Log the formal name and the popular name together ("Name - PopularName"), falling
+            // back to just the name when a room has no popular name.
+            options.WithProperty("RoomName", roomName is null
+                ? "N/A"
+                : string.IsNullOrWhiteSpace(roomPopularName) ? roomName : $"{roomName} - {roomPopularName}");
+
+            // Indoor/Outdoor is only asked for (and posted) on fault reports; "N/A" for the other
+            // types, which don't carry a location.
+            options.WithProperty("Location", location?.ToString() ?? "N/A");
+
+            // Count doubles as the "did they attach anything?" flag — 0 means none.
+            options.WithProperty("AttachmentCount", (request.Files?.Count ?? 0).ToString(CultureInfo.InvariantCulture));
+
+            // Only types where the user picks an explicit leaf category (e.g. SpaceRequirement)
+            // carry a CategoryId; resolve its human-readable path so the event is self-describing.
+            if (request.CategoryId.HasValue)
+            {
+                options.WithProperty("CategoryId", request.CategoryId.Value.ToString(CultureInfo.InvariantCulture));
+
+                string? categoryName = categoryProvider
+                    .GetLeafCategoriesForType((int)workOrderType)
+                    .FirstOrDefault(c => c.Id == request.CategoryId.Value)?.Name;
+                options.WithProperty("CategoryName", categoryName ?? "N/A");
+            }
+        });
     }
 
     public async Task<IReadOnlyList<WorkOrderListItemModel>> GetWorkOrdersAsync(string email, CancellationToken cancellationToken = default)
     {
         IReadOnlyList<WorkOrderEntity> entities = await workOrderRepository.GetByEmailAsync(email, cancellationToken);
-        return WorkOrderMapper.MapToListItems(entities);
+        return WorkOrderMapper.MapToListItems(entities, dataStore.BuildingsById);
     }
 
     public Task<string?> GetLatestNotifierPhoneAsync(string email, CancellationToken cancellationToken = default)
@@ -210,25 +292,11 @@ public class WorkOrderHandler(
             : WorkOrderMapper.MapToDetail(workOrder);
     }
 
-    public async Task<WorkOrderDetailModel> SyncWorkOrderAsync(Guid uid, string email, CancellationToken cancellationToken = default)
-    {
-        WorkOrderEntity? workOrder = await workOrderRepository.GetByUidAsync(uid, email, cancellationToken);
-        if (workOrder is null)
-        {
-            throw new EntityNotFoundException($"Work order {uid} not found.");
-        }
+    public Task<WorkOrderDetailModel> SyncWorkOrderAsync(Guid uid, string email, CancellationToken cancellationToken = default)
+        => statusSyncService.RefreshOneAsync(email, uid, cancellationToken);
 
-        if (_config.StatusSyncEnabled
-            && workOrder is { SyncStatus: WorkOrderSyncStatus.Submitted, PythagorasWorkOrderId: not null })
-        {
-            workOrder.NextSyncAt = DateTimeOffset.UtcNow;
-            workOrder.UpdatedAt = DateTimeOffset.UtcNow;
-            await workOrderRepository.UpdateAsync(workOrder, cancellationToken);
-            workOrderChannel.Notify(workOrder.Uid);
-        }
-
-        return WorkOrderMapper.MapToDetail(workOrder);
-    }
+    public Task<WorkOrderRefreshModel> SyncWorkOrdersAsync(string email, CancellationToken cancellationToken = default)
+        => statusSyncService.RefreshAsync(email, cancellationToken);
 
     public async Task<WorkOrderDetailModel> RetryWorkOrderAsync(Guid uid, string email, CancellationToken cancellationToken = default)
     {

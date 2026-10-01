@@ -155,3 +155,15 @@ const showWarningMessage = computed({
 	}
 }
 </style>
+
+<style lang="scss">
+.app-content-bleed {
+	margin-inline: calc(50% - 50vw);
+}
+
+.app-content-container {
+	max-width: $site-max-width;
+	margin-inline: auto;
+	padding-inline: $site-horizontal-padding;
+}
+</style>

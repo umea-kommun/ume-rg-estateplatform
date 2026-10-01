@@ -20,6 +20,16 @@ const routes: Array<RouteRecordRaw> = [
 	// Estate routes - gated by runtime feature flags
 	{
 		path: '/',
+		name: EstateRoutes.Home,
+		component: () => import('@/components/estate/start/EstateStart.vue'),
+		meta: {
+			requiresInternalLogin: true,
+			requiresFeature: 'EstateService',
+			contentSize: AppContentSize.Wide,
+		},
+	},
+	{
+		path: '/sok',
 		name: EstateRoutes.Search,
 		component: () => import('@/components/estate/search/EstateSearch.vue'),
 		meta: {
@@ -32,6 +42,16 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/om-webbplatsen',
 		name: EstateRoutes.AboutWebsite,
 		component: () => import('@/components/app/AboutWebsite.vue'),
+		meta: {
+			requiresInternalLogin: true,
+			requiresFeature: 'EstateService',
+			contentSize: AppContentSize.Narrow,
+		},
+	},
+	{
+		path: '/versionsinformation',
+		name: EstateRoutes.ReleaseNotes,
+		component: () => import('@/components/app/ReleaseNotes.vue'),
 		meta: {
 			requiresInternalLogin: true,
 			requiresFeature: 'EstateService',
@@ -65,7 +85,7 @@ const routes: Array<RouteRecordRaw> = [
 		component: () =>
 			import(
 				'@/components/estate/spaceRequirement/EstateSpaceRequirement.vue'
-			),
+				),
 		meta: {
 			requiresInternalLogin: true,
 			requiresFeature: 'ErrorReport',

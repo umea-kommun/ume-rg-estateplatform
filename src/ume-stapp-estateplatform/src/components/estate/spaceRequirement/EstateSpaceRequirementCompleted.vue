@@ -14,7 +14,7 @@
 				class="mt-4"
 				color="primary"
 				:to="{
-					name: EstateRoutes.Search,
+					name: EstateRoutes.Home,
 				}"
 			>
 				{{ $t('component.spaceRequirement.completed.goHome') }}

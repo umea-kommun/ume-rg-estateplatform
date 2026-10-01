@@ -10,14 +10,20 @@
 					Portal identity. Kept search-neutral so the page still
 					reads as complete when ErrorReport hides the actions.
 				-->
-				<div class="portal-intro mt-4" v-if="!userHasSearched">
-					<h1>{{ $t('component.estatePortal.title') }}</h1>
-					<p>{{ $t('component.estatePortal.description') }}</p>
+				<div class="portal-intro">
+					<h1 class="mt-0 mb-2">
+						{{ $t('component.estateSearch.title') }}
+					</h1>
+					<p class="my-0">
+						{{ $t('component.estateSearch.description') }}
+					</p>
 				</div>
 				<div class="mt-4">
 					<!-- Search bar-->
 					<v-text-field
+						ref="search-field"
 						v-model="search"
+						class="search-field"
 						:placeholder="
 							$t('component.estateSearch.searchPlaceholder')
 						"
@@ -27,71 +33,77 @@
 						clearable
 						variant="outlined"
 						autocomplete="off"
+						enterkeyhint="search"
+						@keyup.enter="submitSearch"
 					>
 						<template #append-inner>
 							<v-btn
 								variant="flat"
 								color="primary"
 								class="ma-2"
-								@click="fetchSearchResults"
+								@click="submitSearch"
 							>
 								{{ $t('component.estateSearch.searchButton') }}
 							</v-btn>
 						</template>
 					</v-text-field>
 
-					<!-- Search filter -->
-					<div class="mt-2 d-flex justify-start">
+					<v-btn
+						variant="tonal"
+						class="map-btn mt-2"
+						color="primary"
+						prepend-icon="location_pin"
+						block
+						@click="selectBuildingOnMap"
+					>
+						{{ $t('component.estateSearch.selectOnMap') }}
+					</v-btn>
+
+					<!-- Filters -->
+					<div
+						class="filter-bar mt-4 d-flex flex-wrap align-center ga-2"
+					>
 						<v-btn
 							variant="text"
-							color="primary"
 							@click="showSearchFilter = !showSearchFilter"
-							:active="showSearchFilter"
 						>
 							<template #prepend>
-								<div
-									class="indicator-icon"
+								<v-icon
+									icon="expand_more"
+									:size="20"
+									class="chevron"
 									:class="{
-										'indicator-active':
-											Object.keys(searchFilter).length,
+										'chevron-expanded': showSearchFilter,
 									}"
-								>
-									<v-icon icon="filter_list" :size="20" />
-								</div>
+								/>
 							</template>
-							{{ $t('component.estateSearch.filter') }}
+							{{ filterToggleLabel }}
 						</v-btn>
-						<v-btn
-							variant="tonal"
-							class="map-btn ma-0 ml-2"
-							color="primary"
-							prepend-icon="location_pin"
-							@click="selectBuildingOnMap"
-						>
-							{{ $t('component.estateSearch.selectOnMap') }}
-						</v-btn>
+						<estate-search-filter
+							v-model="searchFilter"
+							:expanded="showSearchFilter"
+						/>
 					</div>
 
-					<estate-search-filter
-						v-show="showSearchFilter"
-						v-model="searchFilter"
-						@close="showSearchFilter = false"
-					/>
-
 					<!-- Search results -->
-					<v-alert
-						v-if="
-							!isBusyLoading &&
-							searchResults?.length === 0 &&
-							userHasSearched
-						"
-						class="mt-4"
-						icon="info"
-					>
-						{{ $t('component.estateSearch.noResults') }}
-					</v-alert>
-					<div class="mt-4" v-if="searchResults?.length">
+					<div class="mt-4">
+						<h2 class="mb-4">
+							{{ $t('component.estateSearch.resultsHeading') }}
+						</h2>
+						<v-alert v-if="resultsInfoMessage" icon="info">
+							{{ resultsInfoMessage }}
+						</v-alert>
+						<template v-if="showResultSkeletons">
+							<v-skeleton-loader
+								v-for="n in RESULT_SKELETON_COUNT"
+								:key="n"
+								class="result-skeleton mb-4"
+								type="heading, text@2, chip@3"
+								elevation="1"
+							/>
+						</template>
 						<estate-search-result-item
+							v-else
 							v-for="entry in searchResults"
 							:key="entry.type + entry.id"
 							:entry="entry"
@@ -99,24 +111,32 @@
 							@mouseenter="hoveredSearchResultId = entry.id"
 							@mouseleave="hoveredSearchResultId = null"
 						/>
+						<div
+							v-for="group in otherTypeResults"
+							:key="group.type"
+							class="other-type-results"
+						>
+							<h3 class="mt-6 mb-2">
+								{{
+									$t(
+										`component.estateSearch.otherTypeHeading.${group.type}`
+									)
+								}}
+							</h3>
+							<estate-search-result-item
+								v-for="entry in group.entries"
+								:key="entry.type + entry.id"
+								:entry="entry"
+								class="mb-4 pl-0"
+								@mouseenter="hoveredSearchResultId = entry.id"
+								@mouseleave="hoveredSearchResultId = null"
+							/>
+						</div>
 					</div>
-					<v-skeleton-loader
-						v-if="isBusyLoading"
-						class="my-4"
-						type="article"
-						:loading="isBusyLoading"
-					/>
-				</div>
 
-				<div v-if="!isBusyLoading && !userHasSearched" class="mt-4">
-					<favorite-list class="mt-4" />
-					<rate-feedback
-						category="estatePortal"
-						:feedback-title="
-							$t('component.estatePortal.feedbackTitle')
-						"
-						class="portal-feedback"
-					/>
+					<div v-if="isCleanSearchPage" class="mt-4">
+						<favorite-list class="mt-4" />
+					</div>
 				</div>
 			</div>
 
@@ -134,7 +154,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef } from 'vue';
+import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 import EstateSearchResultItem from './EstateSearchResultItem.vue';
 import { SearchFilter } from '@/models/Interfaces';
 import { watchDebounced } from '@vueuse/core';
@@ -146,21 +166,41 @@ import { useI18n } from 'vue-i18n';
 import BuildingMap from '@/components/estate/map/BuildingMap.vue';
 import EstateSearchFilter from './EstateSearchFilter.vue';
 import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
-import { useEstateSearch } from './useEstateSearch';
 import FavoriteList from '../favorite/FavoriteList.vue';
-import RateFeedback from '@/components/shared/RateFeedback.vue';
+import {
+	createDefaultSearchFilter,
+	hasActiveSearchCriteria,
+	useEstateSearch,
+} from './useEstateSearch';
 import { appInsights } from '@/plugins/appInsights';
+import { useEstateIsMobile } from '../useEstateIsMobile';
 
 const route = useRoute();
 const { t, locale } = useI18n();
 
 const buildingMapRef = useTemplateRef('building-map');
+const searchFieldRef = useTemplateRef('search-field');
+const isMobile = useEstateIsMobile();
 const hoveredSearchResultId = ref<number | null>(null);
 
 const search = ref(route.query.search?.toString() || '');
 const showSearchFilter = ref(false);
-const searchFilter = ref<SearchFilter>(
-	route.query.filter ? JSON.parse(route.query.filter.toString()) : {}
+const filterFromQuery: SearchFilter = route.query.filter
+	? JSON.parse(route.query.filter.toString())
+	: {};
+
+if (!filterFromQuery.types?.length) {
+	filterFromQuery.types = createDefaultSearchFilter().types;
+}
+
+const searchFilter = ref<SearchFilter>(filterFromQuery);
+
+const RESULT_SKELETON_COUNT = 6;
+
+const filterToggleLabel = computed(() =>
+	showSearchFilter.value
+		? t('component.estateSearch.hideFilters')
+		: t('component.estateSearch.showFilters')
 );
 
 const breadcrumbs = computed(() => {
@@ -174,11 +214,13 @@ const breadcrumbs = computed(() => {
 });
 
 const userHasSearched = computed(() => {
-	return !!search.value || Object.keys(searchFilter.value).length > 0;
+	return (
+		!!search.value?.trim() || hasActiveSearchCriteria(searchFilter.value)
+	);
 });
 
 const selectBuildingOnMap = () => {
-	buildingMapRef.value?.openFullscreen();
+	buildingMapRef.value?.open();
 	appInsights?.trackEvent({
 		name: 'EstateSelectOnMapClicked',
 		properties: {
@@ -193,7 +235,53 @@ const {
 	buildingPoints,
 	isBusyLoading,
 	isFetchingBuildingLocations,
-} = useEstateSearch(search, searchFilter);
+	otherTypeResults,
+} = useEstateSearch(search, searchFilter, { suggestOtherTypes: true });
+
+const scrollToSearchField = async () => {
+	if (!isMobile.value) {
+		return;
+	}
+	await nextTick();
+	searchFieldRef.value?.$el.scrollIntoView({
+		behavior: 'smooth',
+		block: 'start',
+	});
+};
+
+const submitSearch = () => {
+	const input = searchFieldRef.value?.$el.querySelector('input');
+	input?.blur();
+	fetchSearchResults();
+};
+
+const showResultSkeletons = computed(
+	() => isBusyLoading.value && searchResults.value === null
+);
+
+const isCleanSearchPage = computed(
+	() => !userHasSearched.value && searchResults.value === null
+);
+
+const resultsInfoMessage = computed(() => {
+	if (isCleanSearchPage.value) {
+		return t('component.estateSearch.noSearchYet');
+	}
+	if (searchResults.value?.length !== 0) {
+		return null;
+	}
+	const scopedTypes = searchFilter.value.types ?? [];
+	if (scopedTypes.length === 1) {
+		return t(`component.estateSearch.noResultsForType.${scopedTypes[0]}`);
+	}
+	return t('component.estateSearch.noResults');
+});
+
+watch(userHasSearched, (searched) => {
+	if (searched) {
+		scrollToSearchField();
+	}
+});
 
 watchDebounced(
 	() => [search.value, searchFilter.value],
@@ -208,21 +296,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.portal-intro {
-	h1 {
-		font-size: size(29);
-		line-height: 1.2;
-		margin: 0 0 4px;
-	}
-
-	p {
-		margin: 0;
-		font-size: size(17);
-		color: $grey-darken-3;
-		max-width: 46ch;
-	}
-}
-
 .estate-search {
 	:deep(.v-btn),
 	:deep(.v-field) {
@@ -232,18 +305,20 @@ onMounted(() => {
 			padding-right: 0;
 		}
 	}
-	.indicator-icon.indicator-active {
-		::before {
-			content: ' ';
-			position: absolute;
-			top: 0;
-			right: 0;
-			width: 10px;
-			height: 10px;
-			background: $primary;
-			border-radius: 20px;
-			border: 2px solid #fff;
+	.chevron {
+		transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+		&.chevron-expanded {
+			transform: rotate(-180deg);
 		}
+	}
+	:deep(.expand-transition-enter-active),
+	:deep(.expand-transition-leave-active) {
+		transition-duration: 0.1s;
+	}
+	.result-skeleton {
+		border-radius: $border-radius;
+		overflow: hidden;
 	}
 	.v-alert {
 		border-radius: $border-radius;
@@ -251,24 +326,26 @@ onMounted(() => {
 			color: $grey-darken-3;
 		}
 	}
+	.search-field {
+		scroll-margin-top: calc($site-header-height + 1rem);
+	}
 	.content {
 		min-height: 50svh;
-	}
-	.portal-feedback {
-		// Vuetify's spacing scale tops out at mt-16 (64px); we want a little
-		// extra breathing room between the favorite list and the feedback card
-		// on the start page (~mt-30).
-		margin-top: 120px;
 	}
 	.map-btn {
 		display: none;
 	}
 	@media only screen and (max-width: $estate-mobile-threshold) {
 		.map-btn {
-			display: inline-flex;
+			display: flex;
 		}
 		.portal-intro h1 {
 			font-size: size(24);
+		}
+		// Keeps the page tall enough to hold the heading at the top of the
+		// viewport once the start page content collapses into results.
+		.content {
+			min-height: 100svh;
 		}
 	}
 }

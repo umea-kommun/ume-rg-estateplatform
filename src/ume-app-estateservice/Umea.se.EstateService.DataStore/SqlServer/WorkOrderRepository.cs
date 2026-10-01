@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Umea.se.EstateService.Shared.Data;
 using Umea.se.EstateService.Shared.Data.Entities;
 using Umea.se.EstateService.Shared.Data.Enums;
@@ -74,14 +75,13 @@ public class WorkOrderRepository(EstateDbContext dbContext) : IWorkOrderReposito
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyList<WorkOrderEntity>> GetDueForProcessingAsync(DateTimeOffset asOf, bool includeSubmitted = true, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<WorkOrderEntity>> GetDueForProcessingAsync(DateTimeOffset asOf, CancellationToken cancellationToken = default)
     {
         return await dbContext.WorkOrders
             .Include(e => e.Files)
             .Where(e => e.NextSyncAt != null && e.NextSyncAt <= asOf)
             .Where(e => e.SyncStatus == WorkOrderSyncStatus.Pending
                 || e.SyncStatus == WorkOrderSyncStatus.Failed
-                || (includeSubmitted && e.SyncStatus == WorkOrderSyncStatus.Submitted)
                 || e.SyncStatus == WorkOrderSyncStatus.Processing)
             .OrderBy(e => e.NextSyncAt)
             .ToListAsync(cancellationToken);
@@ -107,9 +107,55 @@ public class WorkOrderRepository(EstateDbContext dbContext) : IWorkOrderReposito
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task UpdateManyAsync(IReadOnlyList<WorkOrderEntity> workOrders, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<int>> ClaimForStatusRefreshAsync(IReadOnlyList<int> ids, DateTimeOffset staleBefore, DateTimeOffset now, CancellationToken cancellationToken = default)
     {
-        // Entities are already tracked from the query — just save changes
+        // One conditional update for the whole set, so only one of two overlapping requests claims it.
+        int updated = await dbContext.WorkOrders
+            .Where(e => ids.Contains(e.Id) && (e.StatusCheckedAt == null || e.StatusCheckedAt <= staleBefore))
+            .ExecuteUpdateAsync(s => s.SetProperty(e => e.StatusCheckedAt, now), cancellationToken);
+        if (updated == 0)
+        {
+            return [];
+        }
+
+        // The stamp identifies the rows this call took; a losing caller left them untouched.
+        return await dbContext.WorkOrders
+            .Where(e => ids.Contains(e.Id) && e.StatusCheckedAt == now)
+            .Select(e => e.Id)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task SaveStatusesAsync(IReadOnlyList<WorkOrderEntity> workOrders, CancellationToken cancellationToken = default)
+    {
+        // Refresh-owned columns only: the entities are untracked
+        // (GetByEmailAsync), so Update() would write every column.
+        foreach (WorkOrderEntity workOrder in workOrders)
+        {
+            // The context may already track this row from an earlier tracked read in the same
+            // scope, and Attach() on a second instance with the same key throws. FindEntry is an
+            // identity-map lookup (no query); writing the values covers the tracked case and
+            // is a self-assignment otherwise.
+            EntityEntry<WorkOrderEntity> entry = dbContext.WorkOrders.Local.FindEntry(workOrder.Id)
+                ?? dbContext.Attach(workOrder);
+            entry.Entity.PythagorasWorkOrderName = workOrder.PythagorasWorkOrderName;
+            entry.Entity.PythagorasStatusId = workOrder.PythagorasStatusId;
+            entry.Entity.PythagorasStatusName = workOrder.PythagorasStatusName;
+            entry.Entity.PythagorasStatusCategory = workOrder.PythagorasStatusCategory;
+            entry.Entity.StatusChangedAt = workOrder.StatusChangedAt;
+            entry.Entity.CompletedAt = workOrder.CompletedAt;
+            entry.Entity.PerformedDescription = workOrder.PerformedDescription;
+            entry.Entity.PerformedDescriptionAt = workOrder.PerformedDescriptionAt;
+
+            entry.Property(e => e.PythagorasWorkOrderName).IsModified = true;
+            entry.Property(e => e.PythagorasStatusId).IsModified = true;
+            entry.Property(e => e.PythagorasStatusName).IsModified = true;
+            entry.Property(e => e.PythagorasStatusCategory).IsModified = true;
+            entry.Property(e => e.StatusChangedAt).IsModified = true;
+            entry.Property(e => e.CompletedAt).IsModified = true;
+            entry.Property(e => e.PerformedDescription).IsModified = true;
+            entry.Property(e => e.PerformedDescriptionAt).IsModified = true;
+        }
+
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 

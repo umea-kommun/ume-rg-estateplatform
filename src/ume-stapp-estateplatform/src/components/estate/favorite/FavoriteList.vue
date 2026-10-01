@@ -33,6 +33,7 @@
 					v-for="entry in filteredFavorites ?? []"
 					:key="entry.type + entry.id"
 					:entry="entry"
+					:compact="compact"
 					:to="undefined"
 					:loading="
 						(isBusyFetchingBuildingId === entry.id &&
@@ -41,7 +42,7 @@
 							entry.type === EstateType.Room)
 					"
 					@click="select(entry)"
-					class="mb-4 pl-0"
+					:class="[compact ? 'mb-2' : 'mb-4', 'pl-0']"
 				/>
 			</div>
 			<div v-else>
@@ -49,7 +50,8 @@
 					v-for="entry in filteredFavorites ?? []"
 					:key="entry.type + entry.id"
 					:entry="entry"
-					class="mb-4 pl-0"
+					:compact="compact"
+					:class="[compact ? 'mb-2' : 'mb-4', 'pl-0']"
 				/>
 			</div>
 		</div>
@@ -74,6 +76,8 @@ import { useFavorites } from './useFavorites';
 const props = defineProps<{
 	selectable?: boolean;
 	types?: EstateType[];
+	// Render each favourite as a slim row rather than a full detail card.
+	compact?: boolean;
 }>();
 
 const emit = defineEmits<{

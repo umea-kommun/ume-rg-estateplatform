@@ -47,26 +47,27 @@
 								</div>
 							</div>
 						</div>
-						<div class="chip-properties">
-							<v-chip
-								class="flex-shrink-0"
-								:class="estate.type"
-								variant="flat"
-								color="info"
-							>
-								{{ $t('estateCommon.type.estate') }}
-							</v-chip>
-							<v-chip v-if="estate.metrics?.buildingCount">
-								{{
-									$t('estateCommon.buildingCount', {
-										count: estate.metrics?.buildingCount,
-									})
-								}}
-							</v-chip>
-							<v-chip v-if="estate.metrics?.areaSqm">
-								{{ estate.metrics?.areaSqm?.toLocaleString() }}
-								m²
-							</v-chip>
+						<div
+							class="metrics d-flex flex-wrap align-center ga-3 mt-4"
+						>
+							<estate-type-label :type="EstateType.Estate" />
+							<ul class="pa-0 ma-0">
+								<li v-if="estate.metrics?.buildingCount">
+									{{
+										$t('estateCommon.buildingCount', {
+											count: estate.metrics
+												?.buildingCount,
+										})
+									}}
+								</li>
+								<li v-if="estate.metrics?.areaSqm">
+									{{
+										$t('estateCommon.usableArea', {
+											area: estate.metrics.areaSqm.toLocaleString(),
+										})
+									}}
+								</li>
+							</ul>
 						</div>
 					</div>
 
@@ -89,20 +90,10 @@
 					</div>
 					<hr class="circle-button-toggles mobile mt-4 mx-6" />
 
-					<h2 class="px-6">
-						{{ $t('component.estateDetails.buildings') }}
-					</h2>
-					<v-alert
-						v-if="failedToFetchBuildings"
-						class="mt-2 mx-6"
-						rounded="lg"
-						icon="warning"
-					>
-						{{ t('app.error.estate.unableToFetchEstateBuildings') }}
-					</v-alert>
 					<estate-details-buildings
 						:estateId="estate.id"
 						:loading="isBusyFetchingBuildings"
+						:failed="failedToFetchBuildings"
 						:buildings="buildings"
 						class="list"
 						@building-mouseenter="(id) => (hoveredBuildingId = id)"
@@ -145,6 +136,7 @@ import BuildingMap from '../map/BuildingMap.vue';
 import BaseIconButton from '@/components/shared/BaseIconButton.vue';
 import ExternalOwnerInfo from './ExternalOwnerInfo.vue';
 import FavoriteButton from '../favorite/FavoriteButton.vue';
+import EstateTypeLabel from '../EstateTypeLabel.vue';
 import ErrorService from '@/utils/ErrorService';
 
 const props = defineProps<{
@@ -288,12 +280,6 @@ const { y } = useScroll(window);
 				opacity: 1;
 			}
 		}
-	}
-}
-.chip-properties {
-	.v-chip {
-		margin-top: 1rem;
-		margin-right: 1rem;
 	}
 }
 </style>

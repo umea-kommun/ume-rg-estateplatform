@@ -29,7 +29,6 @@ public class WorkOrderProcessorTests : IDisposable
     private readonly FakePythagorasClient _fakeClient;
     private readonly StubCategoryClassifier _classifier;
     private readonly StubFileStorage _fileStorage;
-    private readonly WorkOrderStatusSyncService _statusSync;
     private readonly WorkOrderProcessor _processor;
 
     public WorkOrderProcessorTests()
@@ -54,16 +53,9 @@ public class WorkOrderProcessorTests : IDisposable
 
         _classifier = new StubCategoryClassifier();
         _fileStorage = new StubFileStorage();
-        _statusSync = new WorkOrderStatusSyncService(
-            _repository,
-            _fakeClient,
-            CreateConfig(),
-            NullLogger<WorkOrderStatusSyncService>.Instance);
-
         _processor = new WorkOrderProcessor(
             _repository,
             _fakeClient,
-            _statusSync,
             _classifier,
             _fileStorage,
             CreateConfig(),
@@ -155,7 +147,7 @@ public class WorkOrderProcessorTests : IDisposable
     {
         ApplicationConfig config = CreateConfig(classifierThreshold: 0.1);
         WorkOrderProcessor processor = new(
-            _repository, _fakeClient, _statusSync, _classifier, _fileStorage,
+            _repository, _fakeClient, _classifier, _fileStorage,
             config, NullLogger<WorkOrderProcessor>.Instance);
 
         WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.BuildingService);
@@ -275,7 +267,7 @@ public class WorkOrderProcessorTests : IDisposable
         // Rebuild processor with config missing the BuildingService default
         ApplicationConfig bareConfig = CreateConfig(includeBuildingServiceDefault: false);
         WorkOrderProcessor processor = new(
-            _repository, _fakeClient, _statusSync, _classifier, _fileStorage,
+            _repository, _fakeClient, _classifier, _fileStorage,
             bareConfig, NullLogger<WorkOrderProcessor>.Instance);
 
         WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.BuildingService);
@@ -293,13 +285,27 @@ public class WorkOrderProcessorTests : IDisposable
     }
 
     [Fact]
-    public async Task ProcessPending_StatusSyncEnabled_ReadsStatusForSubmittedOrders()
+    public async Task ProcessPending_StoresWorkOrderNumberFromCreateResponse()
+    {
+        WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport);
+        _fakeClient.SetCreateWorkOrderResult(new WorkOrderDto { Id = 555, Name = "UK-2026-2121" });
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        WorkOrderEntity? reloaded = await _repository.GetByUidAsync(workOrder.Uid, workOrder.CreatedByEmail);
+        reloaded.ShouldNotBeNull();
+        reloaded.PythagorasWorkOrderId.ShouldBe(555);
+        reloaded.PythagorasWorkOrderName.ShouldBe("UK-2026-2121");
+    }
+
+    [Fact]
+    public async Task ProcessPending_StatusSyncEnabled_DoesNotReadStatusForSubmittedOrders()
     {
         await SeedSubmittedAsync();
 
         await CreateProcessor(statusSyncEnabled: true).ProcessPendingAsync(CancellationToken.None);
 
-        _fakeClient.WorkOrderRequests.ShouldContain(r => r.Method == "GetWorkOrdersByIds");
+        _fakeClient.WorkOrderRequests.ShouldBeEmpty();
     }
 
     [Fact]
@@ -405,7 +411,7 @@ public class WorkOrderProcessorTests : IDisposable
     }
 
     private WorkOrderProcessor CreateProcessor(bool statusSyncEnabled) => new(
-        _repository, _fakeClient, _statusSync, _classifier, _fileStorage,
+        _repository, _fakeClient, _classifier, _fileStorage,
         CreateConfig(statusSyncEnabled: statusSyncEnabled),
         NullLogger<WorkOrderProcessor>.Instance);
 

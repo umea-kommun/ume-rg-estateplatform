@@ -2,7 +2,7 @@
 	<div class="map-building-carousel estate-default">
 		<v-card class="building-card" rounded="lg" :key="building?.id">
 			<router-link
-				v-if="building?.imageUrl"
+				v-if="building?.imageUrl && !isCurrentBuilding"
 				:to="{
 					name: EstateRoutes.BuildingDetails,
 					params: { buildingId: building.id },
@@ -14,6 +14,12 @@
 					class="cursor-pointer building-image"
 				/>
 			</router-link>
+			<building-image
+				v-else-if="building?.imageUrl"
+				:src="building.imageUrl"
+				:image-width="300"
+				class="building-image"
+			/>
 			<div class="card-header">
 				<v-skeleton-loader
 					v-if="isBusyLoadingBuildings && !building"
@@ -26,13 +32,19 @@
 					v-else-if="building"
 					class="d-flex align-center pr-0"
 				>
-					<div class="title">
+					<div
+						class="title"
+						:title="building.popularName ?? building.name"
+					>
+						<span v-if="isCurrentBuilding">
+							{{ building?.popularName ?? building?.name }}
+						</span>
 						<router-link
+							v-else
 							:to="{
 								name: EstateRoutes.BuildingDetails,
 								params: { buildingId: building.id },
 							}"
-							:title="building?.popularName ?? building?.name"
 						>
 							{{ building?.popularName ?? building?.name }}
 						</router-link>
@@ -74,27 +86,35 @@
 							</div>
 						</div>
 					</div>
-					<div class="chip-properties d-flex flex-wrap ga-2 mt-4">
-						<v-chip v-if="building?.metrics?.floorCount"
-							>{{
+					<ul class="metrics pa-0 ma-0 mt-4">
+						<li
+							v-if="
+								building?.hasRoomInformation !== false &&
+								building?.metrics?.floorCount
+							"
+						>
+							{{
 								$t('estateCommon.floorCount', {
 									count: building.metrics?.floorCount,
 								})
 							}}
-						</v-chip>
-						<v-chip v-if="building.metrics?.roomCount">
+						</li>
+						<li
+							v-if="
+								building?.hasRoomInformation !== false &&
+								building.metrics?.roomCount
+							"
+						>
 							{{
 								$t('estateCommon.roomCount', {
 									count: building.metrics?.roomCount,
 								})
 							}}
-						</v-chip>
-
-						<v-chip v-if="building.metrics?.areaSqm">
-							{{ building.metrics?.areaSqm?.toLocaleString() }}
-							m²
-						</v-chip>
-					</div>
+						</li>
+						<li v-if="building.metrics?.areaSqm">
+							{{ building.metrics?.areaSqm?.toLocaleString() }} m²
+						</li>
+					</ul>
 				</div>
 			</v-card-text>
 			<div v-if="selectable" class="d-flex justify-center pb-2">
@@ -107,7 +127,10 @@
 				</v-btn>
 			</div>
 		</v-card>
-		<v-card v-if="(buildingIds?.length ?? 0) > 1" class="navigation mt-2">
+		<v-card
+			v-if="(orderedBuildingIds?.length ?? 0) > 1"
+			class="navigation mt-2"
+		>
 			<v-btn
 				icon="chevron_left"
 				rounded="0"
@@ -120,7 +143,7 @@
 				{{
 					$t('component.map.buildingXofY', {
 						buildingNumber: activeBuildingIndex + 1,
-						totalBuildings: buildingIds?.length,
+						totalBuildings: orderedBuildingIds?.length,
 					})
 				}}
 			</div>
@@ -130,7 +153,7 @@
 				size="small"
 				variant="text"
 				:disabled="
-					activeBuildingIndex >= (buildingIds?.length ?? 0) - 1
+					activeBuildingIndex >= (orderedBuildingIds?.length ?? 0) - 1
 				"
 				@click="nextBuilding"
 			/>
@@ -144,6 +167,7 @@ import { IBuildingDetails } from '@/models/Interfaces';
 import { IRootState } from '@/models/Interfaces';
 import { computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
 import { EstateRoutes } from '@/router/routes';
 import { useI18n } from 'vue-i18n';
 import BuildingImage from '../building/BuildingImage.vue';
@@ -165,6 +189,7 @@ const emit = defineEmits([
 
 const store = useStore<IRootState>();
 const { t } = useI18n();
+const route = useRoute();
 
 const buildingIds = computed({
 	get: () => props.modelValue,
@@ -192,28 +217,45 @@ const building = computed(() => {
 	return null;
 });
 
+// Order buildings largest first, once their areas have been fetched.
+const areaOf = (id: number) =>
+	buildings.value.find((b) => b.id === id)?.metrics?.areaSqm ?? 0;
+
+const orderedBuildingIds = computed(() => {
+	if (!buildingIds.value) return null;
+	if (!buildings.value.length) return buildingIds.value;
+	return [...buildingIds.value].sort((a, b) => areaOf(b) - areaOf(a));
+});
+
+// The title links to the building, unless that building is already open.
+const isCurrentBuilding = computed(
+	() =>
+		route.name === EstateRoutes.BuildingDetails &&
+		String(route.params.buildingId) === String(building.value?.id)
+);
+
 const activeBuildingIndex = computed(() => {
-	if (buildingIds.value && activeBuildingId.value !== null) {
-		return buildingIds.value.indexOf(activeBuildingId.value);
+	if (orderedBuildingIds.value && activeBuildingId.value !== null) {
+		return orderedBuildingIds.value.indexOf(activeBuildingId.value);
 	}
 	return -1;
 });
 
 const previousBuilding = () => {
 	const currentIndex = activeBuildingIndex.value;
-	if (buildingIds.value && currentIndex > 0) {
-		activeBuildingId.value = buildingIds.value[currentIndex - 1];
+	if (orderedBuildingIds.value && currentIndex > 0) {
+		activeBuildingId.value = orderedBuildingIds.value[currentIndex - 1];
 	}
 };
 
 const nextBuilding = () => {
 	const currentIndex = activeBuildingIndex.value;
 	if (
-		buildingIds.value &&
+		orderedBuildingIds.value &&
 		currentIndex >= 0 &&
-		currentIndex < buildingIds.value.length - 1
+		currentIndex < orderedBuildingIds.value.length - 1
 	) {
-		activeBuildingId.value = buildingIds.value[currentIndex + 1];
+		activeBuildingId.value = orderedBuildingIds.value[currentIndex + 1];
 	}
 };
 
@@ -255,12 +297,18 @@ const fetchBuildings = async (buildingIds: number[]) => {
 		return;
 	}
 	isBusyLoadingBuildings.value = true;
+	const placeholderId = buildingIds[0];
 	try {
 		buildings.value = await Promise.all(
 			buildingIds.map((id) =>
 				store.dispatch(DispatchType.GetBuildingById, { buildingId: id })
 			)
 		);
+		// Now that areas are known, show the largest building first — but don't
+		// override a selection the user made while the details were loading.
+		if (activeBuildingId.value === placeholderId) {
+			activeBuildingId.value = orderedBuildingIds.value?.[0] ?? null;
+		}
 	} catch (err) {
 		ErrorService.onError({ err });
 	} finally {

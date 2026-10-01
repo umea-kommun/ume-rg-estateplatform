@@ -18,6 +18,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { RouteLocationAsRelativeTyped } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { EstateRoutes } from '@/router/routes';
 
 const props = defineProps<{
 	breadcrumbs: {
@@ -27,7 +29,17 @@ const props = defineProps<{
 	fullWidth?: boolean;
 }>();
 
-const breadcrumbs = computed(() => props.breadcrumbs);
+const { t } = useI18n();
+
+// Every trail starts at the start page, e.g. [home] Hem / Felanmälan. The
+// house icon in the prepend slot sits just before this first crumb.
+const breadcrumbs = computed(() => [
+	{
+		title: t('app.nav.home'),
+		to: { name: EstateRoutes.Home },
+	},
+	...props.breadcrumbs,
+]);
 </script>
 
 <style scoped lang="scss">

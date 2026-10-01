@@ -75,6 +75,13 @@ export enum EstateFaultLocation {
 	Outdoor = 'outdoor',
 }
 
+export enum BuildingSortOption {
+	AreaDesc = 'areaDesc',
+	AreaAsc = 'areaAsc',
+	Name = 'name',
+	Address = 'address',
+}
+
 export enum MapBaseLayer {
 	Lovisa = 'Lovisa',
 	Ortofoto = 'Ortofoto',

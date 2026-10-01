@@ -1,15 +1,25 @@
 <template>
 	<div class="map-controls w-100">
-		<v-btn
-			:icon="fullScreen ? 'close' : 'open_in_full'"
-			@click="fullScreen = !fullScreen"
-			:title="
-				fullScreen
-					? t('component.map.fullScreenClose')
-					: t('component.map.fullScreenOpen')
-			"
-			size="small"
-		/>
+		<div class="map-controls__top">
+			<v-btn
+				v-if="!fullScreen || canLeaveFullscreen"
+				:icon="fullScreen ? 'close_fullscreen' : 'open_in_full'"
+				@click="fullScreen = !fullScreen"
+				:title="
+					fullScreen
+						? t('component.map.fullScreenClose')
+						: t('component.map.fullScreenOpen')
+				"
+				size="small"
+			/>
+			<v-btn
+				v-if="closable"
+				icon="close"
+				@click="emit('close')"
+				:title="t('component.map.close')"
+				size="small"
+			/>
+		</div>
 		<v-spacer></v-spacer>
 		<div class="d-flex align-end justify-space-between w-100 ga-4">
 			<v-btn
@@ -68,6 +78,8 @@ const props = defineProps<{
 	zoomInDisabled?: boolean;
 	zoomOutDisabled?: boolean;
 	baseLayer?: MapBaseLayer;
+	closable?: boolean;
+	canLeaveFullscreen?: boolean;
 }>();
 
 const { t } = useI18n();
@@ -77,6 +89,7 @@ const emit = defineEmits([
 	'update:baseLayer',
 	'zoom-in',
 	'zoom-out',
+	'close',
 ]);
 
 const fullScreen = computed({
@@ -113,6 +126,12 @@ const baseLayer = computed({
 	bottom: 0;
 	padding: 14px;
 	gap: 10px;
+
+	.map-controls__top {
+		display: flex;
+		gap: 10px;
+	}
+
 	.v-btn {
 		pointer-events: all;
 		margin: 0;

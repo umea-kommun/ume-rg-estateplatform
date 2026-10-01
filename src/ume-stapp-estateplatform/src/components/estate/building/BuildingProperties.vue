@@ -16,32 +16,41 @@
 					</div>
 				</div>
 
-				<div class="chip-properties">
-					<v-chip
-						variant="flat"
-						color="primary"
-						class="flex-shrink-0"
-					>
-						{{ $t('estateCommon.type.building') }}
-					</v-chip>
-					<v-chip v-if="building.metrics?.floorCount">
-						{{
-							$t('estateCommon.floorCount', {
-								count: building.metrics?.floorCount,
-							})
-						}}
-					</v-chip>
-					<v-chip v-if="building.metrics?.roomCount">
-						{{
-							$t('estateCommon.roomCount', {
-								count: building.metrics?.roomCount,
-							})
-						}}
-					</v-chip>
-					<v-chip v-if="building.metrics?.areaSqm">
-						{{ building.metrics?.areaSqm?.toLocaleString() }}
-						m²
-					</v-chip>
+				<div class="metrics d-flex flex-wrap align-center ga-3 mt-4">
+					<estate-type-label :type="EstateType.Building" />
+					<ul class="pa-0 ma-0">
+						<li
+							v-if="
+								building.hasRoomInformation !== false &&
+								building.metrics?.floorCount
+							"
+						>
+							{{
+								$t('estateCommon.floorCount', {
+									count: building.metrics?.floorCount,
+								})
+							}}
+						</li>
+						<li
+							v-if="
+								building.hasRoomInformation !== false &&
+								building.metrics?.roomCount
+							"
+						>
+							{{
+								$t('estateCommon.roomCount', {
+									count: building.metrics?.roomCount,
+								})
+							}}
+						</li>
+						<li v-if="building.metrics?.areaSqm">
+							{{
+								$t('estateCommon.usableArea', {
+									area: building.metrics.areaSqm.toLocaleString(),
+								})
+							}}
+						</li>
+					</ul>
 				</div>
 			</div>
 			<building-image
@@ -64,6 +73,8 @@ import { IBuildingDetails } from '@/models/Interfaces';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import BuildingImage from './BuildingImage.vue';
+import EstateTypeLabel from '../EstateTypeLabel.vue';
+import { EstateType } from '@/models/Enums';
 
 const props = defineProps<{
 	building: IBuildingDetails;
@@ -106,12 +117,6 @@ const properties = computed(() => {
 <style scoped lang="scss">
 .properties-wrap {
 	justify-content: space-between;
-
-	.chip-properties {
-		.v-chip {
-			margin: 1rem 1rem 0 0;
-		}
-	}
 
 	@media only screen and (max-width: 620px) {
 		flex-wrap: wrap-reverse;

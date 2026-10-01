@@ -25,6 +25,7 @@ public class WorkOrderHandlerTests : IDisposable
     private readonly EstateDbContext _dbContext;
     private readonly InMemoryDataStore _dataStore;
     private readonly WorkOrderHandler _handler;
+    private readonly FakePythagorasClient _statusClient = new();
 
     public WorkOrderHandlerTests()
     {
@@ -46,7 +47,11 @@ public class WorkOrderHandlerTests : IDisposable
 
         DataStoreSeeder.Seed(
             _dataStore,
-            buildings: [new BuildingEntity { Id = 1, Name = "Building One", PopularName = "B1", WorkOrderTypes = [WorkOrderType.ErrorReport, WorkOrderType.BuildingService, WorkOrderType.SpaceRequirement] }],
+            buildings:
+            [
+                new BuildingEntity { Id = 1, Name = "Building One", PopularName = "B1", ImageIds = [7], WorkOrderTypes = [WorkOrderType.ErrorReport, WorkOrderType.BuildingService, WorkOrderType.SpaceRequirement] },
+                new BuildingEntity { Id = 2, Name = "Building Two", PopularName = "B2", ImageIds = [] },
+            ],
             rooms: [new RoomEntity { Id = 10, Name = "Room Ten", PopularName = "R10", BuildingId = 1 }],
             // SpaceRequirement (Pythagoras type 3) leaf categories the user can pick from.
             workOrderCategories:
@@ -77,9 +82,32 @@ public class WorkOrderHandlerTests : IDisposable
 
         // Verify detail through GetWorkOrderAsync
         WorkOrderDetailModel detail = await _handler.GetWorkOrderAsync(result.Id, "test@example.com");
-        detail.BuildingName.ShouldBe("Building One");
+        detail.BuildingName.ShouldBe("B1");
         detail.RoomName.ShouldBe("Room Ten");
         detail.Location.ShouldBe("Indoor");
+    }
+
+    [Theory]
+    [InlineData("", "Building One")]
+    [InlineData("   ", "Building One")]
+    [InlineData("B1", "B1")]
+    public async Task SubmitWorkOrder_SavesPopularNameAsBuildingNameAndFallsBackToName(string popularName, string expected)
+    {
+        DataStoreSeeder.Seed(
+            _dataStore,
+            buildings: [new BuildingEntity { Id = 1, Name = "Building One", PopularName = popularName, WorkOrderTypes = [WorkOrderType.ErrorReport] }]);
+
+        CreateWorkOrderRequest request = new()
+        {
+            BuildingId = 1,
+            WorkOrderType = WorkOrderType.ErrorReport,
+            Location = "Indoor",
+            Description = "Test workOrder"
+        };
+
+        WorkOrderSubmissionModel result = await _handler.SubmitWorkOrderAsync(request, "test@example.com");
+
+        (await ReloadAsync(result.Id)).BuildingName.ShouldBe(expected);
     }
 
     [Fact]
@@ -564,6 +592,45 @@ public class WorkOrderHandlerTests : IDisposable
     }
 
     [Fact]
+    public async Task GetWorkOrders_MapsBuildingDetailsAndWorkOrderNumber()
+    {
+        WorkOrderEntity withImages = await InsertWorkOrderAsync(WorkOrderSyncStatus.Submitted, null, description: new string('a', 300));
+        withImages.PythagorasWorkOrderName = "UK-2026-2121";
+        WorkOrderEntity withoutImages = await InsertWorkOrderAsync(WorkOrderSyncStatus.Submitted, null);
+        withoutImages.BuildingId = 2;
+        WorkOrderEntity unknownBuilding = await InsertWorkOrderAsync(WorkOrderSyncStatus.Submitted, null);
+        unknownBuilding.BuildingId = 99;
+        WorkOrderEntity noBuilding = await InsertWorkOrderAsync(WorkOrderSyncStatus.Submitted, null);
+        noBuilding.BuildingId = null;
+        noBuilding.BuildingName = null;
+        await _dbContext.SaveChangesAsync();
+
+        IReadOnlyList<WorkOrderListItemModel> result = await _handler.GetWorkOrdersAsync("test@example.com");
+
+        WorkOrderListItemModel first = result.Single(e => e.Id == withImages.Uid);
+        first.WorkOrderNumber.ShouldBe("UK-2026-2121");
+        first.BuildingId.ShouldBe(1);
+        first.BuildingPopularName.ShouldBe("B1");
+        first.BuildingImageUrl.ShouldBe("/api/buildings/1/image");
+        first.Description.Length.ShouldBe(300);
+
+        WorkOrderListItemModel second = result.Single(e => e.Id == withoutImages.Uid);
+        second.BuildingPopularName.ShouldBe("B2");
+        second.BuildingImageUrl.ShouldBeNull();
+
+        WorkOrderListItemModel unknown = result.Single(e => e.Id == unknownBuilding.Uid);
+        unknown.BuildingId.ShouldBe(99);
+        unknown.BuildingPopularName.ShouldBeNull();
+        unknown.BuildingImageUrl.ShouldBeNull();
+
+        WorkOrderListItemModel none = result.Single(e => e.Id == noBuilding.Uid);
+        none.BuildingId.ShouldBeNull();
+        none.WorkOrderNumber.ShouldBeNull();
+        none.BuildingPopularName.ShouldBeNull();
+        none.BuildingImageUrl.ShouldBeNull();
+    }
+
+    [Fact]
     public async Task GetWorkOrder_ByUid_ReturnsCorrectWorkOrder()
     {
         WorkOrderSubmissionModel created = await _handler.SubmitWorkOrderAsync(
@@ -601,15 +668,17 @@ public class WorkOrderHandlerTests : IDisposable
     }
 
     [Fact]
-    public async Task SyncWorkOrder_StatusSyncEnabled_SchedulesImmediateStatusRead()
+    public async Task SyncWorkOrder_StatusSyncEnabled_ReturnsRefreshedStatus()
     {
-        DateTimeOffset scheduled = DateTimeOffset.UtcNow.AddHours(1);
-        WorkOrderEntity submitted = await InsertSubmittedAsync(nextSyncAt: scheduled);
+        WorkOrderEntity submitted = await InsertSubmittedAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 2, StatusName = "Pågår" }]);
+        _dbContext.ChangeTracker.Clear();
 
-        await CreateHandler(CreateTestConfig(statusSyncEnabled: true)).SyncWorkOrderAsync(submitted.Uid, "test@example.com");
+        WorkOrderDetailModel result = await CreateHandler().SyncWorkOrderAsync(submitted.Uid, "test@example.com");
 
-        WorkOrderEntity reloaded = await ReloadAsync(submitted.Uid);
-        reloaded.NextSyncAt!.Value.ShouldBeLessThan(scheduled);
+        result.Status.ShouldBe("Pågår");
+        result.RefreshOutcome.ShouldBe(WorkOrderRefreshOutcome.Refreshed);
+        result.StatusCheckedAt.ShouldNotBeNull();
     }
 
     [Fact]
@@ -823,6 +892,625 @@ public class WorkOrderHandlerTests : IDisposable
         return entity;
     }
 
+    [Fact]
+    public async Task SyncWorkOrders_RefreshesOnlyOwnersDueOrders_AndUsesInfoBatch()
+    {
+        WorkOrderEntity due = await InsertSubmittedAsync();
+        WorkOrderEntity recent = await InsertSubmittedAsync();
+        recent.PythagorasWorkOrderId = 556;
+        recent.StatusCheckedAt = DateTimeOffset.UtcNow;
+        WorkOrderEntity other = await InsertSubmittedAsync();
+        other.CreatedByEmail = "other@example.com";
+        other.PythagorasWorkOrderId = 557;
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 2, StatusName = "Pågår", StatusCategory = "ONGOING" }]);
+
+        WorkOrderRefreshModel result = await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        result.Outcome.ShouldBe(WorkOrderRefreshOutcome.Refreshed);
+        result.WorkOrders.Count.ShouldBe(2);
+        _statusClient.WorkOrderRequests.Count.ShouldBe(1);
+        _statusClient.WorkOrderRequests[0].Method.ShouldBe("GetWorkOrderInfosByIds");
+        _statusClient.WorkOrderRequests[0].Parameters.ShouldBe("ids=555");
+        WorkOrderEntity reloaded = await ReloadAsync(due.Uid);
+        reloaded.PythagorasStatusCategory.ShouldBe("ONGOING");
+        result.WorkOrders.Single(e => e.Id == due.Uid).DisplayStatus.ShouldBe(WorkOrderDisplayStatus.InProgress);
+        reloaded.StatusCheckedAt.ShouldNotBeNull();
+        reloaded.NextSyncAt.ShouldBeNull();
+        (await ReloadAsync(other.Uid)).StatusCheckedAt.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_TwiceWithinCooldown_SecondIsNotDueAndSkipsUpstream()
+    {
+        await InsertSubmittedAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 2, StatusName = "Pågår" }]);
+
+        (await _handler.SyncWorkOrdersAsync("test@example.com")).Outcome.ShouldBe(WorkOrderRefreshOutcome.Refreshed);
+        (await _handler.SyncWorkOrdersAsync("test@example.com")).Outcome.ShouldBe(WorkOrderRefreshOutcome.NotDue);
+
+        _statusClient.WorkOrderRequests.Count.ShouldBe(1);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_AttemptOlderThanCooldown_IsDueAgain()
+    {
+        await InsertSubmittedAsync(statusCheckedAt: DateTimeOffset.UtcNow.AddMinutes(-6));
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 2, StatusName = "Pågår" }]);
+
+        (await _handler.SyncWorkOrdersAsync("test@example.com")).Outcome.ShouldBe(WorkOrderRefreshOutcome.Refreshed);
+
+        _statusClient.WorkOrderRequests.Count.ShouldBe(1);
+    }
+
+    [Theory]
+    [InlineData("COMPLETED", 0)]
+    [InlineData("completed", 0)]
+    [InlineData("PERFORMED", 1)]
+    public async Task SyncWorkOrders_CompletedIsSkipped(string category, int expectedRequests)
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasWorkOrderName = "UK-2026-2121";
+        order.PythagorasStatusCategory = category;
+        order.CompletedAt = DateTimeOffset.UtcNow.AddDays(-10);
+        order.StatusCheckedAt = DateTimeOffset.UtcNow.AddDays(-1);
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 2, StatusName = "Pågår", StatusCategory = "ONGOING" }]);
+
+        WorkOrderRefreshModel result = await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        result.Outcome.ShouldBe(expectedRequests == 0 ? WorkOrderRefreshOutcome.NotDue : WorkOrderRefreshOutcome.Refreshed);
+        _statusClient.WorkOrderRequests.Count.ShouldBe(expectedRequests);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrder_Completed_IsNotDueAndSkipsUpstream()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasWorkOrderName = "UK-2026-2121";
+        order.PythagorasStatusName = "Avslutad";
+        order.PythagorasStatusCategory = "COMPLETED";
+        order.CompletedAt = DateTimeOffset.UtcNow.AddDays(-10);
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 2, StatusName = "Pågår" }]);
+
+        WorkOrderDetailModel result = await _handler.SyncWorkOrderAsync(order.Uid, "test@example.com");
+
+        result.RefreshOutcome.ShouldBe(WorkOrderRefreshOutcome.NotDue);
+        result.Status.ShouldBe("Avslutad");
+        _statusClient.WorkOrderRequests.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public async Task SyncWorkOrder_ReadsOnlyThatOrder()
+    {
+        WorkOrderEntity target = await InsertSubmittedAsync();
+        WorkOrderEntity sibling = await InsertSubmittedAsync();
+        sibling.PythagorasWorkOrderId = 556;
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 2, StatusName = "Pågår" }]);
+
+        (await _handler.SyncWorkOrderAsync(target.Uid, "test@example.com")).RefreshOutcome.ShouldBe(WorkOrderRefreshOutcome.Refreshed);
+
+        _statusClient.WorkOrderRequests.Single().Parameters.ShouldBe("ids=555");
+        (await ReloadAsync(sibling.Uid)).StatusCheckedAt.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_OrderMissingFromResponse_IsFailedKeepsStatusAndMovesStamp()
+    {
+        WorkOrderEntity missing = await InsertSubmittedAsync();
+        missing.PythagorasStatusName = "Registrerad";
+        missing.StatusCheckedAt = DateTimeOffset.UtcNow.AddDays(-1);
+        WorkOrderEntity found = await InsertSubmittedAsync();
+        found.PythagorasWorkOrderId = 556;
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 556, StatusId = 2, StatusName = "Pågår" }]);
+
+        WorkOrderRefreshModel result = await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        result.Outcome.ShouldBe(WorkOrderRefreshOutcome.Failed);
+        WorkOrderEntity saved = await ReloadAsync(missing.Uid);
+        saved.PythagorasStatusName.ShouldBe("Registrerad");
+        saved.NextSyncAt.ShouldBeNull();
+        saved.StatusCheckedAt!.Value.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(5));
+        (await ReloadAsync(found.Uid)).PythagorasStatusName.ShouldBe("Pågår");
+        (await _handler.SyncWorkOrdersAsync("test@example.com")).Outcome.ShouldBe(WorkOrderRefreshOutcome.NotDue);
+        _statusClient.WorkOrderRequests.Count.ShouldBe(1);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_ResponseWithoutStatus_IsFailedAndKeepsSavedStatus()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasStatusName = "Registrerad";
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555 }]);
+
+        WorkOrderRefreshModel result = await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        result.Outcome.ShouldBe(WorkOrderRefreshOutcome.Failed);
+        result.WorkOrders[0].Status.ShouldBe("Registrerad");
+        (await ReloadAsync(order.Uid)).PythagorasStatusName.ShouldBe("Registrerad");
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_UpstreamException_IsFailedAndConsumesCooldown()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasStatusName = "Registrerad";
+        await _dbContext.SaveChangesAsync();
+        _statusClient.WorkOrderInfoException = new HttpRequestException("Unavailable");
+
+        WorkOrderRefreshModel result = await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        result.Outcome.ShouldBe(WorkOrderRefreshOutcome.Failed);
+        result.WorkOrders[0].Status.ShouldBe("Registrerad");
+        result.WorkOrders[0].StatusCheckedAt.ShouldNotBeNull();
+        (await ReloadAsync(order.Uid)).StatusCheckedAt!.Value.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(5));
+        // The failed attempt keeps the cooldown.
+        (await _handler.SyncWorkOrdersAsync("test@example.com")).Outcome.ShouldBe(WorkOrderRefreshOutcome.NotDue);
+        _statusClient.WorkOrderRequests.Count.ShouldBe(1);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_CancelledMidRead_RethrowsAndKeepsSavedStatus()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasStatusName = "Registrerad";
+        await _dbContext.SaveChangesAsync();
+        using CancellationTokenSource cts = new();
+        _statusClient.CancelOnWorkOrderInfoRequest = cts;
+
+        await Should.ThrowAsync<OperationCanceledException>(() => _handler.SyncWorkOrdersAsync("test@example.com", cts.Token));
+
+        WorkOrderEntity saved = await ReloadAsync(order.Uid);
+        saved.PythagorasStatusName.ShouldBe("Registrerad");
+        // The only batch was the one in flight, so its claim is spent.
+        saved.StatusCheckedAt.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_IgnoresNotifierDetailsInResponse()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.NotifierName = "Test User";
+        order.NotifierEmail = "notifier@example.com";
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new()
+        {
+            Id = 555,
+            StatusId = 2,
+            StatusName = "Pågår",
+            NotifierEmail = "ny.anmalare@example.com",
+            NotifierName = "Ny Anmälare",
+        }]);
+
+        await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        WorkOrderEntity saved = await ReloadAsync(order.Uid);
+        saved.PythagorasStatusName.ShouldBe("Pågår");
+        saved.NotifierEmail.ShouldBe("notifier@example.com");
+        saved.NotifierName.ShouldBe("Test User");
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_LeavesUpdatedAtAlone()
+    {
+        DateTimeOffset updatedAt = DateTimeOffset.UtcNow.AddDays(-2);
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.UpdatedAt = updatedAt;
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 2, StatusName = "Pågår" }]);
+
+        (await _handler.SyncWorkOrdersAsync("test@example.com")).Outcome.ShouldBe(WorkOrderRefreshOutcome.Refreshed);
+
+        (await ReloadAsync(order.Uid)).UpdatedAt.ShouldBe(updatedAt, TimeSpan.FromSeconds(1));
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_StoresWorkOrderNumber()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, Name = "UK-2026-2121", StatusId = 2, StatusName = "Pågår" }]);
+
+        WorkOrderRefreshModel result = await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        result.WorkOrders[0].WorkOrderNumber.ShouldBe("UK-2026-2121");
+        (await ReloadAsync(order.Uid)).PythagorasWorkOrderName.ShouldBe("UK-2026-2121");
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_ResponseWithoutName_KeepsSavedWorkOrderNumber()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasWorkOrderName = "UK-2026-2121";
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 2, StatusName = "Pågår" }]);
+
+        await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        (await ReloadAsync(order.Uid)).PythagorasWorkOrderName.ShouldBe("UK-2026-2121");
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_CompletedWithoutNumber_IsReadOnce()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasStatusName = "Avslutad";
+        order.PythagorasStatusCategory = "COMPLETED";
+        order.CompletedAt = DateTimeOffset.UtcNow.AddDays(-10);
+        order.StatusCheckedAt = DateTimeOffset.UtcNow.AddDays(-1);
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, Name = "UK-2026-2121", StatusId = 3, StatusName = "Avslutad", StatusCategory = "COMPLETED" }]);
+
+        (await _handler.SyncWorkOrdersAsync("test@example.com")).Outcome.ShouldBe(WorkOrderRefreshOutcome.Refreshed);
+        // Past the cooldown again: only the number made it eligible, so it is not read twice.
+        await _dbContext.WorkOrders.Where(e => e.Uid == order.Uid)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(e => e.StatusCheckedAt, DateTimeOffset.UtcNow.AddDays(-1)));
+        _dbContext.ChangeTracker.Clear();
+
+        (await _handler.SyncWorkOrdersAsync("test@example.com")).Outcome.ShouldBe(WorkOrderRefreshOutcome.NotDue);
+
+        _statusClient.WorkOrderRequests.Count.ShouldBe(1);
+        (await ReloadAsync(order.Uid)).PythagorasWorkOrderName.ShouldBe("UK-2026-2121");
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_CompletedWithoutNumberInResponse_IsReadOnceAndStoredEmpty()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasStatusCategory = "COMPLETED";
+        order.CompletedAt = DateTimeOffset.UtcNow.AddDays(-10);
+        order.StatusCheckedAt = DateTimeOffset.UtcNow.AddDays(-1);
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 3, StatusName = "Avslutad", StatusCategory = "COMPLETED" }]);
+
+        WorkOrderRefreshModel first = await _handler.SyncWorkOrdersAsync("test@example.com");
+        await _dbContext.WorkOrders.Where(e => e.Uid == order.Uid)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(e => e.StatusCheckedAt, DateTimeOffset.UtcNow.AddDays(-1)));
+        _dbContext.ChangeTracker.Clear();
+
+        (await _handler.SyncWorkOrdersAsync("test@example.com")).Outcome.ShouldBe(WorkOrderRefreshOutcome.NotDue);
+
+        _statusClient.WorkOrderRequests.Count.ShouldBe(1);
+        first.WorkOrders[0].WorkOrderNumber.ShouldBeNull();
+        (await ReloadAsync(order.Uid)).PythagorasWorkOrderName.ShouldBe(string.Empty);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_CompletedWithinWindow_IsReadAndStoresPerformedDescription()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasWorkOrderName = "UK-2026-2121";
+        order.PythagorasStatusCategory = "COMPLETED";
+        order.CompletedAt = DateTimeOffset.UtcNow.AddDays(-1);
+        order.StatusCheckedAt = DateTimeOffset.UtcNow.AddDays(-1);
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new()
+        {
+            Id = 555, StatusId = 3, StatusName = "Avslutad", StatusCategory = "COMPLETED",
+            PerformedDescriptionDescription = "Gallret är bytt.", PerformedDescriptionCreated = 1788339433470
+        }]);
+
+        WorkOrderRefreshModel result = await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        result.Outcome.ShouldBe(WorkOrderRefreshOutcome.Refreshed);
+        result.WorkOrders[0].PerformedDescription.ShouldBe("Gallret är bytt.");
+        result.WorkOrders[0].PerformedDescriptionAt.ShouldBe(DateTimeOffset.FromUnixTimeMilliseconds(1788339433470));
+        WorkOrderEntity saved = await ReloadAsync(order.Uid);
+        saved.PerformedDescription.ShouldBe("Gallret är bytt.");
+        saved.CompletedAt.ShouldBe(order.CompletedAt);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_BecomesCompleted_StampsCompletedAt()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 3, StatusName = "Avslutad", StatusCategory = "COMPLETED" }]);
+
+        await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        (await ReloadAsync(order.Uid)).CompletedAt.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_Reopened_ClearsCompletedAtAndRemovedDescription()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasWorkOrderName = "UK-2026-2121";
+        order.PythagorasStatusCategory = "COMPLETED";
+        order.CompletedAt = DateTimeOffset.UtcNow.AddDays(-1);
+        order.PerformedDescription = "Gallret är bytt.";
+        order.PerformedDescriptionAt = DateTimeOffset.UtcNow.AddDays(-1);
+        order.StatusCheckedAt = DateTimeOffset.UtcNow.AddDays(-1);
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 2, StatusName = "Pågår", StatusCategory = "ONGOING" }]);
+
+        await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        WorkOrderEntity saved = await ReloadAsync(order.Uid);
+        saved.CompletedAt.ShouldBeNull();
+        saved.PerformedDescription.ShouldBeNull();
+        saved.PerformedDescriptionAt.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_StatusChanged_StampsPythagorasUpdated()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasStatusId = 1;
+        order.StatusChangedAt = DateTimeOffset.UtcNow.AddDays(-5);
+        await _dbContext.SaveChangesAsync();
+        DateTimeOffset updated = DateTimeOffset.FromUnixTimeMilliseconds(DateTimeOffset.UtcNow.AddHours(-1).ToUnixTimeMilliseconds());
+        _statusClient.SetWorkOrderInfoResults([new()
+        {
+            Id = 555, StatusId = 11, StatusName = "Beställt material", StatusCategory = "ONGOING",
+            Updated = updated.ToUnixTimeMilliseconds()
+        }]);
+
+        await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        (await ReloadAsync(order.Uid)).StatusChangedAt.ShouldBe(updated);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_StatusUnchanged_KeepsStatusChangedAt()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasStatusId = 2;
+        order.StatusChangedAt = DateTimeOffset.UtcNow.AddDays(-5);
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new()
+        {
+            Id = 555, StatusId = 2, StatusName = "Pågår", StatusCategory = "ONGOING",
+            Updated = DateTimeOffset.UtcNow.AddHours(-1).ToUnixTimeMilliseconds()
+        }]);
+
+        await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        (await ReloadAsync(order.Uid)).StatusChangedAt.ShouldBe(order.StatusChangedAt);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_FirstStatusWithoutUpdated_StampsNow()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 1, StatusName = "Registrerad", StatusCategory = "NOT_STARTED" }]);
+
+        await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        (await ReloadAsync(order.Uid)).StatusChangedAt.ShouldNotBeNull().ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromMinutes(1));
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_StatusChangedWithoutNewerUpdate_StampsNow()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasStatusId = 1;
+        order.StatusChangedAt = DateTimeOffset.UtcNow.AddDays(-1);
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new()
+        {
+            Id = 555, StatusId = 2, StatusName = "Pågår", StatusCategory = "ONGOING",
+            Updated = DateTimeOffset.UtcNow.AddDays(-2).ToUnixTimeMilliseconds()
+        }]);
+
+        await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        (await ReloadAsync(order.Uid)).StatusChangedAt.ShouldNotBeNull().ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromMinutes(1));
+    }
+
+    [Theory]
+    [InlineData("Gallret är bytt.", 0, 24, "saved")] // Unchanged: keeps the saved time.
+    [InlineData("Gallret är bytt och målat.", 0, 24, "updated")] // Edited, same creation stamp: last update.
+    [InlineData("Gallret är bytt och målat.", 1, 24, "created")] // Edited, newer creation stamp: that stamp.
+    [InlineData("Gallret är bytt och målat.", 0, -24, "now")] // Edited, neither stamp moved: this read.
+    public async Task SyncWorkOrders_PerformedDescription_IsDatedByItsLastChange(
+        string description, int createdOffsetHours, int updatedOffsetHours, string expected)
+    {
+        DateTimeOffset savedAt = DateTimeOffset.FromUnixTimeMilliseconds(DateTimeOffset.UtcNow.AddDays(-2).ToUnixTimeMilliseconds());
+        DateTimeOffset createdAt = savedAt.AddHours(createdOffsetHours);
+        DateTimeOffset updated = savedAt.AddHours(updatedOffsetHours);
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        order.PythagorasStatusId = 2;
+        order.PerformedDescription = "Gallret är bytt.";
+        order.PerformedDescriptionAt = savedAt;
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([new()
+        {
+            Id = 555, StatusId = 2, StatusName = "Pågår", StatusCategory = "ONGOING",
+            PerformedDescriptionDescription = description,
+            PerformedDescriptionCreated = createdAt.ToUnixTimeMilliseconds(),
+            Updated = updated.ToUnixTimeMilliseconds()
+        }]);
+
+        await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        WorkOrderEntity saved = await ReloadAsync(order.Uid);
+        saved.PerformedDescription.ShouldBe(description);
+        DateTimeOffset performedAt = saved.PerformedDescriptionAt.ShouldNotBeNull();
+        switch (expected)
+        {
+            case "saved":
+                performedAt.ShouldBe(savedAt);
+                break;
+            case "created":
+                performedAt.ShouldBe(createdAt);
+                break;
+            case "updated":
+                performedAt.ShouldBe(updated);
+                break;
+            default:
+                performedAt.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromMinutes(1));
+                break;
+        }
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_StatusChange_MovesOrderToTop()
+    {
+        WorkOrderEntity older = await InsertSubmittedAsync();
+        older.CreatedAt = DateTimeOffset.UtcNow.AddDays(-10);
+        older.PythagorasStatusId = 1;
+        WorkOrderEntity newer = await InsertSubmittedAsync();
+        newer.CreatedAt = DateTimeOffset.UtcNow.AddDays(-1);
+        newer.PythagorasWorkOrderId = 556;
+        newer.PythagorasStatusId = 1;
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([
+            new() { Id = 555, StatusId = 5, StatusName = "Vilande", StatusCategory = "ONGOING", Updated = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() },
+            new() { Id = 556, StatusId = 1, StatusName = "Registrerad", StatusCategory = "NOT_STARTED" }]);
+
+        (await _handler.GetWorkOrdersAsync("test@example.com")).Select(e => e.Id).ShouldBe([newer.Uid, older.Uid]);
+        WorkOrderRefreshModel result = await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        result.WorkOrders.Select(e => e.Id).ShouldBe([older.Uid, newer.Uid]);
+        (await _handler.GetWorkOrdersAsync("test@example.com")).Select(e => e.Id).ShouldBe([older.Uid, newer.Uid]);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_BatchesAtOneHundred_AndChecksUnchangedStatuses()
+    {
+        List<ServiceAccess.Pythagoras.Dto.WorkOrderInfoDto> infos = [];
+        for (int i = 1; i <= 101; i++)
+        {
+            WorkOrderEntity order = await InsertSubmittedAsync();
+            order.PythagorasWorkOrderId = i;
+            order.PythagorasStatusName = "Pågår";
+            infos.Add(new() { Id = i, StatusId = 2, StatusName = "Pågår" });
+        }
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults(infos);
+
+        WorkOrderRefreshModel result = await _handler.SyncWorkOrdersAsync("test@example.com");
+
+        result.Outcome.ShouldBe(WorkOrderRefreshOutcome.Refreshed);
+        _statusClient.WorkOrderRequests.Count.ShouldBe(2);
+        result.WorkOrders.ShouldAllBe(e => e.StatusCheckedAt != null);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_CancelledOnFirstBatch_LeavesLaterBatchesUnclaimed()
+    {
+        for (int i = 1; i <= 101; i++)
+        {
+            WorkOrderEntity order = await InsertSubmittedAsync();
+            order.PythagorasWorkOrderId = i;
+        }
+        await _dbContext.SaveChangesAsync();
+        using CancellationTokenSource cts = new();
+        _statusClient.CancelOnWorkOrderInfoRequest = cts;
+
+        await Should.ThrowAsync<OperationCanceledException>(() => _handler.SyncWorkOrdersAsync("test@example.com", cts.Token));
+
+        string requested = _statusClient.WorkOrderRequests.ShouldHaveSingleItem().Parameters!;
+        HashSet<int> readIds = [.. requested["ids=".Length..].Split(',').Select(int.Parse)];
+        readIds.Count.ShouldBe(100);
+        _dbContext.ChangeTracker.Clear();
+        List<WorkOrderEntity> saved = await _dbContext.WorkOrders.AsNoTracking().ToListAsync();
+
+        // Only the batch that was in flight is burned; the rest were never claimed.
+        saved.Where(e => readIds.Contains(e.PythagorasWorkOrderId!.Value)).ShouldAllBe(e => e.StatusCheckedAt != null);
+        saved.Where(e => !readIds.Contains(e.PythagorasWorkOrderId!.Value)).ShouldAllBe(e => e.StatusCheckedAt == null);
+        saved.Count(e => e.StatusCheckedAt == null).ShouldBe(1);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_BatchWrite_SavesEachOrdersOwnStatus()
+    {
+        DateTimeOffset updatedAt = DateTimeOffset.UtcNow.AddDays(-2);
+        WorkOrderEntity first = await InsertSubmittedAsync();
+        WorkOrderEntity second = await InsertSubmittedAsync();
+        second.PythagorasWorkOrderId = 556;
+        first.UpdatedAt = updatedAt;
+        second.UpdatedAt = updatedAt;
+        await _dbContext.SaveChangesAsync();
+        _statusClient.SetWorkOrderInfoResults([
+            new() { Id = 555, Name = "UK-2026-1", StatusId = 2, StatusName = "Pågår", StatusCategory = "ONGOING" },
+            new() { Id = 556, StatusId = 3, StatusName = "Avslutad", StatusCategory = "COMPLETED" }]);
+
+        (await _handler.SyncWorkOrdersAsync("test@example.com")).Outcome.ShouldBe(WorkOrderRefreshOutcome.Refreshed);
+
+        WorkOrderEntity savedFirst = await ReloadAsync(first.Uid);
+        WorkOrderEntity savedSecond = await ReloadAsync(second.Uid);
+        savedFirst.PythagorasWorkOrderName.ShouldBe("UK-2026-1");
+        savedFirst.PythagorasStatusName.ShouldBe("Pågår");
+        savedSecond.PythagorasWorkOrderName.ShouldBe(string.Empty);
+        savedSecond.PythagorasStatusName.ShouldBe("Avslutad");
+        savedSecond.PythagorasStatusCategory.ShouldBe("COMPLETED");
+        savedFirst.UpdatedAt.ShouldBe(updatedAt, TimeSpan.FromSeconds(1));
+        savedSecond.UpdatedAt.ShouldBe(updatedAt, TimeSpan.FromSeconds(1));
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_CooldownBelowFloor_IsFlooredAtSixtySeconds()
+    {
+        await InsertSubmittedAsync(statusCheckedAt: DateTimeOffset.UtcNow.AddSeconds(-45));
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 2, StatusName = "Pågår" }]);
+
+        WorkOrderRefreshModel result = await CreateHandler(CreateTestConfig(cooldownSeconds: 30)).SyncWorkOrdersAsync("test@example.com");
+
+        result.Outcome.ShouldBe(WorkOrderRefreshOutcome.NotDue);
+        _statusClient.WorkOrderRequests.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_CooldownAboveFloor_IsHonoured()
+    {
+        WorkOrderEntity recent = await InsertSubmittedAsync(statusCheckedAt: DateTimeOffset.UtcNow.AddSeconds(-120));
+        _statusClient.SetWorkOrderInfoResults([new() { Id = 555, StatusId = 2, StatusName = "Pågår" }]);
+
+        (await CreateHandler(CreateTestConfig(cooldownSeconds: 600)).SyncWorkOrdersAsync("test@example.com"))
+            .Outcome.ShouldBe(WorkOrderRefreshOutcome.NotDue);
+        _statusClient.WorkOrderRequests.ShouldBeEmpty();
+
+        await _dbContext.WorkOrders.Where(e => e.Uid == recent.Uid)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(e => e.StatusCheckedAt, DateTimeOffset.UtcNow.AddSeconds(-700)));
+        _dbContext.ChangeTracker.Clear();
+
+        (await CreateHandler(CreateTestConfig(cooldownSeconds: 600)).SyncWorkOrdersAsync("test@example.com"))
+            .Outcome.ShouldBe(WorkOrderRefreshOutcome.Refreshed);
+        _statusClient.WorkOrderRequests.Count.ShouldBe(1);
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_RecentAndEmptyLists_DoNotCallPythagoras()
+    {
+        (await _handler.SyncWorkOrdersAsync("nobody@example.com")).Outcome.ShouldBe(WorkOrderRefreshOutcome.NotDue);
+        await InsertSubmittedAsync(statusCheckedAt: DateTimeOffset.UtcNow);
+
+        (await _handler.SyncWorkOrdersAsync("test@example.com")).Outcome.ShouldBe(WorkOrderRefreshOutcome.NotDue);
+
+        _statusClient.WorkOrderRequests.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public async Task SyncWorkOrders_StatusSyncDisabled_ReturnsDisabledWithoutUpstream()
+    {
+        await InsertSubmittedAsync();
+
+        WorkOrderRefreshModel result = await CreateHandler(CreateTestConfig(statusSyncEnabled: false)).SyncWorkOrdersAsync("test@example.com");
+
+        result.Outcome.ShouldBe(WorkOrderRefreshOutcome.Disabled);
+        _statusClient.WorkOrderRequests.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public async Task ClaimForStatusRefresh_OverlappingClaim_ReturnsNothingForTheLoser()
+    {
+        WorkOrderEntity order = await InsertSubmittedAsync();
+        WorkOrderRepository repository = new(_dbContext);
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        DateTimeOffset staleBefore = now.AddMinutes(-1);
+
+        IReadOnlyList<int> first = await repository.ClaimForStatusRefreshAsync([order.Id], staleBefore, now);
+        IReadOnlyList<int> second = await repository.ClaimForStatusRefreshAsync([order.Id], staleBefore, now.AddSeconds(1));
+
+        first.ShouldHaveSingleItem().ShouldBe(order.Id);
+        second.ShouldBeEmpty();
+    }
+
     private WorkOrderHandler CreateHandler(ApplicationConfig? config = null, WorkOrderConfiguration? accessConfig = null)
     {
         config ??= CreateTestConfig();
@@ -834,14 +1522,18 @@ public class WorkOrderHandlerTests : IDisposable
             new WorkOrderFileValidator(config),
             new WorkOrderCategoryProvider(_dataStore),
             new WorkOrderAccessPolicy(accessConfig ?? new WorkOrderConfiguration()),
-            config,
+            new WorkOrderStatusSyncService(new WorkOrderRepository(_dbContext), _statusClient, _dataStore, config,
+                NullLogger<WorkOrderStatusSyncService>.Instance),
             NullLogger<WorkOrderHandler>.Instance);
     }
 
-    private async Task<WorkOrderEntity> InsertSubmittedAsync(DateTimeOffset nextSyncAt)
+    // Defaults mirror a freshly submitted order: no submission schedule and no status read yet.
+    private async Task<WorkOrderEntity> InsertSubmittedAsync(
+        DateTimeOffset? statusCheckedAt = null, DateTimeOffset? nextSyncAt = null)
     {
         WorkOrderEntity entity = await InsertWorkOrderAsync(WorkOrderSyncStatus.Submitted, nextSyncAt, description: "Submitted order");
         entity.PythagorasWorkOrderId = 555;
+        entity.StatusCheckedAt = statusCheckedAt;
         await _dbContext.SaveChangesAsync();
         return entity;
     }
@@ -849,7 +1541,7 @@ public class WorkOrderHandlerTests : IDisposable
     private async Task<WorkOrderEntity> ReloadAsync(Guid uid) =>
         (await _dbContext.WorkOrders.AsNoTracking().FirstOrDefaultAsync(w => w.Uid == uid))!;
 
-    private static ApplicationConfig CreateTestConfig(bool statusSyncEnabled = true)
+    private static ApplicationConfig CreateTestConfig(bool statusSyncEnabled = true, int cooldownSeconds = 300)
     {
         Dictionary<string, string?> configData = new()
         {
@@ -857,6 +1549,7 @@ public class WorkOrderHandlerTests : IDisposable
             ["WorkOrder:FileStorage"] = Path.Combine(Path.GetTempPath(), "workOrder-handler-tests"),
             ["WorkOrder:MaxRetries"] = "3",
             ["WorkOrder:StatusSyncEnabled"] = statusSyncEnabled ? "true" : "false",
+            ["WorkOrder:StatusRefreshCooldownSeconds"] = cooldownSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture),
             ["Pythagoras:ApiKey"] = "test",
             ["Pythagoras:BaseUrl"] = "https://localhost/",
             ["Authentication:TokenServiceUrl"] = "https://localhost/",
