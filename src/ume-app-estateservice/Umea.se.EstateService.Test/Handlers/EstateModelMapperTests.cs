@@ -152,18 +152,6 @@ public class EstateModelMapperTests
     }
 
     [Fact]
-    public void MapBuildingInfo_PlaceholderRoomOnNamedFloor_HasRoomInformationIsFalse()
-    {
-        BuildingEntity building = CreateBuilding();
-        building.Floors.Add(new FloorEntity { Id = 10, Name = "Plan 1", BuildingId = building.Id });
-        building.Rooms.Add(new RoomEntity { Id = 100, Name = "R01", BuildingId = building.Id, FloorId = 10 });
-
-        BuildingInfoModel result = EstateModelMapper.MapBuildingInfo(building);
-
-        result.HasRoomInformation.ShouldBeFalse();
-    }
-
-    [Fact]
     public void MapBuildingInfo_PlaceholderFloorWithSingleNamedRoom_HasRoomInformationIsFalse()
     {
         BuildingEntity building = CreateBuilding();

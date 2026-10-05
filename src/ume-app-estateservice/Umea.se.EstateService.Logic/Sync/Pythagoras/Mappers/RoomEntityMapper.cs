@@ -33,8 +33,21 @@ public static class RoomEntityMapper
     }
 
     /// <summary>
-    /// Converts a collection of Workspace DTOs to RoomEntity objects.
+    /// Converts a collection of Workspace DTOs to RoomEntity objects, skipping Pythagoras
+    /// placeholder workspaces that do not represent real rooms.
     /// </summary>
     public static List<RoomEntity> ToEntities(IReadOnlyList<Workspace> dtos)
-        => MapperUtilities.ToEntities(dtos, ToEntity);
+    {
+        ArgumentNullException.ThrowIfNull(dtos);
+
+        return MapperUtilities.ToEntities([.. dtos.Where(dto => !IsPlaceholder(dto))], ToEntity);
+    }
+
+    /// <summary>
+    /// Pythagoras uses "R01" as a stand-in room for buildings without room information, and
+    /// SpaceManager leaves behind workspaces named "unset". Neither is a real room.
+    /// </summary>
+    internal static bool IsPlaceholder(Workspace dto)
+        => string.Equals(dto.Name, "R01", StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(dto.Name, "unset", StringComparison.OrdinalIgnoreCase);
 }
