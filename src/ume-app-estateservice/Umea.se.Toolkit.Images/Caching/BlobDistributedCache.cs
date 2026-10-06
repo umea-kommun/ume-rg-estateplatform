@@ -52,11 +52,11 @@ public sealed class BlobDistributedCache(BlobContainerClient container, ILogger<
         {
             BlobClient blob = _container.GetBlobClient(key);
 
-            TimeSpan ttl = ResolveTtl(options);
-            DateTimeOffset expiresAt = DateTimeOffset.UtcNow + ttl;
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+            DateTimeOffset expiresAt = ResolveExpiresAt(options, now);
 
             using MemoryStream stream = new(value);
-            await blob.UploadAsync(stream, CreateUploadOptions(ttl, expiresAt), token);
+            await blob.UploadAsync(stream, CreateUploadOptions(now, expiresAt), token);
 
             _logger.LogDebug("Blob cache set: {Key}, expires {ExpiresAt}", key, expiresAt);
         }
@@ -102,23 +102,23 @@ public sealed class BlobDistributedCache(BlobContainerClient container, ILogger<
         return false;
     }
 
-    private static TimeSpan ResolveTtl(DistributedCacheEntryOptions options)
-        => options.AbsoluteExpirationRelativeToNow
-            ?? options.SlidingExpiration
-            ?? TimeSpan.FromHours(24);
+    // FusionCache only sets AbsoluteExpiration.
+    private static DateTimeOffset ResolveExpiresAt(DistributedCacheEntryOptions options, DateTimeOffset now)
+        => options.AbsoluteExpiration
+            ?? now + (options.AbsoluteExpirationRelativeToNow ?? options.SlidingExpiration ?? TimeSpan.FromHours(24));
 
-    private static BlobUploadOptions CreateUploadOptions(TimeSpan ttl, DateTimeOffset expiresAt)
+    private static BlobUploadOptions CreateUploadOptions(DateTimeOffset now, DateTimeOffset expiresAt)
         => new()
         {
             HttpHeaders = new BlobHttpHeaders
             {
                 ContentType = "application/octet-stream",
-                CacheControl = $"public, max-age={(int)ttl.TotalSeconds}"
+                CacheControl = $"public, max-age={(int)Math.Max(0, (expiresAt - now).TotalSeconds)}"
             },
             Metadata = new Dictionary<string, string>
             {
                 ["expiresAt"] = expiresAt.ToString("O"),
-                ["createdAt"] = DateTimeOffset.UtcNow.ToString("O")
+                ["createdAt"] = now.ToString("O")
             }
         };
 }
