@@ -2,6 +2,27 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue';
 
 export const ROOM_TYPE_ID = 3;
 
+// The browser lays out an SVG image at the size of its <image> element. The
+// plan's viewBox is only ~100 units wide, so labels would be laid out
+// at under a pixel: WebKit (all iOS browsers) drops them and Chromium spaces
+// them out. Laying the image out 100x larger and scaling it back keeps its
+// size and position.
+const PLAN_IMAGE_SCALE = 100;
+
+export const createPlanImage = (
+	href: string,
+	viewBox: { x: number; y: number; w: number; h: number }
+) => {
+	const image = document.createElement('image');
+	image.setAttribute('href', href);
+	image.setAttribute('x', String(viewBox.x * PLAN_IMAGE_SCALE));
+	image.setAttribute('y', String(viewBox.y * PLAN_IMAGE_SCALE));
+	image.setAttribute('width', String(viewBox.w * PLAN_IMAGE_SCALE));
+	image.setAttribute('height', String(viewBox.h * PLAN_IMAGE_SCALE));
+	image.setAttribute('transform', `scale(${1 / PLAN_IMAGE_SCALE})`);
+	return image;
+};
+
 export const useBlueprintSvg = (blueprintSvg: string) => {
 	const svgBlobUrl = ref<string | null>(null);
 
@@ -34,14 +55,8 @@ export const useBlueprintSvg = (blueprintSvg: string) => {
 		});
 
 		if (svgBlobUrl.value) {
-			const image = document.createElement('image');
-			image.setAttribute('href', svgBlobUrl.value);
-
 			const vb = getViewBoxRounded(svgElement);
-			image.setAttribute('x', String(vb.x));
-			image.setAttribute('y', String(vb.y));
-			image.setAttribute('width', String(vb.w));
-			image.setAttribute('height', String(vb.h));
+			const image = createPlanImage(svgBlobUrl.value, vb);
 			svgElement.setAttribute(
 				'viewBox',
 				`${vb.x} ${vb.y} ${vb.w} ${vb.h}`
