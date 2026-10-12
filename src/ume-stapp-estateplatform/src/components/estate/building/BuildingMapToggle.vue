@@ -122,5 +122,9 @@ const select = (value: ActiveMapType | null) => {
 		// The options are cells of the action row the parent lays out
 		display: contents;
 	}
+
+	@media print {
+		display: none;
+	}
 }
 </style>
