@@ -25,7 +25,7 @@ public class WorkOrderCategoryClassifier(
         IReadOnlyList<WorkOrderCategoryOption> leaves = categoryProvider.GetLeafCategoriesForType(workOrderTypeId);
         if (leaves.Count == 0)
         {
-            logger.LogWarning("No categories found for work order type {WorkOrderTypeId}", workOrderTypeId);
+            logger.LogInformation("No categories found for work order type {WorkOrderTypeId}", workOrderTypeId);
             return [];
         }
 
