@@ -7,6 +7,7 @@
 			:points="points"
 			:highlighted-point-id="highlightedPointId"
 			:fit-points="fitPoints"
+			:focus-points="focusPoints"
 			:loading="loading"
 			:hide-controls="hideControls"
 			:selectable="selectable"
@@ -14,7 +15,9 @@
 			@select-building="
 				(buildingId) => emit('select-building', buildingId)
 			"
-		/>
+		>
+			<template #overlay><slot name="overlay" /></template>
+		</map-viewer>
 
 		<v-dialog
 			v-model="dialogOpen"
@@ -32,6 +35,7 @@
 					:points="points"
 					:highlighted-point-id="highlightedPointId"
 					:fit-points="fitPoints"
+					:focus-points="focusPoints"
 					:loading="loading"
 					:selectable="selectable"
 					:closable="true"
@@ -40,7 +44,9 @@
 						(buildingId) => emit('select-building', buildingId)
 					"
 					@close="dialogOpen = false"
-				/>
+				>
+					<template #overlay><slot name="overlay" /></template>
+				</map-viewer>
 			</div>
 		</v-dialog>
 	</div>
@@ -56,6 +62,7 @@ import { useDialogHistory } from '@/utils/useDialogHistory';
 defineProps<{
 	points?: IMapPoint[];
 	fitPoints?: boolean;
+	focusPoints?: IMapPoint[] | null;
 	initialState?: IMapState | null;
 	highlightedPointId?: number | null;
 	loading?: boolean;

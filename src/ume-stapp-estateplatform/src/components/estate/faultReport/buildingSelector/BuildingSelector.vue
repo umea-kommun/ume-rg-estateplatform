@@ -81,7 +81,14 @@
 					</template>
 				</v-text-field>
 				<div v-if="$slots['search-action']" class="search-action">
-					<slot name="search-action" />
+					<slot
+						name="search-action"
+						:search-result-ids="searchResultIds"
+						:search="search"
+						:update-search="updateSearch"
+						:submit-search="submitSearch"
+						:search-loading="isBusyLoading"
+					/>
 				</div>
 			</div>
 
@@ -192,6 +199,9 @@ const SEARCH_RESULT_LIMIT = 25;
 // rest of the (already fetched) results a page at a time.
 const SEARCH_RESULT_PAGE_SIZE = 5;
 const search = ref('');
+const updateSearch = (value: string) => {
+	search.value = value;
+};
 const visibleCount = ref(SEARCH_RESULT_PAGE_SIZE);
 
 // Address data comes in mixed/upper case (e.g. "UMEÅ"); title-case each word so
@@ -236,6 +246,14 @@ const { fetchSearchResults, searchResults, isBusyLoading } = useEstateSearch(
 
 const visibleSearchResults = computed(
 	() => searchResults.value?.slice(0, visibleCount.value)
+);
+
+// Null means no search result yet; an empty array means a search with no hits.
+// A computed keeps the array identity stable between unrelated re-renders.
+const searchResultIds = computed(() =>
+	search.value?.trim()
+		? searchResults.value?.map((entry) => entry.id) ?? null
+		: null
 );
 
 const isBusyFetchingBuildingId = ref<number | null>(null);

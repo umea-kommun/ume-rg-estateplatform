@@ -38,8 +38,21 @@
 							@select="selectBuilding"
 							@select-room="selectBuildingAndRoom"
 						>
-							<template #search-action>
+							<template
+								#search-action="{
+									searchResultIds,
+									search,
+									updateSearch,
+									submitSearch,
+									searchLoading,
+								}"
+							>
 								<building-map-selector
+									:search-result-ids="searchResultIds"
+									:search="search"
+									:search-loading="searchLoading"
+									@update:search="updateSearch"
+									@submit-search="submitSearch"
 									@select="selectBuilding"
 								/>
 							</template>

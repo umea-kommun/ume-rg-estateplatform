@@ -9,6 +9,7 @@
 		/>
 
 		<div :id="mapId" class="map-viewer"></div>
+		<slot name="overlay" />
 		<div ref="popupEl" class="ol-popup">
 			<map-building-carousel
 				v-model="selectedBuildingIds"
@@ -66,6 +67,7 @@ const props = defineProps<{
 	mapId: string;
 	points?: IMapPoint[];
 	fitPoints?: boolean;
+	focusPoints?: IMapPoint[] | null;
 	initialState?: IMapState | null;
 	highlightedPointId?: number | null;
 	fullscreen?: boolean;
@@ -126,11 +128,6 @@ const activeBuildingId = ref<number | null>(null);
 const popupEl = useTemplateRef('popupEl');
 let popupOverlay: Overlay | null = null;
 
-watchDebounced(
-	() => props.points,
-	() => updatePoints(props.points ?? [], map, props.fitPoints),
-	{ debounce: 100 }
-);
 watch(
 	() => [props.highlightedPointId, activeBuildingId.value],
 	([highlightedId, activeId]) => {
@@ -152,6 +149,28 @@ function closePopup() {
 	selectedBuildingIds.value = null;
 	popupOverlay?.setPosition(undefined);
 }
+watchDebounced(
+	[() => props.points, () => props.focusPoints],
+	() => {
+		// A filtered-out building must no longer be selectable in an old popup.
+		if (
+			selectedBuildingIds.value?.some(
+				(id) => !props.points?.some((point) => point.id === id)
+			)
+		) {
+			closePopup();
+			activeBuildingId.value = null;
+			setHighlightedPoint(null);
+		}
+		updatePoints(
+			props.points ?? [],
+			map,
+			props.fitPoints,
+			props.focusPoints
+		);
+	},
+	{ debounce: 100 }
+);
 watch(selectedBuildingIds, (ids) => {
 	if (!ids) {
 		closePopup();
@@ -355,7 +374,12 @@ const onRenderComplete = () => {
 
 	if (fullscreen.value) {
 		// If first render is in fullscreen, fit points after initial render
-		updatePoints(props.points ?? [], map, props.fitPoints);
+		updatePoints(
+			props.points ?? [],
+			map,
+			props.fitPoints,
+			props.focusPoints
+		);
 	}
 };
 
@@ -441,7 +465,7 @@ const initMap = () => {
 	window.addEventListener('pointerup', onPointerUp);
 	window.addEventListener('pointercancel', onPointerUp);
 
-	updatePoints(props.points ?? [], map, props.fitPoints);
+	updatePoints(props.points ?? [], map, props.fitPoints, props.focusPoints);
 
 	setHighlightedPoint(props.highlightedPointId ?? null);
 

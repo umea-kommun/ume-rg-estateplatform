@@ -163,14 +163,30 @@
 						@skip="showBuildingSelector = false"
 						class="mt-6"
 					>
-						<template #header-btn v-if="!selectedBuilding">
-							<building-map-selector @select="selectBuilding" />
-						</template>
 						<building-selector
 							:selected-building="selectedBuilding"
 							@select="selectBuilding"
 							@select-room="selectBuildingAndRoom"
-						/>
+						>
+							<template
+								#search-action="{
+									searchResultIds,
+									search,
+									updateSearch,
+									submitSearch,
+									searchLoading,
+								}"
+							>
+								<building-map-selector
+									:search-result-ids="searchResultIds"
+									:search="search"
+									:search-loading="searchLoading"
+									@update:search="updateSearch"
+									@submit-search="submitSearch"
+									@select="selectBuilding"
+								/>
+							</template>
+						</building-selector>
 						<v-alert
 							v-if="
 								selectedBuilding &&

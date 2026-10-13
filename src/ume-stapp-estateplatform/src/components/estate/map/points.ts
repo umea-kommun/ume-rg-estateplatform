@@ -1,4 +1,4 @@
-import { createEmpty, extend } from 'ol/extent';
+import { createEmpty, extend, isEmpty } from 'ol/extent';
 import CircleStyle from 'ol/style/Circle';
 import Cluster from 'ol/source/Cluster';
 import Feature, { FeatureLike } from 'ol/Feature';
@@ -24,6 +24,13 @@ const BOUNDS = {
 	lonMin: 19.624,
 	lonMax: 21.8917,
 };
+
+// Only show points within Umeå municipality bounds
+const isWithinBounds = (p: IMapPoint) =>
+	p.lat <= BOUNDS.latMax &&
+	p.lat >= BOUNDS.latMin &&
+	p.lon >= BOUNDS.lonMin &&
+	p.lon <= BOUNDS.lonMax;
 
 export function createPointLayers() {
 	const pointSource = new VectorSource();
@@ -140,16 +147,10 @@ export function createPointLayers() {
 	const updatePoints = (
 		points: IMapPoint[],
 		map: Map | null,
-		fitPoints?: boolean
+		fitPoints?: boolean,
+		focusPoints?: IMapPoint[] | null
 	) => {
-		// Only show points within Umeå municipality bounds
-		points = points.filter(
-			(p) =>
-				p.lat <= BOUNDS.latMax &&
-				p.lat >= BOUNDS.latMin &&
-				p.lon >= BOUNDS.lonMin &&
-				p.lon <= BOUNDS.lonMax
-		);
+		points = points.filter(isWithinBounds);
 
 		if (!points.length) {
 			pointSource.clear(true);
@@ -181,7 +182,16 @@ export function createPointLayers() {
 		clusterSource.refresh();
 
 		if (fitPoints && map) {
-			map.getView().fit(extent, {
+			// Fit to the focus points (e.g. the current search hits) when there
+			// are any, so the map opens on them while still showing all points.
+			const focusExtent = createEmpty();
+			for (const p of focusPoints?.filter(isWithinBounds) ?? []) {
+				extend(
+					focusExtent,
+					new Point(to3016([p.lon, p.lat])).getExtent()
+				);
+			}
+			map.getView().fit(isEmpty(focusExtent) ? extent : focusExtent, {
 				size: map.getSize(),
 				padding: [
 					FIT_POINTS_PADDING,
