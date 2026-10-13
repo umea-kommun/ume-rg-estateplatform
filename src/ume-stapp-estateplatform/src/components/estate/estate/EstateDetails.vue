@@ -18,6 +18,8 @@
 								:breadcrumbs="breadcrumbs"
 							/>
 
+							<turkos-banners class="my-2" />
+
 							<div
 								class="d-flex align-start justify-space-between"
 							>
@@ -116,6 +118,7 @@
 
 <script setup lang="ts">
 import AppContent from '@/components/app/AppContent.vue';
+import { TurkosBanners } from '@turkos/controlcenter-client';
 import { DispatchType } from '@/models/Enums';
 import {
 	IEstateBuilding,

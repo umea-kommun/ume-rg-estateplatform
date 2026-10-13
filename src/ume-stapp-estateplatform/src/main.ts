@@ -12,6 +12,8 @@ import IAuthManager from './plugins/auth/IAuthManager';
 import Validation from './plugins/validation';
 import Auth from '@/plugins/auth/index';
 import '@turkos/components/styles';
+import { createBanners } from '@turkos/controlcenter-client';
+import '@turkos/controlcenter-client/styles';
 import './themes/fontstyle.css';
 import moment from 'moment';
 import 'moment/dist/locale/sv';
@@ -63,4 +65,22 @@ app.use(appInsights, {
 });
 
 Validation(i18n);
-app.use(store).use(router).use(i18n).use(vuetify).mount('#app');
+app.use(store)
+	.use(router)
+	.use(
+		createBanners({
+			apiBaseUrl: Config.VUE_APP_CONTROLCENTER_URL,
+			application: Config.VUE_APP_CONTROLCENTER_APPLICATION,
+			router,
+			onError: (error: Error) =>
+				ErrorService.onError({
+					err: error,
+					log: true,
+					hidden: true,
+					info: '@turkos/controlcenter-client',
+				}),
+		})
+	)
+	.use(i18n)
+	.use(vuetify)
+	.mount('#app');

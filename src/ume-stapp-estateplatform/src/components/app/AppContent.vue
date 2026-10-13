@@ -2,6 +2,7 @@
      src/ume-stapp-minasidor/src/components/app/AppContent.vue -->
 <template>
 	<div class="app-content" :class="props.size">
+		<turkos-banners default-position class="banners-wrap" />
 		<div class="alert-wrap" v-if="showWarningMessage">
 			<v-alert
 				v-model="showWarningMessage"
@@ -32,6 +33,7 @@ import { computed, PropType } from 'vue';
 import { AppContentSize, MutationType } from '@/models/Enums';
 import { useI18n } from 'vue-i18n';
 import AppLoadingSpinner from '@/components/app/AppLoadingSpinner.vue';
+import { TurkosBanners } from '@turkos/controlcenter-client';
 import { useTitle } from '@vueuse/core';
 import { useStore } from 'vuex';
 import { IRootState } from '@/models/Interfaces';
@@ -112,6 +114,11 @@ const showWarningMessage = computed({
 	background: none;
 }
 .app-content {
+	.banners-wrap {
+		max-width: $site-max-width;
+		margin: 0 auto;
+		padding: 16px $site-horizontal-padding 0;
+	}
 	.v-container,
 	.alert-wrap {
 		padding: $site-content-vertical-padding $site-horizontal-padding;
@@ -135,7 +142,8 @@ const showWarningMessage = computed({
 	}
 
 	&.Size-Narrow {
-		.v-container {
+		.v-container,
+		.banners-wrap {
 			max-width: $site-max-width-narrow;
 		}
 	}
@@ -144,6 +152,10 @@ const showWarningMessage = computed({
 			max-width: none;
 
 			padding: 0;
+		}
+		.banners-wrap {
+			max-width: none;
+			padding-bottom: 16px;
 		}
 	}
 

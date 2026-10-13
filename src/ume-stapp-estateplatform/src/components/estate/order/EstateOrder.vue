@@ -11,6 +11,7 @@
 					:breadcrumbs="breadcrumbs"
 					full-width
 				/>
+				<turkos-banners class="my-2" />
 				<estate-order-completed v-if="hasSubmitted" />
 				<div v-else class="mt-2">
 					<div class="pb-4">
@@ -304,6 +305,7 @@
 <script lang="ts" setup>
 import '@/themes/estate.scss';
 import AppContent from '@/components/app/AppContent.vue';
+import { TurkosBanners } from '@turkos/controlcenter-client';
 import {
 	IBuildingDetails,
 	IBuildingRoom,

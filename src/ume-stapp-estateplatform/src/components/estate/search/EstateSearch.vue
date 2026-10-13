@@ -6,6 +6,7 @@
 		<div class="container">
 			<div class="content px-6 pb-4">
 				<nav-breadcrumbs class="mt-4 mb-2" :breadcrumbs="breadcrumbs" />
+				<turkos-banners class="my-2" />
 				<!--
 					Portal identity. Kept search-neutral so the page still
 					reads as complete when ErrorReport hides the actions.
@@ -160,6 +161,7 @@ import { SearchFilter } from '@/models/Interfaces';
 import { watchDebounced } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 import AppContent from '@/components/app/AppContent.vue';
+import { TurkosBanners } from '@turkos/controlcenter-client';
 import '@/themes/estate.scss';
 import { EstateRoutes } from '@/router/routes';
 import { useI18n } from 'vue-i18n';

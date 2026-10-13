@@ -6,6 +6,8 @@
 	>
 		<estate-start-hero />
 
+		<turkos-banners class="mt-4" />
+
 		<!-- Temp: Banner för Release Notes -->
 		<v-alert
 			class="release-banner mt-5"
@@ -38,6 +40,7 @@
 
 <script setup lang="ts">
 import AppContent from '@/components/app/AppContent.vue';
+import { TurkosBanners } from '@turkos/controlcenter-client';
 import EstateStartHero from './EstateStartHero.vue';
 import EstateStartActions from './EstateStartActions.vue';
 import EstateOngoingErrands from './EstateOngoingErrands.vue';

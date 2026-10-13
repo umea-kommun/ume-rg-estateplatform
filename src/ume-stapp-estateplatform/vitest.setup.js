@@ -52,3 +52,4 @@ vi.stubGlobal('crypto', {
 // Define global stubs for other components.
 config.global.stubs['base-login-methods'] = TEMPLATE_DIV;
 config.global.stubs['cookie-banner'] = TEMPLATE_DIV;
+config.global.stubs['TurkosBanners'] = TEMPLATE_DIV;

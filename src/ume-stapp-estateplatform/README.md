@@ -18,6 +18,9 @@ need reconciling.
   The only backend for estate data, work orders, favorites, feedback and the
   runtime `GET /features` flags and authenticated `GET /me` capabilities.
 - **IDProxy** (`authtoken.umea.se`) — one login client, internal AD only.
+- **ControlCenter** (`VUE_APP_CONTROLCENTER_URL`, `ume-rg-general`): operational messages (banners) shown
+  through `@turkos/controlcenter-client` for the application key `VUE_APP_CONTROLCENTER_APPLICATION`.
+  The key must be registered in ControlCenter for each environment.
 
 ## Running it
 

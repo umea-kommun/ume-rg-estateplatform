@@ -11,6 +11,7 @@
 					:breadcrumbs="breadcrumbs"
 					full-width
 				/>
+				<turkos-banners class="my-2" />
 				<estate-space-requirement-completed v-if="hasSubmitted" />
 				<vee-form
 					v-else
@@ -353,6 +354,7 @@
 <script lang="ts" setup>
 import '@/themes/estate.scss';
 import AppContent from '@/components/app/AppContent.vue';
+import { TurkosBanners } from '@turkos/controlcenter-client';
 import {
 	IBuildingDetails,
 	IBuildingRoom,
