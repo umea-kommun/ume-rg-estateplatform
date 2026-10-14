@@ -22,6 +22,9 @@
     <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="10.2.3" />
     <PackageVersion Include="SymSpell" Version="6.7.3" />
     <PackageVersion Include="System.Collections.Immutable" Version="10.0.2" />
+    <!-- Pinned above the 9.0.11 that Microsoft.Data.SqlClient brings in (GHSA-846f-f764-76mx, GHSA-2fmv-rv2c-59x7).
+         Remove when SqlClient itself depends on a patched version. -->
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
     <PackageVersion Include="Umea.se.TestToolkit" Version="2026.9.21.26" />
     <PackageVersion Include="Umea.se.Toolkit" Version="2026.10.7.27" />
     <PackageVersion Include="coverlet.collector" Version="10.1.0" />
