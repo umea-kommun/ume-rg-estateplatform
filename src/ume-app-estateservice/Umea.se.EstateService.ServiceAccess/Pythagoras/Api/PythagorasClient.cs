@@ -658,7 +658,14 @@ where TValue : class
             .PostAsync(requestUri, content, cancellationToken)
             .ConfigureAwait(false);
 
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            string responseBody = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            throw new PythagorasApiException(
+                $"UploadWorkOrderDocument failed: {(int)response.StatusCode} {response.ReasonPhrase}. WorkOrder: {workOrderId}, File: {fileName}, Size: {fileSize}, ParentId: {parentId}, ActionTypeId: {actionTypeId}, ActionTypeStatusId: {actionTypeStatusId}. Response: {responseBody}",
+                response.StatusCode,
+                responseBody);
+        }
     }
 
     public Task<WorkOrderDto?> GetWorkOrderAsync(int workOrderId, CancellationToken cancellationToken = default)

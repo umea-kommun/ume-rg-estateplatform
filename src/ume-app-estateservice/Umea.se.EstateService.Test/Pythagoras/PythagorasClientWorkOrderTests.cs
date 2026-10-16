@@ -236,13 +236,19 @@ public class PythagorasClientWorkOrderTests
     }
 
     [Fact]
-    public async Task UploadWorkOrderDocumentAsync_NonSuccess_Throws()
+    public async Task UploadWorkOrderDocumentAsync_NonSuccess_ThrowsPythagorasApiExceptionWithBody()
     {
-        (PythagorasClient client, _, _) = Build(HttpStatusCode.BadRequest, "");
+        (PythagorasClient client, _, _) = Build(HttpStatusCode.BadRequest, "invalid file type");
         using MemoryStream stream = new([1, 2, 3]);
 
-        await Should.ThrowAsync<HttpRequestException>(
-            async () => await client.UploadWorkOrderDocumentAsync(15, stream, "plan.pdf", 3));
+        PythagorasApiException ex = await Should.ThrowAsync<PythagorasApiException>(
+            async () => await client.UploadWorkOrderDocumentAsync(15, stream, "plan.pdf", 3, parentId: 42));
+
+        ex.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        ex.ResponseBody.ShouldBe("invalid file type");
+        ex.Message.ShouldContain("plan.pdf");
+        ex.Message.ShouldContain("ParentId: 42");
+        ex.Message.ShouldContain("invalid file type");
     }
 
     [Fact]
