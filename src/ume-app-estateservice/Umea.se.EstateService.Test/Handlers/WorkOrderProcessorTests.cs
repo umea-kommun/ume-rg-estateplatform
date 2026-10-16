@@ -410,6 +410,51 @@ public class WorkOrderProcessorTests : IDisposable
         reloaded.NextSyncAt.ShouldNotBeNull();
     }
 
+    [Fact]
+    public async Task UploadFiles_DuplicateClientNames_UploadsUniquePositionalNames()
+    {
+        WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport);
+        AddFile(workOrder, "image.jpg");
+        AddFile(workOrder, "image.JPG");
+        await _repository.UpdateAsync(workOrder);
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        UploadedFileNames().ShouldBe(["555-1.jpg", "555-2.jpg"]);
+    }
+
+    [Fact]
+    public async Task UploadFiles_FirstAlreadyUploaded_KeepsNumberingOnRetry()
+    {
+        WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport);
+        AddFile(workOrder, "image.jpg", uploaded: true);
+        AddFile(workOrder, "image.jpg");
+        workOrder.PythagorasWorkOrderId = 555;
+        await _repository.UpdateAsync(workOrder);
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        UploadedFileNames().ShouldBe(["555-2.jpg"]);
+    }
+
+    private static void AddFile(WorkOrderEntity workOrder, string fileName, bool uploaded = false) =>
+        workOrder.Files.Add(new WorkOrderFileEntity
+        {
+            FileName = fileName,
+            ContentType = "image/jpeg",
+            FileSize = 3,
+            StoragePath = $"{workOrder.Uid}/{Guid.NewGuid():N}.jpg",
+            Uploaded = uploaded,
+            CreatedAt = DateTimeOffset.UtcNow,
+        });
+
+    private List<string> UploadedFileNames() =>
+    [
+        .. _fakeClient.WorkOrderRequests
+            .Where(r => r.Method == "UploadDocument")
+            .Select(r => r.Parameters!.Split('&')[0]["fileName=".Length..])
+    ];
+
     private WorkOrderProcessor CreateProcessor(bool statusSyncEnabled) => new(
         _repository, _fakeClient, _classifier, _fileStorage,
         CreateConfig(statusSyncEnabled: statusSyncEnabled),

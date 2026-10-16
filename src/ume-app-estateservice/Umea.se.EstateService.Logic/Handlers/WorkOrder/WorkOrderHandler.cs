@@ -177,7 +177,10 @@ public class WorkOrderHandler(
 
             foreach (WorkOrderFileUpload file in request.Files)
             {
-                string relativePath = Path.Combine(workOrder.Uid.ToString(), file.FileName);
+                // Client file names aren't unique (iOS sends every photo as image.jpg).
+                string relativePath = Path.Combine(
+                    workOrder.Uid.ToString(),
+                    $"{Guid.NewGuid():N}{Path.GetExtension(file.FileName).ToLowerInvariant()}");
 
                 await fileStorage.SaveAsync(relativePath, file.Stream, cancellationToken);
 

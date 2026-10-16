@@ -87,6 +87,34 @@ public class WorkOrderHandlerTests : IDisposable
         detail.Location.ShouldBe("Indoor");
     }
 
+    [Fact]
+    public async Task SubmitWorkOrder_FilesWithSameName_StoresEachUnderUniquePath()
+    {
+        CreateWorkOrderRequest request = new()
+        {
+            BuildingId = 1,
+            WorkOrderType = WorkOrderType.ErrorReport,
+            Location = "Indoor",
+            Description = "Två foton",
+            Files = [JpegUpload("image.jpg"), JpegUpload("image.jpg")]
+        };
+
+        WorkOrderSubmissionModel result = await _handler.SubmitWorkOrderAsync(request, "test@example.com");
+
+        WorkOrderEntity entity = await _dbContext.WorkOrders.Include(w => w.Files).SingleAsync(w => w.Uid == result.Id);
+        entity.Files.Select(f => f.FileName).ShouldBe(["image.jpg", "image.jpg"]);
+        entity.Files.Select(f => f.StoragePath).Distinct().Count().ShouldBe(2);
+        entity.Files.ShouldAllBe(f => f.StoragePath.StartsWith(result.Id.ToString()) && f.StoragePath.EndsWith(".jpg"));
+    }
+
+    private static WorkOrderFileUpload JpegUpload(string fileName) => new()
+    {
+        FileName = fileName,
+        ContentType = "image/jpeg",
+        FileSize = 4,
+        Stream = new MemoryStream([0xFF, 0xD8, 0xFF, 0xE0])
+    };
+
     [Theory]
     [InlineData("", "Building One")]
     [InlineData("   ", "Building One")]
@@ -1548,6 +1576,7 @@ public class WorkOrderHandlerTests : IDisposable
             ["ASPNETCORE_ENVIRONMENT"] = "Test",
             ["WorkOrder:FileStorage"] = Path.Combine(Path.GetTempPath(), "workOrder-handler-tests"),
             ["WorkOrder:MaxRetries"] = "3",
+            ["WorkOrder:FileValidation:AllowedContentTypes:0"] = "image/jpeg",
             ["WorkOrder:StatusSyncEnabled"] = statusSyncEnabled ? "true" : "false",
             ["WorkOrder:StatusRefreshCooldownSeconds"] = cooldownSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture),
             ["Pythagoras:ApiKey"] = "test",

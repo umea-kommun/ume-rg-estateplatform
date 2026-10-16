@@ -262,16 +262,27 @@ public class WorkOrderProcessor(
         int? actionTypeId = _config.DocumentActionTypeId;
         int? actionTypeStatusId = _config.DocumentActionTypeStatusId;
 
-        foreach (WorkOrderFileEntity file in workOrder.Files.Where(f => !f.Uploaded))
+        // Pythagoras rejects duplicate names within a work order. Numbering over all files,
+        // not just the remaining ones, keeps each name stable across retries.
+        List<WorkOrderFileEntity> files = [.. workOrder.Files.OrderBy(f => f.Id)];
+        for (int i = 0; i < files.Count; i++)
         {
+            WorkOrderFileEntity file = files[i];
+            if (file.Uploaded)
+            {
+                continue;
+            }
+
             if (!await fileStorage.ExistsAsync(file.StoragePath, ct))
             {
                 throw new FileNotFoundException($"Required file missing from storage: {file.StoragePath}");
             }
 
+            string uploadFileName = $"{workOrderId}-{i + 1}{Path.GetExtension(file.FileName).ToLowerInvariant()}";
+
             await using Stream stream = await fileStorage.OpenReadAsync(file.StoragePath, ct);
             await pythagorasClient.UploadWorkOrderDocumentAsync(
-                workOrderId, stream, file.FileName, file.FileSize,
+                workOrderId, stream, uploadFileName, file.FileSize,
                 parentId, actionTypeId, actionTypeStatusId, ct);
 
             file.Uploaded = true;
