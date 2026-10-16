@@ -19,7 +19,7 @@
 	"dependencies": {
 		"@microsoft/applicationinsights-web": "^2.8.18",
 		"@turkos/components": "^0.1.2",
-		"@turkos/controlcenter-client": "^2026.275.1",
+		"@turkos/controlcenter-client": "^2026.289.2",
 		"@vee-validate/rules": "^4.15.1",
 		"@vueuse/core": "^10.11.1",
 		"axios": "^1.20.0",
