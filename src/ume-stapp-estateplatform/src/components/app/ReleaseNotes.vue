@@ -16,52 +16,7 @@
 
 			<v-divider class="my-8" />
 
-			<section class="release">
-				<h2>Release 2026-10-01</h2>
-				<p class="subtitle">
-					I denna release introducerar vi en ny startsida, mina
-					ärenden, nya funktioner och mindre förbättringar.
-				</p>
-
-				<h3>Vad är nytt</h3>
-				<ul>
-					<li>
-						Ny startsida med snabblänkar till bl.a. Felanmälan samt
-						snabbsök.
-					</li>
-					<li>
-						Ny funktion Mina ärenden, där du ser dina inskickade
-						ärenden och deras aktuella status.
-					</li>
-					<li>
-						Nytt sökfilter för fastigheter och byggnader, där
-						byggnader visas som standard.
-					</li>
-					<li>
-						Ny design av korten för byggnader/fastigheter. Rum,
-						kontaktpersoner och handlingar visas nu under egna
-						flikar.
-					</li>
-					<li>
-						Ny våningsväljare. Våning 1 visas först om byggnaden har
-						en sådan.
-					</li>
-					<li>
-						Byggnader som saknar rumsinformation visar inte längre
-						en tom rumslista.
-					</li>
-					<li>
-						Förbättring av felanmälan/beställning-flödet. Alla steg
-						visas på en gång så att det ska bli enklare och
-						tydligare.
-					</li>
-					<li>
-						Förbättrad tillgänglighetsanpassning för användare av
-						text-till-tal.
-					</li>
-					<li>Mindre buggfixar och förbättringar av stabiliteten.</li>
-				</ul>
-			</section>
+			<turkos-release-notes class="release-list" />
 		</div>
 	</app-content>
 </template>
@@ -69,6 +24,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { TurkosReleaseNotes } from '@turkos/controlcenter-client';
 import AppContent from '@/components/app/AppContent.vue';
 import NavBreadcrumbs from '@/components/shared/NavBreadcrumbs.vue';
 import { AppContentSize } from '@/models/Enums';
@@ -109,32 +65,37 @@ const breadcrumbs = computed(() => {
 		font-size: size(20);
 	}
 
-	.release {
-		h2 {
+	.release-list {
+		:deep(.turkos-release-notes__title) {
 			font-size: size(28);
 			line-height: 1.3;
 		}
 
-		h3 {
+		:deep(.turkos-release-notes__heading) {
 			font-size: size(24);
+			margin-top: 16px;
 		}
 
-		.subtitle {
+		:deep(.turkos-release-notes__intro) {
 			color: $grey-darken-1;
-			font-size: size(18);
 			font-style: italic;
-			margin-bottom: 40px;
 		}
 
-		ul {
+		:deep(p),
+		:deep(li) {
+			font-size: size(18);
+			line-height: 1.6;
+		}
+
+		:deep(.turkos-release-notes__items) {
 			padding-left: 24px;
 		}
 
-		li + li {
+		:deep(li + li) {
 			margin-top: 6px;
 		}
 
-		li::marker {
+		:deep(li::marker) {
 			color: $grey-darken-1;
 		}
 	}

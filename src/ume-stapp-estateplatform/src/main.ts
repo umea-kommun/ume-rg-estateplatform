@@ -12,7 +12,7 @@ import IAuthManager from './plugins/auth/IAuthManager';
 import Validation from './plugins/validation';
 import Auth from '@/plugins/auth/index';
 import '@turkos/components/styles';
-import { createBanners } from '@turkos/controlcenter-client';
+import { createControlCenterClient } from '@turkos/controlcenter-client';
 import '@turkos/controlcenter-client/styles';
 import './themes/fontstyle.css';
 import moment from 'moment';
@@ -68,7 +68,7 @@ Validation(i18n);
 app.use(store)
 	.use(router)
 	.use(
-		createBanners({
+		createControlCenterClient({
 			apiBaseUrl: Config.VUE_APP_CONTROLCENTER_URL,
 			application: Config.VUE_APP_CONTROLCENTER_APPLICATION,
 			router,

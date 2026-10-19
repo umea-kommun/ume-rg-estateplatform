@@ -8,19 +8,10 @@
 
 		<turkos-banners class="mt-4" />
 
-		<!-- Temp: Banner för Release Notes -->
-		<v-alert
-			class="release-banner mt-5"
-			icon="info"
-			variant="flat"
-			closable
-		>
-			<span aria-hidden="true">🎉 </span
-			>{{ $t('component.releaseBanner.text') }}
-			<router-link :to="{ name: EstateRoutes.ReleaseNotes }">
-				{{ $t('component.releaseBanner.readMore') }}
-			</router-link>
-		</v-alert>
+		<turkos-release-banner
+			class="mt-4"
+			:to="{ name: EstateRoutes.ReleaseNotes }"
+		/>
 
 		<estate-start-actions />
 
@@ -40,7 +31,10 @@
 
 <script setup lang="ts">
 import AppContent from '@/components/app/AppContent.vue';
-import { TurkosBanners } from '@turkos/controlcenter-client';
+import {
+	TurkosBanners,
+	TurkosReleaseBanner,
+} from '@turkos/controlcenter-client';
 import EstateStartHero from './EstateStartHero.vue';
 import EstateStartActions from './EstateStartActions.vue';
 import EstateOngoingErrands from './EstateOngoingErrands.vue';
@@ -79,11 +73,6 @@ import { EstateRoutes } from '@/router/routes';
 
 	.feedback {
 		margin-top: 96px;
-	}
-
-	.release-banner a {
-		color: $primary;
-		font-weight: bold;
 	}
 
 	@media only screen and (max-width: $estate-mobile-threshold) {
