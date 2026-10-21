@@ -10,7 +10,7 @@ resources:
     - repository: templates
       type: git
       name: Turkos/ume-pipeline-templates
-      ref: refs/tags/release/v260629T1533-18638
+      ref: refs/tags/release/v261020T1230-20166
 
 parameters:
   - name: environment
@@ -194,4 +194,5 @@ stages:
           environment: ${{ parameters.environment }}
           projectFolderName: ume-stapp-estateplatform
           deploymentToken: $(estateplatform-deployment-token)
+          shouldRequireEntraSignIn: ${{ eq(parameters.environment, 'dev') }}
   # ------

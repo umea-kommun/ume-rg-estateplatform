@@ -19,6 +19,9 @@
     },
     "project": {
       "value": "Turkos"
+    },
+    "appRegistrationClientId": {
+      "value": "2736dc0e-131c-417d-88c2-0484a284ca3f"
     }
   }
 }

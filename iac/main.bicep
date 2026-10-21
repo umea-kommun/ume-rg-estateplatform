@@ -22,6 +22,9 @@ param organization string
 @description('Azure Devops Project.')
 param project string
 
+@description('Client ID of the Entra app registration used for sign-in to the Static Web App in dev.')
+param appRegistrationClientId string = ''
+
 @description('Personal Access Token for Azure DevOps.')
 param personalAccessToken string
 
@@ -35,6 +38,7 @@ var resourceGroupTags = {
   LastUpdated: dateNowUtc
 }
 var resourceGroupName = '${companyPrefix}-${resourceGroupType}-${purpose}-${environment}'
+var shouldRequireEntraSignIn = environment == 'dev'
 
 var databasePurposes = {
   estateservice: 'estateservice'
@@ -79,7 +83,7 @@ resource resourceGroup 'Microsoft.Resources/resourceGroups@2025-04-01' = {
 }
 
 // Default Role Assignments
-module defaultRoleAssignments 'br/ume:umea.roleassignments.turkos.defaults:v2.0' = {
+module defaultRoleAssignments 'br/ume:umea.roleassignments.turkos.defaults:v2.2' = {
   scope: resourceGroup
   name: 'defaultRoleAssignments'
   params: {
@@ -147,8 +151,21 @@ module keyVault 'br/ume:microsoft.keyvault.vaults:v2.1' = {
   }
 }
 
+// User assigned identity - Static Web App sign-in
+module identity_staticWebApp_estateplatform 'br/ume:microsoft.managedidentity.userassignedidentities:v2.1' = if (shouldRequireEntraSignIn) {
+  scope: resourceGroup
+  name: 'identity_staticWebApp_estateplatform'
+  params: {
+    environment: environment
+    companyPrefix: companyPrefix
+    location: location
+    purpose: purpose
+    dateNowUtc: dateNowUtc
+  }
+}
+
 // Static Web App - EstatePlatform
-module staticWebApp_estateplatform 'br/ume:microsoft.web.staticsites:v2.3' = {
+module staticWebApp_estateplatform 'br/ume:microsoft.web.staticsites:v2.4' = {
   scope: resourceGroup
   name: 'staticWebApp_estateplatform'
   params: {
@@ -157,6 +174,15 @@ module staticWebApp_estateplatform 'br/ume:microsoft.web.staticsites:v2.3' = {
     location: 'westeurope' // Remove when available in swedencentral. Static Web Apps in Sweden at https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/table
     purpose: purpose
     dateNowUtc: dateNowUtc
+
+    identityType: shouldRequireEntraSignIn ? 'UserAssigned' : 'SystemAssigned'
+    userAssignedIdentityIds: shouldRequireEntraSignIn ? [identity_staticWebApp_estateplatform!.outputs.id] : []
+    environmentVariables: shouldRequireEntraSignIn
+      ? {
+          AZURE_CLIENT_ID: appRegistrationClientId
+          OVERRIDE_USE_MI_FIC_ASSERTION_CLIENTID: identity_staticWebApp_estateplatform!.outputs.clientId
+        }
+      : {}
   }
 }
 
@@ -170,12 +196,12 @@ module appServicePlan 'br/ume:microsoft.web.serverfarms:v2.3' = {
     purpose: purpose
     dateNowUtc: dateNowUtc
 
-    skuName: environment == 'prod' ? 'P0V4' : 'P0V4' // TODO: Prod should use P1V4, it is currently unavailable - 2026-03-18
+    skuName: environment == 'prod' ? 'P1V4' : 'P0V4'
   }
 }
 
 // App Service - EstateService
-module app_estateservice 'br/ume:microsoft.web.sites:v2.3' = {
+module app_estateservice 'br/ume:microsoft.web.sites:v2.4' = {
   scope: resourceGroup
   name: 'app_estateservice'
   params: {
