@@ -13,7 +13,7 @@ resources:
     - repository: templates
       type: git
       name: Turkos/ume-pipeline-templates
-      ref: refs/tags/release/v260629T1533-18638
+      ref: refs/tags/release/v261022T0955-20264
 
 variables:
   - template: pipelines/general/template-default-pipeline-variables.yml@templates
