@@ -10,7 +10,7 @@ resources:
     - repository: templates
       type: git
       name: Turkos/ume-pipeline-templates
-      ref: refs/tags/release/v261020T1230-20166
+      ref: refs/tags/release/v261022T0917-20261
 
 parameters:
   - name: environment
