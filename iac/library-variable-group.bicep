@@ -18,6 +18,7 @@ param openaiEndpoint string
 param applicationInsightsConnectionString string
 param estateplatformName string
 
+@secure()
 param personalAccessToken string
 param organization string
 param project string
@@ -61,7 +62,7 @@ resource staticWebApp_estateplatform 'Microsoft.Web/staticSites@2025-03-01' exis
 }
 
 // Deployment Script - Library Variables
-module libraryVariablesDeploymentScript 'br/ume:umea.deploymentscripts.libraryvariables:v2.4' = {
+module libraryVariablesDeploymentScript 'br/ume:umea.deploymentscripts.libraryvariables:v2.6' = {
   name: 'libraryVariablesDeploymentScript'
   params: {
     environment: environment

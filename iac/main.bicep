@@ -25,6 +25,7 @@ param project string
 @description('Client ID of the Entra app registration used for sign-in to the Static Web App in dev.')
 param appRegistrationClientId string = ''
 
+@secure()
 @description('Personal Access Token for Azure DevOps.')
 param personalAccessToken string
 
