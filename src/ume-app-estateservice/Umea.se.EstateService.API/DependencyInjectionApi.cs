@@ -25,6 +25,8 @@ public static class DependencyInjectionApi
             timeout: TimeSpan.FromSeconds(20))
             .AddCheck<HealthChecks.FailedWorkOrdersHealthCheck>("workorder-queue",
             failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded)
+            .AddCheck<HealthChecks.DataSyncHealthCheck>("data-sync",
+            failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded)
             ;
 
         return services;

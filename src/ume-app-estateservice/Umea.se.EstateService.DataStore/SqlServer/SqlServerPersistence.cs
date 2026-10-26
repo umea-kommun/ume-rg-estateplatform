@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Umea.se.EstateService.DataStore.EfCore;
@@ -50,6 +51,7 @@ public sealed class SqlServerPersistence(
 
             await using IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(ct);
             SqlTransaction sqlTransaction = (SqlTransaction)transaction.GetDbTransaction();
+            IRelationalModel relationalModel = context.Model.GetRelationalModel();
 
             // Clear existing data (FK-safe order)
             await context.Database.ExecuteSqlRawAsync("DELETE FROM [BuildingAscendants]", ct);
@@ -60,13 +62,13 @@ public sealed class SqlServerPersistence(
             await context.Database.ExecuteSqlRawAsync("DELETE FROM [SyncMetadata]", ct);
 
             // Bulk insert all tables
-            await BulkInsertAsync(sqlConnection, sqlTransaction, "Estates", BuildEstatesTable(snapshot.Estates), ct);
-            await BulkInsertAsync(sqlConnection, sqlTransaction, "Buildings", BuildBuildingsTable(snapshot.Buildings), ct);
-            await BulkInsertAsync(sqlConnection, sqlTransaction, "Floors", BuildFloorsTable(snapshot.Floors), ct);
-            await BulkInsertAsync(sqlConnection, sqlTransaction, "Rooms", BuildRoomsTable(snapshot.Rooms), ct);
-            await BulkInsertAsync(sqlConnection, sqlTransaction, "BuildingAscendants",
+            await BulkInsertAsync(sqlConnection, sqlTransaction, relationalModel, "Estates", BuildEstatesTable(snapshot.Estates), ct);
+            await BulkInsertAsync(sqlConnection, sqlTransaction, relationalModel, "Buildings", BuildBuildingsTable(snapshot.Buildings), ct);
+            await BulkInsertAsync(sqlConnection, sqlTransaction, relationalModel, "Floors", BuildFloorsTable(snapshot.Floors), ct);
+            await BulkInsertAsync(sqlConnection, sqlTransaction, relationalModel, "Rooms", BuildRoomsTable(snapshot.Rooms), ct);
+            await BulkInsertAsync(sqlConnection, sqlTransaction, relationalModel, "BuildingAscendants",
                 BuildAscendantsTable(snapshot.BuildingAscendants), ct);
-            await BulkInsertAsync(sqlConnection, sqlTransaction, "SyncMetadata",
+            await BulkInsertAsync(sqlConnection, sqlTransaction, relationalModel, "SyncMetadata",
                 BuildSyncMetadataTable(refreshTime, snapshot), ct);
 
             await transaction.CommitAsync(ct);
@@ -77,9 +79,10 @@ public sealed class SqlServerPersistence(
         });
     }
 
-    private static async Task BulkInsertAsync(
+    private async Task BulkInsertAsync(
         SqlConnection connection,
         SqlTransaction transaction,
+        IRelationalModel relationalModel,
         string tableName,
         DataTable table,
         CancellationToken ct)
@@ -87,6 +90,11 @@ public sealed class SqlServerPersistence(
         if (table.Rows.Count == 0)
         {
             return;
+        }
+
+        if (relationalModel.FindTable(tableName, null) is ITable storeTable)
+        {
+            TruncateOverlongStrings(table, storeTable, Logger);
         }
 
         using SqlBulkCopy bulkCopy = new(connection, SqlBulkCopyOptions.Default, transaction);
@@ -100,6 +108,37 @@ public sealed class SqlServerPersistence(
         }
 
         await bulkCopy.WriteToServerAsync(table, ct);
+    }
+
+    /// <summary>
+    /// Truncates string values that exceed their column's max length, so one oversized
+    /// free-text value from Pythagoras cannot fail the whole snapshot transaction.
+    /// Columns written through a value converter (JSON, enums) are left intact, since a truncated
+    /// value would fail to deserialize and break loading the snapshot back from the database.
+    /// </summary>
+    internal static void TruncateOverlongStrings(DataTable table, ITable storeTable, ILogger logger)
+    {
+        foreach (DataColumn column in table.Columns)
+        {
+            if (column.DataType != typeof(string)
+                || storeTable.FindColumn(column.ColumnName) is not IColumn storeColumn
+                || storeColumn.MaxLength is not int maxLength
+                || storeColumn.PropertyMappings.Any(m => m.Property.GetValueConverter() is not null))
+            {
+                continue;
+            }
+
+            foreach (DataRow row in table.Rows)
+            {
+                if (row[column] is string value && value.Length > maxLength)
+                {
+                    logger.LogWarning(
+                        "Truncating {Table}.{Column} for Id {Id} from {Length} to {MaxLength} characters. Original value: {Value}",
+                        storeTable.Name, column.ColumnName, table.Columns.Contains("Id") ? row["Id"] : null, value.Length, maxLength, value);
+                    row[column] = value[..maxLength];
+                }
+            }
+        }
     }
 
     #region DataTable Builders

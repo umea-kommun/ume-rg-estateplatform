@@ -164,7 +164,7 @@ public class EstateDbContext(DbContextOptions<EstateDbContext> options) : DbCont
                 .HasPrecision(18, 4);
 
             // Building properties
-            entity.Property(e => e.YearOfConstruction).HasMaxLength(50);
+            entity.Property(e => e.YearOfConstruction).HasMaxLength(200);
             entity.Property(e => e.BuildingCondition).HasMaxLength(200);
             entity.Property(e => e.ExternalOwnerStatus).HasMaxLength(200);
             entity.Property(e => e.ExternalOwnerName).HasMaxLength(500);

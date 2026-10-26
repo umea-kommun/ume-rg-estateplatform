@@ -63,4 +63,20 @@ public static class CronHelper
         DateTimeOffset? nextAfterLast = cron.GetNextOccurrence(lastRefresh.Value, tz);
         return nextAfterLast.HasValue && nextAfterLast.Value <= DateTimeOffset.UtcNow;
     }
+
+    /// <summary>
+    /// Returns the first scheduled run after <paramref name="lastSuccess"/> if it should have
+    /// completed by <paramref name="utcNow"/>, or null if no run has been missed.
+    /// </summary>
+    public static DateTimeOffset? GetMissedRun(
+        DateTimeOffset lastSuccess, CronExpression cron, TimeZoneInfo tz, DateTimeOffset utcNow)
+    {
+        // The scheduler can fire a moment before the cron time, so a run that started at 00:59:59
+        // must count as the 01:00 run rather than leaving that occurrence looking missed.
+        TimeSpan earlyStartTolerance = TimeSpan.FromMinutes(5);
+        TimeSpan runDuration = TimeSpan.FromHours(1);
+
+        DateTimeOffset? nextRun = cron.GetNextOccurrence(lastSuccess + earlyStartTolerance, tz);
+        return nextRun.HasValue && nextRun.Value + runDuration <= utcNow ? nextRun : null;
+    }
 }
