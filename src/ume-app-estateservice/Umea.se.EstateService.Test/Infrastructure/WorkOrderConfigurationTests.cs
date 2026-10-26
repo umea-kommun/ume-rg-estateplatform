@@ -17,13 +17,13 @@ public class WorkOrderConfigurationTests
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["ASPNETCORE_ENVIRONMENT"] = "Test",
-                ["WorkOrder:RequiredGroupByType:SpaceRequirement"] = "c33cbefe-1dc8-40c5-bb41-6ca744ff96c7",
+                ["WorkOrder:RequiredGroupByType:SpaceRequirement"] = "9fd6b87f-c7d9-4b5d-8bde-1ee9db7b2c8a",
             })
             .Build();
 
         ApplicationConfig config = new(configuration);
 
         config.WorkOrderProcessing.RequiredGroupByType
-            .ShouldContainKeyAndValue(WorkOrderType.SpaceRequirement, "c33cbefe-1dc8-40c5-bb41-6ca744ff96c7");
+            .ShouldContainKeyAndValue(WorkOrderType.SpaceRequirement, "9fd6b87f-c7d9-4b5d-8bde-1ee9db7b2c8a");
     }
 }

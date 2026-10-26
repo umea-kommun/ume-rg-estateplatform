@@ -6,7 +6,7 @@ namespace Umea.se.EstateService.Test.Handlers;
 
 public class WorkOrderAccessPolicyTests
 {
-    private const string SpaceRequirementGroup = "c33cbefe-1dc8-40c5-bb41-6ca744ff96c7";
+    private const string SpaceRequirementGroup = "9fd6b87f-c7d9-4b5d-8bde-1ee9db7b2c8a";
 
     private static WorkOrderAccessPolicy CreateGatedPolicy()
         => new(new WorkOrderConfiguration
