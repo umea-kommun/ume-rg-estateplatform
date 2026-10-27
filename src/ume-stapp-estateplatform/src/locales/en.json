@@ -63,7 +63,8 @@
 					"unrecognized_file_content": "The file could not be identified.",
 					"content_type_mismatch": "The file content does not match the declared file type.",
 					"not_supported": "Not supported for the selected building.",
-					"conflict": "Invalid selection in combination with other choices."
+					"conflict": "Invalid selection in combination with other choices.",
+					"file_unreadable": "The file could not be read. Close it in other programs and try again. If that doesn't help, remove the file from the list here and attach it again."
 				}
 			}
 		},
@@ -208,7 +209,8 @@
 			"error": {
 				"fileTooLarge": "\"{filename}\" is too large.",
 				"tooManyFiles": "You cannot upload more than {maxFiles} files.",
-				"invalidType": "\"{filename}\" has a file format that is not allowed."
+				"invalidType": "\"{filename}\" has a file format that is not allowed.",
+				"unreadable": "\"{filename}\" could not be read. Close it in other programs and select it again."
 			}
 		},
 		"feedback": {

@@ -8,6 +8,7 @@ import {
 	IRootState,
 } from '@/models/Interfaces';
 import ErrorService from '@/utils/ErrorService';
+import { findUnreadableFiles } from '@/utils/unreadableFiles';
 import { useServerValidation } from '@/utils/useServerValidation';
 import { useWorkOrderConfig } from '@/utils/useWorkOrderConfig';
 
@@ -145,7 +146,8 @@ export const useWorkOrderForm = () => {
 	/**
 	 * Runs the submit lifecycle: busy flag, dispatch, and on success the completed
 	 * view (+ query sync + scroll to top). The caller validates and builds the
-	 * payload first; server-side field errors are mapped back, otherwise
+	 * payload first; attachments the browser can no longer read are flagged per
+	 * file before sending, server-side field errors are mapped back, otherwise
 	 * `unableMessage` is surfaced. Returns whether the submit succeeded.
 	 */
 	const submit = async <TPayload>(
@@ -156,6 +158,18 @@ export const useWorkOrderForm = () => {
 		isBusySubmitting.value = true;
 		try {
 			clearServerErrors();
+
+			const unreadable = await findUnreadableFiles(attachments.value);
+			if (unreadable.length > 0) {
+				serverErrors.value = Object.fromEntries(
+					unreadable.map((index) => [
+						`files[${index}]`,
+						['file_unreadable'],
+					])
+				);
+				return false;
+			}
+
 			await store.dispatch(dispatchType, payload);
 
 			hasSubmitted.value = true;

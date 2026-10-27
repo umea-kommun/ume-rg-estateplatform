@@ -118,6 +118,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { isFileAccepted, normalizeFileType } from '@/utils/fileAccept';
+import { findUnreadableFiles } from '@/utils/unreadableFiles';
 
 const props = defineProps<{
 	id: string;
@@ -265,6 +266,14 @@ function invalidTypeMessages(rejected: File[]): string[] {
 	);
 }
 
+function unreadableMessages(unreadable: File[]): string[] {
+	return unreadable.map((f) =>
+		t('component.baseFileUpload.error.unreadable', {
+			filename: f.name,
+		})
+	);
+}
+
 /** First file exceeding the size limit, or null if all fit. */
 function findOversize(candidates: File[]): File | null {
 	return candidates.find((f) => f.size > maxSizeBytes.value) ?? null;
@@ -325,13 +334,19 @@ function computeBatchOutcome(newOnes: File[]): {
 	return { errors, merged };
 }
 
-function appendFiles(newOnes: File[]) {
+async function appendFiles(newOnes: File[]) {
+	// Files locked by another program are rejected up front so the user
+	// finds out when attaching, not when submitting.
+	const unreadableIndexes = new Set(await findUnreadableFiles(newOnes));
+	const unreadable = newOnes.filter((_, i) => unreadableIndexes.has(i));
+	const readable = newOnes.filter((_, i) => !unreadableIndexes.has(i));
+
 	// Collect every reason we reject something in this batch so a mixed
 	// input (e.g. bad.exe + big.jpg) surfaces both messages instead of
 	// letting the last check clobber the earlier ones. The actual logic
 	// lives in computeBatchOutcome; here we only apply side effects.
-	const { errors: batchErrors, merged } = computeBatchOutcome(newOnes);
-	errors.value = batchErrors;
+	const { errors: batchErrors, merged } = computeBatchOutcome(readable);
+	errors.value = [...unreadableMessages(unreadable), ...batchErrors];
 	if (merged) emit('update:modelValue', merged);
 }
 

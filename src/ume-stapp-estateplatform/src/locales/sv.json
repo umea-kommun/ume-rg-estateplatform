@@ -63,7 +63,8 @@
 					"unrecognized_file_content": "Filen kunde inte identifieras.",
 					"content_type_mismatch": "Filinnehållet matchar inte den angivna filtypen.",
 					"not_supported": "Stöds inte för den valda byggnaden.",
-					"conflict": "Ogiltigt val i kombination med övriga val."
+					"conflict": "Ogiltigt val i kombination med övriga val.",
+					"file_unreadable": "Filen kunde inte läsas. Stäng den i andra program och försök igen. Om det inte hjälper, ta bort filen från listan här och bifoga den på nytt."
 				}
 			}
 		},
@@ -208,7 +209,8 @@
 			"error": {
 				"fileTooLarge": "\"{filename}\" är för stor.",
 				"tooManyFiles": "Du kan inte ladda upp fler än {maxFiles} filer.",
-				"invalidType": "\"{filename}\" har ett filformat som inte tillåts."
+				"invalidType": "\"{filename}\" har ett filformat som inte tillåts.",
+				"unreadable": "\"{filename}\" kunde inte läsas. Stäng den i andra program och välj den igen."
 			}
 		},
 		"feedback": {
