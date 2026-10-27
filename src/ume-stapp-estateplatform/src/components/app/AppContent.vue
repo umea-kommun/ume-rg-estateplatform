@@ -72,12 +72,7 @@ const { environmentPrefix } = useEnvironmentBadge();
  */
 const fullPageTitle = computed(() => {
 	if (!props.pageTitle) {
-		return (
-			environmentPrefix.value +
-			t('app.title').toString() +
-			' - ' +
-			t('app.title').toString()
-		);
+		return environmentPrefix.value + t('app.title').toString();
 	}
 	return (
 		environmentPrefix.value +
