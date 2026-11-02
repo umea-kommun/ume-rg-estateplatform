@@ -31,6 +31,7 @@ public class DataSyncHealthCheck(EstateDbContext dbContext, ApplicationConfig ap
 
         DateTimeOffset? lastSuccess = await _dbContext.SyncMetadata
             .AsNoTracking()
+            .OrderBy(m => m.Id)
             .Select(m => (DateTimeOffset?)m.LastRefreshUtc)
             .FirstOrDefaultAsync(cancellationToken);
 
