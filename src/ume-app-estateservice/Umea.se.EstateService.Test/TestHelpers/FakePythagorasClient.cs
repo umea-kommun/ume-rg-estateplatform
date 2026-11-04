@@ -12,6 +12,7 @@ public sealed class FakePythagorasClient : IPythagorasClient
 {
     private readonly ConcurrentDictionary<Type, Queue<object>> _results = new();
     private readonly ConcurrentDictionary<Type, Exception> _exceptions = new();
+    private Exception? _uploadException;
     private readonly Queue<IReadOnlyDictionary<int, CalculatedPropertyValueDto>> _calculatedPropertyResults = new();
     private readonly Queue<UiListDataResponse<BuildingInfo>> _buildingUiListDataResults = new();
     private readonly Queue<UiListDataResponse<NavigationFolder>> _navigationFolderUiListDataResults = new();
@@ -298,11 +299,13 @@ public sealed class FakePythagorasClient : IPythagorasClient
         return Task.FromResult(_createWorkOrderResult);
     }
 
+    public void ThrowOnUploadWorkOrderDocument(Exception exception) => _uploadException = exception;
+
     public Task UploadWorkOrderDocumentAsync(int workOrderId, Stream fileStream, string fileName, long fileSize, int? parentId = null, int? actionTypeId = null, int? actionTypeStatusId = null, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(workOrderId, 0);
         WorkOrderRequests.Add(new WorkOrderRequestCapture("UploadDocument", workOrderId, $"fileName={fileName}&fileSize={fileSize}&parentId={parentId}&actionTypeId={actionTypeId}&actionTypeStatusId={actionTypeStatusId}"));
-        return Task.CompletedTask;
+        return _uploadException is null ? Task.CompletedTask : Task.FromException(_uploadException);
     }
 
     public Task<WorkOrderDto?> GetWorkOrderAsync(int workOrderId, CancellationToken cancellationToken = default)

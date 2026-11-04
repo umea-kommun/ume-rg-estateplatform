@@ -281,14 +281,28 @@ public class WorkOrderProcessor(
             string uploadFileName = $"{workOrderId}-{i + 1}{Path.GetExtension(file.FileName).ToLowerInvariant()}";
 
             await using Stream stream = await fileStorage.OpenReadAsync(file.StoragePath, ct);
-            await pythagorasClient.UploadWorkOrderDocumentAsync(
-                workOrderId, stream, uploadFileName, file.FileSize,
-                parentId, actionTypeId, actionTypeStatusId, ct);
+            try
+            {
+                await pythagorasClient.UploadWorkOrderDocumentAsync(
+                    workOrderId, stream, uploadFileName, file.FileSize,
+                    parentId, actionTypeId, actionTypeStatusId, ct);
+            }
+            catch (PythagorasApiException ex) when (IsDuplicateFileName(ex))
+            {
+                logger.LogWarning(
+                    "File {FileName} already exists on work order {WorkOrderId}; treating the earlier upload as successful.",
+                    uploadFileName, workOrderId);
+            }
 
             file.Uploaded = true;
             await workOrderRepository.UpdateAsync(workOrder, ct);
         }
     }
+
+    // A lost response (e.g. client timeout) can leave the file stored while we still see a failure.
+    private static bool IsDuplicateFileName(PythagorasApiException ex) =>
+        ex.StatusCode == System.Net.HttpStatusCode.BadRequest
+        && ex.ResponseBody?.Contains("ILLEGAL_UPLOAD_SAME_FILE_NAME", StringComparison.Ordinal) == true;
 
     private async Task<int?> DiscoverWorkOrderFolderAsync(int workOrderId, CancellationToken ct)
     {

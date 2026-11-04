@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Umea.se.EstateService.DataStore;
 using Umea.se.EstateService.DataStore.SqlServer;
 using Umea.se.EstateService.Logic.Handlers.WorkOrder;
+using Umea.se.EstateService.ServiceAccess.Pythagoras.Api;
 using Umea.se.EstateService.ServiceAccess.Pythagoras.Dto;
 using Umea.se.EstateService.ServiceAccess.Pythagoras.Enums;
 using Umea.se.EstateService.Shared.Data;
@@ -435,6 +437,40 @@ public class WorkOrderProcessorTests : IDisposable
         await _processor.ProcessPendingAsync(CancellationToken.None);
 
         UploadedFileNames().ShouldBe(["555-2.jpg"]);
+    }
+
+    [Fact]
+    public async Task UploadFiles_DuplicateFileNameRejected_MarksFileUploadedAndSubmits()
+    {
+        WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport);
+        AddFile(workOrder, "image.jpg");
+        workOrder.PythagorasWorkOrderId = 555;
+        await _repository.UpdateAsync(workOrder);
+        _fakeClient.ThrowOnUploadWorkOrderDocument(new PythagorasApiException(
+            "upload failed", HttpStatusCode.BadRequest, "{\"reason\":\"ILLEGAL_UPLOAD_SAME_FILE_NAME\"}"));
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        WorkOrderEntity? reloaded = await _repository.GetByUidAsync(workOrder.Uid, workOrder.CreatedByEmail);
+        reloaded.ShouldNotBeNull();
+        reloaded.SyncStatus.ShouldBe(WorkOrderSyncStatus.Submitted);
+    }
+
+    [Fact]
+    public async Task UploadFiles_OtherBadRequest_StillFailsWorkOrder()
+    {
+        WorkOrderEntity workOrder = await SeedPendingAsync(PythagorasWorkOrderType.ErrorReport);
+        AddFile(workOrder, "image.jpg");
+        workOrder.PythagorasWorkOrderId = 555;
+        await _repository.UpdateAsync(workOrder);
+        _fakeClient.ThrowOnUploadWorkOrderDocument(new PythagorasApiException(
+            "upload failed", HttpStatusCode.BadRequest, "{\"reason\":\"SOMETHING_ELSE\"}"));
+
+        await _processor.ProcessPendingAsync(CancellationToken.None);
+
+        WorkOrderEntity? reloaded = await _repository.GetByUidAsync(workOrder.Uid, workOrder.CreatedByEmail);
+        reloaded.ShouldNotBeNull();
+        reloaded.SyncStatus.ShouldBe(WorkOrderSyncStatus.Failed);
     }
 
     private static void AddFile(WorkOrderEntity workOrder, string fileName, bool uploaded = false) =>

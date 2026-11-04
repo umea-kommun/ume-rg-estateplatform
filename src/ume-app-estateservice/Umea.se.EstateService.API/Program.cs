@@ -129,12 +129,12 @@ builder.Services.AddHttpClient(HttpClientNames.Pythagoras, client =>
 })
 .AddStandardResilienceHandler(options =>
 {
-    options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(10);
-    options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(30);
+    options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(60);
+    options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(180);
     options.Retry.MaxRetryAttempts = 2;
     options.Retry.BackoffType = DelayBackoffType.Exponential;
     options.Retry.UseJitter = true;
-    options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(90);
+    options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(360);
 });
 
 // Dedicated health-probe client: short timeout, no resilience handler. Fails fast (the next poll
