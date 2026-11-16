@@ -3,12 +3,19 @@ import { describe, expect, test } from 'vitest';
 import { createI18n } from 'vue-i18n';
 import BuildingContactPanel from '../BuildingContactPanel.vue';
 import { IBuildingDetails } from '@/models/Interfaces';
+import { ExternalOwnerStatus } from '@/models/Enums';
 import sv from '@/locales/sv.json';
 
-const mountPanel = (contactPersons: Record<string, unknown>) =>
+const mountPanel = (
+	contactPersons: Record<string, unknown>,
+	externalOwnerStatus: ExternalOwnerStatus | null = null
+) =>
 	mount(BuildingContactPanel, {
 		props: {
-			building: { contactPersons } as unknown as IBuildingDetails,
+			building: {
+				contactPersons,
+				externalOwnerInfo: { status: externalOwnerStatus },
+			} as unknown as IBuildingDetails,
 		},
 		global: {
 			plugins: [
@@ -53,5 +60,30 @@ describe('BuildingContactPanel', () => {
 
 		expect(contactRowsFor('Anna Johansson')).toHaveLength(1);
 		expect(contactRowsFor('Erik Lindqvist')).toHaveLength(2);
+	});
+
+	test('rented building lists two caretakers instead of coordinator and technician', () => {
+		const wrapper = mountPanel(
+			{
+				propertyManager: { name: 'Anna Johansson' },
+				operationCoordinator: { name: 'Ska inte visas' },
+				operationsTechnician: { name: 'Ska inte heller visas' },
+				caretaker: { name: 'Erik Lindqvist' },
+				secondCaretaker: { name: 'Anders Lindberg' },
+			},
+			ExternalOwnerStatus.Inhyrd
+		);
+
+		const roles = wrapper.findAll('.role').map((role) => role.text());
+		const labels = sv.component.buildingContact;
+		expect(roles).toEqual([
+			labels.propertyManager,
+			labels.operationsManager,
+			labels.rentalAdministrator,
+			labels.caretaker,
+			labels.caretaker,
+		]);
+		expect(wrapper.text()).toContain('Anders Lindberg');
+		expect(wrapper.text()).not.toContain('Ska inte');
 	});
 });

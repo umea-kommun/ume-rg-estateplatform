@@ -3,7 +3,7 @@
 		<h2 class="mt-0 mb-2">
 			{{ $t('component.buildingDetails.contactPersonsButton') }}
 		</h2>
-		<div v-for="person in persons" :key="person.label" class="person">
+		<div v-for="person in persons" :key="person.key" class="person">
 			<h3 class="role">{{ person.label }}</h3>
 			<div class="value">
 				<template v-if="person.name">
@@ -45,6 +45,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { IBuildingDetails } from '@/models/Interfaces';
+import { ExternalOwnerStatus } from '@/models/Enums';
 import { useI18n } from 'vue-i18n';
 import BaseAutoLinkText from '@/components/shared/BaseAutoLinkText.vue';
 
@@ -56,33 +57,54 @@ const { t } = useI18n();
 
 const persons = computed(() => {
 	const contacts = props.building.contactPersons;
+	const isRented =
+		props.building.externalOwnerInfo?.status === ExternalOwnerStatus.Inhyrd;
 
-	return [
-		{
-			label: t('component.buildingContact.propertyManager'),
-			value: contacts?.propertyManager,
-		},
-		{
-			label: t('component.buildingContact.operationsManager'),
-			value: contacts?.operationsManager,
-		},
-		{
-			label: t('component.buildingContact.operationCoordinator'),
-			value: contacts?.operationCoordinator,
-		},
-		{
-			label: t('component.buildingContact.rentalAdministrator'),
-			value: contacts?.rentalAdministrator,
-		},
-		{
-			label: t('component.buildingContact.caretaker'),
-			value: contacts?.caretaker,
-		},
-		{
-			label: t('component.buildingContact.operationsTechnician'),
-			value: contacts?.operationsTechnician,
-		},
-	].map((person) => ({
+	const propertyManager = {
+		label: t('component.buildingContact.propertyManager'),
+		value: contacts?.propertyManager,
+	};
+	const operationsManager = {
+		label: t('component.buildingContact.operationsManager'),
+		value: contacts?.operationsManager,
+	};
+	const rentalAdministrator = {
+		label: t('component.buildingContact.rentalAdministrator'),
+		value: contacts?.rentalAdministrator,
+	};
+	const caretaker = {
+		label: t('component.buildingContact.caretaker'),
+		value: contacts?.caretaker,
+	};
+
+	const roles = isRented
+		? [
+				propertyManager,
+				operationsManager,
+				rentalAdministrator,
+				caretaker,
+				{
+					label: t('component.buildingContact.caretaker'),
+					value: contacts?.secondCaretaker,
+				},
+		  ]
+		: [
+				propertyManager,
+				operationsManager,
+				{
+					label: t('component.buildingContact.operationCoordinator'),
+					value: contacts?.operationCoordinator,
+				},
+				rentalAdministrator,
+				caretaker,
+				{
+					label: t('component.buildingContact.operationsTechnician'),
+					value: contacts?.operationsTechnician,
+				},
+		  ];
+
+	return roles.map((person, index) => ({
+		key: index,
 		label: person.label,
 		name: person.value?.name?.trim() ? person.value.name : null,
 		email: person.value?.email,

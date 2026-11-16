@@ -148,7 +148,7 @@ public static class BuildingEntityMapper
 
     /// <summary>
     /// Creates a BuildingContactPersonsModel from property values.
-    /// Name properties (282-285, 304-305) drive presence. Contact properties (306-311) hold
+    /// Name properties (282-285, 304-305, 320) drive presence. Contact properties (306-311, 321) hold
     /// "phone / email" text from Pythagoras and are parsed leniently via ContactInfoParser.
     /// Returns null if no name property is populated.
     /// </summary>
@@ -165,13 +165,15 @@ public static class BuildingEntityMapper
         BuildingContactModel? rentalAdministrator = BuildContact(propertyValues, PropertyCategoryId.RentalAdministrator, PropertyCategoryId.RentalAdministratorContact);
         BuildingContactModel? caretaker = BuildContact(propertyValues, PropertyCategoryId.Caretaker, PropertyCategoryId.CaretakerContact);
         BuildingContactModel? operationsTechnician = BuildContact(propertyValues, PropertyCategoryId.OperationsTechnician, PropertyCategoryId.OperationsTechnicianContact);
+        BuildingContactModel? secondCaretaker = BuildContact(propertyValues, PropertyCategoryId.SecondCaretaker, PropertyCategoryId.SecondCaretakerContact);
 
         if (propertyManager is null &&
             operationsManager is null &&
             operationCoordinator is null &&
             rentalAdministrator is null &&
             caretaker is null &&
-            operationsTechnician is null)
+            operationsTechnician is null &&
+            secondCaretaker is null)
         {
             return null;
         }
@@ -187,7 +189,8 @@ public static class BuildingEntityMapper
             OperationCoordinator = operationCoordinator,
             RentalAdministrator = rentalAdministrator,
             Caretaker = caretaker,
-            OperationsTechnician = operationsTechnician
+            OperationsTechnician = operationsTechnician,
+            SecondCaretaker = secondCaretaker
         };
     }
 

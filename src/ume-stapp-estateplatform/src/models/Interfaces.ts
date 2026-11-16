@@ -187,6 +187,7 @@ export interface IBuildingContactPersons {
 	rentalAdministrator: IBuildingContact | null;
 	caretaker: IBuildingContact | null;
 	operationsTechnician: IBuildingContact | null;
+	secondCaretaker: IBuildingContact | null;
 }
 
 export interface IBuildingGeoLocation {

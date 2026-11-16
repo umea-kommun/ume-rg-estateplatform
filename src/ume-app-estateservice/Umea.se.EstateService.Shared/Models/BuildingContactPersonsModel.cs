@@ -10,6 +10,7 @@ public sealed class BuildingContactPersonsModel
     public BuildingContactModel? RentalAdministrator { get; init; }
     public BuildingContactModel? Caretaker { get; init; }
     public BuildingContactModel? OperationsTechnician { get; init; }
+    public BuildingContactModel? SecondCaretaker { get; init; }
 }
 
 public sealed class BuildingContactModel

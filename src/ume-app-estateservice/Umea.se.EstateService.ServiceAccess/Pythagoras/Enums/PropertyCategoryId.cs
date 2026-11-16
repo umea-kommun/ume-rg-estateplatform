@@ -32,4 +32,6 @@ public enum PropertyCategoryId
     RentalAdministratorContact = 309,
     CaretakerContact = 310,
     OperationsTechnicianContact = 311,
+    SecondCaretaker = 320,
+    SecondCaretakerContact = 321,
 }

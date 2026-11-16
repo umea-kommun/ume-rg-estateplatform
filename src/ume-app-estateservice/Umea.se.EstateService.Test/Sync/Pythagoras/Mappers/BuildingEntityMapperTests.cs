@@ -300,6 +300,24 @@ public class BuildingEntityMapperTests
     }
 
     [Fact]
+    public void ToEntity_SecondCaretaker_ParsesPhoneAndEmail()
+    {
+        BuildingEntity entity = BuildingEntityMapper.ToEntity(new BuildingInfo
+        {
+            Id = 1,
+            PropertyValues = Props(
+                (PropertyCategoryId.SecondCaretaker, "Anders Lindberg"),
+                (PropertyCategoryId.SecondCaretakerContact, "090-16 63 72 / anders.lindberg@umea.se"))
+        });
+
+        entity.ContactPersons.ShouldNotBeNull();
+        entity.ContactPersons!.SecondCaretaker.ShouldNotBeNull();
+        entity.ContactPersons.SecondCaretaker!.Name.ShouldBe("Anders Lindberg");
+        entity.ContactPersons.SecondCaretaker.Phone.ShouldBe("090-16 63 72");
+        entity.ContactPersons.SecondCaretaker.Email.ShouldBe("anders.lindberg@umea.se");
+    }
+
+    [Fact]
     public void ToEntity_OnlyCaretakerPopulated_SynthesizesEmptyPropertyManager()
     {
         BuildingEntity entity = BuildingEntityMapper.ToEntity(new BuildingInfo

@@ -443,6 +443,8 @@ export default {
 						caretaker: rContactPersons.caretaker ?? null,
 						operationsTechnician:
 							rContactPersons.operationsTechnician ?? null,
+						secondCaretaker:
+							rContactPersons.secondCaretaker ?? null,
 				  }
 				: null,
 		};
