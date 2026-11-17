@@ -4,6 +4,7 @@ import { createI18n } from 'vue-i18n';
 import EstateOngoingErrands from '../EstateOngoingErrands.vue';
 import { workOrder } from '@/components/estate/workOrders/__tests__/workOrderFixture';
 import type { WorkOrderListItem } from '@/utils/useWorkOrders';
+import { MyErrandsRoute } from '@/router/routes';
 import sv from '@/locales/sv.json';
 
 const state = vi.hoisted(() => ({
@@ -138,6 +139,12 @@ describe('EstateOngoingErrands', () => {
 
 		await wrapper.find('.toggle-expanded').trigger('click');
 		expect(ids()).toEqual(['a', 'closed', 'b', 'c', 'd', 'e', 'f']);
+	});
+
+	test('carries the anchor the confirmation pages link to', () => {
+		const wrapper = mountErrands([], { loading: true });
+
+		expect(wrapper.find(MyErrandsRoute.hash).exists()).toBe(true);
 	});
 
 	test('shows skeletons and no count while loading', () => {

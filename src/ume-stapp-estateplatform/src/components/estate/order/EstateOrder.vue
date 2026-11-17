@@ -306,6 +306,18 @@
 					>
 						{{ paragraph }}
 					</p>
+					<i18n-t
+						keypath="component.estateOngoingErrands.formHint"
+						tag="p"
+					>
+						<template #link>
+							<router-link :to="MyErrandsRoute">{{
+								$t(
+									'component.estateOngoingErrands.formHintLink'
+								)
+							}}</router-link>
+						</template>
+					</i18n-t>
 					<p
 						v-html="$t('component.order.info.responsibilityLink')"
 					></p>
@@ -325,7 +337,7 @@ import {
 	ISubmitEstateOrder,
 } from '@/models/Interfaces';
 import { computed, onMounted, ref, useTemplateRef, watch } from 'vue';
-import { EstateRoutes } from '@/router/routes';
+import { EstateRoutes, MyErrandsRoute } from '@/router/routes';
 import NavBreadcrumbs from '../../shared/NavBreadcrumbs.vue';
 import { useI18n } from 'vue-i18n';
 import {

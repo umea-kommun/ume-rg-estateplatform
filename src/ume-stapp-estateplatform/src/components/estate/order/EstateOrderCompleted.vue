@@ -10,14 +10,11 @@
 			<p class="my-2">
 				{{ $t('component.order.completed.description') }}
 			</p>
-			<v-btn
-				class="mt-4"
-				color="primary"
-				:to="{
-					name: EstateRoutes.Home,
-				}"
-			>
-				{{ $t('component.order.completed.goHome') }}
+			<p class="my-2">
+				{{ $t('component.estateOngoingErrands.followAfterSubmit') }}
+			</p>
+			<v-btn class="mt-4" color="primary" :to="MyErrandsRoute">
+				{{ $t('component.estateOngoingErrands.goToMyErrands') }}
 			</v-btn>
 		</div>
 		<hr class="mt-6" />
@@ -31,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { EstateRoutes } from '@/router/routes';
+import { MyErrandsRoute } from '@/router/routes';
 import BaseAnimatedSuccess from '@/components/shared/BaseAnimatedSuccess.vue';
 import RateFeedback from '@/components/shared/RateFeedback.vue';
 </script>

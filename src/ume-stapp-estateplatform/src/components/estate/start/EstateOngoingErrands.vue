@@ -1,5 +1,5 @@
 <template>
-	<section class="ongoing-errands">
+	<section :id="MyErrandsId" class="ongoing-errands">
 		<div class="errands-header">
 			<h2 class="mb-4">
 				{{
@@ -88,6 +88,7 @@ import {
 	workOrderStatusKey,
 } from '@/components/estate/workOrders/workOrderDisplay';
 import { appInsights } from '@/plugins/appInsights';
+import { MyErrandsId } from '@/router/routes';
 import { useWorkOrders, type WorkOrderListItem } from '@/utils/useWorkOrders';
 
 const MaxShown = 5;

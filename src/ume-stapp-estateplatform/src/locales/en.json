@@ -289,14 +289,18 @@
 			"searching": "Searching…"
 		},
 		"estateOngoingErrands": {
-			"title": "My work orders ({count})",
-			"titleWithoutCount": "My work orders",
+			"title": "My errands ({count})",
+			"titleWithoutCount": "My errands",
 			"noErrands": "Here you can see your ongoing errands. If you submit a fault report or an order, it will show up here.",
-			"loadFailed": "Could not load your work orders.",
+			"loadFailed": "Could not load your errands.",
 			"showAll": "Show all",
 			"showFewer": "Show fewer",
 			"showClosed": "Show closed",
 			"hideClosed": "Hide closed",
+			"followAfterSubmit": "You can follow your errand under My errands on the start page.",
+			"goToMyErrands": "Go to My errands",
+			"formHint": "You can follow the status of your errands under {link} on the start page.",
+			"formHintLink": "My errands",
 			"status": {
 				"sent": "Sent",
 				"received": "Received",
@@ -308,14 +312,14 @@
 			}
 		},
 		"workOrderModal": {
-			"title": "Work order",
+			"title": "Errand",
 			"where": "Location",
 			"showBuilding": "Show building",
 			"room": "Room: {room}",
 			"indoor": "Indoor",
 			"outdoor": "Outdoor",
 			"description": "Description",
-			"workOrderNumber": "Work order number {number}",
+			"workOrderNumber": "Errand number {number}",
 			"sentOn": "Sent {date}",
 			"updatedOn": "Updated {date}",
 			"performed": "Work performed"
@@ -457,7 +461,6 @@
 			"completed": {
 				"title": "Thank you for your fault report!",
 				"description": "We have received your fault report and will handle it as soon as possible.",
-				"goHome": "Go to the homepage",
 				"feedbackTitle": "How did reporting a fault work?"
 			}
 		},
@@ -538,7 +541,6 @@
 			"completed": {
 				"title": "Thank you for your order!",
 				"description": "We have received your order and will handle it as soon as possible.",
-				"goHome": "Go to the homepage",
 				"feedbackTitle": "How did placing an order work?"
 			}
 		},
@@ -596,7 +598,6 @@
 			"completed": {
 				"title": "Thank you for your request!",
 				"description": "We have received your request for changed space requirements and will handle it as soon as possible.",
-				"goHome": "Go to the homepage",
 				"feedbackTitle": "How did submitting a request for changed space requirements work?"
 			}
 		},

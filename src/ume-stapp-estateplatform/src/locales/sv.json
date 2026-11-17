@@ -297,6 +297,10 @@
 			"showFewer": "Visa färre",
 			"showClosed": "Visa avslutade",
 			"hideClosed": "Dölj avslutade",
+			"followAfterSubmit": "Du kan följa ditt ärende under Mina ärenden på startsidan.",
+			"goToMyErrands": "Gå till Mina ärenden",
+			"formHint": "Under {link} på startsidan kan du följa status för dina ärenden.",
+			"formHintLink": "Mina ärenden",
 			"status": {
 				"sent": "Skickat",
 				"received": "Mottaget",
@@ -457,7 +461,6 @@
 			"completed": {
 				"title": "Tack för din felanmälan!",
 				"description": "Vi har mottagit din felanmälan och kommer att hantera den så snart som möjligt.",
-				"goHome": "Gå till startsidan",
 				"feedbackTitle": "Hur fungerade det att göra en felanmälan?"
 			}
 		},
@@ -538,7 +541,6 @@
 			"completed": {
 				"title": "Tack för din beställning!",
 				"description": "Vi har mottagit din beställning och kommer att hantera den så snart som möjligt.",
-				"goHome": "Gå till startsidan",
 				"feedbackTitle": "Hur fungerade det att göra en beställning?"
 			}
 		},
@@ -596,7 +598,6 @@
 			"completed": {
 				"title": "Tack för din förfrågan!",
 				"description": "Vi har mottagit din förfrågan om förändrade lokalbehov och kommer att hantera den så snart som möjligt.",
-				"goHome": "Gå till startsidan",
 				"feedbackTitle": "Hur fungerade det att skicka in en förfrågan om förändrade lokalbehov?"
 			}
 		},
